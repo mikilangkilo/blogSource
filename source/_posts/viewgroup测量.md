@@ -1,0 +1,13 @@
+---
+title: viewgroup测量
+date: 2018-01-02 23:07:40
+tags:
+---
+ViewGroup会去管理子view，当ViewGroup的大小为wrap_content时，ViewGroup就需要对子View进行遍历，以便获得所有的子View的大小，从而决定自己的大小。在其他模式下则会通过具体的制定值来设置自身的大小。
+ViewGroup在测量时通过遍历所有的子view，从而调用子view的measure方法来获得每个子view的测量结果。
+当子view测量结束时，就会将子view放到合适的位置，这个过程就是子view的layout过程。viewgroup在执行layout过程时，也同样是使用遍历的方法来调用子view的layout方法，并指定其具体显示的位置，从而来决定其布局位置。
+在自定义viewgroup中，通常会重写layout方法来控制子view显示位置的逻辑。同样如果是wrap_content，也必须重写onmeasure方法，这点与view是相同的。
+
+# viewgroup的绘制
+
+viewgroup通常不需要绘制，因为本身没有什么值得绘制的东西，如果不是需要指定viewgroup的颜色，甚至连ondraw方法都不会调用。但是viewgroup会使用dispatchDraw()方法来绘制子view

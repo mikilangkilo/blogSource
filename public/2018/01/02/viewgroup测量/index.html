@@ -79,16 +79,16 @@
 
 
 
-<meta name="description" content="retrofit的post方法简单的双参数上传，结果是ResponseBody12345@FormUrlEncoded@POST(&amp;quot;xxx.com&amp;quot;)Observable&amp;lt;ResponseBody&amp;gt; login(	@Field(&amp;quot;no&amp;quot;) String no,	@Field(&amp;quot;pass&amp;quot;) String pass); 文件上传">
+<meta name="description" content="ViewGroup会去管理子view，当ViewGroup的大小为wrap_content时，ViewGroup就需要对子View进行遍历，以便获得所有的子View的大小，从而决定自己的大小。在其他模式下则会通过具体的制定值来设置自身的大小。ViewGroup在测量时通过遍历所有的子view，从而调用子view的measure方法来获得每个子view的测量结果。当子view测量结束时，就会将子vi">
 <meta property="og:type" content="article">
-<meta property="og:title" content="retrofit2 post">
-<meta property="og:url" content="http://yoursite.com/2017/12/21/retrofit2-post/index.html">
+<meta property="og:title" content="viewgroup测量">
+<meta property="og:url" content="http://yoursite.com/2018/01/02/viewgroup测量/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="retrofit的post方法简单的双参数上传，结果是ResponseBody12345@FormUrlEncoded@POST(&amp;quot;xxx.com&amp;quot;)Observable&amp;lt;ResponseBody&amp;gt; login(	@Field(&amp;quot;no&amp;quot;) String no,	@Field(&amp;quot;pass&amp;quot;) String pass); 文件上传">
-<meta property="og:updated_time" content="2017-12-30T14:04:13.313Z">
+<meta property="og:description" content="ViewGroup会去管理子view，当ViewGroup的大小为wrap_content时，ViewGroup就需要对子View进行遍历，以便获得所有的子View的大小，从而决定自己的大小。在其他模式下则会通过具体的制定值来设置自身的大小。ViewGroup在测量时通过遍历所有的子view，从而调用子view的measure方法来获得每个子view的测量结果。当子view测量结束时，就会将子vi">
+<meta property="og:updated_time" content="2018-01-02T15:56:47.496Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="retrofit2 post">
-<meta name="twitter:description" content="retrofit的post方法简单的双参数上传，结果是ResponseBody12345@FormUrlEncoded@POST(&amp;quot;xxx.com&amp;quot;)Observable&amp;lt;ResponseBody&amp;gt; login(	@Field(&amp;quot;no&amp;quot;) String no,	@Field(&amp;quot;pass&amp;quot;) String pass); 文件上传">
+<meta name="twitter:title" content="viewgroup测量">
+<meta name="twitter:description" content="ViewGroup会去管理子view，当ViewGroup的大小为wrap_content时，ViewGroup就需要对子View进行遍历，以便获得所有的子View的大小，从而决定自己的大小。在其他模式下则会通过具体的制定值来设置自身的大小。ViewGroup在测量时通过遍历所有的子view，从而调用子view的measure方法来获得每个子view的测量结果。当子view测量结束时，就会将子vi">
 
 
 
@@ -118,13 +118,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/12/21/retrofit2-post/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/01/02/viewgroup测量/"/>
 
 
 
 
 
-  <title>retrofit2 post | Hexo</title>
+  <title>viewgroup测量 | Hexo</title>
   
 
 
@@ -231,7 +231,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/21/retrofit2-post/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/02/viewgroup测量/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -248,7 +248,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">retrofit2 post</h1>
+          <h1 class="post-title" itemprop="name headline">viewgroup测量</h1>
         
 
         <div class="post-meta">
@@ -260,8 +260,8 @@
               
                 <span class="post-meta-item-text">Diposting di</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-21T15:53:25+08:00">
-                2017-12-21
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-01-02T23:07:40+08:00">
+                2018-01-02
               </time>
             
 
@@ -298,11 +298,9 @@
       
 
       
-        <h1 id="retrofit的post方法"><a href="#retrofit的post方法" class="headerlink" title="retrofit的post方法"></a>retrofit的post方法</h1><h2 id="简单的双参数上传，结果是ResponseBody"><a href="#简单的双参数上传，结果是ResponseBody" class="headerlink" title="简单的双参数上传，结果是ResponseBody"></a>简单的双参数上传，结果是ResponseBody</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@FormUrlEncoded</span><br><span class="line">@POST(&quot;xxx.com&quot;)</span><br><span class="line">Observable&lt;ResponseBody&gt; login(</span><br><span class="line">	@Field(&quot;no&quot;) String no,</span><br><span class="line">	@Field(&quot;pass&quot;) String pass);</span><br></pre></td></tr></table></figure>
-<h2 id="文件上传-（-多文件上传-使用-PartMap-Map-params-要注意在设置每一个RequestBody文件的时候，数组名不能一致，否则会覆-盖。）"><a href="#文件上传-（-多文件上传-使用-PartMap-Map-params-要注意在设置每一个RequestBody文件的时候，数组名不能一致，否则会覆-盖。）" class="headerlink" title="文件上传 （ 多文件上传,使用 @PartMap Map params 要注意在设置每一个RequestBody文件的时候，数组名不能一致，否则会覆 盖。）"></a>文件上传 （ 多文件上传,使用 @PartMap Map<string, requestbody=""> params 要注意在设置每一个RequestBody文件的时候，数组名不能一致，否则会覆 盖。）</string,></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Multipart</span><br><span class="line">   @POST(&quot;xxx.com&quot;)</span><br><span class="line">   Observable&lt;ResponseBody&gt; uploadFile(</span><br><span class="line">       @Part(&quot;file\&quot;; filename=\&quot;test.png&quot;) RequestBody file</span><br><span class="line">    );</span><br></pre></td></tr></table></figure>
-<h2 id="单文件上传"><a href="#单文件上传" class="headerlink" title="单文件上传"></a>单文件上传</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Multipart</span><br><span class="line">   @POST(&quot;xxx.com&quot;)</span><br><span class="line">   Observable&lt;ResponseBody&gt; uploadFile(</span><br><span class="line">           @Part MultipartBody.Part file );</span><br></pre></td></tr></table></figure>
-<h2 id="多文件上传"><a href="#多文件上传" class="headerlink" title="多文件上传"></a>多文件上传</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Multipart</span><br><span class="line">   @POST(&quot;xxx.com&quot;)</span><br><span class="line">   Observable&lt;ResponseBody&gt; uploadFile(</span><br><span class="line">           @Part() List&lt;MultipartBody.Part&gt; files );</span><br></pre></td></tr></table></figure>
-<h2 id="文件和参数共同上传-参数也需要封装成MultipartBody-Part这样的类型，不然传递会出错，这个类型其实就是将这些数据封装成表单的类型，因为在这里不能使用FormUrlEncoded进行处理"><a href="#文件和参数共同上传-参数也需要封装成MultipartBody-Part这样的类型，不然传递会出错，这个类型其实就是将这些数据封装成表单的类型，因为在这里不能使用FormUrlEncoded进行处理" class="headerlink" title="文件和参数共同上传  (参数也需要封装成MultipartBody.Part这样的类型，不然传递会出错，这个类型其实就是将这些数据封装成表单的类型，因为在这里不能使用FormUrlEncoded进行处理)"></a>文件和参数共同上传  (参数也需要封装成MultipartBody.Part这样的类型，不然传递会出错，这个类型其实就是将这些数据封装成表单的类型，因为在这里不能使用FormUrlEncoded进行处理)</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Multipart</span><br><span class="line">   @POST(&quot;xxx.com&quot;)</span><br><span class="line">   Observable&lt;ResponseBody&gt; uploadFile(</span><br><span class="line">        @Part() List&lt;MultipartBody.Part &gt; files );</span><br></pre></td></tr></table></figure>
+        <p>ViewGroup会去管理子view，当ViewGroup的大小为wrap_content时，ViewGroup就需要对子View进行遍历，以便获得所有的子View的大小，从而决定自己的大小。在其他模式下则会通过具体的制定值来设置自身的大小。<br>ViewGroup在测量时通过遍历所有的子view，从而调用子view的measure方法来获得每个子view的测量结果。<br>当子view测量结束时，就会将子view放到合适的位置，这个过程就是子view的layout过程。viewgroup在执行layout过程时，也同样是使用遍历的方法来调用子view的layout方法，并指定其具体显示的位置，从而来决定其布局位置。<br>在自定义viewgroup中，通常会重写layout方法来控制子view显示位置的逻辑。同样如果是wrap_content，也必须重写onmeasure方法，这点与view是相同的。</p>
+<h1 id="viewgroup的绘制"><a href="#viewgroup的绘制" class="headerlink" title="viewgroup的绘制"></a>viewgroup的绘制</h1><p>viewgroup通常不需要绘制，因为本身没有什么值得绘制的东西，如果不是需要指定viewgroup的颜色，甚至连ondraw方法都不会调用。但是viewgroup会使用dispatchDraw()方法来绘制子view</p>
+
       
     </div>
     
@@ -326,8 +324,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/12/21/test-appveyor/" rel="next" title="test appveyor">
-                <i class="fa fa-chevron-left"></i> test appveyor
+              <a href="/2018/01/02/view的测量和绘制/" rel="next" title="view的测量和绘制">
+                <i class="fa fa-chevron-left"></i> view的测量和绘制
               </a>
             
           </div>
@@ -335,10 +333,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/12/21/“rxjava2-0”/" rel="prev" title="“rxjava2.0”">
-                “rxjava2.0” <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -452,7 +446,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#retrofit的post方法"><span class="nav-number">1.</span> <span class="nav-text">retrofit的post方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#简单的双参数上传，结果是ResponseBody"><span class="nav-number">1.1.</span> <span class="nav-text">简单的双参数上传，结果是ResponseBody</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件上传-（-多文件上传-使用-PartMap-Map-params-要注意在设置每一个RequestBody文件的时候，数组名不能一致，否则会覆-盖。）"><span class="nav-number">1.2.</span> <span class="nav-text">文件上传 （ 多文件上传,使用 @PartMap Map params 要注意在设置每一个RequestBody文件的时候，数组名不能一致，否则会覆 盖。）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单文件上传"><span class="nav-number">1.3.</span> <span class="nav-text">单文件上传</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多文件上传"><span class="nav-number">1.4.</span> <span class="nav-text">多文件上传</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件和参数共同上传-参数也需要封装成MultipartBody-Part这样的类型，不然传递会出错，这个类型其实就是将这些数据封装成表单的类型，因为在这里不能使用FormUrlEncoded进行处理"><span class="nav-number">1.5.</span> <span class="nav-text">文件和参数共同上传  (参数也需要封装成MultipartBody.Part这样的类型，不然传递会出错，这个类型其实就是将这些数据封装成表单的类型，因为在这里不能使用FormUrlEncoded进行处理)</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#viewgroup的绘制"><span class="nav-number">1.</span> <span class="nav-text">viewgroup的绘制</span></a></li></ol></div>
             
 
           </div>
