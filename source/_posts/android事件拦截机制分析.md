@@ -94,3 +94,6 @@ c dispatch
 c ontouch
 ```
 
+解释一下ontouchevent为true的意义。
+假如ontouchevent为false，代表这个ontouch事件没有结束，因此还会继续找别的事件来进行处理直到返回的ontouchevent为true。有一些view自己写了默认的ontouch事件，因此假如想继承一个有功能的view而又不想它产生ontouch效果，可以返回true来截断默认的ontouch事件。
+一般情况下false可以起到添加额外效果的功能。

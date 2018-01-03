@@ -85,7 +85,7 @@
 <meta property="og:url" content="http://yoursite.com/2018/01/03/android事件拦截机制分析/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="由于Android是树状结构，嵌套会导致事件发生区域重叠，针对重叠区域的处理，就叫事件拦截机制。 我们现在假设有一个嵌套结构 第一层： a-ViewGroup第二层： b-ViewGroup第三层： c-View 重写viewgroup的三个方法：12345@Overridepublic boolean dispatchTouchEvent(MotionEvent ev)&amp;#123;	LogUti">
-<meta property="og:updated_time" content="2018-01-03T11:44:15.000Z">
+<meta property="og:updated_time" content="2018-01-03T15:09:48.312Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android事件拦截机制分析">
 <meta name="twitter:description" content="由于Android是树状结构，嵌套会导致事件发生区域重叠，针对重叠区域的处理，就叫事件拦截机制。 我们现在假设有一个嵌套结构 第一层： a-ViewGroup第二层： b-ViewGroup第三层： c-View 重写viewgroup的三个方法：12345@Overridepublic boolean dispatchTouchEvent(MotionEvent ev)&amp;#123;	LogUti">
@@ -314,6 +314,7 @@
 <h1 id="让b的onInterceptTouchEvent-返回true"><a href="#让b的onInterceptTouchEvent-返回true" class="headerlink" title="让b的onInterceptTouchEvent()返回true"></a>让b的onInterceptTouchEvent()返回true</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a dispatch</span><br><span class="line">a intercept</span><br><span class="line">b dispatch</span><br><span class="line">b intercept</span><br><span class="line">b ontouch</span><br><span class="line">a ontouch</span><br></pre></td></tr></table></figure>
 <p>很明显是b处截断了。</p>
 <h1 id="让c的onInterceptTouchEvent-返回true"><a href="#让c的onInterceptTouchEvent-返回true" class="headerlink" title="让c的onInterceptTouchEvent()返回true"></a>让c的onInterceptTouchEvent()返回true</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a dispatch</span><br><span class="line">a intercept</span><br><span class="line">b dispatch</span><br><span class="line">b intercept</span><br><span class="line">c dispatch</span><br><span class="line">c ontouch</span><br></pre></td></tr></table></figure>
+<p>解释一下ontouchevent为true的意义。<br>假如ontouchevent为false，代表这个ontouch事件没有结束，因此还会继续找别的事件来进行处理直到返回的ontouchevent为true。有一些view自己写了默认的ontouch事件，因此假如想继承一个有功能的view而又不想它产生ontouch效果，可以返回true来截断默认的ontouch事件。<br>一般情况下false可以起到添加额外效果的功能。</p>
 
       
     </div>
@@ -347,6 +348,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/03/android事件分发机制/" rel="prev" title="android事件分发机制">
+                android事件分发机制 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -423,7 +428,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">Artikel</span>
                 </a>
               </div>
@@ -437,9 +442,7 @@
 
           
 
-          <div class="links-of-author motion-element">
-            
-          </div>
+          
 
           
           
