@@ -100,7 +100,7 @@
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
     duoshuo: {
       userId: '0',
-      author: 'Penulis'
+      author: 'Author'
     },
     algolia: {
       applicationID: '',
@@ -181,7 +181,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Beranda
+            Startseite
           </a>
         </li>
       
@@ -191,7 +191,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            Arsip
+            Archiv
           </a>
         </li>
       
@@ -214,6 +214,282 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/03/android事件拦截机制分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/03/android事件拦截机制分析/" itemprop="url">android事件拦截机制分析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-01-03T19:04:36+08:00">
+                2018-01-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>由于Android是树状结构，嵌套会导致事件发生区域重叠，针对重叠区域的处理，就叫事件拦截机制。</p>
+<p>我们现在假设有一个嵌套结构</p>
+<p>第一层： a-ViewGroup<br>第二层： b-ViewGroup<br>第三层： c-View</p>
+<p>重写viewgroup的三个方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public boolean dispatchTouchEvent(MotionEvent ev)&#123;</span><br><span class="line">	LogUtil.i(name+&quot;dispatch&quot;);</span><br><span class="line">	return super.dispatchTouchEvent(ev);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public boolean onInterceptTouchEvent(MotionEvent ev)&#123;</span><br><span class="line">	LogUtil.i(name+&quot;intecept&quot;);</span><br><span class="line">	return super.onInterceptTouchEvent(ev);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public boolean onTouchEvent(MotionEvent ev)&#123;</span><br><span class="line">	LogUtil.i(name+&quot;onTouch&quot;);</span><br><span class="line">	return super.onTouchEvent(ev);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由于view不需要重写onInterceptTouchEvent,只需要重写另外的两个事件即可。</p>
+<h1 id="点击c-–正常情况"><a href="#点击c-–正常情况" class="headerlink" title="点击c –正常情况"></a>点击c –正常情况</h1><p>Log显示为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">a dispatch</span><br><span class="line">a intercept</span><br><span class="line">b dispatch</span><br><span class="line">b intercept</span><br><span class="line">c dispatch</span><br><span class="line">c ontouch</span><br><span class="line">b ontouch</span><br><span class="line">a ontouch</span><br></pre></td></tr></table></figure></p>
+<p>事件的传递顺序为a-&gt;b-&gt;c， 事件传递的时候是先执行dispatchTouchEvent()方法，之后在执行onInterceptTouchEvent()方法。<br>事件处理的顺序为c-&gt;b-&gt;a</p>
+<p>事件传递的返回值很容易理解：True,拦截，不继续;False,不拦截，继续流程。<br>事件处理的返回值也类似：True,处理了，不用审核了;False,给上级处理。</p>
+<p>初始情况下，返回值都是false。</p>
+<h1 id="让a的onInterceptTouchEvent-返回true"><a href="#让a的onInterceptTouchEvent-返回true" class="headerlink" title="让a的onInterceptTouchEvent()返回true"></a>让a的onInterceptTouchEvent()返回true</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a dispatch</span><br><span class="line">a intercept</span><br><span class="line">a ontouch</span><br></pre></td></tr></table></figure>
+<p>很明显是a处截断了。</p>
+<h1 id="让b的onInterceptTouchEvent-返回true"><a href="#让b的onInterceptTouchEvent-返回true" class="headerlink" title="让b的onInterceptTouchEvent()返回true"></a>让b的onInterceptTouchEvent()返回true</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a dispatch</span><br><span class="line">a intercept</span><br><span class="line">b dispatch</span><br><span class="line">b intercept</span><br><span class="line">b ontouch</span><br><span class="line">a ontouch</span><br></pre></td></tr></table></figure>
+<p>很明显是b处截断了。</p>
+<h1 id="让c的onInterceptTouchEvent-返回true"><a href="#让c的onInterceptTouchEvent-返回true" class="headerlink" title="让c的onInterceptTouchEvent()返回true"></a>让c的onInterceptTouchEvent()返回true</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a dispatch</span><br><span class="line">a intercept</span><br><span class="line">b dispatch</span><br><span class="line">b intercept</span><br><span class="line">c dispatch</span><br><span class="line">c ontouch</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/03/android持久化存储/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/03/android持久化存储/" itemprop="url">android持久化存储</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-01-03T14:57:26+08:00">
+                2018-01-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="内部存储（internalStorage）"><a href="#内部存储（internalStorage）" class="headerlink" title="内部存储（internalStorage）"></a>内部存储（internalStorage）</h1><p>data文件夹就是我们常说的内部存储，其中有两个文件夹需要关注，一个是app文件夹，一个是data文件夹。</p>
+<h2 id="app文件夹"><a href="#app文件夹" class="headerlink" title="app文件夹"></a>app文件夹</h2><p>app文件夹里存放着我们所有安装的app的apk文件。</p>
+<h2 id="data文件夹"><a href="#data文件夹" class="headerlink" title="data文件夹"></a>data文件夹</h2><p>这个文件夹里面都是一些包名，打开这些包名会看到：</p>
+<ol>
+<li>data/data/包名/shared_prefs</li>
+<li>data/data/包名/databases</li>
+<li>data/data/包名/files</li>
+<li>data/data/包名/cache</li>
+</ol>
+<p>sharedPreferenced的时候，数据持久化存储于本地，其实就是存在这个文件中的xml文件里面。<br>数据库文件就是存储于databases文件夹中。<br>普通数据存储在files中。<br>缓存文件存储在cache文件夹中。</p>
+<h1 id="外部存储（externalStorage）"><a href="#外部存储（externalStorage）" class="headerlink" title="外部存储（externalStorage）"></a>外部存储（externalStorage）</h1><p>外部存储是我们平时操作最多的，外部存储一般就是我们看到的storage文件夹，当然也有mnt文件夹，不同厂家有可能不一样。<br>一般来讲storage文件夹中有一个sdcard文件夹，这个文件夹中的文件又分为两类，一类是公有目录，一类是私有目录。公有目录又分为九大类，比如说DCIM、DOWNLOAD等这种系统为我们创建的文件夹。私有目录就是android这种文件夹，这个文件夹打开之后里面有一个data文件夹，打开这个data文件夹，里面有许多包名组成的文件夹。</p>
+<h1 id="存储操作"><a href="#存储操作" class="headerlink" title="存储操作"></a>存储操作</h1><h2 id="文件存储"><a href="#文件存储" class="headerlink" title="文件存储"></a>文件存储</h2><p>文件存储的所有文件默认放在/data/data/<packagename>/file/目录下</packagename></p>
+<h3 id="文件写入"><a href="#文件写入" class="headerlink" title="文件写入"></a>文件写入</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public void save(String inputText)&#123;</span><br><span class="line">	FIleOutputStream out = null;</span><br><span class="line">	BufferedWriter writer = null;</span><br><span class="line">	try&#123;</span><br><span class="line">		out = openFileOutput(&quot;data&quot;, Context.MODE_PRIVATE);</span><br><span class="line">		writer = new BufferedWriter(new OutputStreamWriter(out));</span><br><span class="line">		writer.write(inputText);</span><br><span class="line">	&#125;catch(FileNotFoundException e)&#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125;catch(IOException e)&#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125;finally&#123;</span><br><span class="line">		if(writer != null)&#123;</span><br><span class="line">			try&#123;</span><br><span class="line">				writer.close();</span><br><span class="line">			&#125;catch(IOException e)&#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="文件读取"><a href="#文件读取" class="headerlink" title="文件读取"></a>文件读取</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">public String load()&#123;</span><br><span class="line">	FileInputStream in = null;</span><br><span class="line">	BufferedReader reader = null;</span><br><span class="line">	StringBuilder content = new StringBuilder();</span><br><span class="line">	try&#123;</span><br><span class="line">		in = openFileInput(&quot;data&quot;);</span><br><span class="line">		reader = new BufferedReader(new InputStreamReader(in));</span><br><span class="line">		String line = &quot;&quot;;</span><br><span class="line">		while((line = reader.readLine()) != null)&#123;</span><br><span class="line">			content.append(line);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;catch(FileNotFoundException e)&#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125;catch(IOException e)&#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125;finally&#123;</span><br><span class="line">		if(reader != null)&#123;</span><br><span class="line">			try&#123;</span><br><span class="line">				reader.close();</span><br><span class="line">			&#125;catch(IOException e)&#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return content.toString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="SharePreferences"><a href="#SharePreferences" class="headerlink" title="SharePreferences"></a>SharePreferences</h2><p>Sharepreference默认放在/data/data/<packagename>/file/目录下</packagename></p>
+<h3 id="SharedPreferences写入"><a href="#SharedPreferences写入" class="headerlink" title="SharedPreferences写入"></a>SharedPreferences写入</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SharedPreferences.Editor editor = getSharedPreferences(&quot;data&quot;, MODE_PRIVATE).edit();</span><br><span class="line">editor.putString(&quot;et_inputText&quot;, &quot;sharePreferences test&quot;);</span><br><span class="line">editor.commit();</span><br></pre></td></tr></table></figure>
+<h3 id="SharedPreferences读取"><a href="#SharedPreferences读取" class="headerlink" title="SharedPreferences读取"></a>SharedPreferences读取</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SharedPreferences sp = getSharedPreferences(&quot;data&quot;, MODE_PRIVATE);</span><br><span class="line">String input = sp.getString(&quot;et_inputText&quot;, &quot;请输入用户名&quot;);//第二个参数是为空的默认信息</span><br></pre></td></tr></table></figure>
+<h2 id="SQLite数据库存储"><a href="#SQLite数据库存储" class="headerlink" title="SQLite数据库存储"></a>SQLite数据库存储</h2><p>sqlite文件默认放在/data/data/<packagename>/datanases/目录下</packagename></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public class MyDataBaseHelper extends SQLiteOpenHelper&#123;</span><br><span class="line">	private static final String CREATE_BOOK = &quot;create table Book(id integer primary key autoincrement, author text, price real, pages integer, name text)&quot;;</span><br><span class="line">	private static final String CREATE_CATEGORY = &quot;create table Category(id integer primary key autoincrement, category_name text, category_code integer)&quot;;</span><br><span class="line">	private Context mContext;</span><br><span class="line">	public MyDataBaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version)&#123;</span><br><span class="line">		super(context, name, factory, version);</span><br><span class="line">		mContext = context;</span><br><span class="line">	&#125;</span><br><span class="line">	@Override</span><br><span class="line">	public void onCreate(SQLiteDatabase db)&#123;</span><br><span class="line">		db.execSQL(CREATE_BOOK);</span><br><span class="line">		db.execSQL(CREATE_CATEGORY);</span><br><span class="line">		Toast.makeText(mContext, &quot;create succeed&quot;, Toast.LENGTH_SHORT).show();</span><br><span class="line">	&#125;</span><br><span class="line">	@Override</span><br><span class="line">	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)&#123;</span><br><span class="line">		db.execSQL(&quot;drop table if exists Book&quot;);</span><br><span class="line">		db.execSQL(&quot;drop table if exists Category&quot;);</span><br><span class="line">		onCreate(db);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="创建数据库"><a href="#创建数据库" class="headerlink" title="创建数据库"></a>创建数据库</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dbHelper = new MyDataBaseHelper(this, &quot;BookStore.db&quot;, null, 2);</span><br></pre></td></tr></table></figure>
+<h3 id="插入数据"><a href="#插入数据" class="headerlink" title="插入数据"></a>插入数据</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">SQLiteDatabase db = dbHelper.getWritableDatabase();</span><br><span class="line">ContentValues values = new ContentValues();</span><br><span class="line">values.put(&quot;name&quot;, &quot;Effective Java&quot;);</span><br><span class="line">values.put(&quot;author&quot;, &quot;Joshua Bloch&quot;);</span><br><span class="line">values.put(&quot;pages&quot;, 454);</span><br><span class="line">values.put(&quot;price&quot;, 16.96);</span><br><span class="line">db.insert(&quot;Book&quot;, null, values);</span><br></pre></td></tr></table></figure>
+<h3 id="更新数据"><a href="#更新数据" class="headerlink" title="更新数据"></a>更新数据</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ContentValues values = new ContentValues();</span><br><span class="line">values.put(&quot;price&quot;, 198.00);</span><br><span class="line">SQLiteDatabase db = dbHelper.getReadableDatabase();</span><br><span class="line">db.updata(&quot;Book&quot;, values, &quot;name=?&quot;,new String[]&#123;&apos;Android Programme&apos;&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="删除行"><a href="#删除行" class="headerlink" title="删除行"></a>删除行</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SQLiteDatabase db = dbHelper.getWritableDatabase();</span><br><span class="line">db.delete(&quot;Book&quot;, &quot;pages &gt; ?&quot;, new String[]&#123;&quot;500&quot;&#125;);</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
     
       
 
@@ -257,7 +533,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Diposting di</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-01-02T23:07:40+08:00">
                 2018-01-02
@@ -378,7 +654,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Diposting di</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-01-02T12:38:03+08:00">
                 2018-01-02
@@ -517,7 +793,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Diposting di</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-01-01T15:47:32+08:00">
                 2018-01-01
@@ -727,7 +1003,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Diposting di</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-31T21:44:56+08:00">
                 2017-12-31
@@ -851,7 +1127,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Diposting di</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-23T17:21:18+08:00">
                 2017-12-23
@@ -987,7 +1263,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Diposting di</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-21T16:24:02+08:00">
                 2017-12-21
@@ -1199,7 +1475,7 @@ BackpressureStrategy.MISSING
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Diposting di</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-21T15:53:25+08:00">
                 2017-12-21
@@ -1322,7 +1598,7 @@ BackpressureStrategy.MISSING
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Diposting di</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-21T11:25:39+08:00">
                 2017-12-21
@@ -1399,143 +1675,13 @@ BackpressureStrategy.MISSING
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/21/使用appveyor-xml-进行双端部署hexo/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/12/21/使用appveyor-xml-进行双端部署hexo/" itemprop="url">使用appveyor.xml 进行双端部署hexo</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Diposting di</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-21T11:12:17+08:00">
-                2017-12-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="注册并登录AppVeyor"><a href="#注册并登录AppVeyor" class="headerlink" title="注册并登录AppVeyor"></a>注册并登录AppVeyor</h1><blockquote>
-<p>访问 <a href="https://ci.appveyor.com/login" target="_blank" rel="noopener">AppVeyor</a>,使用github登录即可。</p>
-</blockquote>
-<h1 id="添加project"><a href="#添加project" class="headerlink" title="添加project"></a>添加project</h1><blockquote>
-<p>在 <a href="https://ci.appveyor.com/projects/new" target="_blank" rel="noopener">project页面</a>,添加相应的source repo</p>
-</blockquote>
-<h1 id="添加appveyor-yml到source-repo"><a href="#添加appveyor-yml到source-repo" class="headerlink" title="添加appveyor.yml到source repo"></a>添加appveyor.yml到source repo</h1><blockquote>
-<p>appveyor如<a href="https://github.com/formulahendry/formulahendry.github.io.source/blob/master/appveyor.yml" target="_blank" rel="noopener">appveyor样例</a>,只需要更改 [Your Github Access Token]即可。</p>
-</blockquote>
-<h1 id="在repo-settings-Environment中添加四个变量"><a href="#在repo-settings-Environment中添加四个变量" class="headerlink" title="在repo/settings/Environment中添加四个变量"></a>在repo/settings/Environment中添加四个变量</h1><blockquote>
-<p>GIT_USER_EMAIL: github email<br>GIT_USER_NAME: github username<br>STATIC_SITE_REPO: blog repo site<br>TARGET_BRANCH: blog repo main branch (default is master)</p>
-</blockquote>
-<h1 id="完成"><a href="#完成" class="headerlink" title="完成"></a>完成</h1><blockquote>
-<p>背后的过程如下<br>Git push to Source Repo -&gt; AppVeyor CI -&gt; Update GitHub Pages Content Repo -&gt; Generate your Hexo blog site</p>
-</blockquote>
-<h1 id="出处"><a href="#出处" class="headerlink" title="出处"></a><a href="https://formulahendry.github.io/2016/12/04/hexo-ci/" target="_blank" rel="noopener">出处</a></h1>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
 
           </div>
@@ -1579,8 +1725,8 @@ BackpressureStrategy.MISSING
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">9</span>
-                  <span class="site-state-item-name">posting</span>
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">Artikel</span>
                 </a>
               </div>
             
@@ -1593,7 +1739,9 @@ BackpressureStrategy.MISSING
 
           
 
-          
+          <div class="links-of-author motion-element">
+            
+          </div>
 
           
           
@@ -1630,7 +1778,7 @@ BackpressureStrategy.MISSING
 </div>
 
 
-  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
 
 
 
@@ -1638,7 +1786,7 @@ BackpressureStrategy.MISSING
 
 
 
-  <div class="theme-info">Tema &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.3</div>
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.3</div>
 
 
 

@@ -79,16 +79,16 @@
 
 
 
-<meta name="description" content="ViewGroup会去管理子view，当ViewGroup的大小为wrap_content时，ViewGroup就需要对子View进行遍历，以便获得所有的子View的大小，从而决定自己的大小。在其他模式下则会通过具体的制定值来设置自身的大小。ViewGroup在测量时通过遍历所有的子view，从而调用子view的measure方法来获得每个子view的测量结果。当子view测量结束时，就会将子vi">
+<meta name="description" content="由于Android是树状结构，嵌套会导致事件发生区域重叠，针对重叠区域的处理，就叫事件拦截机制。 我们现在假设有一个嵌套结构 第一层： a-ViewGroup第二层： b-ViewGroup第三层： c-View 重写viewgroup的三个方法：12345@Overridepublic boolean dispatchTouchEvent(MotionEvent ev)&amp;#123;	LogUti">
 <meta property="og:type" content="article">
-<meta property="og:title" content="viewgroup测量">
-<meta property="og:url" content="http://yoursite.com/2018/01/02/viewgroup测量/index.html">
+<meta property="og:title" content="android事件拦截机制分析">
+<meta property="og:url" content="http://yoursite.com/2018/01/03/android事件拦截机制分析/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="ViewGroup会去管理子view，当ViewGroup的大小为wrap_content时，ViewGroup就需要对子View进行遍历，以便获得所有的子View的大小，从而决定自己的大小。在其他模式下则会通过具体的制定值来设置自身的大小。ViewGroup在测量时通过遍历所有的子view，从而调用子view的measure方法来获得每个子view的测量结果。当子view测量结束时，就会将子vi">
-<meta property="og:updated_time" content="2018-01-03T06:56:40.000Z">
+<meta property="og:description" content="由于Android是树状结构，嵌套会导致事件发生区域重叠，针对重叠区域的处理，就叫事件拦截机制。 我们现在假设有一个嵌套结构 第一层： a-ViewGroup第二层： b-ViewGroup第三层： c-View 重写viewgroup的三个方法：12345@Overridepublic boolean dispatchTouchEvent(MotionEvent ev)&amp;#123;	LogUti">
+<meta property="og:updated_time" content="2018-01-03T11:44:15.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="viewgroup测量">
-<meta name="twitter:description" content="ViewGroup会去管理子view，当ViewGroup的大小为wrap_content时，ViewGroup就需要对子View进行遍历，以便获得所有的子View的大小，从而决定自己的大小。在其他模式下则会通过具体的制定值来设置自身的大小。ViewGroup在测量时通过遍历所有的子view，从而调用子view的measure方法来获得每个子view的测量结果。当子view测量结束时，就会将子vi">
+<meta name="twitter:title" content="android事件拦截机制分析">
+<meta name="twitter:description" content="由于Android是树状结构，嵌套会导致事件发生区域重叠，针对重叠区域的处理，就叫事件拦截机制。 我们现在假设有一个嵌套结构 第一层： a-ViewGroup第二层： b-ViewGroup第三层： c-View 重写viewgroup的三个方法：12345@Overridepublic boolean dispatchTouchEvent(MotionEvent ev)&amp;#123;	LogUti">
 
 
 
@@ -118,13 +118,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/01/02/viewgroup测量/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/01/03/android事件拦截机制分析/"/>
 
 
 
 
 
-  <title>viewgroup测量 | Hexo</title>
+  <title>android事件拦截机制分析 | Hexo</title>
   
 
 
@@ -231,7 +231,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/02/viewgroup测量/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/03/android事件拦截机制分析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -248,7 +248,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">viewgroup测量</h1>
+          <h1 class="post-title" itemprop="name headline">android事件拦截机制分析</h1>
         
 
         <div class="post-meta">
@@ -260,8 +260,8 @@
               
                 <span class="post-meta-item-text">Veröffentlicht am</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-01-02T23:07:40+08:00">
-                2018-01-02
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-01-03T19:04:36+08:00">
+                2018-01-03
               </time>
             
 
@@ -298,8 +298,22 @@
       
 
       
-        <p>ViewGroup会去管理子view，当ViewGroup的大小为wrap_content时，ViewGroup就需要对子View进行遍历，以便获得所有的子View的大小，从而决定自己的大小。在其他模式下则会通过具体的制定值来设置自身的大小。<br>ViewGroup在测量时通过遍历所有的子view，从而调用子view的measure方法来获得每个子view的测量结果。<br>当子view测量结束时，就会将子view放到合适的位置，这个过程就是子view的layout过程。viewgroup在执行layout过程时，也同样是使用遍历的方法来调用子view的layout方法，并指定其具体显示的位置，从而来决定其布局位置。<br>在自定义viewgroup中，通常会重写layout方法来控制子view显示位置的逻辑。同样如果是wrap_content，也必须重写onmeasure方法，这点与view是相同的。</p>
-<h1 id="viewgroup的绘制"><a href="#viewgroup的绘制" class="headerlink" title="viewgroup的绘制"></a>viewgroup的绘制</h1><p>viewgroup通常不需要绘制，因为本身没有什么值得绘制的东西，如果不是需要指定viewgroup的颜色，甚至连ondraw方法都不会调用。但是viewgroup会使用dispatchDraw()方法来绘制子view</p>
+        <p>由于Android是树状结构，嵌套会导致事件发生区域重叠，针对重叠区域的处理，就叫事件拦截机制。</p>
+<p>我们现在假设有一个嵌套结构</p>
+<p>第一层： a-ViewGroup<br>第二层： b-ViewGroup<br>第三层： c-View</p>
+<p>重写viewgroup的三个方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public boolean dispatchTouchEvent(MotionEvent ev)&#123;</span><br><span class="line">	LogUtil.i(name+&quot;dispatch&quot;);</span><br><span class="line">	return super.dispatchTouchEvent(ev);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public boolean onInterceptTouchEvent(MotionEvent ev)&#123;</span><br><span class="line">	LogUtil.i(name+&quot;intecept&quot;);</span><br><span class="line">	return super.onInterceptTouchEvent(ev);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public boolean onTouchEvent(MotionEvent ev)&#123;</span><br><span class="line">	LogUtil.i(name+&quot;onTouch&quot;);</span><br><span class="line">	return super.onTouchEvent(ev);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由于view不需要重写onInterceptTouchEvent,只需要重写另外的两个事件即可。</p>
+<h1 id="点击c-–正常情况"><a href="#点击c-–正常情况" class="headerlink" title="点击c –正常情况"></a>点击c –正常情况</h1><p>Log显示为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">a dispatch</span><br><span class="line">a intercept</span><br><span class="line">b dispatch</span><br><span class="line">b intercept</span><br><span class="line">c dispatch</span><br><span class="line">c ontouch</span><br><span class="line">b ontouch</span><br><span class="line">a ontouch</span><br></pre></td></tr></table></figure></p>
+<p>事件的传递顺序为a-&gt;b-&gt;c， 事件传递的时候是先执行dispatchTouchEvent()方法，之后在执行onInterceptTouchEvent()方法。<br>事件处理的顺序为c-&gt;b-&gt;a</p>
+<p>事件传递的返回值很容易理解：True,拦截，不继续;False,不拦截，继续流程。<br>事件处理的返回值也类似：True,处理了，不用审核了;False,给上级处理。</p>
+<p>初始情况下，返回值都是false。</p>
+<h1 id="让a的onInterceptTouchEvent-返回true"><a href="#让a的onInterceptTouchEvent-返回true" class="headerlink" title="让a的onInterceptTouchEvent()返回true"></a>让a的onInterceptTouchEvent()返回true</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a dispatch</span><br><span class="line">a intercept</span><br><span class="line">a ontouch</span><br></pre></td></tr></table></figure>
+<p>很明显是a处截断了。</p>
+<h1 id="让b的onInterceptTouchEvent-返回true"><a href="#让b的onInterceptTouchEvent-返回true" class="headerlink" title="让b的onInterceptTouchEvent()返回true"></a>让b的onInterceptTouchEvent()返回true</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a dispatch</span><br><span class="line">a intercept</span><br><span class="line">b dispatch</span><br><span class="line">b intercept</span><br><span class="line">b ontouch</span><br><span class="line">a ontouch</span><br></pre></td></tr></table></figure>
+<p>很明显是b处截断了。</p>
+<h1 id="让c的onInterceptTouchEvent-返回true"><a href="#让c的onInterceptTouchEvent-返回true" class="headerlink" title="让c的onInterceptTouchEvent()返回true"></a>让c的onInterceptTouchEvent()返回true</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a dispatch</span><br><span class="line">a intercept</span><br><span class="line">b dispatch</span><br><span class="line">b intercept</span><br><span class="line">c dispatch</span><br><span class="line">c ontouch</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -324,8 +338,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/01/02/view的测量和绘制/" rel="next" title="view的测量和绘制">
-                <i class="fa fa-chevron-left"></i> view的测量和绘制
+              <a href="/2018/01/03/android持久化存储/" rel="next" title="android持久化存储">
+                <i class="fa fa-chevron-left"></i> android持久化存储
               </a>
             
           </div>
@@ -333,10 +347,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/01/03/android持久化存储/" rel="prev" title="android持久化存储">
-                android持久化存储 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -452,7 +462,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#viewgroup的绘制"><span class="nav-number">1.</span> <span class="nav-text">viewgroup的绘制</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#点击c-–正常情况"><span class="nav-number">1.</span> <span class="nav-text">点击c –正常情况</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#让a的onInterceptTouchEvent-返回true"><span class="nav-number">2.</span> <span class="nav-text">让a的onInterceptTouchEvent()返回true</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#让b的onInterceptTouchEvent-返回true"><span class="nav-number">3.</span> <span class="nav-text">让b的onInterceptTouchEvent()返回true</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#让c的onInterceptTouchEvent-返回true"><span class="nav-number">4.</span> <span class="nav-text">让c的onInterceptTouchEvent()返回true</span></a></li></ol></div>
             
 
           </div>
