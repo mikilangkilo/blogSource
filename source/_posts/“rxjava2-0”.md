@@ -1,7 +1,7 @@
 ---
 title: “rxjava2.0”
 date: 2017-12-21 16:24:02
-tags:
+tags: android
 ---
 #[Rxjava2.0](http://blog.csdn.net/flybasker/article/details/78703295)
 

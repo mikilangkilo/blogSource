@@ -1,7 +1,7 @@
 ---
 title: viewgroup测量
 date: 2018-01-02 23:07:40
-tags:
+tags: android
 ---
 ViewGroup会去管理子view，当ViewGroup的大小为wrap_content时，ViewGroup就需要对子View进行遍历，以便获得所有的子View的大小，从而决定自己的大小。在其他模式下则会通过具体的制定值来设置自身的大小。
 ViewGroup在测量时通过遍历所有的子view，从而调用子view的measure方法来获得每个子view的测量结果。

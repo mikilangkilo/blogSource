@@ -1,7 +1,7 @@
 ---
 title: android持久化存储
 date: 2018-01-03 14:57:26
-tags:
+tags: android
 ---
 
 # 内部存储（internalStorage）

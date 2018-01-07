@@ -1,7 +1,7 @@
 ---
 title: retrofit2 post
 date: 2017-12-21 15:53:25
-tags:
+tags: android
 ---
 
 # retrofit的post方法

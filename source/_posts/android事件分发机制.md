@@ -1,7 +1,7 @@
 ---
 title: android事件分发机制
 date: 2018-01-03 23:10:07
-tags:
+tags: android
 ---
 
 假如一个button

@@ -1,7 +1,7 @@
 ---
 title: 使用appveyor.xml 进行双端部署hexo
 date: 2017-12-21 11:12:17
-tags:
+tags: hexo
 ---
 
 

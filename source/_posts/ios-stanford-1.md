@@ -1,7 +1,7 @@
 ---
 title: ios-stanford-1
 date: 2017-12-31 21:44:56
-tags:
+tags: ios
 ---
 
 # what‘s in iOS？
