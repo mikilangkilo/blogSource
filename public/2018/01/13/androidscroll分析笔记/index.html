@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="系统绘制一个view，如同蒙着眼睛的小孩拿着笔在画板上画出一个指定的图案。因此需要一个人在旁边指导他如何去画。Android就是那个蒙着眼睛画画的人，开发者需要告诉它如何去画。 View的测量去画一个图形，就必须知道它的大小和位置。Android系统在绘制view之前，也必须对view进行测量，告诉系统该画一个多大的view。这个过程在onMeasure()中进行。 MeasureSpecmeas">
+<meta name="description" content="android坐标系在android中，将屏幕最左上角的顶点作为android坐标系的原点，往右是x轴正方向，往下是y轴正方向。 视图坐标系视图坐标系原点以父视图左上角为坐标原点。 触控事件 - MotionEvent1234567public static final int ACTION_DOWN = 0;//单击触摸按下动作public static final int ACTION_UP">
 <meta name="keywords" content="android">
 <meta property="og:type" content="article">
-<meta property="og:title" content="view的测量和绘制">
-<meta property="og:url" content="http://yoursite.com/2018/01/02/view的测量和绘制/index.html">
+<meta property="og:title" content="androidscroll分析笔记">
+<meta property="og:url" content="http://yoursite.com/2018/01/13/androidscroll分析笔记/index.html">
 <meta property="og:site_name" content="记录者">
-<meta property="og:description" content="系统绘制一个view，如同蒙着眼睛的小孩拿着笔在画板上画出一个指定的图案。因此需要一个人在旁边指导他如何去画。Android就是那个蒙着眼睛画画的人，开发者需要告诉它如何去画。 View的测量去画一个图形，就必须知道它的大小和位置。Android系统在绘制view之前，也必须对view进行测量，告诉系统该画一个多大的view。这个过程在onMeasure()中进行。 MeasureSpecmeas">
+<meta property="og:description" content="android坐标系在android中，将屏幕最左上角的顶点作为android坐标系的原点，往右是x轴正方向，往下是y轴正方向。 视图坐标系视图坐标系原点以父视图左上角为坐标原点。 触控事件 - MotionEvent1234567public static final int ACTION_DOWN = 0;//单击触摸按下动作public static final int ACTION_UP">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-01-06T15:25:53.222Z">
+<meta property="og:updated_time" content="2018-01-13T15:21:04.480Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="view的测量和绘制">
-<meta name="twitter:description" content="系统绘制一个view，如同蒙着眼睛的小孩拿着笔在画板上画出一个指定的图案。因此需要一个人在旁边指导他如何去画。Android就是那个蒙着眼睛画画的人，开发者需要告诉它如何去画。 View的测量去画一个图形，就必须知道它的大小和位置。Android系统在绘制view之前，也必须对view进行测量，告诉系统该画一个多大的view。这个过程在onMeasure()中进行。 MeasureSpecmeas">
+<meta name="twitter:title" content="androidscroll分析笔记">
+<meta name="twitter:description" content="android坐标系在android中，将屏幕最左上角的顶点作为android坐标系的原点，往右是x轴正方向，往下是y轴正方向。 视图坐标系视图坐标系原点以父视图左上角为坐标原点。 触控事件 - MotionEvent1234567public static final int ACTION_DOWN = 0;//单击触摸按下动作public static final int ACTION_UP">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/01/02/view的测量和绘制/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/01/13/androidscroll分析笔记/"/>
 
 
 
 
 
-  <title>view的测量和绘制 | 记录者</title>
+  <title>androidscroll分析笔记 | 记录者</title>
   
 
 
@@ -233,7 +233,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/02/view的测量和绘制/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/13/androidscroll分析笔记/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sample">
@@ -250,7 +250,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">view的测量和绘制</h1>
+          <h1 class="post-title" itemprop="name headline">androidscroll分析笔记</h1>
         
 
         <div class="post-meta">
@@ -262,8 +262,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-02T12:38:03+08:00">
-                2018-01-02
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-13T15:42:18+08:00">
+                2018-01-13
               </time>
             
 
@@ -300,26 +300,43 @@
       
 
       
-        <p>系统绘制一个view，如同蒙着眼睛的小孩拿着笔在画板上画出一个指定的图案。因此需要一个人在旁边指导他如何去画。<br>Android就是那个蒙着眼睛画画的人，开发者需要告诉它如何去画。</p>
-<h1 id="View的测量"><a href="#View的测量" class="headerlink" title="View的测量"></a>View的测量</h1><p>去画一个图形，就必须知道它的大小和位置。<br>Android系统在绘制view之前，也必须对view进行测量，告诉系统该画一个多大的view。这个过程在onMeasure()中进行。</p>
-<h2 id="MeasureSpec"><a href="#MeasureSpec" class="headerlink" title="MeasureSpec"></a>MeasureSpec</h2><p>measurespec是一个协助测量view的类。它是一个32位的int值，其中高2位为测量的模式，低30位为测量的大小。使用位运算是为了提高并优化效率。<br>测量的模式分为以下三种：</p>
+        <h1 id="android坐标系"><a href="#android坐标系" class="headerlink" title="android坐标系"></a>android坐标系</h1><p>在android中，将屏幕最左上角的顶点作为android坐标系的原点，往右是x轴正方向，往下是y轴正方向。</p>
+<h1 id="视图坐标系"><a href="#视图坐标系" class="headerlink" title="视图坐标系"></a>视图坐标系</h1><p>视图坐标系原点以父视图左上角为坐标原点。</p>
+<h1 id="触控事件-MotionEvent"><a href="#触控事件-MotionEvent" class="headerlink" title="触控事件 - MotionEvent"></a>触控事件 - MotionEvent</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public static final int ACTION_DOWN = 0;//单击触摸按下动作</span><br><span class="line">public static final int ACTION_UP = 1;//单击触摸离开动作</span><br><span class="line">public static final int ACTION_MOVE = 2;//触摸点移动动作</span><br><span class="line">public static final int ACTION_CANCEL = 3;//触摸动作取消</span><br><span class="line">public static final int ACTION_OUTSIDE = 4;//触摸动作超出边界</span><br><span class="line">public static final int ACTION_POINTER_DOWN = 5;//多点触摸按下动作</span><br><span class="line">public static final int ACTION_POINTER_UP = 6;//多点离开动作</span><br></pre></td></tr></table></figure>
+<h2 id="ACTION-CANCEL"><a href="#ACTION-CANCEL" class="headerlink" title="ACTION_CANCEL"></a>ACTION_CANCEL</h2><p>当你的手指（或者其它）移动屏幕的时候会触发这个事件，比如当你的手指在屏幕上拖动一个listView或者一个ScrollView而不是去按上面的按钮时会触发这个事件。</p>
+<p>在设计设置页面的滑动开关时，如果不监听ACTION_CANCEL，在滑动到中间时，如果你手指上下移动，就是移动到开关控件之外，则此时会触发ACTION_CANCEL，而不是ACTION_UP，造成开关的按钮停顿在中间位置。</p>
+<p>意思就是，当用户保持按下操作，并从你的控件转移到外层控件时，会触发ACTION_CANCEL，建议进行处理～</p>
+<p>当前的手势被中断，不会再接收到关于它的记录。<br>推荐将这个事件作为 ACTION_UP 来看待，但是要区别于普通的 ACTION_UP</p>
+<p>话说回来，平常还真碰不到这个事件，习惯上就直接当 ACTION_UP 处理了就</p>
+<p>例如：上层 View 是一个 RecyclerView，它收到了一个 ACTION_DOWN 事件，由于这个可能是点击事件，所以它先传递给对应 ItemView，询问 ItemView 是否需要这个事件，然而接下来又传递过来了一个 ACTION_MOVE 事件，且移动的方向和 RecyclerView 的可滑动方向一致，所以 RecyclerView 判断这个事件是滚动事件，于是要收回事件处理权，这时候对应的 ItemView 会收到一个 ACTION_CANCEL ，并且不会再收到后续事件。</p>
+<h2 id="ACTION-OUTSIDE"><a href="#ACTION-OUTSIDE" class="headerlink" title="ACTION_OUTSIDE"></a>ACTION_OUTSIDE</h2><p>一个触摸事件已经发生了UI元素的正常范围之外。因此不再提供完整的手势，只提供 运动/触摸 的初始位置。dialog,popupwindow中比较常见</p>
+<h2 id="ACTION-POINTER-DOWN"><a href="#ACTION-POINTER-DOWN" class="headerlink" title="ACTION_POINTER_DOWN"></a>ACTION_POINTER_DOWN</h2><p>这个代表用户的第二根手指（之后动手的一根）触摸了屏幕，可以getactionindex获取某一根手指的数字来判断</p>
+<h2 id="ACTION-POINTER-UP"><a href="#ACTION-POINTER-UP" class="headerlink" title="ACTION_POINTER_UP"></a>ACTION_POINTER_UP</h2><p>同第二根手指离开了屏幕</p>
+<h1 id="获取坐标的方法"><a href="#获取坐标的方法" class="headerlink" title="获取坐标的方法"></a>获取坐标的方法</h1><h2 id="View提供的方法（以父布局为坐标系）"><a href="#View提供的方法（以父布局为坐标系）" class="headerlink" title="View提供的方法（以父布局为坐标系）"></a>View提供的方法（以父布局为坐标系）</h2><p>getTop():自身到其父布局顶点的距离<br>getLeft():<br>getRight():<br>getBottom():</p>
+<h2 id="MotionEvent提供的方法"><a href="#MotionEvent提供的方法" class="headerlink" title="MotionEvent提供的方法"></a>MotionEvent提供的方法</h2><p>getX():获取点击事件距离空间左边的距离<br>getY():<br>getRawX():获取点击事件距离整个屏幕左边的距离<br>getRawY():</p>
+<h1 id="实现滑动效果的7种方法"><a href="#实现滑动效果的7种方法" class="headerlink" title="实现滑动效果的7种方法"></a>实现滑动效果的7种方法</h1><ol>
+<li><p>layout方法<br>在ACTION_MOVE中计算偏移量，在action_down中记录触摸点的坐标，并且在move中进行计算偏移量，然后调用view的layout方法来进行调整。</p>
+</li>
+<li><p>offsetLeftAndRight和offsetTopAndBottom<br>使用方法和layout一样，差别是一个需要x的偏移一个需要y的偏移</p>
+</li>
+<li><p>LayoutParams</p>
+</li>
+</ol>
+<p>layoutParams保留了一个view的参数，可以改变view的layoutParams然后setLayoutParams进行更改。</p>
 <ol>
-<li><p>EXACTLY<br>精确模式，当我们将控件的layout_width属性或者layout_height属性指定为具体数值时，比如android:layout_height=”100dp”,或者指定为match_parent属性时，系统使用的是EXACTLY模式。</p>
-</li>
-<li><p>AT_MOST<br>最大值模式，当控件的layout_width属性或者layout_height属性指定为wrap_content时，控件的大小一般随着子控件或内容的变化而变化，此时控件的尺寸只要不超过父控件的最大尺寸即可。</p>
-</li>
-<li><p>UNSPECIFIED<br>不指定大小测量模式。view想多大就多大，通常在绘制自定义view时才使用。</p>
-</li>
+<li>scrollto和scrollby</li>
 </ol>
-<p>View类默认的onMeasure()方法只能支持EXACTLY模式。如果要让自定义view支持wrap_content属性，必须重写onMeasure方法来指定wrap_content时的大小。</p>
-<h2 id="测量的步骤"><a href="#测量的步骤" class="headerlink" title="测量的步骤"></a>测量的步骤</h2><ol>
-<li>从MeasureSpec对象中提取具体的测量模式和大小</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int specMode = MeasureSpec.getMode(measureSpec);</span><br><span class="line">int specSize = MeasureSpec.getSize(measureSpec);</span><br></pre></td></tr></table></figure>
+<p>scrollby(offsetx，offsety)，该方法会造成所有子view移动。因此需要对view的父view使用这个方法，</p>
 <ol>
-<li>通过判断测量的模式，给出不同的判断值。当specMode为EXACTLY时，直接使用指定的specSize即可；当specMode为其他两种模式时，需要给它一个默认的大小。特别的，如果指定wrap_content属性，即AT_MOST模式，需要取出我们制定的大小与specSize中最小的一个来作为最后的测量值。</li>
+<li>Scroller</li>
 </ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">private int measureWidth(int measureSpec)&#123;</span><br><span class="line">	int result = 0;</span><br><span class="line">	int specMode = MeasureSpec.getMode(measureSpec);</span><br><span class="line">	int specSize = MeasureSpec.getSize(measureSpec);</span><br><span class="line"></span><br><span class="line">	if(specMode == MeasureSpec.EXACTLY)&#123;</span><br><span class="line">		result = specSize;</span><br><span class="line">	&#125;else&#123;</span><br><span class="line">		result = 200;</span><br><span class="line">		if(specMpde == MeasureSpec.AT_MOST)&#123;</span><br><span class="line">			result = Math.min(result, specSize);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>scroller可以通过重写view的computeScroll方法，通过获取当前滚动值，来进行不断的瞬间移动，实现整体上的平移效果<br>ps：computeScroll方法是不会自动调用的，只能通过invalidate() -&gt; draw() -&gt; computeScroll()来间接调用该方法。<br>之后使用startScroll即可。</p>
+<ol>
+<li><p>属性动画</p>
+</li>
+<li><p>ViewDragHelper</p>
+</li>
+</ol>
 
       
     </div>
@@ -350,8 +367,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/01/01/2018开年愿景/" rel="next" title="2018开年愿景">
-                <i class="fa fa-chevron-left"></i> 2018开年愿景
+              <a href="/2018/01/12/某金融公司面试小记/" rel="next" title="某金融公司面试小记">
+                <i class="fa fa-chevron-left"></i> 某金融公司面试小记
               </a>
             
           </div>
@@ -359,10 +376,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/01/02/viewgroup测量/" rel="prev" title="viewgroup测量">
-                viewgroup测量 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -485,7 +498,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#View的测量"><span class="nav-number">1.</span> <span class="nav-text">View的测量</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MeasureSpec"><span class="nav-number">1.1.</span> <span class="nav-text">MeasureSpec</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测量的步骤"><span class="nav-number">1.2.</span> <span class="nav-text">测量的步骤</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#android坐标系"><span class="nav-number">1.</span> <span class="nav-text">android坐标系</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#视图坐标系"><span class="nav-number">2.</span> <span class="nav-text">视图坐标系</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#触控事件-MotionEvent"><span class="nav-number">3.</span> <span class="nav-text">触控事件 - MotionEvent</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ACTION-CANCEL"><span class="nav-number">3.1.</span> <span class="nav-text">ACTION_CANCEL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ACTION-OUTSIDE"><span class="nav-number">3.2.</span> <span class="nav-text">ACTION_OUTSIDE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ACTION-POINTER-DOWN"><span class="nav-number">3.3.</span> <span class="nav-text">ACTION_POINTER_DOWN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ACTION-POINTER-UP"><span class="nav-number">3.4.</span> <span class="nav-text">ACTION_POINTER_UP</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#获取坐标的方法"><span class="nav-number">4.</span> <span class="nav-text">获取坐标的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#View提供的方法（以父布局为坐标系）"><span class="nav-number">4.1.</span> <span class="nav-text">View提供的方法（以父布局为坐标系）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MotionEvent提供的方法"><span class="nav-number">4.2.</span> <span class="nav-text">MotionEvent提供的方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实现滑动效果的7种方法"><span class="nav-number">5.</span> <span class="nav-text">实现滑动效果的7种方法</span></a></li></ol></div>
             
 
           </div>
