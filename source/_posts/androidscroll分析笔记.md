@@ -90,3 +90,90 @@ ps：computeScroll方法是不会自动调用的，只能通过invalidate() -> d
 6. 属性动画
 
 7. ViewDragHelper
+
+viewdraghelper是谷歌在support库中提供的drawerlayout和slidingpanelayout两个布局中使用的，用法较为复杂。
+
+1. 初始化viewdraghelper
+
+```
+	mViewDragHelper = ViewDragHelper.create(this, callback);
+```
+
+2. 拦截事件
+
+将事件传递给viewdraghelper处理
+```
+	@Override
+	public boolean onInterceptTouchEvent(MotionEvent ev){
+		return mViewDragHelper.shouldInterceptTouchEvent(ev);
+	}
+	@Override
+	public boolean onTouchEvent(MotionEvent ev){
+		mViewDragHelper.processTouchEvent(event);
+		return true;
+	}
+```
+
+3. 处理computeScroll()
+
+与scroller相似的，需要处理一个computescroll()方法，因为viewdraghelper内部也是使用scroller实现平滑移动的。
+
+```
+	@Override
+	public void computeScroll(){
+		if(mViewdragHelper.continueSettling(true)){
+			ViewCompat.postInvalidateOnAnimation(this);
+		}
+	}
+```
+
+4. 处理回调
+
+```
+	private ViewDragHelper.Callback callback = new ViewDragHelper.Callback(){
+		@Override
+		public boolean tryCaptureView(View child, int pointerId){
+			return false;
+		}
+	}
+```
+使用上述回调，对child进行判断，如果是需要拖动view，就可以返回true
+
+```
+	@Override
+	public int clampViewPositionVertical(View child, int top, int dy){
+		return top;
+	}
+	@Override
+	public int clampViewPositionHorizontal(View child, int left, int dx){
+		return left;
+	}
+```
+
+使用如上方法，来对滑动效果进行设置，返回的top和left为垂直和水平方向上面的距离。dy表示比较前一次的增量
+
+5. 拖动结束之后，子View回到原来的位置
+
+该效果可以通过监听action_up事件，并通过调用Scroller类来实现。
+在viewdraghelper中可以重写onViewRelased()方法来实现。
+
+```
+	@Override
+	public void onViewReleased(View releasedChild, float xvel, float yvel){
+		super.onViewReleased(releasedChild, xvel, yvel);
+		if(mMianView.getLeft()<500){
+			mViewDragHelper.smoothSlideViewTo(mMainView, 0, 0);
+			ViewCompat.postInvalidateOnAnimation(DragViewGroup.this);
+		}else{
+			mViewDragHelper.smoothSlideViewTo(mMainView, 300, 0);
+			ViewCompat.postInvalidateOnAnimation(DragViewGroup.this);
+		}
+	}
+```
+
+这样就可以做到滑动距离小于500时回到原来的位置。
+
+除了以上内容，还有大量的监听事件可以用来处理各种事件。
+onViewCaptured():在用户触摸到view后回调
+onViewDragStateChanged():在拖拽状态改变时回调
+onViewPositionChanged():这个事件在位置改变时回调
