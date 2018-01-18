@@ -268,3 +268,38 @@ view在主线程中对画面进行刷新，surfaceview则通常会通过一个�
 view在绘图时没有使用双缓冲机制，而surfaceview在底层实现机制中就已经实现了双缓冲机制
 
 2. surfaceview的使用
+
+surfaceview使用有一套模版可以根据模版进行操作
+
+## 创建surfaceview：
+
+创建自定义的surfaceview需要继承SurfaceView,并实现两个接口-- surfaceholder callback和 runnable
+
+```
+	public class SurfaceViewTemplate extends SurfaceView implements SurfaceHolder.Callback, Runnable
+```
+
+之后需要实现这两个接口
+
+## 初始化SurfaceView
+
+自定义surfaceview的构造方法中，需要对surfaceview进行初始化，在自定义的surfaceview中，通常需要定义三个成员变量
+
+```
+	//SurfaceHolder
+	private SurfaceHolder mHolder;
+	//用于绘图的Canvas
+	private Canvas mCanvas;
+	//子线程标识位
+	private boolean mIsDrawing;
+```
+
+canvas用于绘图，标志位用于控制子线程。
+
+## 使用SurfaceView
+
+通过surfaceholder对象的lockCanvas()方法，就可以得到当前的canvas绘图对象，接下来就可以与在view中绘制一样的操作了。
+每次调用这个方法获取到的canvas都是继续上次的对象。清屏可以使用drawColor()操作。
+
+绘制的时候，在surfaceCreated()中开启子线程进行绘制，而子线程使用一个while(mIsDrawing)的循环来不停的进行绘制。
+绘制的具体过程，使用lockCanvas()方法获得的Canvas对象进行绘制，并通过unlockCanvasAndPost(mCanvas)方法对画布内容进行提交。

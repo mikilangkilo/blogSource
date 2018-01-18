@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="记录者">
 <meta property="og:description" content="快速排序是内部排序中交换排序的一种。 算法思想1）选择一个基准元素,通常选择第一个元素或者最后一个元素, 2）通过一趟排序讲待排序的记录分割成独立的两部分，其中一部分记录的元素值均比基准元素值小。另一部分记录的 元素值比基准值大。 3）此时基准元素在其排好序后的正确位置 4）然后分别对这两部分记录用同样的方法继续进行排序，直到整个序列有序。 空间复杂度O(1) 时间复杂度最理想 O(nlogn)">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-01-16T08:58:09.000Z">
+<meta property="og:updated_time" content="2018-01-11T15:26:10.942Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="快速排序">
 <meta name="twitter:description" content="快速排序是内部排序中交换排序的一种。 算法思想1）选择一个基准元素,通常选择第一个元素或者最后一个元素, 2）通过一趟排序讲待排序的记录分割成独立的两部分，其中一部分记录的元素值均比基准元素值小。另一部分记录的 元素值比基准值大。 3）此时基准元素在其排好序后的正确位置 4）然后分别对这两部分记录用同样的方法继续进行排序，直到整个序列有序。 空间复杂度O(1) 时间复杂度最理想 O(nlogn)">
@@ -131,6 +131,16 @@
 
 
 
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?6501f9771a3fc3833381947e71bdd393";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
 
 
 
@@ -275,6 +285,17 @@
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/01/11/快速排序/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/01/11/快速排序/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -373,6 +394,16 @@
           
 
   
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
 
 
 
@@ -443,9 +474,7 @@
 
           
 
-          <div class="links-of-author motion-element">
-            
-          </div>
+          
 
           
           
@@ -624,6 +653,26 @@
 
   
 
+    
+      <script id="dsq-count-scr" src="https://Mr.Sample.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2018/01/11/快速排序/';
+          this.page.identifier = '2018/01/11/快速排序/';
+          this.page.title = '快速排序';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://Mr.Sample.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
 
 
 
@@ -639,16 +688,34 @@
 
 
 
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
   
-
-
-
-
-
-
-
-
-
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'lyLXiEg3TqshvM3qxHjYskBX-gzGzoHsz',
+        appKey: 'SlOO9nVu3kxycc3RxicJUlXA',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 

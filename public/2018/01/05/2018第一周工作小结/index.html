@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="记录者">
 <meta property="og:description" content="这一周由于元旦的关系，只上了四天班。2017上半年的时候在传音工作，那时候每天都要写日报，然后周五要写周报，当时写的实在是痛苦，结果来崇杏之后，一天日报都没有写过。 刚开始的确很爽，可是年底总结的时候发现写不出什么来了，对于半年多的工作只有一个浅薄的印象，大致知道做了哪些项目，可是项目相关都有些模糊了。因此重拾写周报的习惯，希望今年能够有一些改变。 这周由于spirtMonitor项目需要重新制作">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-01-09T03:00:41.000Z">
+<meta property="og:updated_time" content="2018-01-06T15:25:12.584Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2018第一周工作小结">
 <meta name="twitter:description" content="这一周由于元旦的关系，只上了四天班。2017上半年的时候在传音工作，那时候每天都要写日报，然后周五要写周报，当时写的实在是痛苦，结果来崇杏之后，一天日报都没有写过。 刚开始的确很爽，可是年底总结的时候发现写不出什么来了，对于半年多的工作只有一个浅薄的印象，大致知道做了哪些项目，可是项目相关都有些模糊了。因此重拾写周报的习惯，希望今年能够有一些改变。 这周由于spirtMonitor项目需要重新制作">
@@ -132,6 +132,16 @@
 
 
 
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?6501f9771a3fc3833381947e71bdd393";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
 
 
 
@@ -276,6 +286,17 @@
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/01/05/2018第一周工作小结/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/01/05/2018第一周工作小结/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -407,6 +428,16 @@
           
 
   
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
 
 
 
@@ -468,9 +499,7 @@
 
           
 
-          <div class="links-of-author motion-element">
-            
-          </div>
+          
 
           
           
@@ -633,6 +662,26 @@
 
   
 
+    
+      <script id="dsq-count-scr" src="https://Mr.Sample.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2018/01/05/2018第一周工作小结/';
+          this.page.identifier = '2018/01/05/2018第一周工作小结/';
+          this.page.title = '2018第一周工作小结';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://Mr.Sample.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
 
 
 
@@ -648,16 +697,34 @@
 
 
 
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
   
-
-
-
-
-
-
-
-
-
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'lyLXiEg3TqshvM3qxHjYskBX-gzGzoHsz',
+        appKey: 'SlOO9nVu3kxycc3RxicJUlXA',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 

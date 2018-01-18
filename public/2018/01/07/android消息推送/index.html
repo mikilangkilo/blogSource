@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="记录者">
 <meta property="og:description" content="之前与服务器通信的时候，使用的是handler轮询的机制，固定几秒来查一次接口数据。 这样做有两个弊端，一个是当app被注销的时候，无法实现通知的功能。另一个是轮询无法达到实时性的地步。 同时无法实现消息推送的功能。 im通信的原理：客户端a发送消息-&amp;gt;服务端处理-&amp;gt;发送给客户端b 消息推送的原理：客户端a发送消息-&amp;gt;服务端处理-&amp;gt;发送给客户端a 长连接和短连接 长连接：客">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-01-09T03:00:41.000Z">
+<meta property="og:updated_time" content="2018-01-08T16:00:43.892Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android消息推送">
 <meta name="twitter:description" content="之前与服务器通信的时候，使用的是handler轮询的机制，固定几秒来查一次接口数据。 这样做有两个弊端，一个是当app被注销的时候，无法实现通知的功能。另一个是轮询无法达到实时性的地步。 同时无法实现消息推送的功能。 im通信的原理：客户端a发送消息-&amp;gt;服务端处理-&amp;gt;发送给客户端b 消息推送的原理：客户端a发送消息-&amp;gt;服务端处理-&amp;gt;发送给客户端a 长连接和短连接 长连接：客">
@@ -132,6 +132,16 @@
 
 
 
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?6501f9771a3fc3833381947e71bdd393";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
 
 
 
@@ -276,6 +286,17 @@
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/01/07/android消息推送/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/01/07/android消息推送/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -383,6 +404,16 @@
           
 
   
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
 
 
 
@@ -453,9 +484,7 @@
 
           
 
-          <div class="links-of-author motion-element">
-            
-          </div>
+          
 
           
           
@@ -634,6 +663,26 @@
 
   
 
+    
+      <script id="dsq-count-scr" src="https://Mr.Sample.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2018/01/07/android消息推送/';
+          this.page.identifier = '2018/01/07/android消息推送/';
+          this.page.title = 'android消息推送';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://Mr.Sample.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
 
 
 
@@ -649,16 +698,34 @@
 
 
 
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
   
-
-
-
-
-
-
-
-
-
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'lyLXiEg3TqshvM3qxHjYskBX-gzGzoHsz',
+        appKey: 'SlOO9nVu3kxycc3RxicJUlXA',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 

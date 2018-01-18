@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="记录者">
 <meta property="og:description" content="#Rxjava2.0 基础概念Observable：在观察者模式中称为“被观察者”；Observer：观察者模式中的“观察者”，可接收Observable发送的数据；subscribe：订阅，观察者与被观察者，通过Observable的subscribe()方法进行订阅；Subscriber：也是一种观察者，在2.0中 它与Observer没什么实质的区别，不同的是 Subscriber要与Flo">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-01-09T03:00:41.000Z">
+<meta property="og:updated_time" content="2018-01-06T15:24:34.230Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="“rxjava2.0”">
 <meta name="twitter:description" content="#Rxjava2.0 基础概念Observable：在观察者模式中称为“被观察者”；Observer：观察者模式中的“观察者”，可接收Observable发送的数据；subscribe：订阅，观察者与被观察者，通过Observable的subscribe()方法进行订阅；Subscriber：也是一种观察者，在2.0中 它与Observer没什么实质的区别，不同的是 Subscriber要与Flo">
@@ -132,6 +132,16 @@
 
 
 
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?6501f9771a3fc3833381947e71bdd393";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
 
 
 
@@ -275,6 +285,17 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/12/21/“rxjava2-0”/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/12/21/“rxjava2-0”/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -465,6 +486,16 @@ BackpressureStrategy.MISSING
           
 
   
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
 
 
 
@@ -535,9 +566,7 @@ BackpressureStrategy.MISSING
 
           
 
-          <div class="links-of-author motion-element">
-            
-          </div>
+          
 
           
           
@@ -716,6 +745,26 @@ BackpressureStrategy.MISSING
 
   
 
+    
+      <script id="dsq-count-scr" src="https://Mr.Sample.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2017/12/21/“rxjava2-0”/';
+          this.page.identifier = '2017/12/21/“rxjava2-0”/';
+          this.page.title = '“rxjava2.0”';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://Mr.Sample.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
 
 
 
@@ -731,16 +780,34 @@ BackpressureStrategy.MISSING
 
 
 
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
   
-
-
-
-
-
-
-
-
-
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'lyLXiEg3TqshvM3qxHjYskBX-gzGzoHsz',
+        appKey: 'SlOO9nVu3kxycc3RxicJUlXA',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 

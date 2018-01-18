@@ -88,7 +88,7 @@
 <meta property="og:description" content="概念相关：所有网站皆可爬互联网的内容都是人写出来的，而且都是偷懒写出来的（不会第一页是a，下一页是8），所以肯定有规律，这就给人有了爬取的可能，可以说，天下没有不能爬的网站 框架不变网站不同，但是原理都类似，大部分爬虫都是从 发送请求——获得页面——解析页面——下载内容——储存内容 这样的流程来进行，只是用的工具不同 基础相关python 基础list，dict：用来序列化你爬的东西切片：用来对爬">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/images/爬虫相关/正则.jpg">
-<meta property="og:updated_time" content="2018-01-09T03:00:41.000Z">
+<meta property="og:updated_time" content="2018-01-06T15:24:57.980Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="爬虫相关">
 <meta name="twitter:description" content="概念相关：所有网站皆可爬互联网的内容都是人写出来的，而且都是偷懒写出来的（不会第一页是a，下一页是8），所以肯定有规律，这就给人有了爬取的可能，可以说，天下没有不能爬的网站 框架不变网站不同，但是原理都类似，大部分爬虫都是从 发送请求——获得页面——解析页面——下载内容——储存内容 这样的流程来进行，只是用的工具不同 基础相关python 基础list，dict：用来序列化你爬的东西切片：用来对爬">
@@ -134,6 +134,16 @@
 
 
 
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?6501f9771a3fc3833381947e71bdd393";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
 
 
 
@@ -278,6 +288,17 @@
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/12/23/爬虫相关/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/12/23/爬虫相关/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -391,6 +412,16 @@
           
 
   
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
 
 
 
@@ -461,9 +492,7 @@
 
           
 
-          <div class="links-of-author motion-element">
-            
-          </div>
+          
 
           
           
@@ -642,6 +671,26 @@
 
   
 
+    
+      <script id="dsq-count-scr" src="https://Mr.Sample.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2017/12/23/爬虫相关/';
+          this.page.identifier = '2017/12/23/爬虫相关/';
+          this.page.title = '爬虫相关';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://Mr.Sample.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
 
 
 
@@ -657,16 +706,34 @@
 
 
 
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
   
-
-
-
-
-
-
-
-
-
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'lyLXiEg3TqshvM3qxHjYskBX-gzGzoHsz',
+        appKey: 'SlOO9nVu3kxycc3RxicJUlXA',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 
