@@ -128,16 +128,6 @@
 
 
 
-  <script type="text/javascript">
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?6501f9771a3fc3833381947e71bdd393";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-  </script>
-
 
 
 
@@ -284,17 +274,6 @@
 
           
             
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/01/16/Android绘图机制与处理技巧/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/01/16/Android绘图机制与处理技巧/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -384,6 +363,34 @@
 <p>Canvas.restore(): 用于合并图层，可以用于将save之后绘制的所有图像与save之前的图像合并</p>
 <p>Canvas.translate():调用translate(x, y)操作可以将原点(0, 0)移动到(x, y)之后的所有操作都将以(x, y)为原点执行</p>
 <p>Canvas.rotate():调用rotate(degree)之后可以将canvas调转一定的角度。</p>
+<ol>
+<li>Layer图层</li>
+</ol>
+<p>Android通过调用saveLayer()方法，saveLayerAlpha()方法将一个图层入栈，使用restore()方法,restoreToCount()方法将一个图层出栈。出栈的时候，会把图像绘制到上层Canvas上。</p>
+<h1 id="画笔特效处理"><a href="#画笔特效处理" class="headerlink" title="画笔特效处理"></a>画笔特效处理</h1><ol>
+<li>PorterDuffXferMode</li>
+</ol>
+<p>该模式控制的是两个图像间的混合显示模式。dst是先画的图形，src是后画的图形。</p>
+<ol>
+<li>Shader</li>
+</ol>
+<p>shader被称为着色器，渲染器。可以用来实现一系列的渐变、渲染效果。</p>
+<p>其中shader包括：<br>BitmapShader   —  位图shader<br>LinearGradient —  线性shader<br>RadialGradient —  光束shader<br>SweepGradient  —  梯度shader<br>ComposeShader  —  混合shader</p>
+<p>shader的作用就是通过paint对画布进行指定的bitmap的填充，填充时有三种模式</p>
+<p>CLAMP  — 拉伸的是图片最后的那一个像素，不断重复<br>REPEAT — 横向纵向不断重复<br>MIRROR — 横向不断翻转重复，纵向不断翻转重复</p>
+<ol>
+<li>PathEffect</li>
+</ol>
+<p>patheffect是指用各种笔触效果来绘制一个路径。</p>
+<p>CornerPathEffect:   将拐角处变的圆滑<br>DiscretePathEffect:    使用这个之后线段上会出现很多杂点<br>DashPathEffect:        使用这个可以绘制虚线，用一个数组来设置各个点之间的间隔，此后绘制虚线时就重复这样的间隔进行绘制，另一个参数phase可以用来绘制时数组的一个偏移量，可以通过设置值来实现路径的动态效果。<br>PathDashPathEffect: 与dashpatheffect类似，不过功能更强大，可以设置点的图形，例如方形点的虚线，圆形点的虚线<br>ComposePathEffect   可以通过composepatheffect来组合patheffect，这个方法的功能就是将任意的两种路径特性组合起来形成一个新的效果。</p>
+<h1 id="SurfaceView"><a href="#SurfaceView" class="headerlink" title="SurfaceView"></a>SurfaceView</h1><ol>
+<li>surfaceview 和view的区别</li>
+</ol>
+<p>对view来说，android系统通过发出VSYNC信号来进行屏幕的重绘，刷新的间隔为16ms，如果在16ms内view完成了所需要执行的所有操作，那么用户在视觉上就不会产生卡顿的感觉。但是执行的操作逻辑太多，在需要频繁刷新的界面上，就会阻塞主线程，因此android提供了surfaceview。</p>
+<p>view主要适用于主动更新的情况下，而surfaceview主要适用于被动更新，例如频繁刷新<br>view在主线程中对画面进行刷新，surfaceview则通常会通过一个子线程来进行页面的刷新<br>view在绘图时没有使用双缓冲机制，而surfaceview在底层实现机制中就已经实现了双缓冲机制</p>
+<ol>
+<li>surfaceview的使用</li>
+</ol>
 
           
         
@@ -476,17 +483,6 @@
           
 
           
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/01/14/2018第二周工作小结/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/01/14/2018第二周工作小结/" itemprop="commentCount"></span>
-                </a>
-              </span>
             
           
 
@@ -615,17 +611,6 @@
           
 
           
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/01/13/androidscroll分析笔记/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/01/13/androidscroll分析笔记/" itemprop="commentCount"></span>
-                </a>
-              </span>
             
           
 
@@ -811,17 +796,6 @@
 
           
             
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/01/12/某金融公司面试小记/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/01/12/某金融公司面试小记/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -960,17 +934,6 @@
 
           
             
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/01/11/快速排序/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/01/11/快速排序/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -1098,17 +1061,6 @@
 
           
             
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/01/11/冒泡排序/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/01/11/冒泡排序/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -1233,17 +1185,6 @@
           
 
           
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/01/09/堆排序/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/01/09/堆排序/" itemprop="commentCount"></span>
-                </a>
-              </span>
             
           
 
@@ -1397,17 +1338,6 @@
 
           
             
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/01/09/简单选择排序/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/01/09/简单选择排序/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -1534,17 +1464,6 @@
           
 
           
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/01/08/希尔排序/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/01/08/希尔排序/" itemprop="commentCount"></span>
-                </a>
-              </span>
             
           
 
@@ -1674,17 +1593,6 @@
           
 
           
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/01/08/直接插入排序/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/01/08/直接插入排序/" itemprop="commentCount"></span>
-                </a>
-              </span>
             
           
 
@@ -1831,7 +1739,9 @@
 
           
 
-          
+          <div class="links-of-author motion-element">
+            
+          </div>
 
           
           
@@ -1990,14 +1900,6 @@
 
   
 
-    
-      <script id="dsq-count-scr" src="https://Mr.Sample.disqus.com/count.js" async></script>
-    
-
-    
-
-  
-
 
 
 
@@ -2010,6 +1912,10 @@
   
 
 
+
+
+
+  
 
 
 

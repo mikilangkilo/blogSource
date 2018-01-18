@@ -219,3 +219,52 @@ Canvas.restore(): 用于合并图层，可以用于将save之后绘制的所有�
 Canvas.translate():调用translate(x, y)操作可以将原点(0, 0)移动到(x, y)之后的所有操作都将以(x, y)为原点执行
 
 Canvas.rotate():调用rotate(degree)之后可以将canvas调转一定的角度。
+
+2. Layer图层
+
+Android通过调用saveLayer()方法，saveLayerAlpha()方法将一个图层入栈，使用restore()方法,restoreToCount()方法将一个图层出栈。出栈的时候，会把图像绘制到上层Canvas上。
+
+# 画笔特效处理
+
+1. PorterDuffXferMode
+
+该模式控制的是两个图像间的混合显示模式。dst是先画的图形，src是后画的图形。
+
+2. Shader
+
+shader被称为着色器，渲染器。可以用来实现一系列的渐变、渲染效果。
+
+其中shader包括：
+BitmapShader   ---  位图shader
+LinearGradient ---  线性shader
+RadialGradient ---  光束shader
+SweepGradient  ---  梯度shader
+ComposeShader  ---  混合shader
+
+shader的作用就是通过paint对画布进行指定的bitmap的填充，填充时有三种模式
+
+CLAMP  --- 拉伸的是图片最后的那一个像素，不断重复
+REPEAT --- 横向纵向不断重复
+MIRROR --- 横向不断翻转重复，纵向不断翻转重复
+
+3. PathEffect
+
+patheffect是指用各种笔触效果来绘制一个路径。
+
+CornerPathEffect:   将拐角处变的圆滑
+DiscretePathEffect:	使用这个之后线段上会出现很多杂点
+DashPathEffect:		使用这个可以绘制虚线，用一个数组来设置各个点之间的间隔，此后绘制虚线时就重复这样的间隔进行绘制，另一个参数phase可以用来绘制时数组的一个偏移量，可以通过设置值来实现路径的动态效果。
+PathDashPathEffect: 与dashpatheffect类似，不过功能更强大，可以设置点的图形，例如方形点的虚线，圆形点的虚线
+ComposePathEffect   可以通过composepatheffect来组合patheffect，这个方法的功能就是将任意的两种路径特性组合起来形成一个新的效果。
+
+# SurfaceView
+
+1. surfaceview 和view的区别
+
+对view来说，android系统通过发出VSYNC信号来进行屏幕的重绘，刷新的间隔为16ms，如果在16ms内view完成了所需要执行的所有操作，那么用户在视觉上就不会产生卡顿的感觉。但是执行的操作逻辑太多，在需要频繁刷新的界面上，就会阻塞主线程，因此android提供了surfaceview。
+
+view主要适用于主动更新的情况下，而surfaceview主要适用于被动更新，例如频繁刷新
+view在主线程中对画面进行刷新，surfaceview则通常会通过一个子线程来进行页面的刷新
+view在绘图时没有使用双缓冲机制，而surfaceview在底层实现机制中就已经实现了双缓冲机制
+
+2. surfaceview的使用
