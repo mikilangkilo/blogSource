@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="记录者">
 <meta property="og:description" content="Android View动画框架Animation框架定义了透明度、旋转、缩放和位移几种常见的动画，控制的是整个view，原理是每次绘制视图时view所在的viewgroup中的drawchild函数获取该view的animation的transformation值，然后调用canvas.concat(transformToApply.getMatrix())，通过矩阵换算完成动画帧，如果动画没有">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-01-22T15:42:19.480Z">
+<meta property="og:updated_time" content="2018-01-24T11:28:06.369Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="第七章动画机制与使用技巧学习笔记">
 <meta name="twitter:description" content="Android View动画框架Animation框架定义了透明度、旋转、缩放和位移几种常见的动画，控制的是整个view，原理是每次绘制视图时view所在的viewgroup中的drawchild函数获取该view的animation的transformation值，然后调用canvas.concat(transformToApply.getMatrix())，通过矩阵换算完成动画帧，如果动画没有">
@@ -362,11 +362,93 @@ ta.setDuration(1000);
 as.addAnimation(ta);
 
 view.startAnimation(as);
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## 属性动画</span><br><span class="line"></span><br><span class="line">由于视图动画改变的只是view的显示，而并不是view的属性，会导致一些问题。</span><br><span class="line"></span><br><span class="line">1. 	ObjectAnimator</span><br><span class="line"></span><br><span class="line">ObjectAnimator是属性动画框架中最重要的实体类，创建一个ObjectAnimator只需要通过他的静态工厂类直接返回一个ObjectAnimator对象。参数包括一个对象和对象的属性名字，但这个属性必须有get和set函数，内部会通过java反射机制来调用set函数修改对象属性值。</span><br></pre></td></tr></table></figure>
+<pre><code>ObjectAnimator animator = ObjectAnimator.ofFloat(
+    view, &quot;translationX&quot;, 300);
+animator.setDuration(300);
+animator.start();
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">第一个参数为要操纵的view，第二个参数为要操纵的属性，第三个三处为一个可变数组参数，需要传进该属性变化的一个取值过程。</span><br><span class="line"></span><br><span class="line">如果需要操控一个值，但是该值没有setget方法，可以使用wrapper方法来进行一层包装。</span><br></pre></td></tr></table></figure>
+<pre><code>private static class WrapperView{
+    private View mTarget;
+    public WrapperView(View target){
+        mTarget = target;
+    }
+    public int getWidth(){
+        return mTarget.getLayoutParams().width;
+    }
+    public void setWidth(int width){
+        mTarget.getLayoutParams().width = width;
+        mTarget.requestLayout();
+    }
+}
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre><code>ViewWrapper wrapper = new ViewWrapper(mButton);
+ObjectAnimator.ofInt(wrapper, &quot;width&quot;, 500).setDuration(5000).start();
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">2. PropertyValuesHolder</span><br><span class="line"></span><br><span class="line">类似视图动画中的AnimationSet,在属性动画中，如果针对同一个对象的多个属性，要同时作用多种动画，可以使用PropertyValuesHolder来实现。</span><br></pre></td></tr></table></figure>
+<pre><code>PropertyValuesHolder pvh1 = PropertyValuesHolder.ofFloat(&quot;translationX&quot;, 300f);
+PropertyValuesHolder pvh2 = PropertyValuesHolder.ofFloat(&quot;scaleX&quot;, 1f, 0, 1f);
+PropertyValuesHolder pvh3 = PropertyValuesHolder.ofFloat(&quot;scaleY&quot;, 1f, 0, 1f);
+ObjectAnimator.ofPropertyValuesHolder(view, pvh1, pvh2, pvh3).setDuration(1000).start();
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">3. ValueAnimator</span><br><span class="line"></span><br><span class="line">ValueAnimator本身不提供任何动画效果，它更像一个数值发生器，用来产生具有一定规律的数字，从而让调用者来控制动画的实现过程。</span><br></pre></td></tr></table></figure>
+<pre><code>ValueAnimator animator = ValueAnimator.ofFloat(0, 100);
+animator.setTarget(view);
+animator.setDuration(1000).start();
+animator.addUpdateListener(new AnimatorUpdateListener(){
+    @Override
+    public void onAnimationUpdate(ValueAnimator animation){
+        Float value = (Float) animation.getAnimatedValue();
+        //TODO use the value
+    }
+})
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">4. 动画事件的监听</span><br><span class="line"></span><br><span class="line">一个完整的动画具有Start, Repeat, End, Cancel四个过程，对动画使用AddListener()即可很方便的监听到这四个事件。</span><br><span class="line"></span><br><span class="line">5. AnimatorSet</span><br><span class="line"></span><br><span class="line">对于一个属性同时作用多个属性动画效果吗可以使用之前的PrpertyValuesHolder实现，而AnimatorSet不仅可以实现效果，还能控制顺序。</span><br></pre></td></tr></table></figure>
+<pre><code>ObjectAnimator animator1 = ObjectAnimator.ofFloat(view, &quot;translationX&quot;, 300f);
+ObjectAnimator animator2 = ObjectAnimator.ofFloat(view, &quot;scaleX&quot;, 1f, 0f, 1f);
+ObjectAnimator animator3 = ObjectAnimator.ofFloat(view, &quot;scaleY&quot;, 1f, 0f, 1f);
+AnimatorSet set = new AnimatorSet();
+set.setDuration(1000);
+set.playTogether(animator1, animator2, animator3);
+set.start();
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">使用playTogether(), playSequentially(), animSet.play().with(),before(),after()来控制多个动画的协同工作方式。</span><br><span class="line"></span><br><span class="line">6. 在xml中使用属性动画</span><br></pre></td></tr></table></figure>
+<p>&lt;?xml version=”1.0” encoding=”utf-8”?&gt;</p>
+<p><objectanimator xmlns:android="http://schemas.android.com/apk/res/android" android:duration="1000" android:propertyname="scaleX" android:valuefrom="1.0" android:valueto="2.0" android:valuetype="floatType"><br></objectanimator><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<pre><code>public void scaleX(View view){
+    Animator anim = AnimatorInflater.loadAnimator(this, R.animator.scalex);
+    anim.setTarget(mMv);
+    anim.start();
+}
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">7. View的animate方法</span><br><span class="line"></span><br><span class="line">animate方法是属性动画的一种简写方式</span><br></pre></td></tr></table></figure>
+<pre><code>view.animate()
+    .alpha(0)
+    .y(300)
+    .setDuration(300)
+    .withStartAction(new Runnable(){
+        @Override
+        public void run(){
+
+        }
+    })
+    .withEndAction(new Runnable(){
+        @Override
+        public void run(){
+
+        }
+    }).start();
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## 布局动画</span><br><span class="line"></span><br><span class="line">布局动画是指在ViewGroup上，给ViewGroup添加view时添加一个动画过度效果。</span><br><span class="line"></span><br><span class="line">最简单的布局动画，只需要添加</span><br></pre></td></tr></table></figure>
+<pre><code>android:animateLayoutChanges=&quot;true&quot;
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">另外，还可以通过使用LayoutAnimationController类来自定义一个子View的过度效果。</span><br></pre></td></tr></table></figure>
+<pre><code>LinearLayout ll = (LinearLayout)findViewById(R.id.ll);
+//设置过渡动画
+ScaleAnimation sa = new ScaleAnimation(0, 1, 0, 1);
+sa.setDuration(2000);
+//设置布局动画的显示属性
+LayoutAnimationController lac = new LayoutAnimationController(sa, 0.5F);
+lac.setOrder(LayoutAnimationController.ORDER_NORMAL);
+//为viewgroup设置布局动画
+ll.setLayoutAnimation(lac);
 </code></pre><p>```</p>
-<h2 id="属性动画"><a href="#属性动画" class="headerlink" title="属性动画"></a>属性动画</h2><p>由于视图动画改变的只是view的显示，而并不是view的属性，会导致一些问题。</p>
-<ol>
-<li>ObjectAnimator</li>
-</ol>
+<p>上述代码可以使得子view出现时有一个缩放的效果。</p>
+<h2 id="插值器"><a href="#插值器" class="headerlink" title="插值器"></a>插值器</h2><p>插值器用于定义动画变化速率。</p>
+<h2 id="自定义动画"><a href="#自定义动画" class="headerlink" title="自定义动画"></a>自定义动画</h2><p>自定义动画是继承一个Animation然后自己写，自定义动画可以获得当前矩阵对象，然后对矩阵进行操作变化，可以实现任何效果的动画。</p>
 
       
     </div>
@@ -406,6 +488,10 @@ view.startAnimation(as);
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/24/第八章Activity与Activity调用栈分析笔记/" rel="prev" title="第八章Activity与Activity调用栈分析笔记">
+                第八章Activity与Activity调用栈分析笔记 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -492,7 +578,7 @@ view.startAnimation(as);
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-count">28</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -538,7 +624,7 @@ view.startAnimation(as);
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-View动画框架"><span class="nav-number">1.</span> <span class="nav-text">Android View动画框架</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#视图动画"><span class="nav-number">1.1.</span> <span class="nav-text">视图动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#属性动画"><span class="nav-number">1.2.</span> <span class="nav-text">属性动画</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-View动画框架"><span class="nav-number">1.</span> <span class="nav-text">Android View动画框架</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#视图动画"><span class="nav-number">1.1.</span> <span class="nav-text">视图动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#插值器"><span class="nav-number">1.2.</span> <span class="nav-text">插值器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义动画"><span class="nav-number">1.3.</span> <span class="nav-text">自定义动画</span></a></li></ol></li></ol></div>
             
 
           </div>
