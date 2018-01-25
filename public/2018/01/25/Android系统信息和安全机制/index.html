@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="Android任务栈简介andriod使用栈结构来管理activity AndroidMainifest启动模式 standard  每次启动都会创建新的实例，覆盖在原来的activity上面  singleTop  每次启动时判断栈顶是否是要启动的activity，如果是则不创建新的而直接引用这个activity。不是的话则创建一个并启动。  singleTask  每次启动时判断整个栈是否有要">
+<meta name="description" content="Android系统信息获取获取系统的配置信息，通常从build和systemproperty两个方面获取  android.os.Build  该类里面的信息非常丰富，包含了系统编译时的大量设备、配置信息  SystemProperty  该类包含了许多系统配置属性值和参数，有一些和build是相同的。  Android系统信息实例  12345String board = Build.BOARD">
 <meta name="keywords" content="android">
 <meta property="og:type" content="article">
-<meta property="og:title" content="第八章Activity与Activity调用栈分析笔记">
-<meta property="og:url" content="http://yoursite.com/2018/01/24/第八章Activity与Activity调用栈分析笔记/index.html">
+<meta property="og:title" content="Android系统信息和安全机制">
+<meta property="og:url" content="http://yoursite.com/2018/01/25/Android系统信息和安全机制/index.html">
 <meta property="og:site_name" content="记录者">
-<meta property="og:description" content="Android任务栈简介andriod使用栈结构来管理activity AndroidMainifest启动模式 standard  每次启动都会创建新的实例，覆盖在原来的activity上面  singleTop  每次启动时判断栈顶是否是要启动的activity，如果是则不创建新的而直接引用这个activity。不是的话则创建一个并启动。  singleTask  每次启动时判断整个栈是否有要">
+<meta property="og:description" content="Android系统信息获取获取系统的配置信息，通常从build和systemproperty两个方面获取  android.os.Build  该类里面的信息非常丰富，包含了系统编译时的大量设备、配置信息  SystemProperty  该类包含了许多系统配置属性值和参数，有一些和build是相同的。  Android系统信息实例  12345String board = Build.BOARD">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-01-24T11:28:02.226Z">
+<meta property="og:updated_time" content="2018-01-25T13:25:09.147Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="第八章Activity与Activity调用栈分析笔记">
-<meta name="twitter:description" content="Android任务栈简介andriod使用栈结构来管理activity AndroidMainifest启动模式 standard  每次启动都会创建新的实例，覆盖在原来的activity上面  singleTop  每次启动时判断栈顶是否是要启动的activity，如果是则不创建新的而直接引用这个activity。不是的话则创建一个并启动。  singleTask  每次启动时判断整个栈是否有要">
+<meta name="twitter:title" content="Android系统信息和安全机制">
+<meta name="twitter:description" content="Android系统信息获取获取系统的配置信息，通常从build和systemproperty两个方面获取  android.os.Build  该类里面的信息非常丰富，包含了系统编译时的大量设备、配置信息  SystemProperty  该类包含了许多系统配置属性值和参数，有一些和build是相同的。  Android系统信息实例  12345String board = Build.BOARD">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/01/24/第八章Activity与Activity调用栈分析笔记/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/01/25/Android系统信息和安全机制/"/>
 
 
 
 
 
-  <title>第八章Activity与Activity调用栈分析笔记 | 记录者</title>
+  <title>Android系统信息和安全机制 | 记录者</title>
   
 
 
@@ -243,7 +243,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/24/第八章Activity与Activity调用栈分析笔记/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/25/Android系统信息和安全机制/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sample">
@@ -260,7 +260,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">第八章Activity与Activity调用栈分析笔记</h1>
+          <h1 class="post-title" itemprop="name headline">Android系统信息和安全机制</h1>
         
 
         <div class="post-meta">
@@ -272,8 +272,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-24T17:34:25+08:00">
-                2018-01-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-25T11:51:19+08:00">
+                2018-01-25
               </time>
             
 
@@ -291,9 +291,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/01/24/第八章Activity与Activity调用栈分析笔记/#comments" itemprop="discussionUrl">
+                <a href="/2018/01/25/Android系统信息和安全机制/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/01/24/第八章Activity与Activity调用栈分析笔记/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2018/01/25/Android系统信息和安全机制/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -321,56 +321,49 @@
       
 
       
-        <h1 id="Android任务栈简介"><a href="#Android任务栈简介" class="headerlink" title="Android任务栈简介"></a>Android任务栈简介</h1><p>andriod使用栈结构来管理activity</p>
-<h1 id="AndroidMainifest启动模式"><a href="#AndroidMainifest启动模式" class="headerlink" title="AndroidMainifest启动模式"></a>AndroidMainifest启动模式</h1><ol>
-<li>standard</li>
-</ol>
-<p>每次启动都会创建新的实例，覆盖在原来的activity上面</p>
+        <h1 id="Android系统信息获取"><a href="#Android系统信息获取" class="headerlink" title="Android系统信息获取"></a>Android系统信息获取</h1><p>获取系统的配置信息，通常从build和systemproperty两个方面获取</p>
 <ol>
-<li>singleTop</li>
+<li>android.os.Build</li>
 </ol>
-<p>每次启动时判断栈顶是否是要启动的activity，如果是则不创建新的而直接引用这个activity。不是的话则创建一个并启动。</p>
+<p>该类里面的信息非常丰富，包含了系统编译时的大量设备、配置信息</p>
 <ol>
-<li>singleTask</li>
+<li>SystemProperty</li>
 </ol>
-<p>每次启动时判断整个栈是否有要启动的activity，如果有就将其以上的activity销毁（同一个app启动这个activity是销毁，不同app启动这个activity则会创建一个新的任务栈），如果activity在后台的一个栈中，后台这个任务栈将同时切换到前台。</p>
-<p>这种启动模式可以用来设置主activity，这样主activity启动别的activity，退出回到主activity时可以顺便销毁别的activity。</p>
+<p>该类包含了许多系统配置属性值和参数，有一些和build是相同的。</p>
 <ol>
-<li>singleInstance</li>
+<li>Android系统信息实例</li>
 </ol>
-<p>这种启动模式常用于需要与程序分离的界面，不同应用共同享用一个activity</p>
-<p>ps:不同栈是无法使用startActivityForResult()方法来获得数据的，只可以通过intent绑定来传。</p>
-<h1 id="Intent-Flag启动模式"><a href="#Intent-Flag启动模式" class="headerlink" title="Intent Flag启动模式"></a>Intent Flag启动模式</h1><p>介绍一些常用的Flag</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">String board = Build.BOARD;</span><br><span class="line">String brand = Build.BRAND;</span><br><span class="line"></span><br><span class="line">String os_version = System.getProperty(&quot;os.version&quot;);</span><br><span class="line">String os_name = System.getProperty(&quot;os.name&quot;);</span><br></pre></td></tr></table></figure>
+<h1 id="Android-Apk应用信息获取之PackageManager"><a href="#Android-Apk应用信息获取之PackageManager" class="headerlink" title="Android Apk应用信息获取之PackageManager"></a>Android Apk应用信息获取之PackageManager</h1><p>PM主宰着应用的包管理</p>
 <ol>
-<li>Intent.FLAG_ACTIVITY_NEW_TASK</li>
+<li><p>ActivityInfo: 封装了在Mainifest文件中<activity></activity>和<receiver></receiver>之间的所有信息，包括name，icon, label, launchmod等</p>
+</li>
+<li><p>ServiceInfo: ServiceInfo与ActivityInfo类似，封装了<service></service>之间的所有信息</p>
+</li>
+<li><p>ApplicationInfo: 封装了 <application></application>之间的信息，特别的是，applicationinfo包含了很多flag，通过这些flag，可以很方便的判断应用的类型</p>
+</li>
+<li><p>PackageInfo: 封装了所有的activity，service等信息</p>
+</li>
+<li><p>ResolveInfo: 封装的是包含<intent>信息的上一级信息，所以可以返回Activityinfo, ServiceInfo等包含<intent>的信息，可以用来找到含有特定intent条件的包</intent></intent></p>
+</li>
 </ol>
-<p>使用一个新的task来启动activity，启动的每个activity都将在一个新的task中。</p>
-<p>该flag通常使用在从service中启动activity的场景，由于在service中并不存在activity栈，所以使用该flag来创建一个新的activity栈，并创建新的activty实例。</p>
+<h1 id="Android-Apk应用信息获取之ActivityMananger"><a href="#Android-Apk应用信息获取之ActivityMananger" class="headerlink" title="Android Apk应用信息获取之ActivityMananger"></a>Android Apk应用信息获取之ActivityMananger</h1><p>AM可以获取正在运行的应用程序信息。</p>
 <ol>
-<li>FLAG_ACTIVITY_SINGLE_TOP</li>
+<li>AcitivtyManager.MemoryInfo</li>
 </ol>
-<p>与singletop等同</p>
+<p>全局内存信息，availMem是系统可用内存，totalMem是总内存，threshold是低内存的阀值，lowMemory是检查是否处于低内存。</p>
 <ol>
-<li>FLAG_ACTIVITY_CLEAR_TOP</li>
+<li>Debug.MemoryInfo</li>
 </ol>
-<p>使用singletask模式来启动一个activity</p>
+<p>用于获取统计进程下的内存信息。数据是由dvm虚拟机提供的。</p>
 <ol>
-<li>FLAG_ACTIVITY_NO_HISTORY</li>
+<li>RunningAppProcessInfo</li>
 </ol>
-<p>使用这种模式启动activity，当该activity启动其他activity后，该activity就消失了，不会保存在栈中。</p>
-<h1 id="清空任务栈"><a href="#清空任务栈" class="headerlink" title="清空任务栈"></a>清空任务栈</h1><p>可以在mainifest中activity标签中使用以下几种属性来清理任务栈</p>
+<p>运行进程的信息</p>
 <ol>
-<li>clearTaskOnLaunch</li>
+<li>RunningServiceInfo</li>
 </ol>
-<p>每次返回该activity时，都将该activity之上的所有activity清除，通过这个属性，可以让这个task每次在初始化的时候，都只有这一个activity</p>
-<ol>
-<li>finishOnTaskLaunch</li>
-</ol>
-<p>当离开这个activity所处的task，用户在返回时，该activity就会被finish掉</p>
-<ol>
-<li>alwaysRetainTaskState</li>
-</ol>
-<p>如果将这个属性设为true，那么该activity所在的task将不受任何清理命令，一直保持当前task状态</p>
+<p>用于封装运行的服务信息。</p>
 
       
     </div>
@@ -401,8 +394,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/01/22/第七章动画机制与使用技巧学习笔记/" rel="next" title="第七章动画机制与使用技巧学习笔记">
-                <i class="fa fa-chevron-left"></i> 第七章动画机制与使用技巧学习笔记
+              <a href="/2018/01/24/第八章Activity与Activity调用栈分析笔记/" rel="next" title="第八章Activity与Activity调用栈分析笔记">
+                <i class="fa fa-chevron-left"></i> 第八章Activity与Activity调用栈分析笔记
               </a>
             
           </div>
@@ -411,8 +404,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/01/25/Android系统信息和安全机制/" rel="prev" title="Android系统信息和安全机制">
-                Android系统信息和安全机制 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/01/25/Android性能优化/" rel="prev" title="Android性能优化">
+                Android性能优化 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -546,7 +539,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android任务栈简介"><span class="nav-number">1.</span> <span class="nav-text">Android任务栈简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AndroidMainifest启动模式"><span class="nav-number">2.</span> <span class="nav-text">AndroidMainifest启动模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Intent-Flag启动模式"><span class="nav-number">3.</span> <span class="nav-text">Intent Flag启动模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#清空任务栈"><span class="nav-number">4.</span> <span class="nav-text">清空任务栈</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android系统信息获取"><span class="nav-number">1.</span> <span class="nav-text">Android系统信息获取</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Apk应用信息获取之PackageManager"><span class="nav-number">2.</span> <span class="nav-text">Android Apk应用信息获取之PackageManager</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Apk应用信息获取之ActivityMananger"><span class="nav-number">3.</span> <span class="nav-text">Android Apk应用信息获取之ActivityMananger</span></a></li></ol></div>
             
 
           </div>
@@ -709,9 +702,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://yoursite.com/2018/01/24/第八章Activity与Activity调用栈分析笔记/';
-          this.page.identifier = '2018/01/24/第八章Activity与Activity调用栈分析笔记/';
-          this.page.title = '第八章Activity与Activity调用栈分析笔记';
+          this.page.url = 'http://yoursite.com/2018/01/25/Android系统信息和安全机制/';
+          this.page.identifier = '2018/01/25/Android系统信息和安全机制/';
+          this.page.title = 'Android系统信息和安全机制';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://Mr.Sample.disqus.com/embed.js';
