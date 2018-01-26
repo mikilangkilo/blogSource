@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="算法," />
+  <meta name="keywords" content="python," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="直接插入排序属于排序中的内部排序的插入排序的一种。 算法思想直接将一个记录插入到已排序好的有序列表中，从而得到一个新的，记录数增1的有序表。 空间复杂度只需要一个待记录的空间，空间复杂度为O(1) 时间复杂度最好情况下，已有列表有序且正序，只需要插入一次，比较n-1次，移动0次最坏情况下，已有列表有序但是倒序，需要全部更改，比较n-1次，移动n-1次，复杂度为O(n^2) 算法实现思想把它当作一个">
-<meta name="keywords" content="算法">
+<meta name="description" content="进行爬虫抓取，有一个大致的思路。首先是抓取当前页的关键内容，也就是我们需要的内容。其次是抓取下一页的网址信息，也就是用于下一轮进行抓取的对象。 因此使用一个queue去存储抓取的网址信息，当queue不为空的时候执行轮次抓取关键信息的操作。同时还有一个set去存储以抓取的网址的信息，确保不会重复查询某个网址。 1234567891011queue Qset SStartPoint = &amp;quot;">
+<meta name="keywords" content="python">
 <meta property="og:type" content="article">
-<meta property="og:title" content="直接插入排序">
-<meta property="og:url" content="http://yoursite.com/2018/01/08/直接插入排序/index.html">
+<meta property="og:title" content="使用python抓取网页内容">
+<meta property="og:url" content="http://yoursite.com/2018/01/26/使用python抓取网页内容/index.html">
 <meta property="og:site_name" content="记录者">
-<meta property="og:description" content="直接插入排序属于排序中的内部排序的插入排序的一种。 算法思想直接将一个记录插入到已排序好的有序列表中，从而得到一个新的，记录数增1的有序表。 空间复杂度只需要一个待记录的空间，空间复杂度为O(1) 时间复杂度最好情况下，已有列表有序且正序，只需要插入一次，比较n-1次，移动0次最坏情况下，已有列表有序但是倒序，需要全部更改，比较n-1次，移动n-1次，复杂度为O(n^2) 算法实现思想把它当作一个">
+<meta property="og:description" content="进行爬虫抓取，有一个大致的思路。首先是抓取当前页的关键内容，也就是我们需要的内容。其次是抓取下一页的网址信息，也就是用于下一轮进行抓取的对象。 因此使用一个queue去存储抓取的网址信息，当queue不为空的时候执行轮次抓取关键信息的操作。同时还有一个set去存储以抓取的网址的信息，确保不会重复查询某个网址。 1234567891011queue Qset SStartPoint = &amp;quot;">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-01-08T16:25:24.149Z">
+<meta property="og:updated_time" content="2018-01-26T15:30:23.263Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="直接插入排序">
-<meta name="twitter:description" content="直接插入排序属于排序中的内部排序的插入排序的一种。 算法思想直接将一个记录插入到已排序好的有序列表中，从而得到一个新的，记录数增1的有序表。 空间复杂度只需要一个待记录的空间，空间复杂度为O(1) 时间复杂度最好情况下，已有列表有序且正序，只需要插入一次，比较n-1次，移动0次最坏情况下，已有列表有序但是倒序，需要全部更改，比较n-1次，移动n-1次，复杂度为O(n^2) 算法实现思想把它当作一个">
+<meta name="twitter:title" content="使用python抓取网页内容">
+<meta name="twitter:description" content="进行爬虫抓取，有一个大致的思路。首先是抓取当前页的关键内容，也就是我们需要的内容。其次是抓取下一页的网址信息，也就是用于下一轮进行抓取的对象。 因此使用一个queue去存储抓取的网址信息，当queue不为空的时候执行轮次抓取关键信息的操作。同时还有一个set去存储以抓取的网址的信息，确保不会重复查询某个网址。 1234567891011queue Qset SStartPoint = &amp;quot;">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/01/08/直接插入排序/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/01/26/使用python抓取网页内容/"/>
 
 
 
 
 
-  <title>直接插入排序 | 记录者</title>
+  <title>使用python抓取网页内容 | 记录者</title>
   
 
 
@@ -243,7 +243,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/08/直接插入排序/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/26/使用python抓取网页内容/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sample">
@@ -260,7 +260,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">直接插入排序</h1>
+          <h1 class="post-title" itemprop="name headline">使用python抓取网页内容</h1>
         
 
         <div class="post-meta">
@@ -272,8 +272,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-08T22:29:59+08:00">
-                2018-01-08
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-26T22:54:51+08:00">
+                2018-01-26
               </time>
             
 
@@ -291,9 +291,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/01/08/直接插入排序/#comments" itemprop="discussionUrl">
+                <a href="/2018/01/26/使用python抓取网页内容/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/01/08/直接插入排序/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2018/01/26/使用python抓取网页内容/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -321,17 +321,17 @@
       
 
       
-        <p>直接插入排序属于排序中的内部排序的插入排序的一种。</p>
-<h1 id="算法思想"><a href="#算法思想" class="headerlink" title="算法思想"></a>算法思想</h1><p>直接将一个记录插入到已排序好的有序列表中，从而得到一个新的，记录数增1的有序表。</p>
-<h1 id="空间复杂度"><a href="#空间复杂度" class="headerlink" title="空间复杂度"></a>空间复杂度</h1><p>只需要一个待记录的空间，空间复杂度为O(1)</p>
-<h1 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h1><p>最好情况下，已有列表有序且正序，只需要插入一次，比较n-1次，移动0次<br>最坏情况下，已有列表有序但是倒序，需要全部更改，比较n-1次，移动n-1次，复杂度为O(n^2)</p>
-<h1 id="算法实现思想"><a href="#算法实现思想" class="headerlink" title="算法实现思想"></a>算法实现思想</h1><p>把它当作一个牌堆，现在从第一张开始抽。（开启一个循环，循环长度为数组的长度）</p>
-<p>假如抽的这一张比右手第一张小，代表需要插到前面。（a[j] &lt; a[j-1]）</p>
-<p>从右手第二张开始往左看，如果找到有比抽到的这张小的，插到这张的后面。<br>这个过程需要将每个比抽到的这大的往后挪一位，</p>
-<p>小技巧，将手中最右边这张先拿出去，然后将抽到的这张加到最右边，然后从最右边开始排序，排序完毕之后将拿出去的这张重新加到最右边。</p>
-<h2 id="java实现"><a href="#java实现" class="headerlink" title="java实现"></a>java实现</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public static int[] insertSort(int[] array)&#123;</span><br><span class="line">	int[] arr = array;</span><br><span class="line">	int temp;</span><br><span class="line">	for(int i = 1; i &lt; arr.length; i++)&#123;</span><br><span class="line">		for(int j = i; j &gt;= 1 &amp;&amp; arr[j - 1] &gt; arr[j]; j-- )&#123;</span><br><span class="line">			temp = arr[j];</span><br><span class="line">			arr[j] = arr[j - 1];</span><br><span class="line">			arr[j - 1] = temp;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return arr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="c实现"><a href="#c实现" class="headerlink" title="c实现"></a>c实现</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">int inser_sort(int s[], int length)&#123;</span><br><span class="line">	int i, j, t;</span><br><span class="line">	for (i = 1; i &lt; length; i++)&#123;</span><br><span class="line">		for (j = i - 1; j &gt; -1 &amp;&amp; s[j] &gt; t; j--)&#123;</span><br><span class="line">			t = s[i];</span><br><span class="line">			s[j + 1] = s[j];</span><br><span class="line">			s[j] = t;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="python实现"><a href="#python实现" class="headerlink" title="python实现"></a>python实现</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">def insertSort(a):</span><br><span class="line">	length = len(targetList)</span><br><span class="line">	for i in range(1, length:</span><br><span class="line">		j = i - 1</span><br><span class="line">		if (target[i] &lt; targetList[j])&#123;</span><br><span class="line">			temp = targetList[i]</span><br><span class="line">			target[i] = targetList[j]</span><br><span class="line">			j = j - 1</span><br><span class="line">			while j &gt; 0 and targetList[j] &gt; temp:</span><br><span class="line">				targetList[j + 1] = targetList[j]</span><br><span class="line">				j = j - 1</span><br><span class="line">			targetList[j + 1] = temp</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
+        <p>进行爬虫抓取，有一个大致的思路。<br>首先是抓取当前页的关键内容，也就是我们需要的内容。<br>其次是抓取下一页的网址信息，也就是用于下一轮进行抓取的对象。</p>
+<p>因此使用一个queue去存储抓取的网址信息，当queue不为空的时候执行轮次抓取关键信息的操作。<br>同时还有一个set去存储以抓取的网址的信息，确保不会重复查询某个网址。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">queue Q</span><br><span class="line">set S</span><br><span class="line">StartPoint = &quot;http://jecvay.com&quot;</span><br><span class="line">Q.push(StartPoint)  # 经典的BFS开头</span><br><span class="line">S.insert(StartPoint)  # 访问一个页面之前先标记他为已访问</span><br><span class="line">while (Q.empty() == false)  # BFS循环体</span><br><span class="line">  T = Q.top()  # 并且pop</span><br><span class="line">  for point in PageUrl(T)  # PageUrl(T)是指页面T中所有url的集合, point是这个集合中的一个元素.</span><br><span class="line">    if (point not in S)</span><br><span class="line">      Q.push(point)</span><br><span class="line">      S.insert(point)</span><br></pre></td></tr></table></figure>
+<p>大致如这个伪代码。</p>
+<p>queue初始化：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">queue = deque()</span><br></pre></td></tr></table></figure></p>
+<p>queue添加：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">queue.append(url)</span><br></pre></td></tr></table></figure></p>
+<p>queue出栈：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">queue.popleft()</span><br></pre></td></tr></table></figure></p>
+<p>set初始化：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">visited = set()</span><br></pre></td></tr></table></figure></p>
+<p>set添加：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">visited |= &#123;url&#125;</span><br></pre></td></tr></table></figure></p>
+<p>url抓取：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">urlop = urllib.requests.urlopen(url)</span><br></pre></td></tr></table></figure></p>
+<p>数据解析:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data = urlop.read().decode(&apos;utf-8&apos;)</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -349,7 +349,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/算法/" rel="tag"># 算法</a>
+            <a href="/tags/python/" rel="tag"># python</a>
           
         </div>
       
@@ -362,8 +362,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/01/07/android消息推送/" rel="next" title="android消息推送">
-                <i class="fa fa-chevron-left"></i> android消息推送
+              <a href="/2018/01/25/Android性能优化/" rel="next" title="Android性能优化">
+                <i class="fa fa-chevron-left"></i> Android性能优化
               </a>
             
           </div>
@@ -371,10 +371,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/01/08/希尔排序/" rel="prev" title="希尔排序">
-                希尔排序 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -436,17 +432,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -497,22 +484,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#算法思想"><span class="nav-number">1.</span> <span class="nav-text">算法思想</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#空间复杂度"><span class="nav-number">2.</span> <span class="nav-text">空间复杂度</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#时间复杂度"><span class="nav-number">3.</span> <span class="nav-text">时间复杂度</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#算法实现思想"><span class="nav-number">4.</span> <span class="nav-text">算法实现思想</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#java实现"><span class="nav-number">4.1.</span> <span class="nav-text">java实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#c实现"><span class="nav-number">4.2.</span> <span class="nav-text">c实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#python实现"><span class="nav-number">4.3.</span> <span class="nav-text">python实现</span></a></li></ol></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
@@ -670,9 +641,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://yoursite.com/2018/01/08/直接插入排序/';
-          this.page.identifier = '2018/01/08/直接插入排序/';
-          this.page.title = '直接插入排序';
+          this.page.url = 'http://yoursite.com/2018/01/26/使用python抓取网页内容/';
+          this.page.identifier = '2018/01/26/使用python抓取网页内容/';
+          this.page.title = '使用python抓取网页内容';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://Mr.Sample.disqus.com/embed.js';
