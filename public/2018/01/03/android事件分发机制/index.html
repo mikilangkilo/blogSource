@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="android," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="假如一个button123456button.setOnClickListener(new OnClickListener()&amp;#123;	@Override	public void onClick(View v)&amp;#123;		Log.d(&amp;quot;TAG&amp;quot;,&amp;quot;onClick execute&amp;quot;);	&amp;#125;&amp;#125;) 同时设置ontouch事件 12345">
+<meta name="keywords" content="android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android事件分发机制">
+<meta property="og:url" content="http://yoursite.com/2018/01/03/android事件分发机制/index.html">
+<meta property="og:site_name" content="记录者">
+<meta property="og:description" content="假如一个button123456button.setOnClickListener(new OnClickListener()&amp;#123;	@Override	public void onClick(View v)&amp;#123;		Log.d(&amp;quot;TAG&amp;quot;,&amp;quot;onClick execute&amp;quot;);	&amp;#125;&amp;#125;) 同时设置ontouch事件 12345">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-01-06T15:25:18.031Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="android事件分发机制">
+<meta name="twitter:description" content="假如一个button123456button.setOnClickListener(new OnClickListener()&amp;#123;	@Override	public void onClick(View v)&amp;#123;		Log.d(&amp;quot;TAG&amp;quot;,&amp;quot;onClick execute&amp;quot;);	&amp;#125;&amp;#125;) 同时设置ontouch事件 12345">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/03/android事件分发机制/"/>
+
+
+
+
+
+  <title>android事件分发机制 | 记录者</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?6501f9771a3fc3833381947e71bdd393";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">记录者</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我们坚持一件事情，并不是因为这样做了会有效果，而是坚信，这样做是对的。</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/03/android事件分发机制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">android事件分发机制</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-03T23:10:07+08:00">
+                2018-01-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/01/03/android事件分发机制/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/01/03/android事件分发机制/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>假如一个button<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">button.setOnClickListener(new OnClickListener()&#123;</span><br><span class="line">	@Override</span><br><span class="line">	public void onClick(View v)&#123;</span><br><span class="line">		Log.d(&quot;TAG&quot;,&quot;onClick execute&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>同时设置ontouch事件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">button.setOnTouchListener(new OnTouchListener()&#123;</span><br><span class="line">	@Override</span><br><span class="line">	public boolean onTouch(View v, MotionEvent event)&#123;</span><br><span class="line">		Log.d(&quot;TAG&quot;,&quot;onTouch execute, action &quot;+ event.getAction());</span><br><span class="line">		return false;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>点击按钮log如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">onTouch execute, action 0</span><br><span class="line">onTouch execute, action 1</span><br><span class="line">onClick execute</span><br></pre></td></tr></table></figure></p>
+<p>onTouch是优先于onClick执行的，并且onTouch执行了2次，一次是ACTION_DOWN,一次是ACTION_UP。<br>顺序是先经过onTouch，在传递到onClick。</p>
+<p>将ontouch返回值改为true，在运行一次，会发现onClick不再执行，这就是拦截了。</p>
+<h1 id="dispatchTouchEvent"><a href="#dispatchTouchEvent" class="headerlink" title="dispatchTouchEvent"></a>dispatchTouchEvent</h1><p>任何view被触摸，一定会执行dispatchTouchEvent这个方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public boolean dispatchTouchEvent(MotionEvent event) &#123;  </span><br><span class="line">    if (mOnTouchListener != null &amp;&amp; (mViewFlags &amp; ENABLED_MASK) == ENABLED &amp;&amp;  </span><br><span class="line">            mOnTouchListener.onTouch(this, event)) &#123;  </span><br><span class="line">        return true;  </span><br><span class="line">    &#125;  </span><br><span class="line">    return onTouchEvent(event);  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码很明显的指出了，首先会执行的是set的onTouchListener的onTouch事件，之后才会执行自身的onTouchEvent事件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line">public boolean onTouchEvent(MotionEvent event) &#123;  </span><br><span class="line">    final int viewFlags = mViewFlags;  </span><br><span class="line">    if ((viewFlags &amp; ENABLED_MASK) == DISABLED) &#123;  </span><br><span class="line">        // A disabled view that is clickable still consumes the touch  </span><br><span class="line">        // events, it just doesn&apos;t respond to them.  </span><br><span class="line">        return (((viewFlags &amp; CLICKABLE) == CLICKABLE ||  </span><br><span class="line">                (viewFlags &amp; LONG_CLICKABLE) == LONG_CLICKABLE));  </span><br><span class="line">    &#125;  </span><br><span class="line">    if (mTouchDelegate != null) &#123;  </span><br><span class="line">        if (mTouchDelegate.onTouchEvent(event)) &#123;  </span><br><span class="line">            return true;  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">    if (((viewFlags &amp; CLICKABLE) == CLICKABLE ||  </span><br><span class="line">            (viewFlags &amp; LONG_CLICKABLE) == LONG_CLICKABLE)) &#123;  </span><br><span class="line">        switch (event.getAction()) &#123;  </span><br><span class="line">            case MotionEvent.ACTION_UP:  </span><br><span class="line">                boolean prepressed = (mPrivateFlags &amp; PREPRESSED) != 0;  </span><br><span class="line">                if ((mPrivateFlags &amp; PRESSED) != 0 || prepressed) &#123;  </span><br><span class="line">                    // take focus if we don&apos;t have it already and we should in  </span><br><span class="line">                    // touch mode.  </span><br><span class="line">                    boolean focusTaken = false;  </span><br><span class="line">                    if (isFocusable() &amp;&amp; isFocusableInTouchMode() &amp;&amp; !isFocused()) &#123;  </span><br><span class="line">                        focusTaken = requestFocus();  </span><br><span class="line">                    &#125;  </span><br><span class="line">                    if (!mHasPerformedLongPress) &#123;  </span><br><span class="line">                        // This is a tap, so remove the longpress check  </span><br><span class="line">                        removeLongPressCallback();  </span><br><span class="line">                        // Only perform take click actions if we were in the pressed state  </span><br><span class="line">                        if (!focusTaken) &#123;  </span><br><span class="line">                            // Use a Runnable and post this rather than calling  </span><br><span class="line">                            // performClick directly. This lets other visual state  </span><br><span class="line">                            // of the view update before click actions start.  </span><br><span class="line">                            if (mPerformClick == null) &#123;  </span><br><span class="line">                                mPerformClick = new PerformClick();  </span><br><span class="line">                            &#125;  </span><br><span class="line">                            if (!post(mPerformClick)) &#123;  </span><br><span class="line">                                performClick();  </span><br><span class="line">                            &#125;  </span><br><span class="line">                        &#125;  </span><br><span class="line">                    &#125;  </span><br><span class="line">                    if (mUnsetPressedState == null) &#123;  </span><br><span class="line">                        mUnsetPressedState = new UnsetPressedState();  </span><br><span class="line">                    &#125;  </span><br><span class="line">                    if (prepressed) &#123;  </span><br><span class="line">                        mPrivateFlags |= PRESSED;  </span><br><span class="line">                        refreshDrawableState();  </span><br><span class="line">                        postDelayed(mUnsetPressedState,  </span><br><span class="line">                                ViewConfiguration.getPressedStateDuration());  </span><br><span class="line">                    &#125; else if (!post(mUnsetPressedState)) &#123;  </span><br><span class="line">                        // If the post failed, unpress right now  </span><br><span class="line">                        mUnsetPressedState.run();  </span><br><span class="line">                    &#125;  </span><br><span class="line">                    removeTapCallback();  </span><br><span class="line">                &#125;  </span><br><span class="line">                break;  </span><br><span class="line">            case MotionEvent.ACTION_DOWN:  </span><br><span class="line">                if (mPendingCheckForTap == null) &#123;  </span><br><span class="line">                    mPendingCheckForTap = new CheckForTap();  </span><br><span class="line">                &#125;  </span><br><span class="line">                mPrivateFlags |= PREPRESSED;  </span><br><span class="line">                mHasPerformedLongPress = false;  </span><br><span class="line">                postDelayed(mPendingCheckForTap, ViewConfiguration.getTapTimeout());  </span><br><span class="line">                break;  </span><br><span class="line">            case MotionEvent.ACTION_CANCEL:  </span><br><span class="line">                mPrivateFlags &amp;= ~PRESSED;  </span><br><span class="line">                refreshDrawableState();  </span><br><span class="line">                removeTapCallback();  </span><br><span class="line">                break;  </span><br><span class="line">            case MotionEvent.ACTION_MOVE:  </span><br><span class="line">                final int x = (int) event.getX();  </span><br><span class="line">                final int y = (int) event.getY();  </span><br><span class="line">                // Be lenient about moving outside of buttons  </span><br><span class="line">                int slop = mTouchSlop;  </span><br><span class="line">                if ((x &lt; 0 - slop) || (x &gt;= getWidth() + slop) ||  </span><br><span class="line">                        (y &lt; 0 - slop) || (y &gt;= getHeight() + slop)) &#123;  </span><br><span class="line">                    // Outside button  </span><br><span class="line">                    removeTapCallback();  </span><br><span class="line">                    if ((mPrivateFlags &amp; PRESSED) != 0) &#123;  </span><br><span class="line">                        // Remove any future long press/tap checks  </span><br><span class="line">                        removeLongPressCallback();  </span><br><span class="line">                        // Need to switch from pressed to not pressed  </span><br><span class="line">                        mPrivateFlags &amp;= ~PRESSED;  </span><br><span class="line">                        refreshDrawableState();  </span><br><span class="line">                    &#125;  </span><br><span class="line">                &#125;  </span><br><span class="line">                break;  </span><br><span class="line">        &#125;  </span><br><span class="line">        return true;  </span><br><span class="line">    &#125;  </span><br><span class="line">    return false;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当事件为MotionEvent.ACTION_UP时，如果该控件可点击，会执行performClick()</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public boolean performClick() &#123;  </span><br><span class="line">    sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_CLICKED);  </span><br><span class="line">    if (mOnClickListener != null) &#123;  </span><br><span class="line">        playSoundEffect(SoundEffectConstants.CLICK);  </span><br><span class="line">        mOnClickListener.onClick(this);  </span><br><span class="line">        return true;  </span><br><span class="line">    &#125;  </span><br><span class="line">    return false;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从源码可以看出，基本上每一次事件，都会return 一个true，也就是消耗掉这次事件了。而之后的事件会重新进入，这也和之前的截断事件机制符合。</p>
+<h1 id="onTouch和onTouchEvent有什么区别，又该如何使用？"><a href="#onTouch和onTouchEvent有什么区别，又该如何使用？" class="headerlink" title="onTouch和onTouchEvent有什么区别，又该如何使用？"></a>onTouch和onTouchEvent有什么区别，又该如何使用？</h1><p>从源码中可以看出，这两个方法都是在View的dispatchTouchEvent中调用的，onTouch优先于onTouchEvent执行。如果在onTouch方法中通过返回true将事件消费掉，onTouchEvent将不会再执行。<br>另外需要注意的是，onTouch能够得到执行需要两个前提条件，第一mOnTouchListener的值不能为空，第二当前点击的控件必须是enable的。因此如果你有一个控件是非enable的，那么给它注册onTouch事件将永远得不到执行。对于这一类控件，如果我们想要监听它的touch事件，就必须通过在该控件中重写onTouchEvent方法来实现。</p>
+<h1 id="为什么给ListView引入了一个滑动菜单的功能，ListView就不能滚动了？"><a href="#为什么给ListView引入了一个滑动菜单的功能，ListView就不能滚动了？" class="headerlink" title="为什么给ListView引入了一个滑动菜单的功能，ListView就不能滚动了？"></a>为什么给ListView引入了一个滑动菜单的功能，ListView就不能滚动了？</h1><p>比如说左右滑的时候，还是正常的左右滑。<br>但是上下滑的时候，会出现一个问题，就是listview无法上下滑动，这主要是事件被scrollview给消耗掉了，需要在触摸的时候，scrollview不进行截断操作，让事件能够传递下去。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/android/" rel="tag"># android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/03/android事件拦截机制分析/" rel="next" title="android事件拦截机制分析">
+                <i class="fa fa-chevron-left"></i> android事件拦截机制分析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/05/2018第一周工作小结/" rel="prev" title="2018第一周工作小结">
+                2018第一周工作小结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Sample</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#dispatchTouchEvent"><span class="nav-number">1.</span> <span class="nav-text">dispatchTouchEvent</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#onTouch和onTouchEvent有什么区别，又该如何使用？"><span class="nav-number">2.</span> <span class="nav-text">onTouch和onTouchEvent有什么区别，又该如何使用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么给ListView引入了一个滑动菜单的功能，ListView就不能滚动了？"><span class="nav-number">3.</span> <span class="nav-text">为什么给ListView引入了一个滑动菜单的功能，ListView就不能滚动了？</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sample</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://Mr.Sample.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2018/01/03/android事件分发机制/';
+          this.page.identifier = '2018/01/03/android事件分发机制/';
+          this.page.title = 'android事件分发机制';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://Mr.Sample.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'lyLXiEg3TqshvM3qxHjYskBX-gzGzoHsz',
+        appKey: 'SlOO9nVu3kxycc3RxicJUlXA',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
