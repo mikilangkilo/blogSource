@@ -237,3 +237,51 @@ transient是一个类型修饰符，仅仅能用来修饰字段（变量）。�
 
 其他没有transient修饰的变量将会被序列化，然后进行传输，或者存储到本地磁盘，transient变量就在这个过程里丢失了
 
++ StringBuffer和StringBuilder的区别在哪里？
+
+StringBuffer,StringBuilder和String一样，都用来代表字符串。
+String类是不可变类，任何针对String的改变都会引起string对象的生成。而StringBuilder和StringBuffer则是可变类。StringBuilder不支持并发操作，线程不安全，不适合多线程。而StringBuffer支持并发操作，线程安全，单线程的性能低于StringBuilder
+
++ StringBuilder怎么避免不可变字符串分配的问题？
+
+String类型在改变的时候都会生成一个新的string，然后指向这个string，因此经常改变内容的字符串最好不要用string，会导致gc。
+stringbuffer则是每次结果都会对stringbuffer对象本身操作，而不是生成新的对象。
+
++ 什么是自动装箱和拆箱？
+
+装箱就是自动将数据类型转换为包装器类型，拆箱就是自动将包装齐类型转换为基本数据类型。
+
+```
+	Integer i = 100;
+```
+
+这句话会被编译器执行为：
+
+```
+	Integer i = Integer.valueOf(100);
+```
+
+这就是自动装箱
+
+```
+	Integer i = 10; // autoboxing
+	int c = i; // unboxing
+```
+
++ 枚举和迭代器有什么区别？
+
+函数接口不同：枚举只有2个函数接口，只能读取集合的数据，而不能更改，迭代器有三个接口，出了读取集合的数据之外，还能进行删除操作
+
+迭代器支持failfast，而枚举不支持。
+
++ java中fail-fast和fail-safe的区别？
+
+fail-fast： 当遍历一个集合时，集合结构若被修改，就会抛出ConcurrentModificationException。
+
+fail-safe:任何对集合的修改都会在一个复制的集合上进行修改，因此不会抛出ConcurrentModificationException。failsafe需要复制集合，产生大量的无效对象，开销大，而且无法保证读取的数据是目前原始数据结构中的数据。
+
++ 优先级队列
+
+priorityQueue类用来表示优先队列，优先队列是一个以集合为基础的抽象数据类型，队列中的每个元素都有一个优先级值，优先级值用来表示该元素的出列的优先级
+
+java中的优先队列基于堆，堆是一个完全二叉树，所以PriorityQueue不是线性结构，而是树形结构。
