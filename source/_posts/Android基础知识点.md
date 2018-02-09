@@ -17,3 +17,158 @@ Bundle内部是由ArrayMap实现的，ArrayMap的内部实现是两个数组，�
 
 jobscheduler提供了一种不同于alarmmanager的唤醒app的方式，其主要工作场景：应用具有您可以推迟的非面向用户的工作。/应用具有当插入设备时您希望优先执行的工作。/应用具有需要访问网络或 Wi-Fi 连接的任务。/应用具有您希望作为一个批次定期运行的许多任务。
 
++ 什么是 ANR ？如何避免发生 ANR ？
+
+ANR = application not response
+
+anr一般有三种类型：
+KeyDispatchTimeout(5 seconds) --主要类型按键或触摸事件在特定时间内无响应；
+BroadcastTimeout(10 seconds) --BroadcastReceiver在特定时间内无法处理完成；
+ServiceTimeout(20 seconds) --小概率类型 Service在特定的时间内无法处理完成
+
+避免的方法：
+
+UI线程尽量只做跟UI相关的工作
+耗时的工作（比如数据库操作，I/O，连接网络或者别的有可能阻碍UI线程的操作）把它放入单独的线程处理
+尽量用Handler来处理UIthread和别的thread之间的交互
+
+措施：
+
+首先分析log
+从trace.txt文件查看调用stack.
+看代码
+仔细查看ANR的成因（iowait?block?memoryleak?）
+
++ 解释一下 broadcast 和 intent 在 app 内传递消息的工作流程。
+
+广播的注册过程 ：最终在ActivityManagerService中将远程的InnerInnerReceiver以及Intent－filter对象存储起来。 
+广播的发送以及接受：内部会首先根据传入的Intent－filter 查找出匹配的广播接受者，并将改接受者放到BroadcastQueue中，紧接着系统会遍历ArrayList中的广播，并将其发送给它们对应的广播接受者，最后调用到广播接受者的onReceiver方法。
+
+Intent传递消息过程：intent在putextra的过程中将消息放入bundle中，bundle由于实现了parcel接口，故可以进行ipc通信，最后通过目标activity从parcel中恢复状态信息，这里面的parcel完成了数据的序列化传输。
+
++ 当 Bitmap 占用较多内存时，你是怎么处理的？
+
+由于内存管理上将外部内存完全当成了当前堆的一部分，也就是说Bitmap对象通过栈上的引用来指向堆上的Bitmap对象，而堆上的Bitmap对象又对应了一个使用了外部存储的native图像，也就是实际上使用的字节数组byte[]来存储的位图信息，因此解码之后的Bitmap的总大小就不能超过8M了。
+
+设置系统的最小堆大小：
+```
+	int newSize = 4 * 1024 * 1024 ; //设置最小堆内存大小为4MB  
+	VMRuntime.getRuntime().setMinimumHeapSize(newSize);  
+	VMRuntime.getRuntime().setTargetHeapUtilization(0.75); // 设置堆内存的利用率为75%  
+```
+
+对图片的大小进行控制:
+```
+	BitmapFactory.Options options = new BitmapFactory.Options();  
+	options.inSampleSize = 2; //图片宽高都为原来的二分之一，即图片为原来的四分之一  
+	Bitmap bitmap = BitmapFactory.decodeFile("/mnt/sdcard/a.jpg",options);  
+```
+
+对bitmapfactory解码的参数进行设置：
+```
+	BitmapFactory.Options options = new BitmapFactory.Options();  
+	options.inTempStorage = new byte[1024*1024*5]; //5MB的临时存储空间  
+	Bitmap bm = BitmapFactory.decodeFile("/mnt/sdcard/a.jpg",options);  
+```
+
++ 什么是 Dalvik 虚拟机？
+
+每一个Android应用在底层都会对应一个独立的Dalvik虚拟机实例，其代码在虚拟机的解释下得以执行。
+dalvik虚拟机使用dex文件的java文件格式，class文件中会附带着不少额外信息，dex文件对其进行精简，将所有的class文件整合一起，减少了文件尺寸和io操作的同时也提高了类的加载速度。
+
+每一个应用都运行在一个dalvik虚拟机里面，而每一个虚拟机都有一个独立的进程空间
+
++ 什么是 Sticky Intent？
+
+在MainActivity里面会有sendBroadcast和sendStickyBroacat.在ReceverActivity里面通 过BroadcastReceiver来接收这两个消息，在ReceiverActivity里是通过代码来注册Recevier而不是在 Manifest里面注册的。所以通过sendBroadcast中发出的intent在ReceverActivity不处于onResume状态是无 法接受到的，即使后面再次使其处于该状态也无法接受到。而sendStickyBroadcast发出的Intent当ReceverActivity重 新处于onResume状态之后就能重新接受到其Intent.这就是the Intent will be held to be re-broadcast to future receivers这句话的表现。就是说sendStickyBroadcast发出的最后一个Intent会被保留，下次当Recevier处于活跃的 时候，又会接受到它。
+
++ Android 的权限有多少个不同的保护等级？
+
+四种，normal，dangerous，signature，signatureOrSystem
+
+普通权限 会在App安装期间被默认赋予。这类权限不需要开发人员进行额外操作。
+
+危险权限是在开发6.0程序时，必须要注意的。这些权限处理不好，程序可能会直接被系统干掉。危险权限以组进行划分，对该组内的一个权限授权视为对整个组进行授权，但是对开发来讲，仍然需要正对每个需要的权限进行获取，否则后期版本的变更会导致权限组划分更改。
+
+签名级别权限和系统签名级别权限需要拥有platform级别的认证才能申请。
+
++ 在转屏时你如何保存 Activity 的状态？
+
+不设置Activity的android:configChanges时，切屏会重新调用各个生命周期，切横屏时会执行一次，切竖屏时会执行两次
+
+设置Activity的android:configChanges="orientation"时，切屏还是会重新调用各个生命周期，切横、竖屏时只会执行一次
+
+设置Activity的android:configChanges="orientation|keyboardHidden"时，切屏不会重新调用各个生命周期，只会执行onConfigurationChanged方法
+
+但是，自从Android 3.2（API 13），在设置Activity的android:configChanges="orientation|keyboardHidden"后，还是一样会重新调用各个生命周期的。因为screen size也开始跟着设备的横竖切换而改变。所以，在AndroidManifest.xml里设置的MiniSdkVersion和 TargetSdkVersion属性大于等于13的情况下，如果你想阻止程序在运行时重新加载Activity，除了设置"orientation"，你还必须设置"ScreenSize"。
+解决方法：
+
+AndroidManifest.xml中设置android:configChanges="orientation|screenSize"
+
++ 如何实现 XML 命名空间？
+
+常见命名空间
+android：xmlns:android=”http://schemas.android.com/apk/res/android”
+解析：xmlns:即xml namespace，声明我们要开始定义一个命名空间了 
+android：称作namespace-prefix，它是命名空间的名字 
+http://schemas.android.com/apk/res/android：这看起来是一个URL，但是这个地址是不可访问的。实际上这是一个URI(统一资源标识符),所以它的值是固定不变的,相当于一个常量)。
+
+```
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="New Text"
+        android:id="@+id/textView" />
+	</LinearLayout>
+```
+
+亦可以写成
+
+```
+	<LinearLayout xmlns:myns="http://schemas.android.com/apk/res/android"
+    myns:layout_width="match_parent"
+    myns:layout_height="match_parent" >
+    <TextView
+        myns:layout_width="wrap_content"
+        myns:layout_height="wrap_content"
+        myns:layout_gravity="center"
+        myns:text="New Text"
+        myns:id="@+id/textView" />
+	</LinearLayout>
+```
+
+
+tools:xmlns:tools=”http://schemas.android.com/tools”
+
+tools只作用于开发阶段
+我们可以把他理解为一个工具(tools)的命名空间,它的只作用于开发阶段,当app被打包时,所有关于tools属性将都会被摒弃掉！
+
+tools:context开发中查看Activity布局效果
+context的用法，在后面跟一个Activtiy的完整包名,它有什么作用呢?
+
+当我们设置一个Activity主题时,是在AndroidManifest.xml中设置中,而主题的效果又只能在运行后在Activtiy中显示
+
+使用context属性, 可以在开发阶段中看到设置在Activity中的主题效果
+
+tools:context=”com.littlehan.myapplication.MainActivity”
+
+在布局中加入这行代码,就可以在design视图中看到与MainActivity绑定主题的效果。
+
+tools:layout开发中查看fragment布局效果
+当我们在Activity上加载一个fragment时，是需要在运行后才可以看到加载后的效果,有没有方法在测试阶段就在布局预览窗口上显示呢?
+
+答案是有的,借助layout属性,例如,在布局中加入这样一行代码: 
+tools:layout=@layout/yourfragmentlayoutname 
+这样你的编写的fragment布局就会预览在指定主布局上了
+
+app:xmlns:app=”http://schemas.android.com/apk/res-auto”
+
+app命名空间为用户自定义，通过attrs进行设置，然后通过自定义view进行解析。
+
+
+
+
