@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="android," />
+  <meta name="keywords" content="架构," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="系统绘制一个view，如同蒙着眼睛的小孩拿着笔在画板上画出一个指定的图案。因此需要一个人在旁边指导他如何去画。Android就是那个蒙着眼睛画画的人，开发者需要告诉它如何去画。 View的测量去画一个图形，就必须知道它的大小和位置。Android系统在绘制view之前，也必须对view进行测量，告诉系统该画一个多大的view。这个过程在onMeasure()中进行。 MeasureSpecmeas">
-<meta name="keywords" content="android">
+<meta name="description" content="以往只知mvc不知mvc所以然，今天来梳理一遍。 m：即是model层，一般惯性是在model层做一些逻辑处理操作，比如说数据库存储、网络操作、复杂的算法操作、耗时任务等等 v：即是view层，xml的布局就是android的view层，view层主要是显示model的结果 c：即是controller层，例如在android中，fragment/activity可以操作view，与用户进行交流，">
+<meta name="keywords" content="架构">
 <meta property="og:type" content="article">
-<meta property="og:title" content="view的测量和绘制">
-<meta property="og:url" content="http://yoursite.com/2018/01/02/view的测量和绘制/index.html">
+<meta property="og:title" content="mvc在android中的使用">
+<meta property="og:url" content="http://yoursite.com/2018/02/10/mvc在android中的使用/index.html">
 <meta property="og:site_name" content="记录者">
-<meta property="og:description" content="系统绘制一个view，如同蒙着眼睛的小孩拿着笔在画板上画出一个指定的图案。因此需要一个人在旁边指导他如何去画。Android就是那个蒙着眼睛画画的人，开发者需要告诉它如何去画。 View的测量去画一个图形，就必须知道它的大小和位置。Android系统在绘制view之前，也必须对view进行测量，告诉系统该画一个多大的view。这个过程在onMeasure()中进行。 MeasureSpecmeas">
+<meta property="og:description" content="以往只知mvc不知mvc所以然，今天来梳理一遍。 m：即是model层，一般惯性是在model层做一些逻辑处理操作，比如说数据库存储、网络操作、复杂的算法操作、耗时任务等等 v：即是view层，xml的布局就是android的view层，view层主要是显示model的结果 c：即是controller层，例如在android中，fragment/activity可以操作view，与用户进行交流，">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-01-06T15:25:53.222Z">
+<meta property="og:updated_time" content="2018-02-10T07:41:11.955Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="view的测量和绘制">
-<meta name="twitter:description" content="系统绘制一个view，如同蒙着眼睛的小孩拿着笔在画板上画出一个指定的图案。因此需要一个人在旁边指导他如何去画。Android就是那个蒙着眼睛画画的人，开发者需要告诉它如何去画。 View的测量去画一个图形，就必须知道它的大小和位置。Android系统在绘制view之前，也必须对view进行测量，告诉系统该画一个多大的view。这个过程在onMeasure()中进行。 MeasureSpecmeas">
+<meta name="twitter:title" content="mvc在android中的使用">
+<meta name="twitter:description" content="以往只知mvc不知mvc所以然，今天来梳理一遍。 m：即是model层，一般惯性是在model层做一些逻辑处理操作，比如说数据库存储、网络操作、复杂的算法操作、耗时任务等等 v：即是view层，xml的布局就是android的view层，view层主要是显示model的结果 c：即是controller层，例如在android中，fragment/activity可以操作view，与用户进行交流，">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/01/02/view的测量和绘制/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/02/10/mvc在android中的使用/"/>
 
 
 
 
 
-  <title>view的测量和绘制 | 记录者</title>
+  <title>mvc在android中的使用 | 记录者</title>
   
 
 
@@ -243,7 +243,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/02/view的测量和绘制/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/10/mvc在android中的使用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sample">
@@ -260,7 +260,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">view的测量和绘制</h1>
+          <h1 class="post-title" itemprop="name headline">mvc在android中的使用</h1>
         
 
         <div class="post-meta">
@@ -272,8 +272,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-02T12:38:03+08:00">
-                2018-01-02
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-10T13:50:25+08:00">
+                2018-02-10
               </time>
             
 
@@ -291,9 +291,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/01/02/view的测量和绘制/#comments" itemprop="discussionUrl">
+                <a href="/2018/02/10/mvc在android中的使用/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/01/02/view的测量和绘制/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2018/02/10/mvc在android中的使用/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -321,26 +321,18 @@
       
 
       
-        <p>系统绘制一个view，如同蒙着眼睛的小孩拿着笔在画板上画出一个指定的图案。因此需要一个人在旁边指导他如何去画。<br>Android就是那个蒙着眼睛画画的人，开发者需要告诉它如何去画。</p>
-<h1 id="View的测量"><a href="#View的测量" class="headerlink" title="View的测量"></a>View的测量</h1><p>去画一个图形，就必须知道它的大小和位置。<br>Android系统在绘制view之前，也必须对view进行测量，告诉系统该画一个多大的view。这个过程在onMeasure()中进行。</p>
-<h2 id="MeasureSpec"><a href="#MeasureSpec" class="headerlink" title="MeasureSpec"></a>MeasureSpec</h2><p>measurespec是一个协助测量view的类。它是一个32位的int值，其中高2位为测量的模式，低30位为测量的大小。使用位运算是为了提高并优化效率。<br>测量的模式分为以下三种：</p>
-<ol>
-<li><p>EXACTLY<br>精确模式，当我们将控件的layout_width属性或者layout_height属性指定为具体数值时，比如android:layout_height=”100dp”,或者指定为match_parent属性时，系统使用的是EXACTLY模式。</p>
-</li>
-<li><p>AT_MOST<br>最大值模式，当控件的layout_width属性或者layout_height属性指定为wrap_content时，控件的大小一般随着子控件或内容的变化而变化，此时控件的尺寸只要不超过父控件的最大尺寸即可。</p>
-</li>
-<li><p>UNSPECIFIED<br>不指定大小测量模式。view想多大就多大，通常在绘制自定义view时才使用。</p>
-</li>
-</ol>
-<p>View类默认的onMeasure()方法只能支持EXACTLY模式。如果要让自定义view支持wrap_content属性，必须重写onMeasure方法来指定wrap_content时的大小。</p>
-<h2 id="测量的步骤"><a href="#测量的步骤" class="headerlink" title="测量的步骤"></a>测量的步骤</h2><ol>
-<li>从MeasureSpec对象中提取具体的测量模式和大小</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int specMode = MeasureSpec.getMode(measureSpec);</span><br><span class="line">int specSize = MeasureSpec.getSize(measureSpec);</span><br></pre></td></tr></table></figure>
-<ol>
-<li>通过判断测量的模式，给出不同的判断值。当specMode为EXACTLY时，直接使用指定的specSize即可；当specMode为其他两种模式时，需要给它一个默认的大小。特别的，如果指定wrap_content属性，即AT_MOST模式，需要取出我们制定的大小与specSize中最小的一个来作为最后的测量值。</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">private int measureWidth(int measureSpec)&#123;</span><br><span class="line">	int result = 0;</span><br><span class="line">	int specMode = MeasureSpec.getMode(measureSpec);</span><br><span class="line">	int specSize = MeasureSpec.getSize(measureSpec);</span><br><span class="line"></span><br><span class="line">	if(specMode == MeasureSpec.EXACTLY)&#123;</span><br><span class="line">		result = specSize;</span><br><span class="line">	&#125;else&#123;</span><br><span class="line">		result = 200;</span><br><span class="line">		if(specMpde == MeasureSpec.AT_MOST)&#123;</span><br><span class="line">			result = Math.min(result, specSize);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <p>以往只知mvc不知mvc所以然，今天来梳理一遍。</p>
+<p>m：即是model层，一般惯性是在model层做一些逻辑处理操作，比如说数据库存储、网络操作、复杂的算法操作、耗时任务等等</p>
+<p>v：即是view层，xml的布局就是android的view层，view层主要是显示model的结果</p>
+<p>c：即是controller层，例如在android中，fragment/activity可以操作view，与用户进行交流，用于显示model的结果，所以fragment/activity就是controller层</p>
+<p>光知道以上的还没用，需要了解一下为什么要分层。</p>
+<p>举个例子，现在有一个功能，是进行网络请求，我们知道，网络请求可以使用okhttp，可以使用volley，可以使用retrofit，但是假如我们直接构造一个getHttp()的方法，嵌入到activity里面，就会产生后续难以维护，假如将okhttp改成volley的话，就需要更改这个功能，由于接口的不同，会导致一系列难以想象的问题发生。</p>
+<p>因此我们可以定义一个interface，这个interface就是用于进行网络请求，里面只有2个功能，一个是请求，一个是返回结果。</p>
+<p>然后我们实现这个interface，实现完了，将这个interface作为一个model插入到activity里面，这样后续需要进行更改，使用别的框架的时候，可以直接更改这个impl，毕竟只需要两个接口的功能完全，也方便测试，同时插拔也十分方便。</p>
+<p>MVC的优点：</p>
+<p>(1)耦合性低。所谓耦合性就是模块代码之间的关联程度。利用MVC框架使得View（视图）层和Model（模型）层可以很好的分离，这样就达到了解耦的目的，所以耦合性低，减少模块代码之间的相互影响。</p>
+<p>(2)可扩展性好。由于耦合性低，添加需求，扩展代码就可以减少修改之前的代码，降低bug的出现率。</p>
+<p>(3)模块职责划分明确。主要划分层M,V,C三个模块，利于代码的维护。</p>
 
       
     </div>
@@ -358,7 +350,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/android/" rel="tag"># android</a>
+            <a href="/tags/架构/" rel="tag"># 架构</a>
           
         </div>
       
@@ -371,8 +363,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/01/01/2018开年愿景/" rel="next" title="2018开年愿景">
-                <i class="fa fa-chevron-left"></i> 2018开年愿景
+              <a href="/2018/02/08/js语法学习/" rel="next" title="js语法学习">
+                <i class="fa fa-chevron-left"></i> js语法学习
               </a>
             
           </div>
@@ -380,10 +372,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/01/02/viewgroup测量/" rel="prev" title="viewgroup测量">
-                viewgroup测量 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -445,17 +433,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -506,22 +485,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#View的测量"><span class="nav-number">1.</span> <span class="nav-text">View的测量</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MeasureSpec"><span class="nav-number">1.1.</span> <span class="nav-text">MeasureSpec</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测量的步骤"><span class="nav-number">1.2.</span> <span class="nav-text">测量的步骤</span></a></li></ol></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
@@ -679,9 +642,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://yoursite.com/2018/01/02/view的测量和绘制/';
-          this.page.identifier = '2018/01/02/view的测量和绘制/';
-          this.page.title = 'view的测量和绘制';
+          this.page.url = 'http://yoursite.com/2018/02/10/mvc在android中的使用/';
+          this.page.identifier = '2018/02/10/mvc在android中的使用/';
+          this.page.title = 'mvc在android中的使用';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://Mr.Sample.disqus.com/embed.js';
