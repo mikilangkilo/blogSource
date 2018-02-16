@@ -105,15 +105,87 @@ empty是生成一个空的观察对象，never是生成一个不会向下游发�
 
 - interval
 
+interval是起到了定时器功能，根据给定的时间间隔上游来发送数据。
+
+```
+Observable.interval(10, TimeUnit.SECONDS).just("1","2").subscribe(new Consumer<String>() {
+            @Override
+            public void accept(String s) throws Exception {
+                
+            }
+        });
+```
+
 - range
+
+创建在一个范围之类的数据类型，上游依次发送这个范围内的数据。
 
 - repeat
 
+多次重复的发送一个数据。
+
 - start
+
+创建发射一个函数的返回值的observable
 
 - timer
 
+创建在一个指定的延时之后发射单个数据的observable
+
 # transforming observables(转换observable)
+
+- map
+
+将一个对象转换为另一个对象。
+
+```
+	Observable.just(1,2,3).map(new Function<Integer, String>() {
+            @Override
+            public String apply(Integer integer) throws Exception {
+                return integer.toString();
+            }
+        }).subscribe(new Consumer<String>() {
+            @Override
+            public void accept(String s) throws Exception {
+                
+            }
+        });
+    //简单的例子，将发射为int的字节转换成为string类型的observable
+```
+
+- flatmap
+
+flatmap是一个一对多的转换对象。
+
+```
+	Observable.just(1,2,3,4).flatMap(new Function<Integer, ObservableSource<? extends String>>() {
+            @Override
+            public ObservableSource<? extends String> apply(Integer integer) throws Exception {
+                return Observable.just(integer+"");
+            }
+        }).subscribe(new Consumer<String>() {
+            @Override
+            public void accept(String s) throws Exception {
+
+            }
+        });
+```
+
+- groupby
+
+group是一个分组行为，根据指定的规则将上游进行分组归类，然后发送至下游时会夹带分组信息
+
+- buffer
+
+缓存，定期的从observable收集数据到一个集合，然后打包发送，而不是一次发送一个
+
+- scan
+
+扫描，对observable发射的每一项数据应用一个函数，然后按照顺序发射这些值
+
+- window
+
+定期将来自observable的数据拆分成一个个的observable窗口，然后发射这些窗口，而不是每次发射一项，类似于buffer， 不过window发射的是observable
 
 # filtering observables(过滤observable)
 
