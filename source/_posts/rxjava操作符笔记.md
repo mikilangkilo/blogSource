@@ -189,6 +189,71 @@ group是一个分组行为，根据指定的规则将上游进行分组归类，
 
 # filtering observables(过滤observable)
 
+- Debounce
+
+过滤掉了由Observable发射的速率过快的数据；如果在一个指定的时间间隔过去了仍旧没有发射一个，那么它将发射最后的那个。通常我们用来结合RxBinding(Jake Wharton大神使用RxJava封装的Android UI组件)使用，防止button重复点击。
+
+- Distinct
+
+distinct()的过滤规则是只允许还没有发射过的数据通过，所有重复的数据项都只会发射一次。 
+
+- ElementAt
+
+获取原始序列第n个元素，并作为唯一发射源进行发射
+
+- Filter
+
+用来过滤观察序列中我们不想要的值，只返回满足条件的值
+
+```
+Observable.from(communities)
+        .filter(new Func1<Community, Boolean>() {
+            @Override
+            public Boolean call(Community community) {
+                return community.houses.size()>10;
+            }
+        }).subscribe(new Action1<Community>() {
+    @Override
+    public void call(Community community) {
+        System.out.println(community.name);
+    }
+});
+```
+
+- First
+
+它是的Observable只发送观测序列中的第一个数据项。
+
+- last
+
+last()只发射观测序列中的最后一个数据项。 
+
+- skip
+
+忽略掉原始序列前n个元素
+
+- skiplast
+
+忽略掉原始序列最后n个元素
+
+- take
+
+发送原始序列中的前n个元素
+```
+Observable.from(communities)
+        .take(10)
+        .subscribe(new Action1<Community>() {
+            @Override
+            public void call(Community community) {
+                System.out.println(community.name);
+            }
+        });
+```
+
+- takelast
+
+发送原始序列中的最后n个元素
+
 # combing observables(组合observable)
 
 # error handling operators(处理错误)

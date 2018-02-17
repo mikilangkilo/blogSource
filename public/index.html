@@ -392,7 +392,48 @@
 <li>window</li>
 </ul>
 <p>定期将来自observable的数据拆分成一个个的observable窗口，然后发射这些窗口，而不是每次发射一项，类似于buffer， 不过window发射的是observable</p>
-<h1 id="filtering-observables-过滤observable"><a href="#filtering-observables-过滤observable" class="headerlink" title="filtering observables(过滤observable)"></a>filtering observables(过滤observable)</h1><h1 id="combing-observables-组合observable"><a href="#combing-observables-组合observable" class="headerlink" title="combing observables(组合observable)"></a>combing observables(组合observable)</h1><h1 id="error-handling-operators-处理错误"><a href="#error-handling-operators-处理错误" class="headerlink" title="error handling operators(处理错误)"></a>error handling operators(处理错误)</h1>
+<h1 id="filtering-observables-过滤observable"><a href="#filtering-observables-过滤observable" class="headerlink" title="filtering observables(过滤observable)"></a>filtering observables(过滤observable)</h1><ul>
+<li>Debounce</li>
+</ul>
+<p>过滤掉了由Observable发射的速率过快的数据；如果在一个指定的时间间隔过去了仍旧没有发射一个，那么它将发射最后的那个。通常我们用来结合RxBinding(Jake Wharton大神使用RxJava封装的Android UI组件)使用，防止button重复点击。</p>
+<ul>
+<li>Distinct</li>
+</ul>
+<p>distinct()的过滤规则是只允许还没有发射过的数据通过，所有重复的数据项都只会发射一次。 </p>
+<ul>
+<li>ElementAt</li>
+</ul>
+<p>获取原始序列第n个元素，并作为唯一发射源进行发射</p>
+<ul>
+<li>Filter</li>
+</ul>
+<p>用来过滤观察序列中我们不想要的值，只返回满足条件的值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Observable.from(communities)</span><br><span class="line">        .filter(new Func1&lt;Community, Boolean&gt;() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public Boolean call(Community community) &#123;</span><br><span class="line">                return community.houses.size()&gt;10;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).subscribe(new Action1&lt;Community&gt;() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void call(Community community) &#123;</span><br><span class="line">        System.out.println(community.name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>First</li>
+</ul>
+<p>它是的Observable只发送观测序列中的第一个数据项。</p>
+<ul>
+<li>last</li>
+</ul>
+<p>last()只发射观测序列中的最后一个数据项。 </p>
+<ul>
+<li>skip</li>
+</ul>
+<p>忽略掉原始序列前n个元素</p>
+<ul>
+<li>skiplast</li>
+</ul>
+<p>忽略掉原始序列最后n个元素</p>
+<ul>
+<li>take</li>
+</ul>
+<p>发送原始序列中的前n个元素<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Observable.from(communities)</span><br><span class="line">        .take(10)</span><br><span class="line">        .subscribe(new Action1&lt;Community&gt;() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void call(Community community) &#123;</span><br><span class="line">                System.out.println(community.name);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>takelast</li>
+</ul>
+<p>发送原始序列中的最后n个元素</p>
+<h1 id="combing-observables-组合observable"><a href="#combing-observables-组合observable" class="headerlink" title="combing observables(组合observable)"></a>combing observables(组合observable)</h1><h1 id="error-handling-operators-处理错误"><a href="#error-handling-operators-处理错误" class="headerlink" title="error handling operators(处理错误)"></a>error handling operators(处理错误)</h1>
           
         
       
