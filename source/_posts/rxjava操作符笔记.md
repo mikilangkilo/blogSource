@@ -254,6 +254,38 @@ Observable.from(communities)
 
 发送原始序列中的最后n个元素
 
-# combing observables(组合observable)
+# combing observables(组合observable
+
+- zip
+
+zip(Observable, Observable, Func2)用来合并两个Observable发射的数据项，根据Func2函数生成一个新的值并发射出去。当其中一个Observable发送数据结束或者出现异常后，另一个Observable也将停在发射数据。
+
+- merge
+
+merge(Observable, Observable)将两个Observable发射的事件序列组合并成一个事件序列，就像是一个Observable发射的一样。你可以简单的将它理解为两个Obsrvable合并成了一个Observable，合并后的数据是无序的。
+
+- startwith
+
+startWith(T)用于在源Observable发射的数据前插入数据。使用startWith(Iterable<T>)我们还可以在源Observable发射的数据前插入Iterable。
+
+- combinelatest
+
+combineLatest(Observable, Observable, Func2)用于将两个Observale最近发射的数据已经Func2函数的规则进展组合
+
+- join
+
+join(Observable, Func1, Func1, Func2)我们先介绍下join操作符的4个参数：
+Observable：源Observable需要组合的Observable,这里我们姑且称之为目标Observable；
+Func1：接收从源Observable发射来的数据，并返回一个Observable，这个Observable的声明周期决定了源Obsrvable发射出来的数据的有效期；
+Func1：接收目标Observable发射来的数据，并返回一个Observable，这个Observable的声明周期决定了目标Obsrvable发射出来的数据的有效期；
+Func2：接收从源Observable和目标Observable发射出来的数据，并将这两个数据组合后返回。所以Join操作符的语法结构大致是这样的：onservableA.join(observableB, 控制observableA发射数据有效期的函数， 控制observableB发射数据有效期的函数，两个observable发射数据的合并规则)join操作符的效果类似于排列组合，把第一个数据源A作为基座窗口，他根据自己的节奏不断发射数据元素，第二个数据源B，每发射一个数据，我们都把它和第一个数据源A中已经发射的数据进行一对一匹配；举例来说，如果某一时刻B发射了一个数据“B”,此时A已经发射了0，1，2，3共四个数据，那么我们的合并操作就会把“B”依次与0,1,2,3配对，得到四组数据： [0, B][1, B] [2, B] [3, B]
+
+- switchonnext
+
+switchOnNext(Observable<? extends Observable<? extends T>>用来将一个发射多个小Observable的源Observable转化为一个Observable，然后发射这多个小Observable所发射的数据。如果一个小的Observable正在发射数据的时候，源Observable又发射出一个新的小Observable，则前一个Observable发射的数据会被抛弃，直接发射新 的小Observable所发射的数据。
 
 # error handling operators(处理错误)
+
+- catch
+
+- retry
