@@ -8,25 +8,25 @@ tags: android
 
 设备 samsung-galaxy-mega2
 
-1. 不设置configChanges时，从横屏切换到竖屏时的生命周期
++ 不设置configChanges时，从横屏切换到竖屏时的生命周期
 
 onPause -> onSaveInstanceState -> onStop -> onDestroy -> onCreate -> onStart -> onRestoreInstanceState -> onResume
 
 很明显，是一次activity的销毁和重建，onPause之后便进行了onSaveInstanceState 而onResume之前也进行了onRestoreInstanceState。很正常
 
-2. 不设置configChanges时，从竖屏切换到横屏时的生命周期
++ 不设置configChanges时，从竖屏切换到横屏时的生命周期
 
 onPause -> onSaveInstanceState -> onStop -> onDestroy -> onCreate -> onStart -> onRestoreInstanceState -> onResume
 
 和1状态一毛一样。并没有走两次。
 
-3. 设置configChanges = "orientation"时，从横屏切换到竖屏时的生命周期
++ 设置configChanges = "orientation"时，从横屏切换到竖屏时的生命周期
 
 onPause -> onSaveInstanceState -> onStop -> onDestroy -> onCreate -> onStart -> onRestoreInstanceState -> onResume
 
 也是一毛一样
 
-4. 设置configChanges = "orientation"时，从竖屏切换到横屏的生命周期
++ 设置configChanges = "orientation"时，从竖屏切换到横屏的生命周期
 
 onPause -> onSaveInstanceState -> onStop -> onDestroy -> onCreate -> onStart -> onRestoreInstanceState -> onResume
 
@@ -34,29 +34,29 @@ onPause -> onSaveInstanceState -> onStop -> onDestroy -> onCreate -> onStart -> 
 
 这就代表着configChanges = "orientation"没有任何作用
 
-5. 设置configChanges = "orientation|keyboardHidden"时，从横屏切换到竖屏 && 竖屏切换到横屏的生命周期
++ 设置configChanges = "orientation|keyboardHidden"时，从横屏切换到竖屏 && 竖屏切换到横屏的生命周期
 
 onPause -> onSaveInstanceState -> onStop -> onDestroy -> onCreate -> onStart -> onRestoreInstanceState -> onResume
 
 依旧一毛一样
 
-6. 设置configChanges = "orientation|keyboardHidden|screensize"时，从横屏切换到竖屏 && 竖屏切换到横屏的生命周期
++ 设置configChanges = "orientation|keyboardHidden|screensize"时，从横屏切换到竖屏 && 竖屏切换到横屏的生命周期
 
 只走了onConfigurationChanged这一个方法。
 
-7. 只设置configChanges = "screensize" || 只设置configChanges = "orientation",从横屏切换到竖屏 || 竖屏切换到横屏的生命周期
++ 只设置configChanges = "screensize" || 只设置configChanges = "orientation",从横屏切换到竖屏 || 竖屏切换到横屏的生命周期
 
 onPause -> onSaveInstanceState -> onStop -> onDestroy -> onCreate -> onStart -> onRestoreInstanceState -> onResume
 
 代表只设置一个是无效的
 
-8. 只设置configChanges = "keyboardHidden|screensize",从横屏切换到竖屏 && 竖屏切换到横屏的生命周期
++ 只设置configChanges = "keyboardHidden|screensize",从横屏切换到竖屏 && 竖屏切换到横屏的生命周期
 
 onPause -> onSaveInstanceState -> onStop -> onDestroy -> onCreate -> onStart -> onRestoreInstanceState -> onResume
 
 仍旧无效
 
-9. 只设置configChanges = "orientation|screensize",从横屏切换到竖屏 || 竖屏切换到横屏的生命周期
++ 只设置configChanges = "orientation|screensize",从横屏切换到竖屏 || 竖屏切换到横屏的生命周期
 
 只走了onConfigurationChanged这一个方法。
 
