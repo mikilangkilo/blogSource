@@ -239,6 +239,195 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/23/大话多线程阅读笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/02/23/大话多线程阅读笔记/" itemprop="url">大话多线程阅读笔记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-23T23:05:12+08:00">
+                2018-02-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/02/23/大话多线程阅读笔记/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/02/23/大话多线程阅读笔记/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本篇文章主要是针对技术掘金上面《大话android多线程》进行笔记总结，好记性不如烂笔头。</p>
+<h1 id="Thread和Runnable的联系和区别"><a href="#Thread和Runnable的联系和区别" class="headerlink" title="Thread和Runnable的联系和区别"></a>Thread和Runnable的联系和区别</h1><p>线程的创建有两种方式，一种是重写runnable的run方法然后放到thread中，一种是重写thread的run方法</p>
+<h2 id="两者的联系"><a href="#两者的联系" class="headerlink" title="两者的联系"></a>两者的联系</h2><ol>
+<li>thread实现了runnable接口</li>
+<li>都需要重写run方法</li>
+</ol>
+<h2 id="两者的区别"><a href="#两者的区别" class="headerlink" title="两者的区别"></a>两者的区别</h2><ol>
+<li>实现runnable的类更具有健壮性，避免了单继承的局限</li>
+<li>runnable更容易实现资源共享，能多个线程同时处理一个资源</li>
+</ol>
+<h2 id="两者的比较"><a href="#两者的比较" class="headerlink" title="两者的比较"></a>两者的比较</h2><p>使用runnable创建的多线程，若是同一个runnable，那么运行的时候实际上执行的是同一个任务，共享的是相同的资源。<br>相反，使用thread创建的多线程，则是不同的任务，也不会共享相同的资源。</p>
+<h1 id="Synchronized使用解析"><a href="#Synchronized使用解析" class="headerlink" title="Synchronized使用解析"></a>Synchronized使用解析</h1><p>多线程的环境下面，很容易出现不同步的情况下，条件a为当b大于0的时候，b自减，结果1号线程2号线程同时进行操作，1号线程快2号线程几毫秒，对1号线程来讲，a成立，在1号线程准备对b进行操作的时候，2号线程进来，2号线程在判断的时候发现a也成立，而此时1号线程在2号线程判断之后顺利的进行的b的自减操作，此时2号线程虽然条件不成立，但是仍然需要进行b操作，此时就会产生一系列的问题。</p>
+<p>锁的作用，便是对方法块进行同步操作。在一个对象操作该方法的时候，另一个对象无法操作，等第一个对象操作完毕，该方法块才可以让别的对象操作。</p>
+<p>synchronized (obj){}同步代码块和用synchronized声明方法的作用基本一致，都是对synchronized作用范围内的代码进行加锁保护，其区别在于synchronized同步代码块使用更加灵活、轻巧，synchronized (obj){}括号内的对象参数即为该代码块持有锁的对象</p>
+<h2 id="同步方法和静态同步方法"><a href="#同步方法和静态同步方法" class="headerlink" title="同步方法和静态同步方法"></a>同步方法和静态同步方法</h2><ul>
+<li>synchronized声明非静态方法、同步代码块的synchronized (this){}和synchronized (非this对象){}这三者持有锁的对象为实例对象（类的实例对象可以有很多个），线程想要执行该synchronized作用范围内的同步代码，需获得对象锁。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public class SynchronizedTest &#123;</span><br><span class="line">    public synchronized void test1()&#123;</span><br><span class="line">        //持有锁的对象为SynchronizedTest的实例对象</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void test2()&#123;</span><br><span class="line">        synchronized (this)&#123;</span><br><span class="line">            //持有锁的对象为SynchronizedTest的实例对象</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private String obj = &quot;obj&quot;;</span><br><span class="line">    public void test3()&#123;</span><br><span class="line">        synchronized (obj)&#123;</span><br><span class="line">            //持有锁的对象为obj</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>synchronized声明静态方法以及同步代码块的synchronized (类.class){}这两者持有锁的对象为Class对象（每个类只有一个Class对象，而Class对象是Java类编译后生成的.class文件，它包含了与类有关的信息），线程想要执行该synchronized作用范围内的同步代码，需获得类锁</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class SynchronizedTest &#123;</span><br><span class="line">    public static synchronized void test4()&#123;</span><br><span class="line">        //持有锁的对象为SynchronizedTest的Class对象（SynchronizedTest.class）</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void test5()&#123;</span><br><span class="line">        synchronized (SynchronizedTest.class)&#123;</span><br><span class="line">            //持有锁的对象为SynchronizedTest的Class对象（SynchronizedTest.class）</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>若synchronized同步方法（代码块）持有锁的对象不同，则多线程执行相应的同步代码时互不干扰；若相同，则获得该对象锁的线程先执行同步代码，其他访问同步代码的线程会被阻塞并等待锁的释放</p>
+<h1 id="线程间的通信机制之Handler"><a href="#线程间的通信机制之Handler" class="headerlink" title="线程间的通信机制之Handler"></a>线程间的通信机制之Handler</h1><p>handler了解的还是比较多的，扫盲一下。</p>
+<ol>
+<li>主线程的looper在应用开始前系统就已经创建好了，需要在主线程往子线程发射消息，需要在子线程重写looper并开启循环</li>
+</ol>
+<p>重写方式如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">public class HandlerTestActivity extends AppCompatActivity &#123;</span><br><span class="line">    private Handler handler2;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_handler_test);</span><br><span class="line">        TestThread testThread = new TestThread();</span><br><span class="line">        testThread.start();</span><br><span class="line"></span><br><span class="line">        while (true)&#123;//保证testThread.looper已经初始化</span><br><span class="line">            if(testThread.looper!=null)&#123;</span><br><span class="line">                handler2 = new Handler(testThread.looper)&#123;</span><br><span class="line">                    @Override</span><br><span class="line">                    public void handleMessage(Message msg) &#123;//子线程收到消息后执行</span><br><span class="line">                        switch (msg.what)&#123;</span><br><span class="line">                            case CODE_TEST_FOUR:</span><br><span class="line">                                Log.e(TAG,&quot;收到主线程发送的消息&quot;);</span><br><span class="line">                                break;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;;</span><br><span class="line"></span><br><span class="line">                handler2.sendEmptyMessage(CODE_TEST_FOUR);//在主线程中发送消息</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    private class TestThread extends Thread&#123;</span><br><span class="line">        private Looper looper;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            super.run();</span><br><span class="line">            Looper.prepare();//创建该子线程的Looper实例</span><br><span class="line">            looper = Looper.myLooper();//取出该子线程的Looper实例</span><br><span class="line">            Looper.loop();//开始循环</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>虽然可以使用继承一个线程然后开looper的方式进行子线程设置looper，不过仍然是比较麻烦，直接使用handlerthread便可直接解决该问题。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">handler2 = new Handler(handlerThread.getLooper())&#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void handleMessage(Message msg) &#123;//子线程收到消息后执行</span><br><span class="line">                switch (msg.what)&#123;</span><br><span class="line">                    case CODE_TEST_FOUR:</span><br><span class="line">                        Log.e(TAG,&quot;收到主线程发送的消息&quot;);</span><br><span class="line">                        break;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br></pre></td></tr></table></figure>
+<p>这样子在主线程中使用handler便可直接获取子线程的looper，然后进行通信。</p>
+<ol>
+<li><p>子线程和子线程之间进行通信，其实也就是子线程a能否获得子线程b的looper这个问题，如上使用handlerthread或者直接使用继承然后写一个get方法获取looper也可以。</p>
+</li>
+<li><p>messagequeue其实是looper中包含的，并不能将他们区分开来看。</p>
+</li>
+</ol>
+<h1 id="callable、future、futuretask"><a href="#callable、future、futuretask" class="headerlink" title="callable、future、futuretask"></a>callable、future、futuretask</h1><h2 id="使用callable方式创建线程"><a href="#使用callable方式创建线程" class="headerlink" title="使用callable方式创建线程"></a>使用callable方式创建线程</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">public static class TestCallable implements Callable&#123;</span><br><span class="line">	private int ticket = 10;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public String call() throws Exception &#123;</span><br><span class="line">		System.out.println(Thread.currentThread().getName() + &quot;：我买几个橘子去。你就在此地，不要走动&quot; + &quot; 时间：&quot; + getTime());</span><br><span class="line">		Thread.sleep(2000);//模拟买橘子的时间</span><br><span class="line">		System.out.println(Thread.currentThread().getName() + &quot;：橘子卖完了&quot; + &quot; 时间：&quot; + getTime());</span><br><span class="line">		</span><br><span class="line">		throw new NullPointerException(&quot;橘子卖完了&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public static void main(String args[])&#123;</span><br><span class="line">	TestCallable callable = new TestCallable();</span><br><span class="line">	FutureTask&lt;String&gt; futureTask = new FutureTask&lt;String&gt;(callable);</span><br><span class="line"></span><br><span class="line">	Thread thread1 = new Thread(futureTask, &quot;爸爸&quot;);</span><br><span class="line">	thread1.start();</span><br><span class="line"></span><br><span class="line">	//也可以用threadpool</span><br><span class="line">	//ExecutorService executor = Executors.newCachedThreadPool();</span><br><span class="line">	//Future&lt;String&gt; future = executor.submit(callable);</span><br><span class="line"></span><br><span class="line">	System.out.println(&quot;儿子站在原地&quot; + &quot; 时间：&quot; + getTime());//验证主线程的执行情况</span><br><span class="line">	try&#123;</span><br><span class="line">		System.out.println(futureTask.get());</span><br><span class="line">		System.out.println(&quot;儿子收到橘子&quot; + &quot; 时间：&quot; + getTime());//验证主线程的执行情况</span><br><span class="line">	&#125;catch (InterruptedException | ExecutionException e)&#123;</span><br><span class="line">		System.out.println(&quot;儿子没收到橘子&quot; + &quot; 时间：&quot; + getTime());//验证主线程的执行情况</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li><p>Callable在被线程执行后，可以提供一个返回值，我们可以通过Future的get()方法拿到这个值</p>
+</li>
+<li><p>Future是一个接口，而FutureTask实现了RunnableFuture接口，RunnableFuture继承了Runnable接口和Future接口</p>
+</li>
+<li><p>与runnable不同的两点：</p>
+</li>
+</ol>
+<p>1。FutureTask用于异步获取执行结果或取消执行任务的场景，它的主要功能有：<br>可以判断任务是否完成<br>可以获取任务执行结果<br>可以中断任务</p>
+<p>2。Callable的call()方法可以抛出异常，我们可以在尝试执行get()方法时捕获这个异常</p>
+<ol>
+<li><p>FutureTask可以确保任务只执行一次</p>
+</li>
+<li><p>我们在某条线程执行get()方法时，该线程会被阻塞，直到Future拿到Callable.call()方法的返回值。</p>
+</li>
+</ol>
+<p>在UI线程中使用时（尤其是后续还有更新UI的操作）要特别注意这点，以免造成界面卡顿。那么要如何处理这种多线程执行耗时任务，等待结果，然后再更新UI的情况呢？handler</p>
+<h1 id="ThreadPoolExecutor"><a href="#ThreadPoolExecutor" class="headerlink" title="ThreadPoolExecutor"></a>ThreadPoolExecutor</h1><h2 id="new-Thread-的缺点"><a href="#new-Thread-的缺点" class="headerlink" title="new Thread()的缺点"></a>new Thread()的缺点</h2><p>• 每次new Thread()耗费性能<br>• 调用new Thread()创建的线程缺乏管理，被称为野线程，而且可以无限制创建，之间相互竞争，会导致过多占用系统资源导致系统瘫痪<br>• 不利于扩展，比如如定时执行、定期执行、线程中断 </p>
+<h2 id="线程池的优点"><a href="#线程池的优点" class="headerlink" title="线程池的优点"></a>线程池的优点</h2><p>• 重用存在的线程，减少对象创建、消亡的开销，性能佳<br>• 可有效控制最大并发线程数，提高系统资源的使用率，同时避免过多资源竞争，避免堵塞<br>• 提供定时执行、定期执行、单线程、并发数控制等功能</p>
+<h2 id="参数解析"><a href="#参数解析" class="headerlink" title="参数解析"></a>参数解析</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public ThreadPoolExecutor(int corePoolSize,</span><br><span class="line">		  int maximumPoolSize,</span><br><span class="line">		  long keepAliveTime,</span><br><span class="line">		  TimeUnit unit,</span><br><span class="line">		  BlockingQueue&lt;Runnable&gt; workQueue,</span><br><span class="line">		  ThreadFactory threadFactory,</span><br><span class="line">		  RejectedExecutionHandler handler)</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/23/android横竖屏切换总结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1676,148 +1865,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/10/mvc在android中的使用/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/02/10/mvc在android中的使用/" itemprop="url">mvc在android中的使用</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-10T13:50:25+08:00">
-                2018-02-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/02/10/mvc在android中的使用/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/02/10/mvc在android中的使用/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>以往只知mvc不知mvc所以然，今天来梳理一遍。</p>
-<p>m：即是model层，一般惯性是在model层做一些逻辑处理操作，比如说数据库存储、网络操作、复杂的算法操作、耗时任务等等</p>
-<p>v：即是view层，xml的布局就是android的view层，view层主要是显示model的结果</p>
-<p>c：即是controller层，例如在android中，fragment/activity可以操作view，与用户进行交流，用于显示model的结果，所以fragment/activity就是controller层</p>
-<p>光知道以上的还没用，需要了解一下为什么要分层。</p>
-<p>举个例子，现在有一个功能，是进行网络请求，我们知道，网络请求可以使用okhttp，可以使用volley，可以使用retrofit，但是假如我们直接构造一个getHttp()的方法，嵌入到activity里面，就会产生后续难以维护，假如将okhttp改成volley的话，就需要更改这个功能，由于接口的不同，会导致一系列难以想象的问题发生。</p>
-<p>因此我们可以定义一个interface，这个interface就是用于进行网络请求，里面只有2个功能，一个是请求，一个是返回结果。</p>
-<p>然后我们实现这个interface，实现完了，将这个interface作为一个model插入到activity里面，这样后续需要进行更改，使用别的框架的时候，可以直接更改这个impl，毕竟只需要两个接口的功能完全，也方便测试，同时插拔也十分方便。</p>
-<p>MVC的优点：</p>
-<p>(1)耦合性低。所谓耦合性就是模块代码之间的关联程度。利用MVC框架使得View（视图）层和Model（模型）层可以很好的分离，这样就达到了解耦的目的，所以耦合性低，减少模块代码之间的相互影响。</p>
-<p>(2)可扩展性好。由于耦合性低，添加需求，扩展代码就可以减少修改之前的代码，降低bug的出现率。</p>
-<p>(3)模块职责划分明确。主要划分层M,V,C三个模块，利于代码的维护。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1868,7 +1915,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-count">49</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
