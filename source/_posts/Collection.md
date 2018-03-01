@@ -13,7 +13,7 @@ java.util.Collection是一个集合接口（集合类的一个顶级接口）。
 
 Collection接口最大的意义是为了各种具体的集合提供最大化的统一操作方式，其直接继承接口有List和set等等。
 
-![Collection子类](/images/数据结构/Java集合框架.png)
+![Collection子类](/images/数据结构/Java集合框架.jpg)
 
 
 ## Collection源码解析
