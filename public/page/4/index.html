@@ -239,6 +239,201 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/13/androidscroll分析笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/13/androidscroll分析笔记/" itemprop="url">androidscroll分析笔记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-13T15:42:18+08:00">
+                2018-01-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/01/13/androidscroll分析笔记/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/01/13/androidscroll分析笔记/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="android坐标系"><a href="#android坐标系" class="headerlink" title="android坐标系"></a>android坐标系</h1><p>在android中，将屏幕最左上角的顶点作为android坐标系的原点，往右是x轴正方向，往下是y轴正方向。</p>
+<h1 id="视图坐标系"><a href="#视图坐标系" class="headerlink" title="视图坐标系"></a>视图坐标系</h1><p>视图坐标系原点以父视图左上角为坐标原点。</p>
+<h1 id="触控事件-MotionEvent"><a href="#触控事件-MotionEvent" class="headerlink" title="触控事件 - MotionEvent"></a>触控事件 - MotionEvent</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public static final int ACTION_DOWN = 0;//单击触摸按下动作</span><br><span class="line">public static final int ACTION_UP = 1;//单击触摸离开动作</span><br><span class="line">public static final int ACTION_MOVE = 2;//触摸点移动动作</span><br><span class="line">public static final int ACTION_CANCEL = 3;//触摸动作取消</span><br><span class="line">public static final int ACTION_OUTSIDE = 4;//触摸动作超出边界</span><br><span class="line">public static final int ACTION_POINTER_DOWN = 5;//多点触摸按下动作</span><br><span class="line">public static final int ACTION_POINTER_UP = 6;//多点离开动作</span><br></pre></td></tr></table></figure>
+<h2 id="ACTION-CANCEL"><a href="#ACTION-CANCEL" class="headerlink" title="ACTION_CANCEL"></a>ACTION_CANCEL</h2><p>当你的手指（或者其它）移动屏幕的时候会触发这个事件，比如当你的手指在屏幕上拖动一个listView或者一个ScrollView而不是去按上面的按钮时会触发这个事件。</p>
+<p>在设计设置页面的滑动开关时，如果不监听ACTION_CANCEL，在滑动到中间时，如果你手指上下移动，就是移动到开关控件之外，则此时会触发ACTION_CANCEL，而不是ACTION_UP，造成开关的按钮停顿在中间位置。</p>
+<p>意思就是，当用户保持按下操作，并从你的控件转移到外层控件时，会触发ACTION_CANCEL，建议进行处理～</p>
+<p>当前的手势被中断，不会再接收到关于它的记录。<br>推荐将这个事件作为 ACTION_UP 来看待，但是要区别于普通的 ACTION_UP</p>
+<p>话说回来，平常还真碰不到这个事件，习惯上就直接当 ACTION_UP 处理了就</p>
+<p>例如：上层 View 是一个 RecyclerView，它收到了一个 ACTION_DOWN 事件，由于这个可能是点击事件，所以它先传递给对应 ItemView，询问 ItemView 是否需要这个事件，然而接下来又传递过来了一个 ACTION_MOVE 事件，且移动的方向和 RecyclerView 的可滑动方向一致，所以 RecyclerView 判断这个事件是滚动事件，于是要收回事件处理权，这时候对应的 ItemView 会收到一个 ACTION_CANCEL ，并且不会再收到后续事件。</p>
+<h2 id="ACTION-OUTSIDE"><a href="#ACTION-OUTSIDE" class="headerlink" title="ACTION_OUTSIDE"></a>ACTION_OUTSIDE</h2><p>一个触摸事件已经发生了UI元素的正常范围之外。因此不再提供完整的手势，只提供 运动/触摸 的初始位置。dialog,popupwindow中比较常见</p>
+<h2 id="ACTION-POINTER-DOWN"><a href="#ACTION-POINTER-DOWN" class="headerlink" title="ACTION_POINTER_DOWN"></a>ACTION_POINTER_DOWN</h2><p>这个代表用户的第二根手指（之后动手的一根）触摸了屏幕，可以getactionindex获取某一根手指的数字来判断</p>
+<h2 id="ACTION-POINTER-UP"><a href="#ACTION-POINTER-UP" class="headerlink" title="ACTION_POINTER_UP"></a>ACTION_POINTER_UP</h2><p>同第二根手指离开了屏幕</p>
+<h1 id="获取坐标的方法"><a href="#获取坐标的方法" class="headerlink" title="获取坐标的方法"></a>获取坐标的方法</h1><h2 id="View提供的方法（以父布局为坐标系）"><a href="#View提供的方法（以父布局为坐标系）" class="headerlink" title="View提供的方法（以父布局为坐标系）"></a>View提供的方法（以父布局为坐标系）</h2><p>getTop():自身到其父布局顶点的距离<br>getLeft():<br>getRight():<br>getBottom():</p>
+<h2 id="MotionEvent提供的方法"><a href="#MotionEvent提供的方法" class="headerlink" title="MotionEvent提供的方法"></a>MotionEvent提供的方法</h2><p>getX():获取点击事件距离空间左边的距离<br>getY():<br>getRawX():获取点击事件距离整个屏幕左边的距离<br>getRawY():</p>
+<h1 id="实现滑动效果的7种方法"><a href="#实现滑动效果的7种方法" class="headerlink" title="实现滑动效果的7种方法"></a>实现滑动效果的7种方法</h1><ol>
+<li><p>layout方法<br>在ACTION_MOVE中计算偏移量，在action_down中记录触摸点的坐标，并且在move中进行计算偏移量，然后调用view的layout方法来进行调整。</p>
+</li>
+<li><p>offsetLeftAndRight和offsetTopAndBottom<br>使用方法和layout一样，差别是一个需要x的偏移一个需要y的偏移</p>
+</li>
+<li><p>LayoutParams</p>
+</li>
+</ol>
+<p>layoutParams保留了一个view的参数，可以改变view的layoutParams然后setLayoutParams进行更改。</p>
+<ol>
+<li>scrollto和scrollby</li>
+</ol>
+<p>scrollby(offsetx，offsety)，该方法会造成所有子view移动。因此需要对view的父view使用这个方法，</p>
+<ol>
+<li>Scroller</li>
+</ol>
+<p>scroller可以通过重写view的computeScroll方法，通过获取当前滚动值，来进行不断的瞬间移动，实现整体上的平移效果<br>ps：computeScroll方法是不会自动调用的，只能通过invalidate() -&gt; draw() -&gt; computeScroll()来间接调用该方法。<br>之后使用startScroll即可。</p>
+<ol>
+<li><p>属性动画</p>
+</li>
+<li><p>ViewDragHelper</p>
+</li>
+</ol>
+<p>viewdraghelper是谷歌在support库中提供的drawerlayout和slidingpanelayout两个布局中使用的，用法较为复杂。</p>
+<ol>
+<li>初始化viewdraghelper</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mViewDragHelper = ViewDragHelper.create(this, callback);</span><br></pre></td></tr></table></figure>
+<ol>
+<li>拦截事件</li>
+</ol>
+<p>将事件传递给viewdraghelper处理<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public boolean onInterceptTouchEvent(MotionEvent ev)&#123;</span><br><span class="line">	return mViewDragHelper.shouldInterceptTouchEvent(ev);</span><br><span class="line">&#125;</span><br><span class="line">@Override</span><br><span class="line">public boolean onTouchEvent(MotionEvent ev)&#123;</span><br><span class="line">	mViewDragHelper.processTouchEvent(event);</span><br><span class="line">	return true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>处理computeScroll()</li>
+</ol>
+<p>与scroller相似的，需要处理一个computescroll()方法，因为viewdraghelper内部也是使用scroller实现平滑移动的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public void computeScroll()&#123;</span><br><span class="line">	if(mViewdragHelper.continueSettling(true))&#123;</span><br><span class="line">		ViewCompat.postInvalidateOnAnimation(this);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>处理回调</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">private ViewDragHelper.Callback callback = new ViewDragHelper.Callback()&#123;</span><br><span class="line">	@Override</span><br><span class="line">	public boolean tryCaptureView(View child, int pointerId)&#123;</span><br><span class="line">		return false;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用上述回调，对child进行判断，如果是需要拖动view，就可以返回true</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public int clampViewPositionVertical(View child, int top, int dy)&#123;</span><br><span class="line">	return top;</span><br><span class="line">&#125;</span><br><span class="line">@Override</span><br><span class="line">public int clampViewPositionHorizontal(View child, int left, int dx)&#123;</span><br><span class="line">	return left;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用如上方法，来对滑动效果进行设置，返回的top和left为垂直和水平方向上面的距离。dy表示比较前一次的增量</p>
+<ol>
+<li>拖动结束之后，子View回到原来的位置</li>
+</ol>
+<p>该效果可以通过监听action_up事件，并通过调用Scroller类来实现。<br>在viewdraghelper中可以重写onViewRelased()方法来实现。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public void onViewReleased(View releasedChild, float xvel, float yvel)&#123;</span><br><span class="line">	super.onViewReleased(releasedChild, xvel, yvel);</span><br><span class="line">	if(mMianView.getLeft()&lt;500)&#123;</span><br><span class="line">		mViewDragHelper.smoothSlideViewTo(mMainView, 0, 0);</span><br><span class="line">		ViewCompat.postInvalidateOnAnimation(DragViewGroup.this);</span><br><span class="line">	&#125;else&#123;</span><br><span class="line">		mViewDragHelper.smoothSlideViewTo(mMainView, 300, 0);</span><br><span class="line">		ViewCompat.postInvalidateOnAnimation(DragViewGroup.this);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样就可以做到滑动距离小于500时回到原来的位置。</p>
+<p>除了以上内容，还有大量的监听事件可以用来处理各种事件。<br>onViewCaptured():在用户触摸到view后回调<br>onViewDragStateChanged():在拖拽状态改变时回调<br>onViewPositionChanged():这个事件在位置改变时回调</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/12/某金融公司面试小记/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1512,171 +1707,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/05/2018第一周工作小结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/05/2018第一周工作小结/" itemprop="url">2018第一周工作小结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-05T22:18:49+08:00">
-                2018-01-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/01/05/2018第一周工作小结/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/01/05/2018第一周工作小结/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>这一周由于元旦的关系，只上了四天班。2017上半年的时候在传音工作，那时候每天都要写日报，然后周五要写周报，当时写的实在是痛苦，结果来崇杏之后，一天日报都没有写过。</p>
-<p>刚开始的确很爽，可是年底总结的时候发现写不出什么来了，对于半年多的工作只有一个浅薄的印象，大致知道做了哪些项目，可是项目相关都有些模糊了。因此重拾写周报的习惯，希望今年能够有一些改变。</p>
-<p>这周由于spirtMonitor项目需要重新制作ui，前几天陈哥还没有做完效果，因此先将之前做的肺科医院订餐管理后台先进行微信登陆的集成。</p>
-<p>微信的集成刚开始准备我这边获取相关的token，然后直接与服务器对接。但是当我获取了openid之后，后端说微信开放平台的openid与公众平台的openid不同，只可以使用unionid来对接。同时还有个问题，就是我这边无法直接使用获取的unionid来进行对接，不可以把appid和secretid放在app里面，防止别人抓包。</p>
-<p>因此需要重新设置一个模式，使用appid加微信登陆获取的一次性code，将code传回服务器，在服务器里面进行处理，之后返回一个处理完毕的token，我在app这边做一个持久化，这个token有效期三天，我根据token是否过期进行重新获取code，重复之上的行为即可。因此等待张凯把后端处理完我才可以进行之后的行动。</p>
-<p>关于token，我和张凯交流的时候有个设想，我这边将code，使用query的方式添加到url的末尾，然后使用浏览器传出去，之后浏览器走之前微信公众号的那个端口，走完之后浏览器返回值，然后浏览器吊起我的程序。这个方法感觉是可行的，但是当时考虑到跨域的问题没有实现。</p>
-<p>晚上关于这个问题搜索了一下，主要针对是如何使用webview来吊起activity。</p>
-<p>结果显示，的确如果直接发intent吊起webview会出现跨域的问题，但是可以本地写一个html页面来解决跨域的问题。</p>
-<p><a href="http://www.cnblogs.com/yejiurui/p/3413796.html" target="_blank" rel="noopener">使用webview吊起activity</a></p>
-<p>这样给我一个想法。由于安卓跨域保护的问题，很多和浏览器协作的方面，比如说之前做的，hybirdapp调用本地视频的功能，可以截取webview的url，然后吊起本地的html来加载视频。不过这个方式对于那种内嵌的视频可能不好用，内嵌的视频还是需要使用webserver来进行视频的提供。但是也是一种思路。</p>
-<p>明天做一下相关的demo。</p>
-<p>微信集成搞了2天，之后陈总那边的ui好了，因此需要重新更改ui。</p>
-<p>之前使用animation的方式，对textview进行动画的设置，这样会在更新的时候触发动画，但是动画的效果不是很好看，之后恰好看到了一个app，使用的是每次更新的时候数字从小到大的方式。刚好找到了一个库，单纯的一个自定义view，直接继承了textview，使用的一个valueAmatior动画，这个动画里面添加了一个animationListener，在这个监听器里面进行了textview的设值。值的范围从设置的开端到末端。这个设置的动画和我之前设置的对比就完全不同了，感觉十分好。</p>
-<p>周四周五大概就做了这几件事。晚上回来的路上，在想关于借口查询的问题，我之前使用的是定时去查询接口的方式，但是之前了解了一个关于http长连接的方式，实时聊天软件就是使用的长连接的效果，这方面也需要了解一下。</p>
-<p>因此本周的收获如下：</p>
-<ol>
-<li>了解了如何使用valueAmator来进行动画的更新。</li>
-<li>了解了如何集成微信</li>
-</ol>
-<p>遗留未解决的问题如下：</p>
-<ol>
-<li>使用本地静态html来进行get操作，对返回值过滤来吊起app并且获取返回值</li>
-<li>学习使用长链接的方式来进行接口的查询</li>
-</ol>
-<p>周末的任务：</p>
-<ol>
-<li>解决遗留问题</li>
-<li>处理一下williamchart的ui更改</li>
-<li>研究一下安卓的渐变色，圆心渐变和直线渐变</li>
-</ol>
-<p>有时间的话：</p>
-<ol>
-<li>学习一下常用的排序算法</li>
-<li>继续学习安卓群英传</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1727,7 +1757,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-count">53</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
