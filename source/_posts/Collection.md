@@ -125,3 +125,191 @@ public interface Collection<E> extends Iterable<E> {
 
 java.util.Collections则是一个包装类（工具类/帮助类），包含各种有关集合操作的静态多态方法。不能被实例化，就像一个工具类，用于对集合中元素进行排序、搜索和线程安全等各种操作。
 
+
+```
+public class Collections {
+
+	//构造函数私有化，目的是为了保证无法被构造
+	private Collections() {
+    }
+
+
+    /*
+    *sort排序
+    */
+    @SuppressWarnings("unchecked")//使用了范型，让编译器别做反应
+    public static <T extends Comparable<? super T>> void sort(List<T> list) {
+        if (list.getClass() == ArrayList.class) {
+            Arrays.sort(((ArrayList) list).elementData, 0, list.size());//arraylist直接使用Arrays的排序
+            return;
+        }
+
+        Object[] a = list.toArray();//不是arraylist，则将其转换为array，然后使用Arrays的排序
+        Arrays.sort(a);
+        /*
+        *之后获取迭代器，通过迭代器进行参数的传递
+        */
+        ListIterator<T> i = list.listIterator();
+        for (int j=0; j<a.length; j++) {
+            i.next();
+            i.set((T)a[j]);
+        }
+    }
+
+    /*
+    *sort排序的多态方法，加上一个比较器进行排序
+    */
+    @SuppressWarnings({"unchecked", "rawtypes"})//压制警告，即去除警告，rawtypes是说传参时也要传递带泛型的参数
+    public static <T> void sort(List<T> list, Comparator<? super T> c) {
+        if (list.getClass() == ArrayList.class) {
+            Arrays.sort(((ArrayList) list).elementData, 0, list.size(), (Comparator) c);
+            return;
+        }
+
+        Object[] a = list.toArray();
+        Arrays.sort(a, (Comparator)c);
+        ListIterator<T> i = list.listIterator();
+        for (int j=0; j<a.length; j++) {
+            i.next();
+            i.set((T)a[j]);
+        }
+        /*
+        *仅仅是多加了一个比较器而已
+        */
+    }
+
+    /*
+    *二分查找，在list实现randomaccess接口，或者大小小于5000时，使用索引二分查找，否则使用迭代器二分查找
+    */
+    public static <T> int binarySearch(List<? extends Comparable<? super T>> list, T key) {
+        if (list instanceof RandomAccess || list.size()<BINARYSEARCH_THRESHOLD)
+            return Collections.indexedBinarySearch(list, key);
+        else
+            return Collections.iteratorBinarySearch(list, key);
+    }
+
+    /*
+    *二分查找的多态方法，支持比较器
+    */
+    @SuppressWarnings("unchecked")
+    public static <T> int binarySearch(List<? extends T> list, T key, Comparator<? super T> c) {
+        if (c==null)
+            return binarySearch((List<? extends Comparable<? super T>>) list, key);
+
+        if (list instanceof RandomAccess || list.size()<BINARYSEARCH_THRESHOLD)
+            return Collections.indexedBinarySearch(list, key, c);
+        else
+            return Collections.iteratorBinarySearch(list, key, c);
+    }
+
+    /*
+    *反转操作，数量小于18，或者实现randomaccess接口时，使用swap操作，否则使用迭代器进行反转替换
+    */
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public static void reverse(List<?> list) {
+        int size = list.size();
+        if (size < REVERSE_THRESHOLD || list instanceof RandomAccess) {
+            for (int i=0, mid=size>>1, j=size-1; i<mid; i++, j--)
+                swap(list, i, j);
+        } else {
+            // instead of using a raw type here, it's possible to capture
+            // the wildcard but it will require a call to a supplementary
+            // private method
+            ListIterator fwd = list.listIterator();
+            ListIterator rev = list.listIterator(size);
+            for (int i=0, mid=list.size()>>1; i<mid; i++) {
+                Object tmp = fwd.next();
+                fwd.set(rev.previous());
+                rev.set(tmp);
+            }
+        }
+    }
+
+    /*
+    *洗牌操作
+    */
+    public static void shuffle(List<?> list) {
+        Random rnd = r;
+        if (rnd == null)
+            r = rnd = new Random(); // harmless race.
+        shuffle(list, rnd);
+    }
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public static void shuffle(List<?> list, Random rnd) {
+        int size = list.size();
+        if (size < SHUFFLE_THRESHOLD || list instanceof RandomAccess) {
+            for (int i=size; i>1; i--)
+                swap(list, i-1, rnd.nextInt(i));
+        } else {
+            Object arr[] = list.toArray();
+
+            // Shuffle array
+            for (int i=size; i>1; i--)
+                swap(arr, i-1, rnd.nextInt(i));
+
+            // Dump array back into list
+            // instead of using a raw type here, it's possible to capture
+            // the wildcard but it will require a call to a supplementary
+            // private method
+            ListIterator it = list.listIterator();
+            for (int i=0; i<arr.length; i++) {
+                it.next();
+                it.set(arr[i]);
+            }
+        }
+    }
+
+    /*
+    *交换操作
+    */
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public static void swap(List<?> list, int i, int j) {
+        // instead of using a raw type here, it's possible to capture
+        // the wildcard but it will require a call to a supplementary
+        // private method
+        final List l = list;
+        l.set(i, l.set(j, l.get(i)));
+    }
+
+    /*
+    *填满操作，将list填充成全是obj的list
+    */
+    public static <T> void fill(List<? super T> list, T obj) {
+        int size = list.size();
+
+        if (size < FILL_THRESHOLD || list instanceof RandomAccess) {
+            for (int i=0; i<size; i++)
+                list.set(i, obj);
+        } else {
+            ListIterator<? super T> itr = list.listIterator();
+            for (int i=0; i<size; i++) {
+                itr.next();
+                itr.set(obj);
+            }
+        }
+    }
+
+    /*
+    *复制操作，结束后dest的内容将和src的内容完全一样，不过有两点，一个是dest的长度要不小于src的长度，另一个是dest的长度大于src时，dest中多余的元素将不受影响
+    */
+    public static <T> void copy(List<? super T> dest, List<? extends T> src) {
+        int srcSize = src.size();
+        if (srcSize > dest.size())
+            throw new IndexOutOfBoundsException("Source does not fit in dest");
+
+        if (srcSize < COPY_THRESHOLD ||
+            (src instanceof RandomAccess && dest instanceof RandomAccess)) {
+            for (int i=0; i<srcSize; i++)
+                dest.set(i, src.get(i));
+        } else {
+            ListIterator<? super T> di=dest.listIterator();
+            ListIterator<? extends T> si=src.listIterator();
+            for (int i=0; i<srcSize; i++) {
+                di.next();
+                di.set(si.next());
+            }
+        }
+    }
+}
+```
+
