@@ -310,6 +310,128 @@ public class Collections {
             }
         }
     }
+
+    /*
+    *计算最小值，方法仍然是使用迭代器
+    */
+    public static <T extends Object & Comparable<? super T>> T min(Collection<? extends T> coll) {
+        Iterator<? extends T> i = coll.iterator();
+        T candidate = i.next();
+
+        while (i.hasNext()) {
+            T next = i.next();
+            if (next.compareTo(candidate) < 0)
+                candidate = next;
+        }
+        return candidate;
+    }
+
+    /*
+    *计算最小值的多态方法，添加了一个比较器
+    */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static <T> T min(Collection<? extends T> coll, Comparator<? super T> comp) {
+        if (comp==null)
+            return (T)min((Collection) coll);
+
+        Iterator<? extends T> i = coll.iterator();
+        T candidate = i.next();
+
+        while (i.hasNext()) {
+            T next = i.next();
+            if (comp.compare(next, candidate) < 0)
+                candidate = next;
+        }
+        return candidate;
+    }
+
+    /*
+    *计算最大值
+    */
+    public static <T extends Object & Comparable<? super T>> T max(Collection<? extends T> coll) {
+        Iterator<? extends T> i = coll.iterator();
+        T candidate = i.next();
+
+        while (i.hasNext()) {
+            T next = i.next();
+            if (next.compareTo(candidate) > 0)
+                candidate = next;
+        }
+        return candidate;
+    }
+
+    /*
+    *通过比较器计算最大值
+    */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static <T> T max(Collection<? extends T> coll, Comparator<? super T> comp) {
+        if (comp==null)
+            return (T)max((Collection) coll);
+
+        Iterator<? extends T> i = coll.iterator();
+        T candidate = i.next();
+
+        while (i.hasNext()) {
+            T next = i.next();
+            if (comp.compare(next, candidate) > 0)
+                candidate = next;
+        }
+        return candidate;
+    }
+
+    /*
+    *旋转操作，通过distance来计算
+    */
+    public static void rotate(List<?> list, int distance) {
+        if (list instanceof RandomAccess || list.size() < ROTATE_THRESHOLD)
+            rotate1(list, distance);
+        else
+            rotate2(list, distance);
+    }
+
+    /*
+    *使用新值，替换list中原有的旧值
+    */
+    public static <T> boolean replaceAll(List<T> list, T oldVal, T newVal) {
+        boolean result = false;
+        int size = list.size();
+        if (size < REPLACEALL_THRESHOLD || list instanceof RandomAccess) {
+            if (oldVal==null) {
+                for (int i=0; i<size; i++) {
+                    if (list.get(i)==null) {
+                        list.set(i, newVal);
+                        result = true;
+                    }
+                }
+            } else {
+                for (int i=0; i<size; i++) {
+                    if (oldVal.equals(list.get(i))) {
+                        list.set(i, newVal);
+                        result = true;
+                    }
+                }
+            }
+        } else {
+            ListIterator<T> itr=list.listIterator();
+            if (oldVal==null) {
+                for (int i=0; i<size; i++) {
+                    if (itr.next()==null) {
+                        itr.set(newVal);
+                        result = true;
+                    }
+                }
+            } else {
+                for (int i=0; i<size; i++) {
+                    if (oldVal.equals(itr.next())) {
+                        itr.set(newVal);
+                        result = true;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
 }
 ```
 
