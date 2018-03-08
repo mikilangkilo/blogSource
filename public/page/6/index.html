@@ -50,19 +50,19 @@
 
 <link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
 
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
 
 
-  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
 
 
 
@@ -94,7 +94,7 @@
   var CONFIG = {
     root: '/',
     scheme: 'Muse',
-    version: '5.1.3',
+    version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
     tabs: true,
@@ -127,16 +127,6 @@
 
 
 
-
-  <script type="text/javascript">
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?6501f9771a3fc3833381947e71bdd393";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-  </script>
 
 
 
@@ -283,17 +273,6 @@
           
 
           
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/12/21/“rxjava2-0”/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/12/21/“rxjava2-0”/" itemprop="commentCount"></span>
-                </a>
-              </span>
             
           
 
@@ -507,17 +486,6 @@ BackpressureStrategy.MISSING
 
           
             
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/12/21/retrofit2-post/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/12/21/retrofit2-post/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -545,7 +513,7 @@ BackpressureStrategy.MISSING
         
           
             <h1 id="retrofit的post方法"><a href="#retrofit的post方法" class="headerlink" title="retrofit的post方法"></a>retrofit的post方法</h1><h2 id="简单的双参数上传，结果是ResponseBody"><a href="#简单的双参数上传，结果是ResponseBody" class="headerlink" title="简单的双参数上传，结果是ResponseBody"></a>简单的双参数上传，结果是ResponseBody</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@FormUrlEncoded</span><br><span class="line">@POST(&quot;xxx.com&quot;)</span><br><span class="line">Observable&lt;ResponseBody&gt; login(</span><br><span class="line">	@Field(&quot;no&quot;) String no,</span><br><span class="line">	@Field(&quot;pass&quot;) String pass);</span><br></pre></td></tr></table></figure>
-<h2 id="文件上传-（-多文件上传-使用-PartMap-Map-params-要注意在设置每一个RequestBody文件的时候，数组名不能一致，否则会覆-盖。）"><a href="#文件上传-（-多文件上传-使用-PartMap-Map-params-要注意在设置每一个RequestBody文件的时候，数组名不能一致，否则会覆-盖。）" class="headerlink" title="文件上传 （ 多文件上传,使用 @PartMap Map params 要注意在设置每一个RequestBody文件的时候，数组名不能一致，否则会覆 盖。）"></a>文件上传 （ 多文件上传,使用 @PartMap Map<string, requestbody=""> params 要注意在设置每一个RequestBody文件的时候，数组名不能一致，否则会覆 盖。）</string,></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Multipart</span><br><span class="line">   @POST(&quot;xxx.com&quot;)</span><br><span class="line">   Observable&lt;ResponseBody&gt; uploadFile(</span><br><span class="line">       @Part(&quot;file\&quot;; filename=\&quot;test.png&quot;) RequestBody file</span><br><span class="line">    );</span><br></pre></td></tr></table></figure>
+<h2 id="文件上传-（-多文件上传-使用-PartMap-Map-lt-String-RequestBody-gt-params-要注意在设置每一个RequestBody文件的时候，数组名不能一致，否则会覆-盖。）"><a href="#文件上传-（-多文件上传-使用-PartMap-Map-lt-String-RequestBody-gt-params-要注意在设置每一个RequestBody文件的时候，数组名不能一致，否则会覆-盖。）" class="headerlink" title="文件上传 （ 多文件上传,使用 @PartMap Map&lt;String, RequestBody&gt; params 要注意在设置每一个RequestBody文件的时候，数组名不能一致，否则会覆 盖。）"></a>文件上传 （ 多文件上传,使用 @PartMap Map&lt;String, RequestBody&gt; params 要注意在设置每一个RequestBody文件的时候，数组名不能一致，否则会覆 盖。）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Multipart</span><br><span class="line">   @POST(&quot;xxx.com&quot;)</span><br><span class="line">   Observable&lt;ResponseBody&gt; uploadFile(</span><br><span class="line">       @Part(&quot;file\&quot;; filename=\&quot;test.png&quot;) RequestBody file</span><br><span class="line">    );</span><br></pre></td></tr></table></figure>
 <h2 id="单文件上传"><a href="#单文件上传" class="headerlink" title="单文件上传"></a>单文件上传</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Multipart</span><br><span class="line">   @POST(&quot;xxx.com&quot;)</span><br><span class="line">   Observable&lt;ResponseBody&gt; uploadFile(</span><br><span class="line">           @Part MultipartBody.Part file );</span><br></pre></td></tr></table></figure>
 <h2 id="多文件上传"><a href="#多文件上传" class="headerlink" title="多文件上传"></a>多文件上传</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Multipart</span><br><span class="line">   @POST(&quot;xxx.com&quot;)</span><br><span class="line">   Observable&lt;ResponseBody&gt; uploadFile(</span><br><span class="line">           @Part() List&lt;MultipartBody.Part&gt; files );</span><br></pre></td></tr></table></figure>
 <h2 id="文件和参数共同上传-参数也需要封装成MultipartBody-Part这样的类型，不然传递会出错，这个类型其实就是将这些数据封装成表单的类型，因为在这里不能使用FormUrlEncoded进行处理"><a href="#文件和参数共同上传-参数也需要封装成MultipartBody-Part这样的类型，不然传递会出错，这个类型其实就是将这些数据封装成表单的类型，因为在这里不能使用FormUrlEncoded进行处理" class="headerlink" title="文件和参数共同上传  (参数也需要封装成MultipartBody.Part这样的类型，不然传递会出错，这个类型其实就是将这些数据封装成表单的类型，因为在这里不能使用FormUrlEncoded进行处理)"></a>文件和参数共同上传  (参数也需要封装成MultipartBody.Part这样的类型，不然传递会出错，这个类型其实就是将这些数据封装成表单的类型，因为在这里不能使用FormUrlEncoded进行处理)</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Multipart</span><br><span class="line">   @POST(&quot;xxx.com&quot;)</span><br><span class="line">   Observable&lt;ResponseBody&gt; uploadFile(</span><br><span class="line">        @Part() List&lt;MultipartBody.Part &gt; files );</span><br></pre></td></tr></table></figure>
@@ -640,17 +608,6 @@ BackpressureStrategy.MISSING
           
 
           
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/12/21/test-appveyor/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/12/21/test-appveyor/" itemprop="commentCount"></span>
-                </a>
-              </span>
             
           
 
@@ -770,17 +727,6 @@ BackpressureStrategy.MISSING
           
 
           
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/12/21/使用appveyor-xml-进行双端部署hexo/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/12/21/使用appveyor-xml-进行双端部署hexo/" itemprop="commentCount"></span>
-                </a>
-              </span>
             
           
 
@@ -976,7 +922,7 @@ BackpressureStrategy.MISSING
 
 
 
-  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.3</div>
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
 
 
 
@@ -1067,34 +1013,26 @@ BackpressureStrategy.MISSING
   
 
 
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
 
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
-
-
-
-  
-  
-
-  
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
 
 
 
   
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
 
 
   
 
-    
-      <script id="dsq-count-scr" src="https://Mr.Sample.disqus.com/count.js" async></script>
-    
-
-    
 
   
 
@@ -1113,34 +1051,16 @@ BackpressureStrategy.MISSING
 
 
 
-
-
-
-
-
-
-
-  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
   
-  <script type="text/javascript">
-    var GUEST = ['nick','mail','link'];
-    var guest = 'nick,mail,link';
-    guest = guest.split(',').filter(item=>{
-      return GUEST.indexOf(item)>-1;
-    });
-    new Valine({
-        el: '#comments' ,
-        verify: false,
-        notify: false,
-        appId: 'lyLXiEg3TqshvM3qxHjYskBX-gzGzoHsz',
-        appKey: 'SlOO9nVu3kxycc3RxicJUlXA',
-        placeholder: 'Just go go',
-        avatar:'mm',
-        guest_info:guest,
-        pageSize:'10' || 10,
-    });
-  </script>
+
+
+
+
+
+
+
+
+
 
 
 

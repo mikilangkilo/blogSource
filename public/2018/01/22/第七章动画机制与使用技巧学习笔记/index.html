@@ -50,19 +50,19 @@
 
 <link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
 
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
 
 
-  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
 
 
 
@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="记录者">
 <meta property="og:description" content="Android View动画框架Animation框架定义了透明度、旋转、缩放和位移几种常见的动画，控制的是整个view，原理是每次绘制视图时view所在的viewgroup中的drawchild函数获取该view的animation的transformation值，然后调用canvas.concat(transformToApply.getMatrix())，通过矩阵换算完成动画帧，如果动画没有">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-01-24T11:28:06.369Z">
+<meta property="og:updated_time" content="2018-03-08T10:15:30.072Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="第七章动画机制与使用技巧学习笔记">
 <meta name="twitter:description" content="Android View动画框架Animation框架定义了透明度、旋转、缩放和位移几种常见的动画，控制的是整个view，原理是每次绘制视图时view所在的viewgroup中的drawchild函数获取该view的animation的transformation值，然后调用canvas.concat(transformToApply.getMatrix())，通过矩阵换算完成动画帧，如果动画没有">
@@ -99,7 +99,7 @@
   var CONFIG = {
     root: '/',
     scheme: 'Muse',
-    version: '5.1.3',
+    version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
     tabs: true,
@@ -132,16 +132,6 @@
 
 
 
-
-  <script type="text/javascript">
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?6501f9771a3fc3833381947e71bdd393";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-  </script>
 
 
 
@@ -285,17 +275,6 @@
           
 
           
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/01/22/第七章动画机制与使用技巧学习笔记/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/01/22/第七章动画机制与使用技巧学习笔记/" itemprop="commentCount"></span>
-                </a>
-              </span>
             
           
 
@@ -445,7 +424,7 @@ LayoutAnimationController lac = new LayoutAnimationController(sa, 0.5F);
 lac.setOrder(LayoutAnimationController.ORDER_NORMAL);
 //为viewgroup设置布局动画
 ll.setLayoutAnimation(lac);
-</code></pre><p>```</p>
+</code></pre><p><code>`</code></p>
 <p>上述代码可以使得子view出现时有一个缩放的效果。</p>
 <h2 id="插值器"><a href="#插值器" class="headerlink" title="插值器"></a>插值器</h2><p>插值器用于定义动画变化速率。</p>
 <h2 id="自定义动画"><a href="#自定义动画" class="headerlink" title="自定义动画"></a>自定义动画</h2><p>自定义动画是继承一个Animation然后自己写，自定义动画可以获得当前矩阵对象，然后对矩阵进行操作变化，可以实现任何效果的动画。</p>
@@ -519,16 +498,6 @@ ll.setLayoutAnimation(lac);
 
 
           
-
-  
-    <div class="comments" id="comments">
-      <div id="disqus_thread">
-        <noscript>
-          Please enable JavaScript to view the
-          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
-        </noscript>
-      </div>
-    </div>
 
   
 
@@ -662,7 +631,7 @@ ll.setLayoutAnimation(lac);
 
 
 
-  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.3</div>
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
 
 
 
@@ -753,50 +722,30 @@ ll.setLayoutAnimation(lac);
   
 
 
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
 
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
-
-
-
-  
-  
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
 
 
 
   
+  
 
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
 
 
 
   
 
 
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
   
 
-    
-      <script id="dsq-count-scr" src="https://Mr.Sample.disqus.com/count.js" async></script>
-    
-
-    
-      <script type="text/javascript">
-        var disqus_config = function () {
-          this.page.url = 'http://yoursite.com/2018/01/22/第七章动画机制与使用技巧学习笔记/';
-          this.page.identifier = '2018/01/22/第七章动画机制与使用技巧学习笔记/';
-          this.page.title = '第七章动画机制与使用技巧学习笔记';
-        };
-        var d = document, s = d.createElement('script');
-        s.src = 'https://Mr.Sample.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', '' + +new Date());
-        (d.head || d.body).appendChild(s);
-      </script>
-    
 
   
 
@@ -815,34 +764,16 @@ ll.setLayoutAnimation(lac);
 
 
 
-
-
-
-
-
-
-
-  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
   
-  <script type="text/javascript">
-    var GUEST = ['nick','mail','link'];
-    var guest = 'nick,mail,link';
-    guest = guest.split(',').filter(item=>{
-      return GUEST.indexOf(item)>-1;
-    });
-    new Valine({
-        el: '#comments' ,
-        verify: false,
-        notify: false,
-        appId: 'lyLXiEg3TqshvM3qxHjYskBX-gzGzoHsz',
-        appKey: 'SlOO9nVu3kxycc3RxicJUlXA',
-        placeholder: 'Just go go',
-        avatar:'mm',
-        guest_info:guest,
-        pageSize:'10' || 10,
-    });
-  </script>
+
+
+
+
+
+
+
+
+
 
 
 
