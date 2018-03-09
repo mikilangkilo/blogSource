@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="android," />
+  <meta name="keywords" content="日常bug," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="Android任务栈简介andriod使用栈结构来管理activity AndroidMainifest启动模式 standard  每次启动都会创建新的实例，覆盖在原来的activity上面  singleTop  每次启动时判断栈顶是否是要启动的activity，如果是则不创建新的而直接引用这个activity。不是的话则创建一个并启动。  singleTask  每次启动时判断整个栈是否有要">
-<meta name="keywords" content="android">
+<meta name="description" content="出现了一个问题，使用gradlew进行分渠道打包编译的时候，报错。但是直接使用build，assemblebuild等操作都是可以的。排查发现网上有个相同的问题，回答者说是java9不稳定。因此需要替换一下jdk版本。 编译的时候需要修改gradle.properties增加一行：org.gradle.java.home=/Library/Java/JavaVirtualMachines/jdk1">
+<meta name="keywords" content="日常bug">
 <meta property="og:type" content="article">
-<meta property="og:title" content="第八章Activity与Activity调用栈分析笔记">
-<meta property="og:url" content="http://yoursite.com/2018/01/24/第八章Activity与Activity调用栈分析笔记/index.html">
+<meta property="og:title" content="gradlew编译报错小结">
+<meta property="og:url" content="http://yoursite.com/2018/03/09/gradlew编译报错小结/index.html">
 <meta property="og:site_name" content="记录者">
-<meta property="og:description" content="Android任务栈简介andriod使用栈结构来管理activity AndroidMainifest启动模式 standard  每次启动都会创建新的实例，覆盖在原来的activity上面  singleTop  每次启动时判断栈顶是否是要启动的activity，如果是则不创建新的而直接引用这个activity。不是的话则创建一个并启动。  singleTask  每次启动时判断整个栈是否有要">
+<meta property="og:description" content="出现了一个问题，使用gradlew进行分渠道打包编译的时候，报错。但是直接使用build，assemblebuild等操作都是可以的。排查发现网上有个相同的问题，回答者说是java9不稳定。因此需要替换一下jdk版本。 编译的时候需要修改gradle.properties增加一行：org.gradle.java.home=/Library/Java/JavaVirtualMachines/jdk1">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-03-08T10:15:30.072Z">
+<meta property="og:updated_time" content="2018-03-09T03:36:54.604Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="第八章Activity与Activity调用栈分析笔记">
-<meta name="twitter:description" content="Android任务栈简介andriod使用栈结构来管理activity AndroidMainifest启动模式 standard  每次启动都会创建新的实例，覆盖在原来的activity上面  singleTop  每次启动时判断栈顶是否是要启动的activity，如果是则不创建新的而直接引用这个activity。不是的话则创建一个并启动。  singleTask  每次启动时判断整个栈是否有要">
+<meta name="twitter:title" content="gradlew编译报错小结">
+<meta name="twitter:description" content="出现了一个问题，使用gradlew进行分渠道打包编译的时候，报错。但是直接使用build，assemblebuild等操作都是可以的。排查发现网上有个相同的问题，回答者说是java9不稳定。因此需要替换一下jdk版本。 编译的时候需要修改gradle.properties增加一行：org.gradle.java.home=/Library/Java/JavaVirtualMachines/jdk1">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/01/24/第八章Activity与Activity调用栈分析笔记/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/03/09/gradlew编译报错小结/"/>
 
 
 
 
 
-  <title>第八章Activity与Activity调用栈分析笔记 | 记录者</title>
+  <title>gradlew编译报错小结 | 记录者</title>
   
 
 
@@ -233,7 +233,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/24/第八章Activity与Activity调用栈分析笔记/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/09/gradlew编译报错小结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sample">
@@ -250,7 +250,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">第八章Activity与Activity调用栈分析笔记</h1>
+          <h1 class="post-title" itemprop="name headline">gradlew编译报错小结</h1>
         
 
         <div class="post-meta">
@@ -262,8 +262,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-24T17:34:25+08:00">
-                2018-01-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-09T11:34:35+08:00">
+                2018-03-09
               </time>
             
 
@@ -300,56 +300,9 @@
       
 
       
-        <h1 id="Android任务栈简介"><a href="#Android任务栈简介" class="headerlink" title="Android任务栈简介"></a>Android任务栈简介</h1><p>andriod使用栈结构来管理activity</p>
-<h1 id="AndroidMainifest启动模式"><a href="#AndroidMainifest启动模式" class="headerlink" title="AndroidMainifest启动模式"></a>AndroidMainifest启动模式</h1><ol>
-<li>standard</li>
-</ol>
-<p>每次启动都会创建新的实例，覆盖在原来的activity上面</p>
-<ol>
-<li>singleTop</li>
-</ol>
-<p>每次启动时判断栈顶是否是要启动的activity，如果是则不创建新的而直接引用这个activity。不是的话则创建一个并启动。</p>
-<ol>
-<li>singleTask</li>
-</ol>
-<p>每次启动时判断整个栈是否有要启动的activity，如果有就将其以上的activity销毁（同一个app启动这个activity是销毁，不同app启动这个activity则会创建一个新的任务栈），如果activity在后台的一个栈中，后台这个任务栈将同时切换到前台。</p>
-<p>这种启动模式可以用来设置主activity，这样主activity启动别的activity，退出回到主activity时可以顺便销毁别的activity。</p>
-<ol>
-<li>singleInstance</li>
-</ol>
-<p>这种启动模式常用于需要与程序分离的界面，不同应用共同享用一个activity</p>
-<p>ps:不同栈是无法使用startActivityForResult()方法来获得数据的，只可以通过intent绑定来传。</p>
-<h1 id="Intent-Flag启动模式"><a href="#Intent-Flag启动模式" class="headerlink" title="Intent Flag启动模式"></a>Intent Flag启动模式</h1><p>介绍一些常用的Flag</p>
-<ol>
-<li>Intent.FLAG_ACTIVITY_NEW_TASK</li>
-</ol>
-<p>使用一个新的task来启动activity，启动的每个activity都将在一个新的task中。</p>
-<p>该flag通常使用在从service中启动activity的场景，由于在service中并不存在activity栈，所以使用该flag来创建一个新的activity栈，并创建新的activty实例。</p>
-<ol>
-<li>FLAG_ACTIVITY_SINGLE_TOP</li>
-</ol>
-<p>与singletop等同</p>
-<ol>
-<li>FLAG_ACTIVITY_CLEAR_TOP</li>
-</ol>
-<p>使用singletask模式来启动一个activity</p>
-<ol>
-<li>FLAG_ACTIVITY_NO_HISTORY</li>
-</ol>
-<p>使用这种模式启动activity，当该activity启动其他activity后，该activity就消失了，不会保存在栈中。</p>
-<h1 id="清空任务栈"><a href="#清空任务栈" class="headerlink" title="清空任务栈"></a>清空任务栈</h1><p>可以在mainifest中activity标签中使用以下几种属性来清理任务栈</p>
-<ol>
-<li>clearTaskOnLaunch</li>
-</ol>
-<p>每次返回该activity时，都将该activity之上的所有activity清除，通过这个属性，可以让这个task每次在初始化的时候，都只有这一个activity</p>
-<ol>
-<li>finishOnTaskLaunch</li>
-</ol>
-<p>当离开这个activity所处的task，用户在返回时，该activity就会被finish掉</p>
-<ol>
-<li>alwaysRetainTaskState</li>
-</ol>
-<p>如果将这个属性设为true，那么该activity所在的task将不受任何清理命令，一直保持当前task状态</p>
+        <p>出现了一个问题，使用gradlew进行分渠道打包编译的时候，报错。<br>但是直接使用build，assemblebuild等操作都是可以的。<br>排查发现网上有个相同的问题，回答者说是java9不稳定。<br>因此需要替换一下jdk版本。</p>
+<p>编译的时候需要修改gradle.properties<br>增加一行：org.gradle.java.home=/Library/Java/JavaVirtualMachines/jdk1.8.0_161.jdk/Contents/Home<br>用于表明编译使用的jdk版本</p>
+<p>即可</p>
 
       
     </div>
@@ -367,7 +320,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/android/" rel="tag"># android</a>
+            <a href="/tags/日常bug/" rel="tag"># 日常bug</a>
           
         </div>
       
@@ -380,8 +333,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/01/22/第七章动画机制与使用技巧学习笔记/" rel="next" title="第七章动画机制与使用技巧学习笔记">
-                <i class="fa fa-chevron-left"></i> 第七章动画机制与使用技巧学习笔记
+              <a href="/2018/03/07/clean架构学习/" rel="next" title="clean架构学习">
+                <i class="fa fa-chevron-left"></i> clean架构学习
               </a>
             
           </div>
@@ -389,10 +342,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/01/25/Android系统信息和安全机制/" rel="prev" title="Android系统信息和安全机制">
-                Android系统信息和安全机制 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -444,17 +393,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -505,22 +445,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android任务栈简介"><span class="nav-number">1.</span> <span class="nav-text">Android任务栈简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AndroidMainifest启动模式"><span class="nav-number">2.</span> <span class="nav-text">AndroidMainifest启动模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Intent-Flag启动模式"><span class="nav-number">3.</span> <span class="nav-text">Intent Flag启动模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#清空任务栈"><span class="nav-number">4.</span> <span class="nav-text">清空任务栈</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
