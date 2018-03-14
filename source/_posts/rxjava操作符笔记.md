@@ -289,3 +289,13 @@ switchOnNext(Observable<? extends Observable<? extends T>>用来将一个发射�
 - catch
 
 - retry
+
+# 补充
+
+- takeUtil
+
+observable.takeUtil(condition),当condition == true时终止，且包含临界条件的item
+
+- takeWhile
+
+observable.takeWhile(condition),当condition == false时终止，不包含临界条件的item
