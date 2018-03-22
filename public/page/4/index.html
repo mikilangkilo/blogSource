@@ -229,6 +229,182 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/28/java反射/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/28/java反射/" itemprop="url">java反射</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-28T19:44:53+08:00">
+                2018-01-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="什么是反射"><a href="#什么是反射" class="headerlink" title="什么是反射"></a>什么是反射</h1><p>反射是一种在程序运行时动态访问，修改某个类中任意属性(状态)和方法(行为)的机制</p>
+<ul>
+<li><p>在运行时判断任意一个对象所属的类</p>
+</li>
+<li><p>在运行时构造任意一个类的对象</p>
+</li>
+<li><p>在运行时判断任意一个类所具有的成员变量和方法</p>
+</li>
+<li><p>在运行时调用任意一个对象的方法</p>
+</li>
+</ul>
+<p>设计到的四个核心类</p>
+<ul>
+<li><p>java.lang.Class.java:类对象</p>
+</li>
+<li><p>java.lang.reflect.Constructor.java:类的构造器对象</p>
+</li>
+<li><p>java.lang.reflect.Method.java:类的方法对象</p>
+</li>
+<li><p>java.lang.reflect.Field.java:类的属性对象</p>
+</li>
+</ul>
+<h1 id="反射有什么用？"><a href="#反射有什么用？" class="headerlink" title="反射有什么用？"></a>反射有什么用？</h1><ul>
+<li><p>操作因访问权限限制的属性和方法</p>
+</li>
+<li><p>实现自定义注解</p>
+</li>
+<li><p>动态加载第三方jar包，解决android中方法数不能超过65536个的问题</p>
+</li>
+<li><p>按需加载类，节省编译和初始化apk的时间</p>
+</li>
+</ul>
+<h1 id="反射工作原理"><a href="#反射工作原理" class="headerlink" title="反射工作原理"></a>反射工作原理</h1><p>当编完一个java项目之后，每个java文件都会被编译成一个.class文件，这些class对象继承了这个类的所有信息，包括父类、接口、构造函数、方法、属性等，这些class文件在程序运行时会被classloader加载到虚拟机中。当一类被加载以后，java虚拟机就会在内存中自动产生一个class对象。</p>
+<p>反射的原理就是借助class.java， constructor.java, method.java, field.java四个类在程序运行时动态访问和修改任何类的行为和状态。</p>
+<h1 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h1><ul>
+<li>获取父类</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">private void getSuperClass()&#123;</span><br><span class="line">       ProgramMonkey programMonkey = new ProgramMonkey(&quot;小明&quot;, &quot;男&quot;, 12);</span><br><span class="line">       Class&lt;?&gt; superClass = programMonkey.getClass().getSuperclass();</span><br><span class="line">       while (superClass != null) &#123;</span><br><span class="line">           LogE(&quot;programMonkey&apos;s super class is : &quot; + superClass.getName());</span><br><span class="line">           // 再获取父类的上一层父类，直到最后的 Object 类，Object 的父类为 null</span><br><span class="line">           superClass = superClass.getSuperclass();</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>获取接口</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">private void getInterfaces() &#123;</span><br><span class="line">       ProgramMonkey programMonkey = new ProgramMonkey(&quot;小明&quot;, &quot;男&quot;, 12);</span><br><span class="line">       Class&lt;?&gt;[] interfaceses = programMonkey.getClass().getInterfaces();</span><br><span class="line">       for (Class&lt;?&gt; class1 : interfaceses) &#123;</span><br><span class="line">           LogE(&quot;programMonkey&apos;s interface is : &quot; + class1.getName());</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>获取当前类的所有的方法</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">private void getCurrentClassMethods() &#123;</span><br><span class="line">       ProgramMonkey programMonkey = new ProgramMonkey(&quot;小明&quot;, &quot;男&quot;, 12);</span><br><span class="line">       Method[] methods = programMonkey.getClass().getDeclaredMethods();</span><br><span class="line">       for (Method method : methods) &#123;</span><br><span class="line">           LogE(&quot;declared method name : &quot; + method.getName());</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       try &#123;</span><br><span class="line">           Method getSalaryPerMonthMethod = programMonkey.getClass().getDeclaredMethod(&quot;getSalaryPerMonth&quot;);</span><br><span class="line">           getSalaryPerMonthMethod.setAccessible(true);</span><br><span class="line">           // 获取返回类型</span><br><span class="line">           Class&lt;?&gt; returnType = getSalaryPerMonthMethod.getReturnType();</span><br><span class="line">           LogE(&quot;getSalaryPerMonth 方法的返回类型 : &quot; + returnType.getName());</span><br><span class="line"></span><br><span class="line">           // 获取方法的参数类型列表</span><br><span class="line">           Class&lt;?&gt;[] paramClasses = getSalaryPerMonthMethod.getParameterTypes() ;</span><br><span class="line">           for (Class&lt;?&gt; class1 : paramClasses) &#123;</span><br><span class="line">               LogE(&quot;getSalaryPerMonth 方法的参数类型 : &quot; + class1.getName());</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           // 是否是 private 函数，属性是否是 private 也可以使用这种方式判断</span><br><span class="line">           LogE(getSalaryPerMonthMethod.getName() + &quot; is private &quot; + Modifier.isPrivate(getSalaryPerMonthMethod.getModifiers()));</span><br><span class="line"></span><br><span class="line">           // 执行方法</span><br><span class="line">           Object result = getSalaryPerMonthMethod.invoke(programMonkey);</span><br><span class="line">           LogE(&quot;getSalaryPerMonth 方法的返回结果: &quot; + result);</span><br><span class="line">       &#125; catch (Exception e) &#123;</span><br><span class="line">           e.printStackTrace();</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>获取当前类和父类的所有公有方法</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">private void getAllMethods() &#123;</span><br><span class="line">       ProgramMonkey programMonkey = new ProgramMonkey(&quot;小明&quot;, &quot;男&quot;, 12);</span><br><span class="line">       // 获取当前类和父类的所有公有方法</span><br><span class="line">       Method[] methods = programMonkey.getClass().getMethods();</span><br><span class="line">       for (Method method : methods) &#123;</span><br><span class="line">           LogE(&quot;method name : &quot; + method.getName());</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       try &#123;</span><br><span class="line">           Method setmLanguageMethod = programMonkey.getClass().getMethod(&quot;setmLanguage&quot;, String.class);</span><br><span class="line">           setmLanguageMethod.setAccessible(true);</span><br><span class="line"></span><br><span class="line">           // 获取返回类型</span><br><span class="line">           Class&lt;?&gt; returnType = setmLanguageMethod.getReturnType();</span><br><span class="line">           LogE(&quot;setmLanguage 方法的返回类型 : &quot; + returnType.getName());</span><br><span class="line"></span><br><span class="line">           // 获取方法的参数类型列表</span><br><span class="line">                       Class&lt;?&gt;[] paramClasses = setmLanguageMethod.getParameterTypes() ;</span><br><span class="line">           for (Class&lt;?&gt; class1 : paramClasses) &#123;</span><br><span class="line">               LogE(&quot;setmLanguage 方法的参数类型 : &quot; + class1.getName());</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           // 是否是 private 函数，属性是否是 private 也可以使用这种方式判断</span><br><span class="line">           LogE(setmLanguageMethod.getName() + &quot; is private &quot; + Modifier.isPrivate(setmLanguageMethod.getModifiers()));</span><br><span class="line"></span><br><span class="line">           // 执行方法</span><br><span class="line">           Object result = setmLanguageMethod.invoke(programMonkey, &quot;Java&quot;);</span><br><span class="line">           LogE(&quot;setmLanguage 方法的返回结果: &quot; + result);</span><br><span class="line">       &#125; catch (Exception e) &#123;</span><br><span class="line">           e.printStackTrace();</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>获取当前类的所有实例</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">private void getCurrentClassFields() &#123;</span><br><span class="line">       ProgramMonkey programMonkey = new ProgramMonkey(&quot;小明&quot;, &quot;男&quot;, 12);</span><br><span class="line">       // 获取当前类的所有属性</span><br><span class="line">       Field[] publicFields = programMonkey.getClass().getDeclaredFields();</span><br><span class="line">       for (Field field : publicFields) &#123;</span><br><span class="line">           LogE(&quot;declared field name : &quot; + field.getName());</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       try &#123;</span><br><span class="line">           // 获取当前类的某个属性</span><br><span class="line">           Field ageField = programMonkey.getClass().getDeclaredField(&quot;mAge&quot;);</span><br><span class="line">           // 获取属性值</span><br><span class="line">           LogE(&quot; my age is : &quot; + ageField.getInt(programMonkey));</span><br><span class="line">           // 设置属性值</span><br><span class="line">           ageField.set(programMonkey, 10);</span><br><span class="line">           LogE(&quot; my age is : &quot; + ageField.getInt(programMonkey));</span><br><span class="line">       &#125; catch (Exception e) &#123;</span><br><span class="line">           e.printStackTrace();</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>获取当前类和父类的所有公有属性</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">private void getAllFields() &#123;</span><br><span class="line">       ProgramMonkey programMonkey = new ProgramMonkey(&quot;小明&quot;, &quot;男&quot;, 12);</span><br><span class="line">       // 得到当前类和父类的所有公有属性</span><br><span class="line">       Field[] publicFields = programMonkey.getClass().getFields();</span><br><span class="line">       for (Field field : publicFields) &#123;</span><br><span class="line">           LogE(&quot;field name : &quot; + field.getName());</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       try &#123;</span><br><span class="line">           // 获取当前类和父类的某个公有属性</span><br><span class="line">           Field ageField = programMonkey.getClass().getField(&quot;mAge&quot;);</span><br><span class="line">           LogE(&quot; age is : &quot; + ageField.getInt(programMonkey));</span><br><span class="line">           ageField.set(programMonkey, 8);</span><br><span class="line">           LogE(&quot; my age is : &quot; + ageField.getInt(programMonkey));</span><br><span class="line">       &#125; catch (Exception e) &#123;</span><br><span class="line">           e.printStackTrace();</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/28/2018第四周工作小结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1696,190 +1872,6 @@ ll.setLayoutAnimation(lac);
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/13/androidscroll分析笔记/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/13/androidscroll分析笔记/" itemprop="url">androidscroll分析笔记</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-13T15:42:18+08:00">
-                2018-01-13
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="android坐标系"><a href="#android坐标系" class="headerlink" title="android坐标系"></a>android坐标系</h1><p>在android中，将屏幕最左上角的顶点作为android坐标系的原点，往右是x轴正方向，往下是y轴正方向。</p>
-<h1 id="视图坐标系"><a href="#视图坐标系" class="headerlink" title="视图坐标系"></a>视图坐标系</h1><p>视图坐标系原点以父视图左上角为坐标原点。</p>
-<h1 id="触控事件-MotionEvent"><a href="#触控事件-MotionEvent" class="headerlink" title="触控事件 - MotionEvent"></a>触控事件 - MotionEvent</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public static final int ACTION_DOWN = 0;//单击触摸按下动作</span><br><span class="line">public static final int ACTION_UP = 1;//单击触摸离开动作</span><br><span class="line">public static final int ACTION_MOVE = 2;//触摸点移动动作</span><br><span class="line">public static final int ACTION_CANCEL = 3;//触摸动作取消</span><br><span class="line">public static final int ACTION_OUTSIDE = 4;//触摸动作超出边界</span><br><span class="line">public static final int ACTION_POINTER_DOWN = 5;//多点触摸按下动作</span><br><span class="line">public static final int ACTION_POINTER_UP = 6;//多点离开动作</span><br></pre></td></tr></table></figure>
-<h2 id="ACTION-CANCEL"><a href="#ACTION-CANCEL" class="headerlink" title="ACTION_CANCEL"></a>ACTION_CANCEL</h2><p>当你的手指（或者其它）移动屏幕的时候会触发这个事件，比如当你的手指在屏幕上拖动一个listView或者一个ScrollView而不是去按上面的按钮时会触发这个事件。</p>
-<p>在设计设置页面的滑动开关时，如果不监听ACTION_CANCEL，在滑动到中间时，如果你手指上下移动，就是移动到开关控件之外，则此时会触发ACTION_CANCEL，而不是ACTION_UP，造成开关的按钮停顿在中间位置。</p>
-<p>意思就是，当用户保持按下操作，并从你的控件转移到外层控件时，会触发ACTION_CANCEL，建议进行处理～</p>
-<p>当前的手势被中断，不会再接收到关于它的记录。<br>推荐将这个事件作为 ACTION_UP 来看待，但是要区别于普通的 ACTION_UP</p>
-<p>话说回来，平常还真碰不到这个事件，习惯上就直接当 ACTION_UP 处理了就</p>
-<p>例如：上层 View 是一个 RecyclerView，它收到了一个 ACTION_DOWN 事件，由于这个可能是点击事件，所以它先传递给对应 ItemView，询问 ItemView 是否需要这个事件，然而接下来又传递过来了一个 ACTION_MOVE 事件，且移动的方向和 RecyclerView 的可滑动方向一致，所以 RecyclerView 判断这个事件是滚动事件，于是要收回事件处理权，这时候对应的 ItemView 会收到一个 ACTION_CANCEL ，并且不会再收到后续事件。</p>
-<h2 id="ACTION-OUTSIDE"><a href="#ACTION-OUTSIDE" class="headerlink" title="ACTION_OUTSIDE"></a>ACTION_OUTSIDE</h2><p>一个触摸事件已经发生了UI元素的正常范围之外。因此不再提供完整的手势，只提供 运动/触摸 的初始位置。dialog,popupwindow中比较常见</p>
-<h2 id="ACTION-POINTER-DOWN"><a href="#ACTION-POINTER-DOWN" class="headerlink" title="ACTION_POINTER_DOWN"></a>ACTION_POINTER_DOWN</h2><p>这个代表用户的第二根手指（之后动手的一根）触摸了屏幕，可以getactionindex获取某一根手指的数字来判断</p>
-<h2 id="ACTION-POINTER-UP"><a href="#ACTION-POINTER-UP" class="headerlink" title="ACTION_POINTER_UP"></a>ACTION_POINTER_UP</h2><p>同第二根手指离开了屏幕</p>
-<h1 id="获取坐标的方法"><a href="#获取坐标的方法" class="headerlink" title="获取坐标的方法"></a>获取坐标的方法</h1><h2 id="View提供的方法（以父布局为坐标系）"><a href="#View提供的方法（以父布局为坐标系）" class="headerlink" title="View提供的方法（以父布局为坐标系）"></a>View提供的方法（以父布局为坐标系）</h2><p>getTop():自身到其父布局顶点的距离<br>getLeft():<br>getRight():<br>getBottom():</p>
-<h2 id="MotionEvent提供的方法"><a href="#MotionEvent提供的方法" class="headerlink" title="MotionEvent提供的方法"></a>MotionEvent提供的方法</h2><p>getX():获取点击事件距离空间左边的距离<br>getY():<br>getRawX():获取点击事件距离整个屏幕左边的距离<br>getRawY():</p>
-<h1 id="实现滑动效果的7种方法"><a href="#实现滑动效果的7种方法" class="headerlink" title="实现滑动效果的7种方法"></a>实现滑动效果的7种方法</h1><ol>
-<li><p>layout方法<br>在ACTION_MOVE中计算偏移量，在action_down中记录触摸点的坐标，并且在move中进行计算偏移量，然后调用view的layout方法来进行调整。</p>
-</li>
-<li><p>offsetLeftAndRight和offsetTopAndBottom<br>使用方法和layout一样，差别是一个需要x的偏移一个需要y的偏移</p>
-</li>
-<li><p>LayoutParams</p>
-</li>
-</ol>
-<p>layoutParams保留了一个view的参数，可以改变view的layoutParams然后setLayoutParams进行更改。</p>
-<ol>
-<li>scrollto和scrollby</li>
-</ol>
-<p>scrollby(offsetx，offsety)，该方法会造成所有子view移动。因此需要对view的父view使用这个方法，</p>
-<ol>
-<li>Scroller</li>
-</ol>
-<p>scroller可以通过重写view的computeScroll方法，通过获取当前滚动值，来进行不断的瞬间移动，实现整体上的平移效果<br>ps：computeScroll方法是不会自动调用的，只能通过invalidate() -&gt; draw() -&gt; computeScroll()来间接调用该方法。<br>之后使用startScroll即可。</p>
-<ol>
-<li><p>属性动画</p>
-</li>
-<li><p>ViewDragHelper</p>
-</li>
-</ol>
-<p>viewdraghelper是谷歌在support库中提供的drawerlayout和slidingpanelayout两个布局中使用的，用法较为复杂。</p>
-<ol>
-<li>初始化viewdraghelper</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mViewDragHelper = ViewDragHelper.create(this, callback);</span><br></pre></td></tr></table></figure>
-<ol>
-<li>拦截事件</li>
-</ol>
-<p>将事件传递给viewdraghelper处理<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public boolean onInterceptTouchEvent(MotionEvent ev)&#123;</span><br><span class="line">	return mViewDragHelper.shouldInterceptTouchEvent(ev);</span><br><span class="line">&#125;</span><br><span class="line">@Override</span><br><span class="line">public boolean onTouchEvent(MotionEvent ev)&#123;</span><br><span class="line">	mViewDragHelper.processTouchEvent(event);</span><br><span class="line">	return true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<ol>
-<li>处理computeScroll()</li>
-</ol>
-<p>与scroller相似的，需要处理一个computescroll()方法，因为viewdraghelper内部也是使用scroller实现平滑移动的。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public void computeScroll()&#123;</span><br><span class="line">	if(mViewdragHelper.continueSettling(true))&#123;</span><br><span class="line">		ViewCompat.postInvalidateOnAnimation(this);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ol>
-<li>处理回调</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">private ViewDragHelper.Callback callback = new ViewDragHelper.Callback()&#123;</span><br><span class="line">	@Override</span><br><span class="line">	public boolean tryCaptureView(View child, int pointerId)&#123;</span><br><span class="line">		return false;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用上述回调，对child进行判断，如果是需要拖动view，就可以返回true</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public int clampViewPositionVertical(View child, int top, int dy)&#123;</span><br><span class="line">	return top;</span><br><span class="line">&#125;</span><br><span class="line">@Override</span><br><span class="line">public int clampViewPositionHorizontal(View child, int left, int dx)&#123;</span><br><span class="line">	return left;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用如上方法，来对滑动效果进行设置，返回的top和left为垂直和水平方向上面的距离。dy表示比较前一次的增量</p>
-<ol>
-<li>拖动结束之后，子View回到原来的位置</li>
-</ol>
-<p>该效果可以通过监听action_up事件，并通过调用Scroller类来实现。<br>在viewdraghelper中可以重写onViewRelased()方法来实现。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public void onViewReleased(View releasedChild, float xvel, float yvel)&#123;</span><br><span class="line">	super.onViewReleased(releasedChild, xvel, yvel);</span><br><span class="line">	if(mMianView.getLeft()&lt;500)&#123;</span><br><span class="line">		mViewDragHelper.smoothSlideViewTo(mMainView, 0, 0);</span><br><span class="line">		ViewCompat.postInvalidateOnAnimation(DragViewGroup.this);</span><br><span class="line">	&#125;else&#123;</span><br><span class="line">		mViewDragHelper.smoothSlideViewTo(mMainView, 300, 0);</span><br><span class="line">		ViewCompat.postInvalidateOnAnimation(DragViewGroup.this);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这样就可以做到滑动距离小于500时回到原来的位置。</p>
-<p>除了以上内容，还有大量的监听事件可以用来处理各种事件。<br>onViewCaptured():在用户触摸到view后回调<br>onViewDragStateChanged():在拖拽状态改变时回调<br>onViewPositionChanged():这个事件在位置改变时回调</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1930,7 +1922,7 @@ ll.setLayoutAnimation(lac);
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-count">63</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

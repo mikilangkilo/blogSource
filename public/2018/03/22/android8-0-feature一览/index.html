@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="工作小结," />
+  <meta name="keywords" content="android," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="这周是在崇杏的最后一周。 主要将之前维护的项目做了一个代码复盘，针对了一些自己认为重要的地方加了注释，同时写了流程图，方便后来人看吧。 图表化软件出现一个问题，关于视觉化的。之前对于网络接口设计原则，都是一个请求拉下来所有的接口，但是这次由于接口数据过于庞大，如果通过rxjjava使用一个observable转换来拉，一是处理来不及，二是请求极其容易超时，毕竟observable是需要每个都发送的">
-<meta name="keywords" content="工作小结">
+<meta name="description" content="android p出来了，是时候了解一波新特性了。 Notification Channels这个是从Android 8.0 引入的概念，目的是提供统一的系统来帮助用户管理通知，开发者可以为需要发送的每个不同的通知类型创建一个通知渠道。还可以创建通知渠道来反映应用的用户做出的选择。例如，可以为聊天应用的用户创建的每个聊天组建立单独的通知渠道。 假如不使用channel的话，会不给发通知。 创建流程">
+<meta name="keywords" content="android">
 <meta property="og:type" content="article">
-<meta property="og:title" content="2018第九周工作小结">
-<meta property="og:url" content="http://yoursite.com/2018/03/02/2018第九周工作小结/index.html">
+<meta property="og:title" content="android8.0-feature一览">
+<meta property="og:url" content="http://yoursite.com/2018/03/22/android8-0-feature一览/index.html">
 <meta property="og:site_name" content="记录者">
-<meta property="og:description" content="这周是在崇杏的最后一周。 主要将之前维护的项目做了一个代码复盘，针对了一些自己认为重要的地方加了注释，同时写了流程图，方便后来人看吧。 图表化软件出现一个问题，关于视觉化的。之前对于网络接口设计原则，都是一个请求拉下来所有的接口，但是这次由于接口数据过于庞大，如果通过rxjjava使用一个observable转换来拉，一是处理来不及，二是请求极其容易超时，毕竟observable是需要每个都发送的">
+<meta property="og:description" content="android p出来了，是时候了解一波新特性了。 Notification Channels这个是从Android 8.0 引入的概念，目的是提供统一的系统来帮助用户管理通知，开发者可以为需要发送的每个不同的通知类型创建一个通知渠道。还可以创建通知渠道来反映应用的用户做出的选择。例如，可以为聊天应用的用户创建的每个聊天组建立单独的通知渠道。 假如不使用channel的话，会不给发通知。 创建流程">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-03-08T10:15:30.058Z">
+<meta property="og:updated_time" content="2018-03-22T15:08:39.065Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="2018第九周工作小结">
-<meta name="twitter:description" content="这周是在崇杏的最后一周。 主要将之前维护的项目做了一个代码复盘，针对了一些自己认为重要的地方加了注释，同时写了流程图，方便后来人看吧。 图表化软件出现一个问题，关于视觉化的。之前对于网络接口设计原则，都是一个请求拉下来所有的接口，但是这次由于接口数据过于庞大，如果通过rxjjava使用一个observable转换来拉，一是处理来不及，二是请求极其容易超时，毕竟observable是需要每个都发送的">
+<meta name="twitter:title" content="android8.0-feature一览">
+<meta name="twitter:description" content="android p出来了，是时候了解一波新特性了。 Notification Channels这个是从Android 8.0 引入的概念，目的是提供统一的系统来帮助用户管理通知，开发者可以为需要发送的每个不同的通知类型创建一个通知渠道。还可以创建通知渠道来反映应用的用户做出的选择。例如，可以为聊天应用的用户创建的每个聊天组建立单独的通知渠道。 假如不使用channel的话，会不给发通知。 创建流程">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/03/02/2018第九周工作小结/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/03/22/android8-0-feature一览/"/>
 
 
 
 
 
-  <title>2018第九周工作小结 | 记录者</title>
+  <title>android8.0-feature一览 | 记录者</title>
   
 
 
@@ -233,7 +233,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/02/2018第九周工作小结/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/22/android8-0-feature一览/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sample">
@@ -250,7 +250,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">2018第九周工作小结</h1>
+          <h1 class="post-title" itemprop="name headline">android8.0-feature一览</h1>
         
 
         <div class="post-meta">
@@ -262,8 +262,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-02T23:13:30+08:00">
-                2018-03-02
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-22T22:16:52+08:00">
+                2018-03-22
               </time>
             
 
@@ -300,14 +300,20 @@
       
 
       
-        <p>这周是在崇杏的最后一周。</p>
-<p>主要将之前维护的项目做了一个代码复盘，针对了一些自己认为重要的地方加了注释，同时写了流程图，方便后来人看吧。</p>
-<p>图表化软件出现一个问题，关于视觉化的。<br>之前对于网络接口设计原则，都是一个请求拉下来所有的接口，但是这次由于接口数据过于庞大，如果通过rxjjava使用一个observable转换来拉，一是处理来不及，二是请求极其容易超时，毕竟observable是需要每个都发送的，相当于将所有的请求依次排序了。所以我使用的是多个observable来拉，多个observable又出现了一个问题，有些observable由于接口拉下来的数据量并不大，所以响应很快，而另一些observable则数据量过大，服务器没有缓存要进行计算，响应十分缓慢。导致了一个现象，一个是评论的总数，一个是评论的详情，评论的总数由于数据缓慢，获取到的速度就慢于评论的详情，导致了评论的总数这个数字的ui一下子进行了刷新，而评论详情却在之后才进行刷新，双方不同步。</p>
-<p>再加上我本就使用的是轮询而不是推送的方式，导致轮询无法等待，极端情况会出现评论数字刷了2次，而评论详情却还没有刷的状态，十分的糟糕。</p>
-<p>但是由于是服务器的原因导致的不同的接口加载的速度不一致，因此我也没有办法做过多的优化，只能做一个刷新时间的设置，让用户可操控多少秒刷新一次，这样可以保证在一次刷新周期内，两处ui可以同步。</p>
-<p>不过这终究不是一个好的解决方法。我想了一下，最好的方法是使用推送，服务器将同步的数据推送上来，我直接显示，这是最好的。其次是使用等待策略，当一个ui数据好了，另一个没有好的时候，让好了的等待没有好的，等没有好的好了则一起刷新，但是又个风险，就是没有好的超时了，这次等待就遥遥无期了。</p>
-<p>总而言之，在崇杏的最后一周，是在不断的修改之前的需求，核对数据中度过的。仔细想想，太多坑，假如设计原型明确的话，完全没必要趟的，哎，但是设计之间自己都不明确，最后填坑的还的是我。</p>
-<p>farewall，崇杏。</p>
+        <p>android p出来了，是时候了解一波新特性了。</p>
+<h1 id="Notification-Channels"><a href="#Notification-Channels" class="headerlink" title="Notification Channels"></a>Notification Channels</h1><p>这个是从Android 8.0 引入的概念，目的是提供统一的系统来帮助用户管理通知，开发者可以为需要发送的每个不同的通知类型创建一个通知渠道。还可以创建通知渠道来反映应用的用户做出的选择。例如，可以为聊天应用的用户创建的每个聊天组建立单独的通知渠道。</p>
+<p>假如不使用channel的话，会不给发通知。</p>
+<h2 id="创建流程"><a href="#创建流程" class="headerlink" title="创建流程"></a>创建流程</h2><ul>
+<li>创建渠道</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.O) &#123;</span><br><span class="line">            NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);</span><br><span class="line"></span><br><span class="line">            NotificationChannel mChannel = new NotificationChannel(&quot;channel_01&quot;,</span><br><span class="line">                    &quot;消息推送&quot;, NotificationManager.IMPORTANCE_DEFAULT);</span><br><span class="line">            manager.createNotificationChannel(mChannel);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>构建通知</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Context context = DJApplication.getInstance();</span><br><span class="line">      Notification.Builder builder = new Notification.Builder(context);</span><br><span class="line">      builder.setTicker(&quot;开始下载&quot;);</span><br><span class="line">      builder.setSmallIcon(R.mipmap.ic_launcher);</span><br><span class="line">      builder.setLargeIcon(BitmapFactory.decodeResource(DJApplication.getInstance().getResources(), R.mipmap.ic_launcher));</span><br><span class="line">      builder.setAutoCancel(true);</span><br><span class="line">      PendingIntent pIntent = PendingIntent.getActivity(context, 0, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);</span><br><span class="line">      builder.setContentTitle(&quot;下载中&quot;);</span><br><span class="line">      builder.setContentIntent(pIntent);</span><br><span class="line">      builder.setContentText(text);</span><br><span class="line">      if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.O) &#123;</span><br><span class="line">          builder.setChannelId(&quot;channel_01&quot;);</span><br><span class="line">      &#125;</span><br><span class="line">      manager.notify(1,  builder.build());</span><br></pre></td></tr></table></figure>
+<h1 id="安装权限问题"><a href="#安装权限问题" class="headerlink" title="安装权限问题"></a>安装权限问题</h1><p>这次更新之后，下载和安装权限分离了，安装需要使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;uses-permission android:name=&quot;android.permission.REQUEST_INSTALL_PACKAGES&quot; /&gt;</span><br></pre></td></tr></table></figure>
+<p>该权限可以确保下载完成之后吊起安装程序</p>
 
       
     </div>
@@ -325,7 +331,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/工作小结/" rel="tag"># 工作小结</a>
+            <a href="/tags/android/" rel="tag"># android</a>
           
         </div>
       
@@ -338,8 +344,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/02/28/Collection/" rel="next" title="Collection">
-                <i class="fa fa-chevron-left"></i> Collection
+              <a href="/2018/03/22/OSS服务器接入上传下载学习/" rel="next" title="OSS服务器接入上传下载学习">
+                <i class="fa fa-chevron-left"></i> OSS服务器接入上传下载学习
               </a>
             
           </div>
@@ -347,10 +353,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/03/07/clean架构学习/" rel="prev" title="clean架构学习">
-                clean架构学习 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -402,8 +404,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -454,6 +465,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Notification-Channels"><span class="nav-number">1.</span> <span class="nav-text">Notification Channels</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建流程"><span class="nav-number">1.1.</span> <span class="nav-text">创建流程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装权限问题"><span class="nav-number">2.</span> <span class="nav-text">安装权限问题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
