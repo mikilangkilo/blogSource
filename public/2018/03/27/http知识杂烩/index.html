@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="java," />
+  <meta name="keywords" content="http," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="动态编程，常用到的是反射，但是反射开销性能大，上线的项目上面用反射不好。有另一种和反射功能相当的，但是比反射开销低的，就是javaassit 什么是javaassitjavaassit就是一个二方包，提供了运行时操作java字节码的方法。 使用javaassit 更改某个类的父类  1234ClassPool pool = ClassPool.getDefault();CtClass cc = p">
-<meta name="keywords" content="java">
+<meta name="description" content="今天被后台怼了，主要是没加1@Headers(&amp;#123;&amp;quot;Content-Type: application/json&amp;quot;&amp;#125;) 导致请求没有过到服务器，然后我还挺着老脸去问为啥没用。丢人呐。 所以今天开一个杂烩贴，用于将http遇到的问题总结下来。 Content-TypeContent-Type，内容类型，一般是指网页中存在的Content-Type，用于定义网络文">
+<meta name="keywords" content="http">
 <meta property="og:type" content="article">
-<meta property="og:title" content="java动态编程">
-<meta property="og:url" content="http://yoursite.com/2018/01/29/java动态编程/index.html">
+<meta property="og:title" content="http知识杂烩">
+<meta property="og:url" content="http://yoursite.com/2018/03/27/http知识杂烩/index.html">
 <meta property="og:site_name" content="记录者">
-<meta property="og:description" content="动态编程，常用到的是反射，但是反射开销性能大，上线的项目上面用反射不好。有另一种和反射功能相当的，但是比反射开销低的，就是javaassit 什么是javaassitjavaassit就是一个二方包，提供了运行时操作java字节码的方法。 使用javaassit 更改某个类的父类  1234ClassPool pool = ClassPool.getDefault();CtClass cc = p">
+<meta property="og:description" content="今天被后台怼了，主要是没加1@Headers(&amp;#123;&amp;quot;Content-Type: application/json&amp;quot;&amp;#125;) 导致请求没有过到服务器，然后我还挺着老脸去问为啥没用。丢人呐。 所以今天开一个杂烩贴，用于将http遇到的问题总结下来。 Content-TypeContent-Type，内容类型，一般是指网页中存在的Content-Type，用于定义网络文">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-03-08T10:15:30.064Z">
+<meta property="og:updated_time" content="2018-03-27T15:06:47.203Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="java动态编程">
-<meta name="twitter:description" content="动态编程，常用到的是反射，但是反射开销性能大，上线的项目上面用反射不好。有另一种和反射功能相当的，但是比反射开销低的，就是javaassit 什么是javaassitjavaassit就是一个二方包，提供了运行时操作java字节码的方法。 使用javaassit 更改某个类的父类  1234ClassPool pool = ClassPool.getDefault();CtClass cc = p">
+<meta name="twitter:title" content="http知识杂烩">
+<meta name="twitter:description" content="今天被后台怼了，主要是没加1@Headers(&amp;#123;&amp;quot;Content-Type: application/json&amp;quot;&amp;#125;) 导致请求没有过到服务器，然后我还挺着老脸去问为啥没用。丢人呐。 所以今天开一个杂烩贴，用于将http遇到的问题总结下来。 Content-TypeContent-Type，内容类型，一般是指网页中存在的Content-Type，用于定义网络文">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/01/29/java动态编程/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/03/27/http知识杂烩/"/>
 
 
 
 
 
-  <title>java动态编程 | 记录者</title>
+  <title>http知识杂烩 | 记录者</title>
   
 
 
@@ -233,7 +233,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/29/java动态编程/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/27/http知识杂烩/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sample">
@@ -250,7 +250,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">java动态编程</h1>
+          <h1 class="post-title" itemprop="name headline">http知识杂烩</h1>
         
 
         <div class="post-meta">
@@ -262,8 +262,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-29T22:21:09+08:00">
-                2018-01-29
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-27T22:45:05+08:00">
+                2018-03-27
               </time>
             
 
@@ -300,30 +300,19 @@
       
 
       
-        <p>动态编程，常用到的是反射，但是反射开销性能大，上线的项目上面用反射不好。有另一种和反射功能相当的，但是比反射开销低的，就是javaassit</p>
-<h1 id="什么是javaassit"><a href="#什么是javaassit" class="headerlink" title="什么是javaassit"></a>什么是javaassit</h1><p>javaassit就是一个二方包，提供了运行时操作java字节码的方法。</p>
-<h1 id="使用javaassit"><a href="#使用javaassit" class="headerlink" title="使用javaassit"></a>使用javaassit</h1><ul>
-<li>更改某个类的父类</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ClassPool pool = ClassPool.getDefault();</span><br><span class="line">CtClass cc = pool.get(&quot;test.Rectangle&quot;);</span><br><span class="line">cc.setSuperclass(pool.get(&quot;test.Point&quot;));</span><br><span class="line">cc.writeFile();</span><br></pre></td></tr></table></figure>
-<ul>
-<li>获取字节码和加载字节码</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">byte[] b = cc.toBytecode();</span><br><span class="line">Class clazz = cc.toClass();</span><br></pre></td></tr></table></figure>
-<ul>
-<li>定义一个新类</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ClassPool pool = ClassPool.getDefault();</span><br><span class="line">CtClass cc = pool.makeClass(&quot;Point&quot;);</span><br></pre></td></tr></table></figure>
-<ul>
-<li>通过CtMethod和CtField构造方法和成员甚至Annotation。</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ClassPool pool = ClassPool.getDefault();</span><br><span class="line">CtClass cc = pool.makeClass(&quot;foo&quot;);</span><br><span class="line">CtMethod mthd = CtNewMethod.make(&quot;public Integer getInteger() &#123; return null; &#125;&quot;, cc);</span><br><span class="line">cc.addMethod(mthd);</span><br><span class="line">CtField f = new CtField(CtClass.intType, &quot;i&quot;, cc);</span><br><span class="line">point.addField(f);</span><br><span class="line">clazz = cc.toClass(); Object instance = class.newInstance();</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Javassist不仅可以生成类、变量和方法，还可以操作现有的方法，这在AOP上非常有用，比如做方法调用的埋点</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// Point.java</span><br><span class="line">class Point &#123;</span><br><span class="line">   	int x, y;</span><br><span class="line">   	void move(int dx, int dy) &#123; x += dx; y += dy; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 对已有代码每次move执行时做埋点</span><br><span class="line">ClassPool pool = ClassPool.getDefault();</span><br><span class="line">CtClass cc = pool.get(&quot;Point&quot;);</span><br><span class="line">CtMethod m = cc.getDeclaredMethod(&quot;move&quot;);</span><br><span class="line">m.insertBefore(&quot;&#123; System.out.println($1); System.out.println($2); &#125;&quot;);</span><br><span class="line">cc.writeFile();</span><br></pre></td></tr></table></figure>
-<p>其中$1和$2表示调用栈中的第一和第二个参数，写到磁盘后的class定义类似：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">class Point &#123;</span><br><span class="line">   	int x, y;</span><br><span class="line">   	void move(int dx, int dy) &#123;</span><br><span class="line">       	&#123; System.out.println(dx); System.out.println(dy); &#125;</span><br><span class="line">       	x += dx; y += dy;</span><br><span class="line">   	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <p>今天被后台怼了，主要是没加<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@Headers(&#123;&quot;Content-Type: application/json&quot;&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>导致请求没有过到服务器，然后我还挺着老脸去问为啥没用。丢人呐。</p>
+<p>所以今天开一个杂烩贴，用于将http遇到的问题总结下来。</p>
+<h2 id="Content-Type"><a href="#Content-Type" class="headerlink" title="Content-Type"></a>Content-Type</h2><p>Content-Type，内容类型，一般是指网页中存在的Content-Type，用于定义网络文件的类型和网页的编码，决定文件接收方将以什么形式、什么编码读取这个文件</p>
+<h3 id="application-json"><a href="#application-json" class="headerlink" title="application/json"></a>application/json</h3><p>application/json是一种正常的以json形式读取传输文件的方式。<br>json全名是javascript object notation，形式是{“key”:”value”}的形式</p>
+<p>对象表示为键值对<br>数据由逗号分隔<br>花括号保存对象<br>方括号保存数组</p>
+<h3 id="application-x-www-form-urlencoded"><a href="#application-x-www-form-urlencoded" class="headerlink" title="application/x-www-form-urlencoded"></a>application/x-www-form-urlencoded</h3><p>首先，Content-Type 被指定为 application/x-www-form-urlencoded；其次，提交的数据按照 key1=val1&amp;key2=val2 的方式进行编码，key 和 val 都进行了 URL 转码。大部分服务端语言都对这种方式有很好的支持。</p>
+<h3 id="multipart-form-data"><a href="#multipart-form-data" class="headerlink" title="multipart/form-data"></a>multipart/form-data</h3><p>这是使用表单上传文件时必须的。</p>
+<p>示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">POST http://www.example.com HTTP/1.1</span><br><span class="line">Content-Type:multipart/form-data; boundary=----WebKitFormBoundaryrGKCBY7qhFd3TrwA</span><br><span class="line"></span><br><span class="line">------WebKitFormBoundaryrGKCBY7qhFd3TrwA</span><br><span class="line">Content-Disposition: form-data; name=&quot;text&quot;</span><br><span class="line"></span><br><span class="line">title</span><br><span class="line">------WebKitFormBoundaryrGKCBY7qhFd3TrwA</span><br><span class="line">Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;chrome.png&quot;</span><br><span class="line">Content-Type: image/png</span><br><span class="line"></span><br><span class="line">PNG ... content of chrome.png ...</span><br><span class="line">------WebKitFormBoundaryrGKCBY7qhFd3TrwA--</span><br></pre></td></tr></table></figure></p>
+<p>首先生成了一个 boundary 用于分割不同的字段，为了避免与正文内容重复，boundary 很长很复杂。然后 Content-Type 里指明了数据是以 multipart/form-data 来编码，本次请求的 boundary 是什么内容。消息主体里按照字段个数又分为多个结构类似的部分，每部分都是以 –boundary 开始，紧接着是内容描述信息，然后是回车，最后是字段具体内容（文本或二进制）。如果传输的是文件，还要包含文件名和文件类型信息。消息主体最后以 –boundary– 标示结束。</p>
+<h3 id="text-xml"><a href="#text-xml" class="headerlink" title="text/xml"></a>text/xml</h3><p>示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">POST http://www.example.com HTTP/1.1 </span><br><span class="line">Content-Type: text/xml</span><br><span class="line"></span><br><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;methodCall&gt;</span><br><span class="line">    &lt;methodName&gt;examples.getStateName&lt;/methodName&gt;</span><br><span class="line">    &lt;params&gt;</span><br><span class="line">        &lt;param&gt;</span><br><span class="line">            &lt;value&gt;&lt;i4&gt;41&lt;/i4&gt;&lt;/value&gt;</span><br><span class="line">        &lt;/param&gt;</span><br><span class="line">    &lt;/params&gt;</span><br><span class="line">&lt;/methodCall&gt;</span><br></pre></td></tr></table></figure></p>
+<p>这个就和android里面的xml差不多，用途还挺多的，不过就是太大了，也能解析成类似于json的形式。</p>
+
       
     </div>
     
@@ -340,7 +329,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/java/" rel="tag"># java</a>
+            <a href="/tags/http/" rel="tag"># http</a>
           
         </div>
       
@@ -353,8 +342,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/01/28/java反射/" rel="next" title="java反射">
-                <i class="fa fa-chevron-left"></i> java反射
+              <a href="/2018/03/26/java-uri拼接/" rel="next" title="java-uri拼接">
+                <i class="fa fa-chevron-left"></i> java-uri拼接
               </a>
             
           </div>
@@ -362,10 +351,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/01/31/java基础知识点/" rel="prev" title="java基础知识点">
-                java基础知识点 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -488,7 +473,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是javaassit"><span class="nav-number">1.</span> <span class="nav-text">什么是javaassit</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用javaassit"><span class="nav-number">2.</span> <span class="nav-text">使用javaassit</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Content-Type"><span class="nav-number">1.</span> <span class="nav-text">Content-Type</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#application-json"><span class="nav-number">1.1.</span> <span class="nav-text">application/json</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#application-x-www-form-urlencoded"><span class="nav-number">1.2.</span> <span class="nav-text">application/x-www-form-urlencoded</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#multipart-form-data"><span class="nav-number">1.3.</span> <span class="nav-text">multipart/form-data</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#text-xml"><span class="nav-number">1.4.</span> <span class="nav-text">text/xml</span></a></li></ol></li></ol></div>
             
 
           </div>

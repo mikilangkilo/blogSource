@@ -229,6 +229,137 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/27/http知识杂烩/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/27/http知识杂烩/" itemprop="url">http知识杂烩</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-27T22:45:05+08:00">
+                2018-03-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>今天被后台怼了，主要是没加<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@Headers(&#123;&quot;Content-Type: application/json&quot;&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>导致请求没有过到服务器，然后我还挺着老脸去问为啥没用。丢人呐。</p>
+<p>所以今天开一个杂烩贴，用于将http遇到的问题总结下来。</p>
+<h2 id="Content-Type"><a href="#Content-Type" class="headerlink" title="Content-Type"></a>Content-Type</h2><p>Content-Type，内容类型，一般是指网页中存在的Content-Type，用于定义网络文件的类型和网页的编码，决定文件接收方将以什么形式、什么编码读取这个文件</p>
+<h3 id="application-json"><a href="#application-json" class="headerlink" title="application/json"></a>application/json</h3><p>application/json是一种正常的以json形式读取传输文件的方式。<br>json全名是javascript object notation，形式是{“key”:”value”}的形式</p>
+<p>对象表示为键值对<br>数据由逗号分隔<br>花括号保存对象<br>方括号保存数组</p>
+<h3 id="application-x-www-form-urlencoded"><a href="#application-x-www-form-urlencoded" class="headerlink" title="application/x-www-form-urlencoded"></a>application/x-www-form-urlencoded</h3><p>首先，Content-Type 被指定为 application/x-www-form-urlencoded；其次，提交的数据按照 key1=val1&amp;key2=val2 的方式进行编码，key 和 val 都进行了 URL 转码。大部分服务端语言都对这种方式有很好的支持。</p>
+<h3 id="multipart-form-data"><a href="#multipart-form-data" class="headerlink" title="multipart/form-data"></a>multipart/form-data</h3><p>这是使用表单上传文件时必须的。</p>
+<p>示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">POST http://www.example.com HTTP/1.1</span><br><span class="line">Content-Type:multipart/form-data; boundary=----WebKitFormBoundaryrGKCBY7qhFd3TrwA</span><br><span class="line"></span><br><span class="line">------WebKitFormBoundaryrGKCBY7qhFd3TrwA</span><br><span class="line">Content-Disposition: form-data; name=&quot;text&quot;</span><br><span class="line"></span><br><span class="line">title</span><br><span class="line">------WebKitFormBoundaryrGKCBY7qhFd3TrwA</span><br><span class="line">Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;chrome.png&quot;</span><br><span class="line">Content-Type: image/png</span><br><span class="line"></span><br><span class="line">PNG ... content of chrome.png ...</span><br><span class="line">------WebKitFormBoundaryrGKCBY7qhFd3TrwA--</span><br></pre></td></tr></table></figure></p>
+<p>首先生成了一个 boundary 用于分割不同的字段，为了避免与正文内容重复，boundary 很长很复杂。然后 Content-Type 里指明了数据是以 multipart/form-data 来编码，本次请求的 boundary 是什么内容。消息主体里按照字段个数又分为多个结构类似的部分，每部分都是以 –boundary 开始，紧接着是内容描述信息，然后是回车，最后是字段具体内容（文本或二进制）。如果传输的是文件，还要包含文件名和文件类型信息。消息主体最后以 –boundary– 标示结束。</p>
+<h3 id="text-xml"><a href="#text-xml" class="headerlink" title="text/xml"></a>text/xml</h3><p>示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">POST http://www.example.com HTTP/1.1 </span><br><span class="line">Content-Type: text/xml</span><br><span class="line"></span><br><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;methodCall&gt;</span><br><span class="line">    &lt;methodName&gt;examples.getStateName&lt;/methodName&gt;</span><br><span class="line">    &lt;params&gt;</span><br><span class="line">        &lt;param&gt;</span><br><span class="line">            &lt;value&gt;&lt;i4&gt;41&lt;/i4&gt;&lt;/value&gt;</span><br><span class="line">        &lt;/param&gt;</span><br><span class="line">    &lt;/params&gt;</span><br><span class="line">&lt;/methodCall&gt;</span><br></pre></td></tr></table></figure></p>
+<p>这个就和android里面的xml差不多，用途还挺多的，不过就是太大了，也能解析成类似于json的形式。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/26/java-uri拼接/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1558,137 +1689,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/14/混淆学习/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/14/混淆学习/" itemprop="url">混淆学习</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-14T09:59:35+08:00">
-                2018-03-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="混淆文件生成"><a href="#混淆文件生成" class="headerlink" title="混淆文件生成"></a>混淆文件生成</h1><p>每次构建时 ProGuard 都会输出下列文件：</p>
-<p>dump.txt<br>说明 APK 中所有类文件的内部结构。</p>
-<p>mapping.txt<br>提供原始与混淆过的类、方法和字段名称之间的转换。</p>
-<p>seeds.txt<br>列出未进行混淆的类和成员。</p>
-<p>usage.txt<br>列出从 APK 移除的代码。</p>
-<p>这些文件保存在 <module-name>/build/outputs/mapping/release/ 中。</module-name></p>
-<h1 id="解码混淆过的堆叠追踪"><a href="#解码混淆过的堆叠追踪" class="headerlink" title="解码混淆过的堆叠追踪"></a>解码混淆过的堆叠追踪</h1><p>在 ProGuard 压缩代码后，读取堆叠追踪变得困难（即使并非不可行），因为方法名称经过了混淆处理。幸运的是，ProGuard 每次运行时都会创建一个 mapping.txt 文件，其中显示了与混淆过的名称对应的原始类名称、方法名称和字段名称。ProGuard 将该文件保存在应用的 <module-name>/build/outputs/mapping/release/ 目录中。</module-name></p>
-<p>请注意，您每次使用 ProGuard 创建发布构建时都会覆盖 mapping.txt 文件，因此您每次发布新版本时都必须小心地保存一个副本。通过为每个发布构建保留一个 mapping.txt 文件副本，您就可以在用户提交的已混淆堆叠追踪来自旧版本应用时对问题进行调试。</p>
-<p>在 Google Play 上发布应用时，您可以上传每个 APK 版本的 mapping.txt 文件。Google Play 将根据用户报告的问题对收到的堆叠追踪进行去混淆处理，以便您在 Google Play Developer Console 中进行检查。如需了解详细信息，请参阅帮助中心有关如何对崩溃堆叠追踪进行去混淆处理的文章。</p>
-<p>要自行将混淆过的堆叠追踪转换成可读的堆叠追踪，请使用 retrace 脚本（在 Windows 上为 retrace.bat；在 Mac/Linux 上为 retrace.sh）。它位于 <sdk-root>/tools/proguard/ 目录中。该脚本利用 mapping.txt 文件和您的堆叠追踪生成新的可读堆叠追踪。使用 retrace 工具的语法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">retrace.bat|retrace.sh [-verbose] mapping.txt [&lt;stacktrace_file&gt;]</span><br></pre></td></tr></table></figure></sdk-root></p>
-<p>例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">retrace.bat -verbose mapping.txt obfuscated_trace.txt</span><br></pre></td></tr></table></figure></p>
-<p>如果您不指定堆叠追踪文件，retrace 工具会从标准输入读取。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1739,7 +1739,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">66</span>
+                  <span class="site-state-item-count">67</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1752,7 +1752,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
