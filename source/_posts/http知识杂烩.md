@@ -73,3 +73,21 @@ Content-Type: text/xml
 ```
 
 这个就和android里面的xml差不多，用途还挺多的，不过就是太大了，也能解析成类似于json的形式。
+
+## RequestBody拓展
+
+requestBody的拓展其实比较有用，今次项目中用到，若不是不支持urlencode，获取也不会关注。
+
+在okhttp里面加入一个继承自Interceptor的拦截器，将请求拦截下来，针对不同的请求进行操作，例如加上一个token，批量操作header等。
+
+操作的过程就是对requestbody拓展的过程，就是将原有的src的requestbody，和extend的requestbody进行融合。
+
+需要写三个方法，contentType、contentLength、writeTo。
+
+contenttype是contenttype。contentlength是src.contentlength()+extend.contentlength()+1。writeto是写操作，先写src，后写extend，需要对不同的contenttype加上不同的连接符，sink.writeUtf8(",")或者sink.writeUtf8("&")等等。
+
+如此便可以自由的截断和拓展相关requestbody了。
+
+
+
+

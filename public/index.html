@@ -312,6 +312,12 @@
 <p>首先生成了一个 boundary 用于分割不同的字段，为了避免与正文内容重复，boundary 很长很复杂。然后 Content-Type 里指明了数据是以 multipart/form-data 来编码，本次请求的 boundary 是什么内容。消息主体里按照字段个数又分为多个结构类似的部分，每部分都是以 –boundary 开始，紧接着是内容描述信息，然后是回车，最后是字段具体内容（文本或二进制）。如果传输的是文件，还要包含文件名和文件类型信息。消息主体最后以 –boundary– 标示结束。</p>
 <h3 id="text-xml"><a href="#text-xml" class="headerlink" title="text/xml"></a>text/xml</h3><p>示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">POST http://www.example.com HTTP/1.1 </span><br><span class="line">Content-Type: text/xml</span><br><span class="line"></span><br><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;methodCall&gt;</span><br><span class="line">    &lt;methodName&gt;examples.getStateName&lt;/methodName&gt;</span><br><span class="line">    &lt;params&gt;</span><br><span class="line">        &lt;param&gt;</span><br><span class="line">            &lt;value&gt;&lt;i4&gt;41&lt;/i4&gt;&lt;/value&gt;</span><br><span class="line">        &lt;/param&gt;</span><br><span class="line">    &lt;/params&gt;</span><br><span class="line">&lt;/methodCall&gt;</span><br></pre></td></tr></table></figure></p>
 <p>这个就和android里面的xml差不多，用途还挺多的，不过就是太大了，也能解析成类似于json的形式。</p>
+<h2 id="RequestBody拓展"><a href="#RequestBody拓展" class="headerlink" title="RequestBody拓展"></a>RequestBody拓展</h2><p>requestBody的拓展其实比较有用，今次项目中用到，若不是不支持urlencode，获取也不会关注。</p>
+<p>在okhttp里面加入一个继承自Interceptor的拦截器，将请求拦截下来，针对不同的请求进行操作，例如加上一个token，批量操作header等。</p>
+<p>操作的过程就是对requestbody拓展的过程，就是将原有的src的requestbody，和extend的requestbody进行融合。</p>
+<p>需要写三个方法，contentType、contentLength、writeTo。</p>
+<p>contenttype是contenttype。contentlength是src.contentlength()+extend.contentlength()+1。writeto是写操作，先写src，后写extend，需要对不同的contenttype加上不同的连接符，sink.writeUtf8(“,”)或者sink.writeUtf8(“&amp;”)等等。</p>
+<p>如此便可以自由的截断和拓展相关requestbody了。</p>
 
           
         

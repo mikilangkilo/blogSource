@@ -299,3 +299,10 @@ observable.takeUtil(condition),当condition == true时终止，且包含临界�
 - takeWhile
 
 observable.takeWhile(condition),当condition == false时终止，不包含临界条件的item
+
+- concat
+
+Concat操作符将多个Observable结合成一个Observable并发射数据，并且严格按照先后顺序发射数据，前一个Observable的数据没有发射完，是不能发射后面Observable的数据的。
+Concat配合first()可以实现按顺序进行发射数据，有就立即停下，例如从内存缓存，本地缓存，网络请求三者中进行读取数据的操作。
+
+
