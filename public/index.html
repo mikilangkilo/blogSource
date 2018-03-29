@@ -316,8 +316,14 @@
 <p>在okhttp里面加入一个继承自Interceptor的拦截器，将请求拦截下来，针对不同的请求进行操作，例如加上一个token，批量操作header等。</p>
 <p>操作的过程就是对requestbody拓展的过程，就是将原有的src的requestbody，和extend的requestbody进行融合。</p>
 <p>需要写三个方法，contentType、contentLength、writeTo。</p>
-<p>contenttype是contenttype。contentlength是src.contentlength()+extend.contentlength()+1。writeto是写操作，先写src，后写extend，需要对不同的contenttype加上不同的连接符，sink.writeUtf8(“,”)或者sink.writeUtf8(“&amp;”)等等。</p>
-<p>如此便可以自由的截断和拓展相关requestbody了。</p>
+<!-- contenttype是contenttype。contentlength是src.contentlength()+extend.contentlength()+1。writeto是写操作，先写src，后写extend，需要对不同的contenttype加上不同的连接符，sink.writeUtf8(",")或者sink.writeUtf8("&")等等。
+
+如此便可以自由的截断和拓展相关requestbody了。 -->
+<p>对requestbody的拓展，如果是json有一个问题，就是}{这两个符号不好处理，暂时没有找到方法。</p>
+<p>但是对于x-www-form-urlencoded这种连接的文本比较容易操作，中间加一个&amp;即可。</p>
+<h2 id="http-url拓展"><a href="#http-url拓展" class="headerlink" title="http url拓展"></a>http url拓展</h2><p>url的拓展主要是针对末尾增加query，或者parameter这种。</p>
+<p>使用的方法也是差不多的方法，通过拦截器获取request，然后从request中取出url，对url进行拼装，之后在使用新的url来重新组装一个request，之后返回即可。</p>
+<p>有一点需要注意的，不是所有的请求都会从url中获取参数，这个开发中需要注意。</p>
 
           
         

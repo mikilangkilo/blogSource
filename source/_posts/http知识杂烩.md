@@ -84,10 +84,21 @@ requestBody的拓展其实比较有用，今次项目中用到，若不是不支
 
 需要写三个方法，contentType、contentLength、writeTo。
 
-contenttype是contenttype。contentlength是src.contentlength()+extend.contentlength()+1。writeto是写操作，先写src，后写extend，需要对不同的contenttype加上不同的连接符，sink.writeUtf8(",")或者sink.writeUtf8("&")等等。
+<!-- contenttype是contenttype。contentlength是src.contentlength()+extend.contentlength()+1。writeto是写操作，先写src，后写extend，需要对不同的contenttype加上不同的连接符，sink.writeUtf8(",")或者sink.writeUtf8("&")等等。
 
-如此便可以自由的截断和拓展相关requestbody了。
+如此便可以自由的截断和拓展相关requestbody了。 -->
 
+对requestbody的拓展，如果是json有一个问题，就是}{这两个符号不好处理，暂时没有找到方法。
+
+但是对于x-www-form-urlencoded这种连接的文本比较容易操作，中间加一个&即可。
+
+## http url拓展
+
+url的拓展主要是针对末尾增加query，或者parameter这种。
+
+使用的方法也是差不多的方法，通过拦截器获取request，然后从request中取出url，对url进行拼装，之后在使用新的url来重新组装一个request，之后返回即可。
+
+有一点需要注意的，不是所有的请求都会从url中获取参数，这个开发中需要注意。
 
 
 
