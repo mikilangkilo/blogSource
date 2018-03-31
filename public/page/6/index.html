@@ -229,6 +229,158 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/09/堆排序/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/09/堆排序/" itemprop="url">堆排序</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-09T23:27:02+08:00">
+                2018-01-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>堆排序是内部排序中选择排序的一种。堆排序是一种树形选择排序，是对选择排序的有效改进。</p>
+<p>堆是一种具有n个元素的序列，当且仅当满足 ki&lt;=k2i, ki&lt;= k2i+1，或者反过来。<br>若以一维数组存储一个堆，则堆对应一棵完全二叉树，且所有非叶结点的值均不大于(或不小于)其子女的值，根结点（堆顶元素）的值是最小(或最大)的。</p>
+<p>初始时把要排序的n个数的序列看作是一棵顺序存储的二叉树（一维数组存储二叉树），调整它们的存储序，使之成为一个堆，将堆顶元素输出，得到n 个元素中最小(或最大)的元素，这时堆的根节点的数最小（或者最大）。<br>然后对前面(n-1)个元素重新调整使之成为堆，输出堆顶元素，得到n 个元素中次小(或次大的元素。<br>依此类推，直到只有两个节点的堆，并对它们作交换，最后得到有n个节点的有序序列。称这个过程为堆排序。</p>
+<ol>
+<li>调整小堆顶的方法</li>
+</ol>
+<p>1）设有m 个元素的堆，输出堆顶元素后，剩下m-1 个元素。将堆底元素送入堆顶（（最后一个元素与堆顶进行交换），堆被破坏，其原因仅是根结点不满足堆的性质。</p>
+<p>2）将根结点与左、右子树中较小元素的进行交换。</p>
+<p>3）若与左子树交换：如果左子树堆被破坏，即左子树的根结点不满足堆的性质，则重复方法 （2）.</p>
+<p>4）若与右子树交换，如果右子树堆被破坏，即右子树的根结点不满足堆的性质。则重复方法 （2）.</p>
+<p>5）继续对不满足堆性质的子树进行上述交换操作，直到叶子结点，堆被建成。</p>
+<ol>
+<li>建堆方法：对初始序列建堆的过程，就是一个反复进行筛选的过程。</li>
+</ol>
+<p>1）n 个结点的完全二叉树，则最后一个结点是第个结点的子树。</p>
+<p>2）筛选从第个结点为根的子树开始，该子树成为堆。</p>
+<p>3）之后向前依次对各结点为根的子树进行筛选，使之成为堆，直到根结点。</p>
+<h1 id="算法思想"><a href="#算法思想" class="headerlink" title="算法思想"></a>算法思想</h1><p>初始时把要排序的n个数的序列看作是一棵顺序存储的二叉树（一维数组存储二叉树），调整它们的存储序，使之成为一个堆，将堆顶元素输出，得到n 个元素中最小(或最大)的元素，这时堆的根节点的数最小（或者最大）。<br>然后对前面(n-1)个元素重新调整使之成为堆，输出堆顶元素，得到n 个元素中次小(或次大的元素。<br>依此类推，直到只有两个节点的堆，并对它们作交换，最后得到有n个节点的有序序列。称这个过程为堆排序。</p>
+<h1 id="空间复杂度"><a href="#空间复杂度" class="headerlink" title="空间复杂度"></a>空间复杂度</h1><p>因为堆排序是就地排序，空间复杂度为常数：O(1)</p>
+<h1 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h1><p>堆排序的时间复杂度，主要在初始化堆过程和每次选取最大数后重新建堆的过程；</p>
+<p>初始化建堆过程时间：O(n)</p>
+<p>推算过程：</p>
+<p>首先要理解怎么计算这个堆化过程所消耗的时间，可以直接画图去理解；</p>
+<p>假设高度为k，则从倒数第二层右边的节点开始，这一层的节点都要执行子节点比较然后交换（如果顺序是对的就不用交换）；倒数第三层呢，则会选择其子节点进行比较和交换，如果没交换就可以不用再执行下去了。如果交换了，那么又要选择一支子树进行比较和交换；</p>
+<p>那么总的时间计算为：s = 2^( i - 1 )  *  ( k - i )；其中 i 表示第几层，2^( i - 1) 表示该层上有多少个元素，( k - i) 表示子树上要比较的次数，如果在最差的条件下，就是比较次数后还要交换；因为这个是常数，所以提出来后可以忽略；</p>
+<p>S = 2^(k-2) <em> 1 + 2^(k-3)</em>2…..+2<em>(k-2)+2^(0)</em>(k-1)  ===&gt; 因为叶子层不用交换，所以i从 k-1 开始到 1；<br>这个等式求解，我想高中已经会了：等式左右乘上2，然后和原来的等式相减，就变成了：<br>S = 2^(k - 1) + 2^(k - 2) + 2^(k - 3) ….. + 2 - (k-1)<br>除最后一项外，就是一个等比数列了，直接用求和公式：S = {  a1[ 1-  (q^n) ] }  / (1-q)；<br>S = 2^k -k -1；又因为k为完全二叉树的深度，所以 (2^k) &lt;=  n &lt; (2^k  -1 )，总之可以认为：k = logn （实际计算得到应该是 log(n+1) &lt; k &lt;= logn ）;<br>综上所述得到：S = n - longn -1，所以时间复杂度为：O(n)<br>更改堆元素后重建堆时间：O(nlogn)<br>推算过程：<br>1、循环  n -1 次，每次都是从根节点往下循环查找，所以每一次时间是 logn，总时间：logn(n-1) = nlogn  - logn ；<br>综上所述：堆排序的时间复杂度为：O(nlogn)</p>
+<h1 id="算法实现思想"><a href="#算法实现思想" class="headerlink" title="算法实现思想"></a>算法实现思想</h1><p>堆排序的大概步骤如下:</p>
+<ol>
+<li>构建最大堆。</li>
+<li>选择顶，并与第0位置元素交换</li>
+<li>由于步骤2的的交换可能破环了最大堆的性质，第0不再是最大元素，需要调用maxHeap调整堆(沉降法)，如果需要重复步骤2</li>
+</ol>
+<h1 id="java实现"><a href="#java实现" class="headerlink" title="java实现"></a>java实现</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">public static void heapSort(int[] array) &#123;  </span><br><span class="line">    if (array == null || array.length &lt;= 1) &#123;  </span><br><span class="line">        return;  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    buildMaxHeap(array);  </span><br><span class="line">  </span><br><span class="line">    for (int i = array.length - 1; i &gt;= 1; i--) &#123;  </span><br><span class="line">    	ArrayUtils.exchangeElements(array, 0, i);  </span><br><span class="line"></span><br><span class="line">    	maxHeap(array, i, 0);  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">private static void buildMaxHeap(int[] array) &#123;  </span><br><span class="line">	if (array == null || array.length &lt;= 1) &#123;  </span><br><span class="line">		return;  </span><br><span class="line">	&#125;  </span><br><span class="line"></span><br><span class="line">	int half = array.length / 2;  </span><br><span class="line">	for (int i = half; i &gt;= 0; i--) &#123;  </span><br><span class="line">		maxHeap(array, array.length, i);  </span><br><span class="line">	&#125;  </span><br><span class="line">&#125;</span><br><span class="line">private static void maxHeap(int[] array, int heapSize, int index) &#123;  </span><br><span class="line">	int left = index * 2 + 1;  </span><br><span class="line">	int right = index * 2 + 2;  </span><br><span class="line"></span><br><span class="line">	int largest = index;  </span><br><span class="line">	if (left &lt; heapSize &amp;&amp; array[left] &gt; array[index]) &#123;  </span><br><span class="line">		largest = left;  </span><br><span class="line">	&#125;  </span><br><span class="line"></span><br><span class="line">	if (right &lt; heapSize &amp;&amp; array[right] &gt; array[largest]) &#123;  </span><br><span class="line">		largest = right;  </span><br><span class="line">	&#125;  </span><br><span class="line"></span><br><span class="line">	if (index != largest) &#123;  </span><br><span class="line">		ArrayUtils.exchangeElements(array, index, largest);  </span><br><span class="line"></span><br><span class="line">		maxHeap(array, heapSize, largest);  </span><br><span class="line">	&#125;  </span><br><span class="line">&#125;  </span><br><span class="line">public static void exchangeElements(int[] array, int index1, int index2) &#123;  </span><br><span class="line">	int temp = array[index1];  </span><br><span class="line">	array[index1] = array[index2];  </span><br><span class="line">	array[index2] = temp;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="c实现"><a href="#c实现" class="headerlink" title="c实现"></a>c实现</h1><h1 id="python实现"><a href="#python实现" class="headerlink" title="python实现"></a>python实现</h1>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/09/简单选择排序/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1426,127 +1578,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/02/viewgroup测量/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/02/viewgroup测量/" itemprop="url">viewgroup测量</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-02T23:07:40+08:00">
-                2018-01-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>ViewGroup会去管理子view，当ViewGroup的大小为wrap_content时，ViewGroup就需要对子View进行遍历，以便获得所有的子View的大小，从而决定自己的大小。在其他模式下则会通过具体的制定值来设置自身的大小。<br>ViewGroup在测量时通过遍历所有的子view，从而调用子view的measure方法来获得每个子view的测量结果。<br>当子view测量结束时，就会将子view放到合适的位置，这个过程就是子view的layout过程。viewgroup在执行layout过程时，也同样是使用遍历的方法来调用子view的layout方法，并指定其具体显示的位置，从而来决定其布局位置。<br>在自定义viewgroup中，通常会重写layout方法来控制子view显示位置的逻辑。同样如果是wrap_content，也必须重写onmeasure方法，这点与view是相同的。</p>
-<h1 id="viewgroup的绘制"><a href="#viewgroup的绘制" class="headerlink" title="viewgroup的绘制"></a>viewgroup的绘制</h1><p>viewgroup通常不需要绘制，因为本身没有什么值得绘制的东西，如果不是需要指定viewgroup的颜色，甚至连ondraw方法都不会调用。但是viewgroup会使用dispatchDraw()方法来绘制子view</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1597,7 +1628,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">68</span>
+                  <span class="site-state-item-count">69</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
