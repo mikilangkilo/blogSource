@@ -229,6 +229,182 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/25/Android性能优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/25/Android性能优化/" itemprop="url">Android性能优化</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-25T16:00:25+08:00">
+                2018-01-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="布局优化"><a href="#布局优化" class="headerlink" title="布局优化"></a>布局优化</h1><ol>
+<li>ui渲染机制</li>
+</ol>
+<p>android中，系统通过VSYNC信号触发对ui的渲染、重绘，间隔是16ms，即每秒60帧。<br>如果系统每次渲染的时间都保持在16ms之内，那么我们看见的ui界面是非常流畅的，这需要讲所有程序的逻辑都保证在16ms之内，如果不能在16ms内完成绘制，就会造成丢帧现象。<br>导致16ms*n一直显示同一帧，产生卡顿的现象</p>
+<ol>
+<li>避免Overdraw</li>
+</ol>
+<p>过度绘制是指给布局绘制了重叠的背景，过度绘制会浪费很多的cpu、gpu资源。使用GPU OVERDRAW可以检查</p>
+<ol>
+<li>优化布局层级</li>
+</ol>
+<p>android中，系统对view进行测量、布局和绘制时，都是通过对view树的遍历来进行操作的，如果一个view树太高，就会严重影响测量、布局和绘制的速度，因此优化布局的第一个方法就是降低view树的高度，树的高度不宜超过10层。</p>
+<p>使用RelativeLayout可以有效降低嵌套。</p>
+<ol>
+<li>避免嵌套过多无用布局</li>
+</ol>
+<p>嵌套的布局会让view树的高度越来越高，因此在布局时，需要根据自身布局的特点来选择不同的layout组件，从而避免通过某一种layout组件来实现功能时的局限性，从而造成嵌套过多的情况发生。</p>
+<p>使用<include>可以复用标签<br>使用<viewstub>可以实现view的延迟加载。viewstub只有在显示时才会去渲染整个布局，而view.gone，在初始化布局树的时候就已经添加在布局树上面了。</viewstub></include></p>
+<ol>
+<li>Hierarcy Viewer</li>
+</ol>
+<p>使用Hierarcy可以很容易的看到布局结构，找到冗杂的布局进行优化。</p>
+<h1 id="内存优化"><a href="#内存优化" class="headerlink" title="内存优化"></a>内存优化</h1><ol>
+<li>什么是内存</li>
+</ol>
+<p>寄存器：速度最快的存储场所，因为寄存器位于处理器内部，在程序中无法控制<br>栈：存放基本类型的数据和对象的引用，但对象本身不存放在栈中，而是存放在堆中<br>堆：存放由new创建的对象和数组，在堆中分配的内存，由java虚拟机的自动垃圾回收装置回收（gc）<br>静态存储区域：静态存储区域就是指在固定的位置存放应用程序运行时一直存在的数据，java专门划分了一个静态存储区来管理一些特殊的数据变量，如静态的数据变量。<br>常量池：jvm虚拟机必须为每个被装载的类型维护一个常量池，常量池就是该类型所用到常量的一个有序集合，包括直接常量和对其他类型、字段和方法的符号引用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ActivityManager manager = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);</span><br><span class="line">int heapSize = manager.getLargeMemoryClass();</span><br></pre></td></tr></table></figure>
+<p>使用如上代码可以获取heap的大小。</p>
+<ol>
+<li>获取android系统内存信息</li>
+</ol>
+<p>Process state: 在android k 以上设置中开启该功能，进行内存的监视。</p>
+<p>也可以使用 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell dumpsys procstats</span><br></pre></td></tr></table></figure>
+<p>Meminfo: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell dumpsys meminfo</span><br></pre></td></tr></table></figure>
+<ol>
+<li>内存回收</li>
+</ol>
+<p>使用System.gc()可以建议系统进行gc，但系统是否采纳就不一定，有些对象因为算法的原因，不在回收，就会造成内存泄漏</p>
+<ol>
+<li>内存优化实例</li>
+</ol>
+<p>bitmap优化：bitmap是造成内存占用过高，甚至是oom的最大威胁。可以使用适当分辨率和大小的图片，及时使用bitmap.recycle()回收内存，使用图片缓存（内存缓存或硬盘缓存）来减少该问题的发生。</p>
+<p>代码优化：</p>
+<ol>
+<li>对常量使用static修饰符</li>
+<li>使用静态方法，静态方法会比普通方法提高15%的访问速度</li>
+<li>减少不必要的成员变量</li>
+<li>减少不必要的对象，使用基础类型会比使用对象更加节省资源，同时更应避免频繁创建短作用域的变量。</li>
+<li>尽量不用使用枚举，少用迭代器</li>
+<li>对Cursor, Receiver, Sensor, File等对象，要非常注意对他们的创建，回收与注册，解注册。</li>
+<li>避免使用IOC框架，注解和反射会带来性能的下降</li>
+<li>使用RenderScript, OpenGL来进行非常复杂的绘图操作</li>
+<li>使用SurfaceView来替代view进行大量、频繁的绘图操作</li>
+<li>尽量使用视图缓存，而不是每次都执行inflate（）方法。</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/25/Android系统信息和安全机制/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1716,131 +1892,6 @@ ll.setLayoutAnimation(lac);
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/11/冒泡排序/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/11/冒泡排序/" itemprop="url">冒泡排序</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-11T21:52:24+08:00">
-                2018-01-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>冒泡排序是内部排序中交换排序的一种。</p>
-<h1 id="算法思想"><a href="#算法思想" class="headerlink" title="算法思想"></a>算法思想</h1><p>对当前还未排序好的范围内的全部数，自上而下对相邻的两个数进行比较和调整，大的下沉，小的上浮。</p>
-<h1 id="空间复杂度"><a href="#空间复杂度" class="headerlink" title="空间复杂度"></a>空间复杂度</h1><p>只是互换，为O(1)</p>
-<h1 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h1><p>两次循环，故为O(n^2)</p>
-<h1 id="算法实现思想"><a href="#算法实现思想" class="headerlink" title="算法实现思想"></a>算法实现思想</h1><p>每当两相邻的数比较后发现它们的排序与排序要求相反时，就将它们互换。</p>
-<h1 id="java实现"><a href="#java实现" class="headerlink" title="java实现"></a>java实现</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public int[] bubbleSort(int[] array)&#123;</span><br><span class="line">	int[] arr = array;</span><br><span class="line">	for(int i = 0; i &lt; array.length - 1; i ++)&#123;</span><br><span class="line">		for(int j = 0; j &lt; array.length - i - 1; j ++)&#123;</span><br><span class="line">			if(arr[j] &gt; arr[j+1])&#123;</span><br><span class="line">				int temp = arr[j];</span><br><span class="line">				arr[j] = arr[j+1];</span><br><span class="line">				arr[j+1] = temp;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return arr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="c实现"><a href="#c实现" class="headerlink" title="c实现"></a>c实现</h1><h1 id="python实现"><a href="#python实现" class="headerlink" title="python实现"></a>python实现</h1>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1891,7 +1942,7 @@ ll.setLayoutAnimation(lac);
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">69</span>
+                  <span class="site-state-item-count">70</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
