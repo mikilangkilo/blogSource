@@ -229,6 +229,197 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/20/关于WebviewJavaScriptBrige的一些学习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/20/关于WebviewJavaScriptBrige的一些学习/" itemprop="url">关于WebviewJavaScriptBrige的一些学习</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-20T10:36:19+08:00">
+                2018-03-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>项目中用到了js连调的技术，之前有使用过，但是没有全面的了解过，这次做个复习和深入学习。</p>
+<h1 id="js与native交互"><a href="#js与native交互" class="headerlink" title="js与native交互"></a>js与native交互</h1><p>js与native交互总共有四种方式</p>
+<h2 id="JavascriptInterface"><a href="#JavascriptInterface" class="headerlink" title="JavascriptInterface"></a>JavascriptInterface</h2><p>首先Java代码要实现这么一个类，它的作用是提供给Javascript调用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public class JavascriptInterface &#123;</span><br><span class="line"></span><br><span class="line">    @JavascriptInterface</span><br><span class="line">    public void showToast(String toast) &#123;</span><br><span class="line">        Toast.makeText(MainActivity.this, toast, Toast.LENGTH_SHORT).show();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后把这个类添加到WebView的JavascriptInterface中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">webView.addJavascriptInterface(new JavascriptInterface(), &quot;javascriptInterface&quot;);</span><br></pre></td></tr></table></figure>
+<p>在Javascript代码中就能直接通过“javascriptInterface”直接调用了该Native的类的方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function showToast(toast) &#123;</span><br><span class="line">    javascript:javascriptInterface.showToast(toast);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是这个官方提供的解决方案在Android4.2之前存在安全漏洞。在Android4.2之后，加入了@JavascriptInterface才得到解决。所以考虑到兼容低版本的系统，JavascriptInterface并不适合。</p>
+<h2 id="WebViewClient-shouldOverrideUrlLoading"><a href="#WebViewClient-shouldOverrideUrlLoading" class="headerlink" title="WebViewClient.shouldOverrideUrlLoading()"></a>WebViewClient.shouldOverrideUrlLoading()</h2><p>这个方法的作用是拦截所有WebView的Url跳转。页面可以构造一个特殊格式的Url跳转，shouldOverrideUrlLoading拦截Url后判断其格式，然后Native就能执行自身的逻辑了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class CustomWebViewClient extends WebViewClient &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean shouldOverrideUrlLoading(WebView view, String url) &#123;</span><br><span class="line">        if (isJsBridgeUrl(url)) &#123;</span><br><span class="line">            // JSbridge的处理逻辑</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        return super.shouldOverrideUrlLoading(view, url);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="WebChromeClient-onConsoleMessage"><a href="#WebChromeClient-onConsoleMessage" class="headerlink" title="WebChromeClient.onConsoleMessage()"></a>WebChromeClient.onConsoleMessage()</h2><p>这是Android提供给Javascript调试在Native代码里面打印日志信息的API，同时这也成了其中一种Javascript与Native代码通信的方法。</p>
+<p>在Javascript代码中调用console.log(‘xxx’)方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(&apos;log message that is going to native code&apos;)</span><br></pre></td></tr></table></figure>
+<p>就会在Native代码的WebChromeClient.consoleMessage()中得到回调。</p>
+<p>consoleMessage.message()获得的正是Javascript代码console.log(‘xxx’)的内容.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public class CustomWebChromeClient extends WebChromeClient &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean onConsoleMessage(ConsoleMessage consoleMessage) &#123;</span><br><span class="line">        super.onConsoleMessage(consoleMessage);</span><br><span class="line">        String msg = consoleMessage.message();//Javascript输入的Log内容</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="WebChromeClient-onJsPrompt"><a href="#WebChromeClient-onJsPrompt" class="headerlink" title="WebChromeClient.onJsPrompt()"></a>WebChromeClient.onJsPrompt()</h2><p>其实除了WebChromeClient.onJsPrompt()，还有WebChromeClient.onJsAlert()和WebChromeClient.onJsConfirm()。顾名思义，这三个Javascript给Native代码的回调接口的作用分别是提示展示提示信息，展示警告信息和展示确认信息。鉴于，alert和confirm在Javascript的使用率很高，所以JSBridge的解决方案中都倾向于选用onJsPrompt()。</p>
+<p>Javascript中调用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">window.prompt(message, value)</span><br></pre></td></tr></table></figure>
+<p>WebChromeClient.onJsPrompt()就会受到回调。</p>
+<p>onJsPrompt()方法的message参数的值正是Javascript的方法window.prompt()的message的值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class CustomWebChromeClient extends WebChromeClient &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, JsPromptResult result) &#123;</span><br><span class="line">        // 处理JS 的调用逻辑</span><br><span class="line">        result.confirm();</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="JsBridge"><a href="#JsBridge" class="headerlink" title="JsBridge"></a>JsBridge</h1><p>java 通信js只有这一种方式</p>
+<ul>
+<li>WebView加载html页面</li>
+</ul>
+<p>webView.registerHandler(“submitFromWeb”,…);这是Java层注册了一个叫”submitFromWeb”的接口方法，目的是提供给Javascript来调用。这个”submitFromWeb”的接口方法的回调就是BridgeHandler.handler()。</p>
+<p>webView.callHandler(“functionInJs”, …, new CallBackFunction());<br>这是Java层主动调用Javascript的”functionInJs”方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">public class MainActivity extends Activity implements OnClickListener &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        webView = (BridgeWebView) findViewById(R.id.webView);</span><br><span class="line">        webView.loadUrl(&quot;file:///android_asset/demo.html&quot;);</span><br><span class="line">        webView.registerHandler(&quot;submitFromWeb&quot;, new BridgeHandler() &#123;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void handler(String data, CallBackFunction function) &#123;</span><br><span class="line">                Log.i(TAG, &quot;handler = submitFromWeb, data from web = &quot; + data);</span><br><span class="line">                function.onCallBack(&quot;submitFromWeb exe, response data 中文 from Java&quot;);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        webView.callHandler(&quot;functionInJs&quot;, new Gson().toJson(user), new CallBackFunction() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onCallBack(String data) &#123;</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们一层层深入callHandler()方法的实现。这其中会调用到doSend()方法，这里想解释下callbackId。</p>
+<p>callbackId生成后不仅仅会被传到Javascript，而且会以key-value对的形式和responseCallback配对保存到responseCallbacks这个Map里面。</p>
+<p>它的目的，就是为了等Javascript把处理结果回调给Java层后，Java层能根据callbackId找到对应的responseCallback，做后续的回调处理。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">private void doSend(String handlerName, String data, CallBackFunction responseCallback) &#123;</span><br><span class="line">        Message m = new Message();</span><br><span class="line">        if (!TextUtils.isEmpty(data)) &#123;</span><br><span class="line">            m.setData(data);</span><br><span class="line">        &#125;</span><br><span class="line">        if (responseCallback != null) &#123;</span><br><span class="line">            String callbackStr = String.format(BridgeUtil.CALLBACK_ID_FORMAT, ++uniqueId + (BridgeUtil.UNDERLINE_STR + SystemClock.currentThreadTimeMillis()));</span><br><span class="line">            responseCallbacks.put(callbackStr, responseCallback);</span><br><span class="line">            m.setCallbackId(callbackStr);</span><br><span class="line">        &#125;</span><br><span class="line">        if (!TextUtils.isEmpty(handlerName)) &#123;</span><br><span class="line">            m.setHandlerName(handlerName);</span><br><span class="line">        &#125;</span><br><span class="line">        queueMessage(m);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>最终可以看到是BridgeWebView.dispatchMessage(Message m)方法调用的是this.loadUrl()，调用了_handleMessageFromNative这个Javascript方法。那这个Javascript的方法是哪里来的呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">final static String JS_HANDLE_MESSAGE_FROM_JAVA = &quot;javascript:WebViewJavascriptBridge._handleMessageFromNative(&apos;%s&apos;);&quot;;</span><br><span class="line"></span><br><span class="line">void dispatchMessage(Message m) &#123;</span><br><span class="line">        String messageJson = m.toJson();</span><br><span class="line">        //escape special characters for json string</span><br><span class="line">        messageJson = messageJson.replaceAll(&quot;(\\\\)([^utrn])&quot;, &quot;\\\\\\\\$1$2&quot;);</span><br><span class="line">        messageJson = messageJson.replaceAll(&quot;(?&lt;=[^\\\\])(\&quot;)&quot;, &quot;\\\\\&quot;&quot;);</span><br><span class="line">        String javascriptCommand = String.format(BridgeUtil.JS_HANDLE_MESSAGE_FROM_JAVA, messageJson);</span><br><span class="line">        if (Thread.currentThread() == Looper.getMainLooper().getThread()) &#123;</span><br><span class="line">            this.loadUrl(javascriptCommand);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>页面加载完成后会加在一段Javascript。</li>
+</ul>
+<p>在WebViewClient.onPageFinished()里面的BridgeUtil.webViewLoadLocalJs(view, BridgeWebView.toLoadJs)。正是把保存在assert/WebViewJavascriptBridge.js加载到WebView中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">public class BridgeWebViewClient extends WebViewClient &#123;</span><br><span class="line">　　</span><br><span class="line">    @Override</span><br><span class="line">    public void onPageFinished(WebView view, String url) &#123;</span><br><span class="line">        super.onPageFinished(view, url);</span><br><span class="line"></span><br><span class="line">        if (BridgeWebView.toLoadJs != null) &#123;</span><br><span class="line">            BridgeUtil.webViewLoadLocalJs(view, BridgeWebView.toLoadJs);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //</span><br><span class="line">        if (webView.getStartupMessage() != null) &#123;</span><br><span class="line">            for (Message m : webView.getStartupMessage()) &#123;</span><br><span class="line">                webView.dispatchMessage(m);</span><br><span class="line">            &#125;</span><br><span class="line">            webView.setStartupMessage(null);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们看看WebViewJavascriptBridge.js的代码，就能找到function _handleMessageFromNative()这个Javascript方法了。</p>
+<ul>
+<li>WebViewJavascriptBridge.js</li>
+</ul>
+<p>_handleMessageFromNative()方法里面会调用_dispatchMessageFromNative()方法。</p>
+<p>当处理来自Java层的主动调用时候会走“直接发送”的else分支。</p>
+<p>message.callbackId会被取出来，实例化一个responseCallback，而它是用来Javascript处理完成后把结果数据回调给Java层代码的。</p>
+<p>接着会根据message.handleName（在这个分析例子中，handleName的值就是”functionInJs”）在messageHandlers这个Map去获取handler，最后交给handler去处理。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">function _dispatchMessageFromNative(messageJSON) &#123;</span><br><span class="line">    setTimeout(function() &#123;</span><br><span class="line">        var message = JSON.parse(messageJSON);</span><br><span class="line">        var responseCallback;</span><br><span class="line">        //java call finished, now need to call js callback function</span><br><span class="line">        if (message.responseId) &#123;</span><br><span class="line">            ...</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            //直接发送</span><br><span class="line">            if (message.callbackId) &#123;</span><br><span class="line">                var callbackResponseId = message.callbackId;</span><br><span class="line">                responseCallback = function(responseData) &#123;</span><br><span class="line">                    _doSend(&#123;</span><br><span class="line">                        responseId: callbackResponseId,</span><br><span class="line">                        responseData: responseData</span><br><span class="line">                    &#125;);</span><br><span class="line">                &#125;;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            var handler = WebViewJavascriptBridge._messageHandler;</span><br><span class="line">            if (message.handlerName) &#123;</span><br><span class="line">                handler = messageHandlers[message.handlerName];</span><br><span class="line">            &#125;</span><br><span class="line">            //查找指定handler</span><br><span class="line">            try &#123;</span><br><span class="line">                handler(message.data, responseCallback);</span><br><span class="line">            &#125; catch (exception) &#123;</span><br><span class="line">                if (typeof console != &apos;undefined&apos;) &#123;</span><br><span class="line">                    console.log(&quot;WebViewJavascriptBridge: WARNING: javascript handler threw.&quot;, message, exception);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>页面注册的”functionInJs”方法，提供给Java调用Javascript的。</li>
+</ul>
+<p>延续上面的分析，messageHandler是哪里设置的呢。答案就在当初webView.loadUrl(“file:///android_asset/demo.html”);加载的这个demo.html中。</p>
+<p>bridge.registerHandler(“functionInJs”, …)这里注册了”functionInJs”。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;head&gt;</span><br><span class="line">    ...</span><br><span class="line">    &lt;/head&gt;</span><br><span class="line">    &lt;body&gt;</span><br><span class="line">    ...</span><br><span class="line">    &lt;/body&gt;</span><br><span class="line">    &lt;script&gt;</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">        connectWebViewJavascriptBridge(function(bridge) &#123;</span><br><span class="line">            bridge.init(function(message, responseCallback) &#123;</span><br><span class="line">                console.log(&apos;JS got a message&apos;, message);</span><br><span class="line">                var data = &#123;</span><br><span class="line">                    &apos;Javascript Responds&apos;: &apos;测试中文!&apos;</span><br><span class="line">                &#125;;</span><br><span class="line">                console.log(&apos;JS responding with&apos;, data);</span><br><span class="line">                responseCallback(data);</span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line">            bridge.registerHandler(&quot;functionInJs&quot;, function(data, responseCallback) &#123;</span><br><span class="line">                document.getElementById(&quot;show&quot;).innerHTML = (&quot;data from Java: = &quot; + data);</span><br><span class="line">                var responseData = &quot;Javascript Says Right back aka!&quot;;</span><br><span class="line">                responseCallback(responseData);</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;)</span><br><span class="line">    &lt;/script&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>“functionInJs”执行完毕把结果回传给Java</li>
+</ul>
+<p>“funciontInJs”执行完毕后调用的responseCallback正是_dispatchMessageFromNative()实例化的，而它实际会调用_doSend()方法。</p>
+<p>_doSend()方法会先把Message推送到sendMessageQueue中。</p>
+<p>然后修改messagingIframe.src，这里会出发Java层的WebViewClient.shouldOverrideUrlLoading()的回调。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">function _doSend(message, responseCallback) &#123;</span><br><span class="line">    if (responseCallback) &#123;</span><br><span class="line">        var callbackId = &apos;cb_&apos; + (uniqueId++) + &apos;_&apos; + new Date().getTime();</span><br><span class="line">        responseCallbacks[callbackId] = responseCallback;</span><br><span class="line">        message.callbackId = callbackId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    sendMessageQueue.push(message);</span><br><span class="line">    messagingIframe.src = CUSTOM_PROTOCOL_SCHEME + &apos;://&apos; + QUEUE_HAS_MESSAGE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> 在BridgeWebViewClient.shouldOverrideUrlLoading()里面，会先执行webView.flushMessageQueue()的分支。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public boolean shouldOverrideUrlLoading(WebView view, String url) &#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        url = URLDecoder.decode(url, &quot;UTF-8&quot;);</span><br><span class="line">    &#125; catch (UnsupportedEncodingException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (url.startsWith(BridgeUtil.YY_RETURN_DATA)) &#123; // 如果是返回数据</span><br><span class="line">        webView.handlerReturnData(url);</span><br><span class="line">        return true;</span><br><span class="line">    &#125; else if (url.startsWith(BridgeUtil.YY_OVERRIDE_SCHEMA)) &#123; //</span><br><span class="line">        webView.flushMessageQueue();</span><br><span class="line">        return true;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        return super.shouldOverrideUrlLoading(view, url);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>webView.flushMessageQueue()首先去执行Javascript的_flushQueue()方法，并附带着CallBackFunction。</p>
+<p>Javascript的_flushQueue()方法会把sendMessageQueue中的所有message都回传给Java层。</p>
+<p>CallBackFunction就是把messageQueue解析出来后一个一个Message在for循环中处理，也正是在for循环中，”functionInJs”的Java层回调方法被执行了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">void flushMessageQueue() &#123;</span><br><span class="line">    if (Thread.currentThread() == Looper.getMainLooper().getThread()) &#123;</span><br><span class="line">        loadUrl(BridgeUtil.JS_FETCH_QUEUE_FROM_JAVA, new CallBackFunction() &#123;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void onCallBack(String data) &#123;</span><br><span class="line">                // deserializeMessage</span><br><span class="line">                List&lt;Message&gt; list = null;</span><br><span class="line">                try &#123;</span><br><span class="line">                    list = Message.toArrayList(data);</span><br><span class="line">                &#125; catch (Exception e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                    return;</span><br><span class="line">                &#125;</span><br><span class="line">                if (list == null || list.size() == 0) &#123;</span><br><span class="line">                    return;</span><br><span class="line">                &#125;</span><br><span class="line">                for (int i = 0; i &lt; list.size(); i++) &#123;</span><br><span class="line">                    ...</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>到此，JsBridge的调用流程就分析完毕了。虽然JsBridge使用了MessageQueue后，分析起来有点绕，但原理是不变的。</p>
+<p>Javascript调用Java是通过WebViewClient.shouldOverrideUrlLoading()。当然，还有在文章开头介绍另外3种方式。</p>
+<p>Java调用Javascript是通过WebView.loadUrl(“javascript:xxxx”)。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/19/2018第十一周工作小结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1436,152 +1627,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/27/近期问题回顾/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/02/27/近期问题回顾/" itemprop="url">近期问题回顾 18-02-27</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-27T23:02:25+08:00">
-                2018-02-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>这两天面了三家单位，有一些问题暴露的比较明显，也是平时开发过程中没有注意到的问题。</p>
-<ol>
-<li>数据结构和算法</li>
-</ol>
-<p>虽然安卓也是前端的一部分，但是安卓怎么讲都是基于java的，所以java提供的一些必要的集合包，需要自己有个很详细的理解，这次面试遇到问我Collection与Collections区别的问题，我因为不熟悉，居然没有回答出来。另外问到我为甚么ArrayList的查询速度快于LinkedList,我也没有回答得出来，回来看答案之后发现自己其实是懂一些的，但是并不是全懂，尤其是一些基础的常用的东西，大部分虽然自己都能实现，但是有现成的轮子不用，却自己去造轮子，这是很蠢的行为。</p>
-<p>这也给我提了个醒，越是不起眼的东西，其实越能决定一些重要的事情，细节决定成败。</p>
-<p>所以针对java部分的数据结构相关的知识，我需要重新看java编程思想这本书。必要的时候自己重写常见的几个数据结构。</p>
-<p>人家的确说的没错，有能力造轮子，和造好轮子是两回事，我设计的queue，的确可以用，但是只在单线程的情况下，多线程情况下很明显会出现不同步的问题。当时就没有考虑过这个问题。</p>
-<ol>
-<li>网络基础</li>
-</ol>
-<p>这次面试还有人问到HTTP1.0和HTTP1.1的差别，事实上我对他们的差别认知只在于api的不同，残酷的是我只知道api不同，却不知道api不同在哪儿。那个人问我知道http1.1可以实现长连接吗？我一脸懵逼，我知道http是可以实现长连接，但是没有想到是http1.1才可以实现，没办法，我只能说我可以用socket实现长连接，然后他就问我socket实现的长连接有哪些问题，我又懵逼了，不就是异常处理吗？虽然那个人好像也不是很懂java，更不懂android，但是他对http相关的知识了解的确是凌驾于我的。</p>
-<p>这也暴露了我网络基础的不充足，不论是socket，http，tcpip等等，我都没有一个明确的理解，这部分需要进行一个完全的知识架构的搭建。</p>
-<ol>
-<li>流行框架的源码理解</li>
-</ol>
-<p>我曾经看别人说过，要理解框架，就需要手动撸一遍。当时看到这句话的时候，我还在传音，那时候别说撸框架了，我连用框架都没办法。后来去崇杏，我的确用了市面上很多的流行框架，然而我却忘了这句话的含义。</p>
-<p>直到有人问起了我Butterknife的一些理解。想来真是可笑，明明在群里曾经讨论过，butterknife是用于编译时进行代码补全的框架，但是我却被我之前写过的关于注解的一篇笔记给弄糊涂了，虽然两者实现的功能大致相同，但是明显不是同一回事。我在和面试官窘迫的解释我理解的butterknife的时候，却没有想到我明明是错误的，还这么嚣张。</p>
-<p>现在想想真想找个地洞钻进去。</p>
-<p>亡羊补牢，这也是之后需要进行的工作侧重点，对常用的代码开发框架，像Butterknife、eventbus、rxjava等等，找时间将它们实现一遍，这样才能深入的理解重点。</p>
-<p>大致下来就这三个问题。虽然面试的效果不是很好，但是还是收获到了心仪的offer，希望自己能在新的公司发挥自己的作用，希望自己的水平可以上一个台阶。</p>
-<p>天道酬勤。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1627,7 +1677,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-count">71</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
