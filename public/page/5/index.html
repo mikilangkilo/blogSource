@@ -229,6 +229,129 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/28/2018第四周工作小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/28/2018第四周工作小结/" itemprop="url">2018第四周工作小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-28T17:45:07+08:00">
+                2018-01-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>这周把图表的那个做完，之后就继续做微信接口登陆的问题。<br>图表的任务主要是收尾，将缓存什么的做了一下，持久层也做好了，将一些额外的feature结束，也就没任务了。没什么需要总结的。</p>
+<p>微信接口的问题，目前是商量好了使用v2的接口，获取到了一次性code，然后回传，这样在得到一次性token。<br>需要继续做的事就是将返回的token想办法做一个有效期判定的措施，然后每次都根据这个进行判断。</p>
+<p>下周的任务，目前来看就这一个</p>
+<p>将微信token做一个持久化处理，然后针对返回的是否是404做一个注册操作。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/26/使用python抓取网页内容/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1757,144 +1880,6 @@ ll.setLayoutAnimation(lac);
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/12/某金融公司面试小记/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/12/某金融公司面试小记/" itemprop="url">某金融公司面试小记</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-12T20:38:32+08:00">
-                2018-01-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>前几天在boss直聘上面接到了一个面试邀请，hr蛮真诚的，今天下午请了半天年假去试试。</p>
-<h1 id="笔试"><a href="#笔试" class="headerlink" title="笔试"></a>笔试</h1><p>首先是笔试，笔试第一题是Math.round(11.5)和Math.round(-11.5)的值,我居然没用过，当时猜的12和-11，还猜对了。</p>
-<p>挑有印象的写。</p>
-<p>之后是问intent能传送哪些内容，serizable，parcel，bundle，charsquence,当时忘了，就写了个parcel和bundle，回来一看其实都能..</p>
-<p>之后的一些字符串处理的<br>StringBuffer str = new StringBuffer(“hello”);<br>str.append(“world”);<br>当然输出hello world了</p>
-<p>List<integer> listA = new ArrayList&lt;&gt;();<br>listA.add(1);<br>listA.add(2);<br>List<integer> listB = new ArrayList&lt;&gt;(listA);<br>Collections.copy(listA, listB);<br>这时候listb还是1，2</integer></integer></p>
-<p>fragment在activity中使用和fragment中使用的差别：<br>记得就是fragmentmanager的差别，context的差别。</p>
-<p>解释一下DVM中的线程和linux中线程的区别：<br>DVM指dalivk的虚拟机。每一个Android应用程序都在它自己的进程中运行，都拥有一个独立的Dalvik虚拟机实例。而每一个DVM都是在Linux 中的一个进程，所以说可以认为是同一个概念。<br>这题不会。</p>
-<p>笔试大概就这么多了。</p>
-<h1 id="一面"><a href="#一面" class="headerlink" title="一面"></a>一面</h1><p>一面是个android的leader，刚开始还不是很打开话夹子，问我为啥走，问我做了哪些工作。居然还把我app开发说成只有6个月，丫的。<br>这个leader感觉没问啥高深的问题，我居然都想不起来了。但我的确有几个没回答的上来..汗怎么忘了。</p>
-<p>感觉好像对大学学java的比较歧视，以为我没有多深的java功底。</p>
-<p>后来问我kotlin的一些相关的，高阶编程，我以为是函数式编程，拿python的高阶函数去说，还居然蒙对了。<br>还问我h5会不会，我说只会一丁点，node会不会，只会搭博客，python会不会，这个有。没问c我有点诧异。</p>
-<p>问了我一个问题，关于activity的启动模式的，四种我都熟了，后来问我假如这四种同时添加，栈内什么情况，我说正确的，后来问我怎么从a回退到c，我真不知道这个，只能从activitymanager获取stack这个角度来说，这样获取了实例可以直接启动。</p>
-<h1 id="二面"><a href="#二面" class="headerlink" title="二面"></a>二面</h1><p>二面是项目经理，这是大神，上来就是一系列由浅入深的题目，让我用mvp设计一个架构，保证耦合度低和热插拔，这部分是接口分离的原则来设计，这部分真不了解。<br>之后问我一些别的内容，数据结构方面的，set vector的区别，我居然说vector是线程安全的，但是好像不止这些，其内部指责都不同。<br>还问了我一些内容，可是好多我都忘了- -汗。</p>
-<h1 id="三面"><a href="#三面" class="headerlink" title="三面"></a>三面</h1><p>三面是个证券经理，既然是证券经理，为啥揪着我简历上面的技术栈问..蛋疼</p>
-<h1 id="四面"><a href="#四面" class="headerlink" title="四面"></a>四面</h1><p>四面是个妹子，和我讲了一些公司的发展，薪酬方面的，大概扣多少钱五险之类的。</p>
-<h1 id="五面"><a href="#五面" class="headerlink" title="五面"></a>五面</h1><p>五面是联系我去公司的hr，他和我讲了好久公司发展的内容，其实我写的预期薪资并不高啊，最后成功的从税前13扯到了税后11-12，其实还不错。不过明显的他有点慌，他的意思是希望我接到offer能早点去，不要太拖，不要被别的公司高不到5k的offer挖走。汗，加5k是他妈18k了，我哪里值这么多钱。</p>
-<h1 id="心得"><a href="#心得" class="headerlink" title="心得"></a>心得</h1><p>安卓开发自己还是投入了不少心血的，虽然一年半的从业经验，还是收获了不少东西，这次面试也证明了自己的能力。不再是当年在传音的时候任人宰割的那个我了。</p>
-<h1 id="期望"><a href="#期望" class="headerlink" title="期望"></a>期望</h1><p>希望能拿到offer吧，税后12我就去，11以内我就放弃。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1945,7 +1930,7 @@ ll.setLayoutAnimation(lac);
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">71</span>
+                  <span class="site-state-item-count">72</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
