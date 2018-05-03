@@ -229,6 +229,425 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/03/针对activity栈启动模式进行fragment栈的引申/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/03/针对activity栈启动模式进行fragment栈的引申/" itemprop="url">针对activity栈启动模式进行fragment栈的引申</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-03T23:30:29+08:00">
+                2018-05-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>“one activity for the whole app, you can use fragments, just don’t use the backstack with fragments”</p>
+<p>— jake·warton</p>
+<p>安卓开发有其独特的魅力，相对于每个页面不断的切换，事实上前端开发从安卓的角度来看可以有不同的作为。</p>
+<p>比如说jake·warton所说的只使用一个activity窗口，外加很多个碎片，来组成一个app。这句话很好理解，可是后面的这半句话是什么意思呢？主要是fragment的后台管理栈比较不容易操控。</p>
+<p>所以我们需要了解一下如何操控这个栈。这次就从activity的启动模式来分析。</p>
+<ul>
+<li>standard</li>
+</ul>
+<p>默认的启动模式，对fragment来讲，在basefragment中抽取activity的stackedfragments，每次新建一个fragment时，创建一个新的加入到栈顶即可。</p>
+<ul>
+<li>singleTop</li>
+</ul>
+<p>在栈顶的话，启动还是会转到自己，而不在栈顶的话就会新建。这个属性对fragment来讲不怎么实用，没怎么遇到过这种情形，如果要用的话，就判断之前的栈顶是否和新传入的相同，相同的话，就仍然返回的自身，不同就创建一个。</p>
+<ul>
+<li>singleTask</li>
+</ul>
+<p>在栈内的话，启动一个实例，就会启动栈内的。这个属性比较好用，对fragment来讲，可以用这个来做很多事情，包括回去的时候直接pop起到了cleartop的效果。</p>
+<p>开发中还遇到相似的，一次传入三到四个fragment，如果有其中的fragment在栈上方，立即返回他，中断其余判断。这种操作其实就是遍历栈而已，不过能够在fragment多复用的情况下，找到当前回归路径，省了很多其他的事情。</p>
+<ul>
+<li>singleinstance</li>
+</ul>
+<p>每次开辟一个新的栈，这个在fragment中没用，因为只有唯一的一个栈在activity中。</p>
+<ul>
+<li>FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS</li>
+</ul>
+<p>对activity来讲，新的Activity不会在最近启动的Activity的列表中保存。对fragment来讲，就是新启动的不入栈，可以考虑设计一个固定大小的栈的时候，只有固定的几个fragment可以用于入栈，其余的都不入。不过这个设计要考虑一下，返回哪些栈。</p>
+<p>实际效果可能就是切了很多个页面，最后一个回退，回退到了很久之前的一个页面。使用情景比较局限。</p>
+<ul>
+<li>FLAG_ACTIVITY_FORWARD_RESULT</li>
+</ul>
+<p>这个是startactivityforresult的标志位，同样的也可以设计一个startfragmentforresult。事实上也就是在进入这个fragment的时候，basefragment记录一下resultcode的值，然后回退的时候，将这个result值传入到栈顶即可。</p>
+<ul>
+<li>FLAG_ACTIVITY_NO_HISTORY</li>
+</ul>
+<p>单纯的不入栈的操作。</p>
+<ul>
+<li>FLAG_ACTIVITY_REORDER_TO_FRONT</li>
+</ul>
+<p>该标志位是用于启动时挪动activity栈的，对fragment同样可以设计，不过较为复杂，可以从栈内取出，重新排序之后插入。比较不好的是可能会遗漏状态。</p>
+<ul>
+<li>FLAG_ACTIVITY_NEW_TASK</li>
+</ul>
+<p>同 singinstance</p>
+<ul>
+<li>FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET</li>
+</ul>
+<p>对activity来讲，是当新进入的activity携带这个标志时，就会清理栈。fragment同样可以设计，若有个携带该标记的进入，也可以清空。虽然我目前仍然是使用老的回到最起初的fragment，不过效果可能没这个设计的好。</p>
+<p>大致就这些。针对fragment设计一个单独的有特征的栈，我个人觉得是使用fragment代替activity的第一步。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/01/2018第十七周工作小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/01/2018第十七周工作小结/" itemprop="url">2018第十七周工作小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-01T23:45:39+08:00">
+                2018-05-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最近实在是太忙了，忙到github都忘了更新博客了。每天都在忙着需求，改bug，然后项目追着上线。累的半死不活的。</p>
+<p>好消息是项目终于给整上线了，坏消息是项目上线之后可能会更忙。</p>
+<p>来公司2个月还没到，一下子回到了刚毕业的时候在传音那种加班加点很累的生活方式。不过好的是，起码现在自己是在做自己的事情。</p>
+<p>上周来了个大牛，技术比我厉害，也跟着他学习到了不少东西。需要整理一下。主要是http/https，okhttp工作原理，还有序列化原理等等。这些是学到的东西。</p>
+<p>工作上面的总结感觉没啥好说的，有两个要写一下，一个是activity栈的工作原理，一个是fragment栈的工作原理。目前了解一些，但是不够深入。</p>
+<p>明天开始仍然是进入学习的阶段。就先这样吧。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/22/2018第十六周工作小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/22/2018第十六周工作小结/" itemprop="url">2018第十六周工作小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-22T17:01:05+08:00">
+                2018-04-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>这周简直是崩溃的一周。</p>
+<p>首先是上一周没有休息，加上上周由于假期多上了一天，导致连着9点到晚上10点多（甚至凌晨）13天，身体在周三的时候报警，整个人精神状态十分不佳，加上深陷在我写的bug中无法自拔，整个人基本上是废了的状态。</p>
+<p>昨天整整睡了一天，今天精神才缓过来。</p>
+<p>这一周的工作情况也不容乐观，一边开发加需求，一边修改bug，压力是在是太大，所有的东西都要我来改，十分十分的蛋疼。产品那边催，技术总监那边也在催，就是周五上线周五上线。</p>
+<p>可是我能怎么办呢？我除了硬着头皮上还能做什么呢？</p>
+<p>算了，额外的话不说了，说一下这周做了什么吧。</p>
+<p>这周重写了购物车的缓存，针对目前的需求针对化的重写了一些方法。但是bug太多，购物车和订单2个互联的东西，写起来说实话坑还蛮多的。目前还有关于购物车的删除事件的处理行为，这个很麻烦，不知道用什么来删除，目前使用的是遍历，效率十分的低。</p>
+<p>这周说实话就做了这么一些东西，下周就是埋点和功能的设计，今天还要解一些bug。难受</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/16/2018第十五周工作小结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1201,400 +1620,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/27/http知识杂烩/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/27/http知识杂烩/" itemprop="url">http知识杂烩</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-27T22:45:05+08:00">
-                2018-03-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>今天被后台怼了，主要是没加<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@Headers(&#123;&quot;Content-Type: application/json&quot;&#125;)</span><br></pre></td></tr></table></figure></p>
-<p>导致请求没有过到服务器，然后我还挺着老脸去问为啥没用。丢人呐。</p>
-<p>所以今天开一个杂烩贴，用于将http遇到的问题总结下来。</p>
-<h2 id="Content-Type"><a href="#Content-Type" class="headerlink" title="Content-Type"></a>Content-Type</h2><p>Content-Type，内容类型，一般是指网页中存在的Content-Type，用于定义网络文件的类型和网页的编码，决定文件接收方将以什么形式、什么编码读取这个文件</p>
-<h3 id="application-json"><a href="#application-json" class="headerlink" title="application/json"></a>application/json</h3><p>application/json是一种正常的以json形式读取传输文件的方式。<br>json全名是javascript object notation，形式是{“key”:”value”}的形式</p>
-<p>对象表示为键值对<br>数据由逗号分隔<br>花括号保存对象<br>方括号保存数组</p>
-<h3 id="application-x-www-form-urlencoded"><a href="#application-x-www-form-urlencoded" class="headerlink" title="application/x-www-form-urlencoded"></a>application/x-www-form-urlencoded</h3><p>首先，Content-Type 被指定为 application/x-www-form-urlencoded；其次，提交的数据按照 key1=val1&amp;key2=val2 的方式进行编码，key 和 val 都进行了 URL 转码。大部分服务端语言都对这种方式有很好的支持。</p>
-<h3 id="multipart-form-data"><a href="#multipart-form-data" class="headerlink" title="multipart/form-data"></a>multipart/form-data</h3><p>这是使用表单上传文件时必须的。</p>
-<p>示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">POST http://www.example.com HTTP/1.1</span><br><span class="line">Content-Type:multipart/form-data; boundary=----WebKitFormBoundaryrGKCBY7qhFd3TrwA</span><br><span class="line"></span><br><span class="line">------WebKitFormBoundaryrGKCBY7qhFd3TrwA</span><br><span class="line">Content-Disposition: form-data; name=&quot;text&quot;</span><br><span class="line"></span><br><span class="line">title</span><br><span class="line">------WebKitFormBoundaryrGKCBY7qhFd3TrwA</span><br><span class="line">Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;chrome.png&quot;</span><br><span class="line">Content-Type: image/png</span><br><span class="line"></span><br><span class="line">PNG ... content of chrome.png ...</span><br><span class="line">------WebKitFormBoundaryrGKCBY7qhFd3TrwA--</span><br></pre></td></tr></table></figure></p>
-<p>首先生成了一个 boundary 用于分割不同的字段，为了避免与正文内容重复，boundary 很长很复杂。然后 Content-Type 里指明了数据是以 multipart/form-data 来编码，本次请求的 boundary 是什么内容。消息主体里按照字段个数又分为多个结构类似的部分，每部分都是以 –boundary 开始，紧接着是内容描述信息，然后是回车，最后是字段具体内容（文本或二进制）。如果传输的是文件，还要包含文件名和文件类型信息。消息主体最后以 –boundary– 标示结束。</p>
-<h3 id="text-xml"><a href="#text-xml" class="headerlink" title="text/xml"></a>text/xml</h3><p>示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">POST http://www.example.com HTTP/1.1 </span><br><span class="line">Content-Type: text/xml</span><br><span class="line"></span><br><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;methodCall&gt;</span><br><span class="line">    &lt;methodName&gt;examples.getStateName&lt;/methodName&gt;</span><br><span class="line">    &lt;params&gt;</span><br><span class="line">        &lt;param&gt;</span><br><span class="line">            &lt;value&gt;&lt;i4&gt;41&lt;/i4&gt;&lt;/value&gt;</span><br><span class="line">        &lt;/param&gt;</span><br><span class="line">    &lt;/params&gt;</span><br><span class="line">&lt;/methodCall&gt;</span><br></pre></td></tr></table></figure></p>
-<p>这个就和android里面的xml差不多，用途还挺多的，不过就是太大了，也能解析成类似于json的形式。</p>
-<h2 id="RequestBody拓展"><a href="#RequestBody拓展" class="headerlink" title="RequestBody拓展"></a>RequestBody拓展</h2><p>requestBody的拓展其实比较有用，今次项目中用到，若不是不支持urlencode，获取也不会关注。</p>
-<p>在okhttp里面加入一个继承自Interceptor的拦截器，将请求拦截下来，针对不同的请求进行操作，例如加上一个token，批量操作header等。</p>
-<p>操作的过程就是对requestbody拓展的过程，就是将原有的src的requestbody，和extend的requestbody进行融合。</p>
-<p>需要写三个方法，contentType、contentLength、writeTo。</p>
-<!-- contenttype是contenttype。contentlength是src.contentlength()+extend.contentlength()+1。writeto是写操作，先写src，后写extend，需要对不同的contenttype加上不同的连接符，sink.writeUtf8(",")或者sink.writeUtf8("&")等等。
-
-如此便可以自由的截断和拓展相关requestbody了。 -->
-<p>对requestbody的拓展，如果是json有一个问题，就是}{这两个符号不好处理，暂时没有找到方法。</p>
-<p>但是对于x-www-form-urlencoded这种连接的文本比较容易操作，中间加一个&amp;即可。</p>
-<h2 id="http-url拓展"><a href="#http-url拓展" class="headerlink" title="http url拓展"></a>http url拓展</h2><p>url的拓展主要是针对末尾增加query，或者parameter这种。</p>
-<p>使用的方法也是差不多的方法，通过拦截器获取request，然后从request中取出url，对url进行拼装，之后在使用新的url来重新组装一个request，之后返回即可。</p>
-<p>有一点需要注意的，不是所有的请求都会从url中获取参数，这个开发中需要注意。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/26/java-uri拼接/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/26/java-uri拼接/" itemprop="url">java-uri拼接</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-26T20:31:44+08:00">
-                2018-03-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>项目中遇到一个问题，是关于uri拼接的。</p>
-<p>uri类似如下<br><a href="http://www.baidu.com/d/j/fd%3fd" target="_blank" rel="noopener">www.baidu.com/d/j/fd%3fd</a></p>
-<p>我需要在后面加一个 ?xx/impg,wpeg/resize,h_40这样的</p>
-<p>这个涉及到解码编码的问题，前面由于具有%3这种符号，不可以解码，需要编码，而后缀由于具有?这种符号，不可以编码。</p>
-<p>这样可以直接前面的通过URI的buildupon来构建，而后面的可以通过直接相加避免编码的方法。</p>
-<p>事实上直接相加或许也可以，但是通过buildupon的path相加，会自动对path的内容进行编码，但是坑爹的是我的后缀也没变了。而encodepath则更坑，把前缀也给解码了。</p>
-<p>后来又试了一下直接相加，也可以？？</p>
-<p>这就好蛋疼了。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/25/2018第十二周工作小结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/25/2018第十二周工作小结/" itemprop="url">2018第十二周工作小结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-25T16:48:41+08:00">
-                2018-03-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>这周大部分任务都是处理项目相关的内容了。</p>
-<p>首先是项目部分的需求改动，主要这次是关于盒子的需求更改，内容不多，主要是vip费用部分，还有就是订单部分的更改。等待接口好了就可以动工。</p>
-<p>其次是将之前wantu图床改成oss图床，另外将原来下载方式也改成oss的。改下载方式其实就是换了个channel，但是wantu改成oss图床还没弄好，目前上传总是失败。需要搞一下。</p>
-<p>本周就做了这几个内容。</p>
-<p>下周接口好了就要开始加班了。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1645,7 +1670,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">74</span>
+                  <span class="site-state-item-count">77</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
