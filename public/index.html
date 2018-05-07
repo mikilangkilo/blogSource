@@ -229,6 +229,327 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/07/effective-java学习笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/07/effective-java学习笔记/" itemprop="url">effective-java学习笔记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-07T16:45:46+08:00">
+                2018-05-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="创建和销毁对象。"><a href="#创建和销毁对象。" class="headerlink" title="创建和销毁对象。"></a>创建和销毁对象。</h2><h3 id="使用静态工厂方法代替构造器"><a href="#使用静态工厂方法代替构造器" class="headerlink" title="使用静态工厂方法代替构造器"></a>使用静态工厂方法代替构造器</h3><p>优势：</p>
+<p>1 - 静态工厂方法与构造器不同的第一大优势：它们有名称。</p>
+<p>由于一个类只能有一个指定签名的构造器，及时我们使用替换顺序来构造不同的构造器，也会产生困扰，不知道该使用哪个。但是静态工厂方法则可以代替构造器，使用不同的名称以显示不同的区别。</p>
+<p>2 - 静态工厂方法与构造器不同的第二大优势：不必在每次调用它们的时候都创建一个新的对象。</p>
+<p>静态工厂方法可以使用预先构建好的实例，或者将实例缓存起来，进行重复利用。如果程序进场请求创建相同的对象，并且创建对象的代价很高的话，可以考虑使用该方法。</p>
+<p>3 - 静态工厂方法与构造器不同的第三大优势：它们可以返回原返回类型的任何子类型的对象。</p>
+<p>api可以返回对象，又不会使对象的类变成公有的，类的实现在客户端看来是不可见的。</p>
+<p>由于静态工厂方法返回的对象所属的类，在编写包含该静态方法的类时可以不必存在。因此衍生了“服务提供者框架”。</p>
+<p>服务提供者框架有三个重要的组件：服务接口，提供者注册api，服务访问api。第四个组件可选，是服务提供者接口。这些提供者负责创建其服务实现的实例，如果没有服务提供者接口，实现就按照类名称注册，并通过反射方式进行实例化。</p>
+<p>4 - 静态工厂方法的第四大优势：在创建参数化类型实例的时候，它们使代码变得更加简洁。</p>
+<p>例如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String, List&lt;String&gt;&gt; m = new HashMap&lt;String, List&lt;String&gt;&gt;();</span><br></pre></td></tr></table></figure></p>
+<p>可以通过<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public static &lt;K, V&gt; HashMap&lt;K, V&gt; newInstance()&#123;</span><br><span class="line">	return new HashMap&lt;K, V&gt;();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>改成<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String, List&lt;String&gt;&gt; m = HashMap.newInstance();</span><br></pre></td></tr></table></figure></p>
+<p>缺点：</p>
+<p>1 - 类如果不含公有的或者受保护的构造器，就不能子类化。</p>
+<p>针对这一条，“复合“好过”继承“</p>
+<p>2 - 它们与其他的静态方法实际上没有任何区别。</p>
+<p>由于不是构造器，因此没有办法像构造器一样明确标识出来。因此对于提供了静态工厂方法而不是构造器的类来讲，想要查明如何实例化一个类，比较困难。</p>
+<p>我们需要遵守一些惯用名称：</p>
+<ul>
+<li><p>valueOf —- 该方法返回的实例与他的参数具有相同的值，这样的静态工厂方法世纪上是类转换的方法。</p>
+</li>
+<li><p>of —- valueOf的另一个更加简洁的方法</p>
+</li>
+<li><p>getInstance —- 返回的实例是通过方法的参数来描述的，但是不能说与参数具有相同的值。对于singleton来说，该方法没有参数，并返回唯一的实例。</p>
+</li>
+<li><p>newInstance —- newinstance能够确保返回的每个实例都与所有的其他实例不同</p>
+</li>
+<li><p>getType —- 像getinstance一样，但是gettype表示返回的使用类型。</p>
+</li>
+<li><p>newType —- 和gettype一样。</p>
+</li>
+</ul>
+<h3 id="遇到多个构造器参数时要考虑使用构建器"><a href="#遇到多个构造器参数时要考虑使用构建器" class="headerlink" title="遇到多个构造器参数时要考虑使用构建器"></a>遇到多个构造器参数时要考虑使用构建器</h3><p>静态工厂和构造器有个共同的局限性，它们都不能很好的扩展到大量的可选参数。</p>
+<p>构建器就是使用set方法来设置参数，不过是build模式的。可以利用单个builder构建多个对象，builder的参数可以在创建对象期间进行调整，也可以随着不同的对象而改变。builder可以自动填充某些域，例如每次创建对象时自动增加序列号。</p>
+<h3 id="用私有构造器或者枚举类型强化singleton属性"><a href="#用私有构造器或者枚举类型强化singleton属性" class="headerlink" title="用私有构造器或者枚举类型强化singleton属性"></a>用私有构造器或者枚举类型强化singleton属性</h3><ul>
+<li>使用公有静态域</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public class Elvis&#123;</span><br><span class="line">	public static final Elvis INSTANCE = new Elvis();</span><br><span class="line">	private Elvis()&#123;</span><br><span class="line">		...</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该方法确保只有一个全局变量，但是该方法容易被反射。</p>
+<ul>
+<li>使用静态工厂方法来实现singleton</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class Elvis&#123;</span><br><span class="line">	private static final Elvis INSTANCE = new Elvis();</span><br><span class="line">	private Elvis&#123;</span><br><span class="line">		...</span><br><span class="line">	&#125;</span><br><span class="line">	public static Elivs getInstance()&#123;</span><br><span class="line">		return INSTANCE;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>getInstance()方法的所有调用都会返回同一个对象引用，所以永远不会创建别的对象。</p>
+<p>工厂方法的优势在于提供了灵活性，不改变api的前提下，可以改变该类是否是singleton的想法，可序列化但是维护singleton的话需要申明所有实例域是瞬时的，并且要提供一个readResolve方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">private Object readResolve()&#123;</span><br><span class="line">	return Instance;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>编写一个包含单个元素的枚举类型</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public enum Elvis &#123;</span><br><span class="line">	INSTANCE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该方法在功能上与公有域相近，但是更加简洁，并且无偿的提供了序列化机制，绝对防止多次实例化，哪怕是反射的时候。</p>
+<h3 id="通过私有化构造器强化不可实例化的能力"><a href="#通过私有化构造器强化不可实例化的能力" class="headerlink" title="通过私有化构造器强化不可实例化的能力"></a>通过私有化构造器强化不可实例化的能力</h3><p>对于类似于Collections这种，不需要也不希望实例化的类，避免自动构建其无参构造，可以使用以下方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public class UtilityClass&#123;</span><br><span class="line">	private UtilityClass()&#123;</span><br><span class="line">		throw new AssertionError();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该方法会导致子类没有构造器。</p>
+<h3 id="避免创建不必要的对象"><a href="#避免创建不必要的对象" class="headerlink" title="避免创建不必要的对象"></a>避免创建不必要的对象</h3><p>对于同时提供静态方法和构造器的不可变类，通常可以使用静态工厂方法而不是构造器，以避免创建不必要的对象。例如Boolean.valueOf(String)几乎总是优先于构造器Boolean(String)。这是由于构造器每次构造的时候都会创建一个对象，而静态方法则不会。</p>
+<p>除了重用这种方法之外，还可以重用已知的不会修改的可变对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class Person&#123;</span><br><span class="line">	</span><br><span class="line">	private final Date birthDate;</span><br><span class="line"></span><br><span class="line">	public boolean isBabyBoomer()&#123;</span><br><span class="line">		Calendar gmtCal = Calendar.getInstance(TimeZone.getTimeZone(&quot;GMT&quot;));</span><br><span class="line">		gmtCal.set(1946, Calendar.JANUARY, 1, 0, 0, 0);</span><br><span class="line">		Date boomStart = gmtCal.getTime();</span><br><span class="line">		gmtCal.set(1956, Calendar.JANUARY, 1, 0, 0, 0);</span><br><span class="line">		Date boomEnd = gmtCal.getTime();</span><br><span class="line">		return birthDate.compare(boomStart) &gt;= 0 &amp;&amp; birthDate.compare(boomEnd) &lt; 0;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如上方法，每次调用都会新建一个Calendar, 一个TimeZone, 和两个Date实例。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">class Person&#123;</span><br><span class="line">	private final Date birthDate;</span><br><span class="line"></span><br><span class="line">	private static final Date BOOM_START;</span><br><span class="line">	private static final Date BOOM_END;</span><br><span class="line"></span><br><span class="line">	static&#123;</span><br><span class="line">		Calendar gmtCal = Calendar.getInstance(TimeZone.getTimeZone(&quot;GMT&quot;));</span><br><span class="line">		gmtCal.set(1946, Calendar.JANUARY, 1, 0, 0, 0);</span><br><span class="line">		BOOM_START = gmtCal.getTime();</span><br><span class="line">		gmtCal.set(1956, Calendar.JANUARY, 1, 0, 0, 0);</span><br><span class="line">		BOOM_END = gmtCal.getTime();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public boolean isBabyBoomer()&#123;</span><br><span class="line">		return birthDate.compare(BOOM_START) &gt;= 0 &amp;&amp; birthDate.compare(BOOM_END) &lt; 0;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>改进后只会创建一个Calendar, 一个TimeZone和一个Date</p>
+<p>另外关于基本类型和装箱基本类型之前的变换，如今有自动拆箱和自动拆箱，不过在需要的时候，使用基本类型总是效率好过装箱类型，要小心无意识的自动装箱行为。</p>
+<h3 id="消除过期的对象引用"><a href="#消除过期的对象引用" class="headerlink" title="消除过期的对象引用"></a>消除过期的对象引用</h3><p>该题主要针对内存泄漏现象的分析，对过期引用的分析处理主要在清空引用方法。在android方面的分析处理看着的话用处不大。</p>
+<p>仍然是缓存和监听器回调泄漏这些方面。</p>
+<h3 id="避免使用终结（finalizer）方法"><a href="#避免使用终结（finalizer）方法" class="headerlink" title="避免使用终结（finalizer）方法"></a>避免使用终结（finalizer）方法</h3><p>终结方法通常不可预测，一般不可使用。</p>
+<p>jvm正确的执行对象的终结方法是顺利的回收。但是由于jvm不同，很有可能在不同的平台上不同的算法不同，导致产生的现象大相庭径。</p>
+<p>终结方法是以队列的形式进行回收，但是由于终结方法的优先级很低，不确定哪些线程会执行终结方法。因此会造成在终结方法中执行方法的速度小于进入终结方法的速度，会导致大量的回收对象堆积，以此产生oom。</p>
+<p>2018-05-08</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/07/java编程思想第一章《对象导论》学习笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/07/java编程思想第一章《对象导论》学习笔记/" itemprop="url">java编程思想第一章《对象导论》学习笔记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-07T01:05:26+08:00">
+                2018-05-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>1.1 抽象过程</p>
+<ul>
+<li><p>万物皆为对象：将对象是为奇特的变量，他可以存储数据，还可以在自身上执行操作。</p>
+</li>
+<li><p>程序是对象的集合，它们通过发送消息来告知彼此所要做的：可以把消息想象为对某个特定对象的方法的调用请求。</p>
+</li>
+<li><p>每个对象都有自己的由其他对象所构成的存储：通过创建包含现有的对象的包的方式来创建新类型的对象。</p>
+</li>
+<li><p>每个对象都拥有其类型：每个类最重要的区别于其他类的特性就是可以发送什么样的消息给他。</p>
+</li>
+<li><p>某一特定类型的所有对象都可以接收同样的消息：可替代性是oop中最强有力的概念之一。</p>
+</li>
+</ul>
+<p>1.2 每个对象都有一个接口</p>
+<p>通过设计接口的形式，将对对象的每个请求定义下来。接口确定了对某一特定对象所能发出的请求。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/03/针对activity栈启动模式进行fragment栈的引申/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1349,277 +1670,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/31/关于面向对象/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/31/关于面向对象/" itemprop="url">关于面向对象</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-31T23:22:59+08:00">
-                2018-03-31
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>写java也这么多年了，从一开始就知道面向对象的三大特征：封装多态和继承。然而在工作这么久之后，突然回头看看，才一下子意识到这三大特征的重要性。</p>
-<p>知其然容易，知其所以然则太难了。如今希望能在突然一瞬间的理解出现时，将其记录下来。</p>
-<h1 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h1><p>封装是将对象使用一系列方法包裹起来，仅仅对外提供一系列功能接口，而屏蔽内在的属性。</p>
-<p>为什么这么做呢？</p>
-<p>首先，我们将对象定义为一系列的属性，这一系列的属性决定了这个对象能够表达出什么样的信息。但是其实我们并不关心他真正的属性，并不关心他某个值的含义，关心的仅仅是他能够做什么。</p>
-<p>所以我们需要将他的功能列出来，这些功能并不是说他们只能这样，而是我们处于项目的需求，只需要这些功能。</p>
-<p>因此在我们眼前，对象不是一系列的数据组合的，而是一系列功能组合的。</p>
-<p>这样其实就已经从普通的物理层面抽象出来了对象的本质，换言之，我们仅仅需要功能，而不再是属性。</p>
-<p>从代码层面，这样有一个好处，就是我们将一个对象可以做的事情，限制在他的类中，直观的操作，而不再是通过在不同条件下拼装其属性来展现功能。</p>
-<p>对象可以是变的，可能是后端接口导致的映射改变，也可能是某个属性不在起作用，但是我们仅仅需要关心的功能是否能够再次实现。</p>
-<p>对内，对象是一个系统。对外，对象却只是一个小模块。</p>
-<h1 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h1><p>多态是对一个方法的展开。</p>
-<p>我们将一个个的对象封装起来的意义，就是为了只观功能。</p>
-<p>而多态恰巧给功能的健壮性提供了面对多场合的稳定。</p>
-<p>没有了多态，我们需要实现一个相同功能，却命名为一个不同的名字。在不同的场景下会产生很多的误解。</p>
-<p>封装是为了将对象进行功能的抽象，而多态，是对功能的抽象进行一个整合，让这个抽象不需要太离谱。</p>
-<h1 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h1><p>继承，或者说实现，就是一个完全的面向功能的操作。</p>
-<p>继承是子类对父类的角色实现一种扩展，每个子类都需要有父类的特征，但同时也可以拥有自己的特征。</p>
-<p>接口在我眼里也是一种继承，不过接口在高度上高于直接继承，接口是完完全全为了功能实现的。</p>
-<p>有了接口，我们可以直接在功能的角度上面来设计代码，之后只需要对这些功能来实现即可。这是自上而下，而之前的封装，则是自下而上，实际操作没有这么隔离，但是大致意义这样。</p>
-<h1 id="对架构的关系"><a href="#对架构的关系" class="headerlink" title="对架构的关系"></a>对架构的关系</h1><p>总是从低到高的实现，就如同从底层开始构筑，很容易出现越垒越歪，越垒越庞大。而由于基于底层，所以一旦对底层有一些更改，很容易出现大规模的重构。十分不利于代码的健壮性。</p>
-<p>而从高到低的实现，很大程度避免了这个问题的发生。</p>
-<p>将一个项目拆分成几个子模块，然后将子模块的功能定下来，之后无论下层如何实现，如何更改，从高层来看，仍然是原来的模样。</p>
-<p>架构的魅力很大，单纯写代码会让人觉得疲惫，庸于在代码中翻找。而架构，让人一瞬间高屋建瓴，一眼看透了需要做什么。之后连工期都很容易预估。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/30/关于后台改接口之后前端应该做的事情/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/30/关于后台改接口之后前端应该做的事情/" itemprop="url">关于后台改接口之后前端应该做的事情</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-30T21:45:26+08:00">
-                2018-03-30
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>新到公司，一切都是新鲜的，然而很快问题就来了。</p>
-<p>公司后台重构了后台的接口，将原先多层级的接口，改成了扁平化的接口。</p>
-<p>这对我是完全没有接触过的挑战。</p>
-<p>刚开始我觉得，既然后台改了接口，我就应该把接口部分删了重构，然后将得到的数据结构也重构。但是后来发现，基于原来数据结构上的接口衍生的代码十分庞大，层级比较深，这样重构数据结构基本上等于重构项目了，时间上面不可行。</p>
-<p>因此我后来想到一个办法，将原来的数据结构设为set和get，然后将现在获取的数据结构扭成之前的数据结构，需要原先参数的地方，我改成get的方式，将现有的数据结构组合来返回，这样衍生的代码就可以基于之前的数据结构上来运行，可以保证数据结构之上的代码不需要改变。</p>
-<p>但是又遇到一个问题，就是项目中很多地方是直接使用数据结构里面的值来进行操作的，而不是set和get，这样我改成set和get，就需要更改使用到该值的地方。当时采取了这种方式，的确代码可运行，而且较为稳定了。</p>
-<p>后来在和别人的交流中，得知可以使用一层封装，封装现有的数据结构，变成原来的数据结构，这样也可以。</p>
-<p>例如我使用retrofit获取的数据，在rxjava中对observable的执行过程中，直接将原先的数据进行转换，写一个wrapper，然后onnext中返回这个wrapper，这样使用这个接口的部分仍然可以直接使用原来的数据，甚至都不需要使用get和set。</p>
-<p>所以当以后遇到这种情况，可以直接使用上述方法，将数据扭合成原先的结构，来进行更改。这样每次更改接口，仅仅需要更改这个wrapper即可。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1670,7 +1720,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">77</span>
+                  <span class="site-state-item-count">79</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

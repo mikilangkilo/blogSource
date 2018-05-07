@@ -229,6 +229,356 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/10/mvc在android中的使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/02/10/mvc在android中的使用/" itemprop="url">mvc在android中的使用</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-10T13:50:25+08:00">
+                2018-02-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>以往只知mvc不知mvc所以然，今天来梳理一遍。</p>
+<p>m：即是model层，一般惯性是在model层做一些逻辑处理操作，比如说数据库存储、网络操作、复杂的算法操作、耗时任务等等</p>
+<p>v：即是view层，xml的布局就是android的view层，view层主要是显示model的结果</p>
+<p>c：即是controller层，例如在android中，fragment/activity可以操作view，与用户进行交流，用于显示model的结果，所以fragment/activity就是controller层</p>
+<p>光知道以上的还没用，需要了解一下为什么要分层。</p>
+<p>举个例子，现在有一个功能，是进行网络请求，我们知道，网络请求可以使用okhttp，可以使用volley，可以使用retrofit，但是假如我们直接构造一个getHttp()的方法，嵌入到activity里面，就会产生后续难以维护，假如将okhttp改成volley的话，就需要更改这个功能，由于接口的不同，会导致一系列难以想象的问题发生。</p>
+<p>因此我们可以定义一个interface，这个interface就是用于进行网络请求，里面只有2个功能，一个是请求，一个是返回结果。</p>
+<p>然后我们实现这个interface，实现完了，将这个interface作为一个model插入到activity里面，这样后续需要进行更改，使用别的框架的时候，可以直接更改这个impl，毕竟只需要两个接口的功能完全，也方便测试，同时插拔也十分方便。</p>
+<p>MVC的优点：</p>
+<p>(1)耦合性低。所谓耦合性就是模块代码之间的关联程度。利用MVC框架使得View（视图）层和Model（模型）层可以很好的分离，这样就达到了解耦的目的，所以耦合性低，减少模块代码之间的相互影响。</p>
+<p>(2)可扩展性好。由于耦合性低，添加需求，扩展代码就可以减少修改之前的代码，降低bug的出现率。</p>
+<p>(3)模块职责划分明确。主要划分层M,V,C三个模块，利于代码的维护。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/08/js语法学习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/02/08/js语法学习/" itemprop="url">js语法学习</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-08T10:50:54+08:00">
+                2018-02-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>今年过年一周时间需要用来充电，目前目标就是啃一下<javascript dom编程艺术="">这本书。</javascript></p>
+<h4 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h4><ol>
+<li>语句</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">first statement</span><br><span class="line">second statement</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">first statement; second statement;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">first statement;</span><br><span class="line">second statement;</span><br></pre></td></tr></table></figure>
+<p>以上三种都是可行的。</p>
+<ol>
+<li>注释</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// 这可以代表一行注释</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 这可以代表多行注释第一行 </span><br><span class="line">// 这可代表多行注释第二行</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/* 多行注释</span><br><span class="line">	第二种写法*/</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- html风格注释，功能等同于//，不推荐使用，不需要使用html的--&gt;结尾</span><br></pre></td></tr></table></figure>
+<ol>
+<li>变量</li>
+</ol>
+<p>javascript是一个弱类型语言</p>
+<p>变量声明</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var mood;</span><br><span class="line">var age;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var mood, age;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var mood = &quot;happy&quot;;</span><br><span class="line">var age = 33;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var mood = &quot;happy&quot;, age = 33;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var mood, age;</span><br><span class="line">mood = &quot;happy&quot;;</span><br><span class="line">age = 33;</span><br></pre></td></tr></table></figure>
+<p>以上声明都可以。js区分大小写。</p>
+<p>变量命名不允许包含空格或者标点符号，可以在适当的地方插入下划线。美元符号也可以。<br>也可以使用驼峰格式</p>
+<ol>
+<li>数据类型</li>
+</ol>
+<p>javascript是弱类型语言，可以在任何阶段改变变量的数据类型。</p>
+<ul>
+<li>字符串</li>
+</ul>
+<p>字符串由0个或者多个字符构成，字符包括不限于字母、数字、标点符号和空格。字符必须包在引号里面，单引号或者双引号都可以。<br>可以随意选用引号，单最好根据字符串所包含的字符来选择，如果字符串包含双引号，就将字符放入单引号里面。</p>
+<p>字符的转义也是和java一样的使用\符号</p>
+<ul>
+<li>数值</li>
+</ul>
+<p>javascript允许使用带小数点的数值，并且允许任意位小数，这样的数称为浮点数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var age = 33.35;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>布尔值</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var sleeping = true;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>数组</li>
+</ol>
+<p>可以声明带长度的数组<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var beatles = Array(4);</span><br></pre></td></tr></table></figure></p>
+<p>也可以声明不带长度的数组<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var beatles = Array();</span><br></pre></td></tr></table></figure></p>
+<p>数据填充方式如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">array[index] = element;</span><br></pre></td></tr></table></figure></p>
+<p>也可以声明的时候赋值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var beatles = Array(&quot;John&quot;, &quot;Paul&quot;, &quot;George&quot;, &quot;Ringo&quot;);</span><br></pre></td></tr></table></figure></p>
+<p>也可以不明确声明数组<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var beatles = [&apos;John&apos;, &apos;Paul&apos;, &apos;George&apos;, &apos;Ringo&apos;];</span><br></pre></td></tr></table></figure></p>
+<p>数组使用方式较为灵活，可以使用变量添加数组，数组数据类型可以不固定，还可以数组中包含其他数组。</p>
+<p>关联数组类似于key2value的pojo</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var lennon = Array();</span><br><span class="line">lennon[&quot;name&quot;] = &quot;John&quot;;</span><br><span class="line">lennon[&quot;year&quot;] = 1940;</span><br><span class="line">lennon[&quot;living&quot;] = false;</span><br></pre></td></tr></table></figure>
+<p>并不推荐使用。可以直接使用object</p>
+<ol>
+<li>对象</li>
+</ol>
+<p>对象也是使用一个名字表示一组值。对象的每个值都是对象的一个属性。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var lennon = Object();</span><br><span class="line">lennon.name = &quot;John&quot;;</span><br><span class="line">lennon.year = 1940;</span><br><span class="line">lennon.living = false;</span><br></pre></td></tr></table></figure>
+<p>或者使用一种更简洁的“花括号语法”</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var lennon = &#123;name:&quot;John&quot;, year:1940, living:false&#125;;</span><br></pre></td></tr></table></figure>
+<h4 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h4><p>需要多次使用同一段代码，可以把他们封装成一个函数，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">function multiply(num1, num2)&#123;</span><br><span class="line">	var total = num1 * num2;</span><br><span class="line">	alert(total);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function convertToCelsius(temp)&#123;</span><br><span class="line">	var result = temp - 32;</span><br><span class="line">	result = result/1.8;</span><br><span class="line">	return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h4><p>javascript里面，属性和方法都使用“点”语法来访问</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var jeremy = new Person;</span><br><span class="line">alert(jeremy.age);</span><br><span class="line">alert(jeremy.mood);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>内建对象</li>
+</ul>
+<p>内建对象是在new的时候就会自动创建的内在对象，比如说new出一个array，就自带了length对象。</p>
+<ul>
+<li>宿主对象</li>
+</ul>
+<p>javascript脚本里面可以使用一些已经预先定义好的其他对象，这些对象不是由javascript语言本身而是由它的运行环境提供的。具体到web里面，这个环境就是浏览器，由浏览器提供的预定义对象被称为宿主对象。</p>
+<h4 id="DOM"><a href="#DOM" class="headerlink" title="DOM"></a>DOM</h4><ul>
+<li>getElementById</li>
+</ul>
+<p>DOM提供了一个名为getElementById的方法，这个方法将返回一个与那个有着给定id属性值的元素节点对应的对象</p>
+<ul>
+<li>getElementsByTagName</li>
+</ul>
+<p>该方法返回一个对象数组，每个对象分别对应着文档里有着给定标签的一个元素</p>
+<ul>
+<li>getElementsByClassName</li>
+</ul>
+<p>这个方法能够通过class来访问元素，返回一个具有相同类名的元素组。但是该方法需要较新的浏览器才可以使用，否则就要自己实现。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">function getElementsByClassName(node, classname)&#123;</span><br><span class="line">	if(node.getElementsByClassName)&#123;</span><br><span class="line">		return node.getElementsByClassName(classname);</span><br><span class="line">	&#125;else&#123;</span><br><span class="line">		var results = new Array();</span><br><span class="line">		var elems = node.getElementsByTagName(&quot;*&quot;);</span><br><span class="line">		for (var i = 0; i &lt; elems.length; i++)&#123;</span><br><span class="line">			if(elems[i].className.indexOf(classname) != -1)&#123;</span><br><span class="line">				results[results.length] = elems[i];</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		return results;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>getAttribute</li>
+</ul>
+<p>getAttribute是一个函数，它只有一个参数，打算查询的属性的姓名，getAttribute()方法不属于document对象，所以不能通过document对象调用，只能通过元素节点对象调用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var paras = document.getElementsByTagName(&quot;p&quot;);</span><br><span class="line">for(var i = 0; i &lt; paras.length; i++)&#123;</span><br><span class="line">	alert(paras[i].getAttribute(&quot;title&quot;));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>setAttribute</li>
+</ul>
+<p>setAttribute允许对节点值进行修改</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var shopping = document.getElementById(&quot;purchases&quot;);</span><br><span class="line">shopping.setAttribute(&quot;title&quot;, &quot;a list of goods&quot;);</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/06/2018第五周工作小结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1635,337 +1985,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/25/Android系统信息和安全机制/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/25/Android系统信息和安全机制/" itemprop="url">Android系统信息和安全机制</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-25T11:51:19+08:00">
-                2018-01-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Android系统信息获取"><a href="#Android系统信息获取" class="headerlink" title="Android系统信息获取"></a>Android系统信息获取</h1><p>获取系统的配置信息，通常从build和systemproperty两个方面获取</p>
-<ol>
-<li>android.os.Build</li>
-</ol>
-<p>该类里面的信息非常丰富，包含了系统编译时的大量设备、配置信息</p>
-<ol>
-<li>SystemProperty</li>
-</ol>
-<p>该类包含了许多系统配置属性值和参数，有一些和build是相同的。</p>
-<ol>
-<li>Android系统信息实例</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">String board = Build.BOARD;</span><br><span class="line">String brand = Build.BRAND;</span><br><span class="line"></span><br><span class="line">String os_version = System.getProperty(&quot;os.version&quot;);</span><br><span class="line">String os_name = System.getProperty(&quot;os.name&quot;);</span><br></pre></td></tr></table></figure>
-<h1 id="Android-Apk应用信息获取之PackageManager"><a href="#Android-Apk应用信息获取之PackageManager" class="headerlink" title="Android Apk应用信息获取之PackageManager"></a>Android Apk应用信息获取之PackageManager</h1><p>PM主宰着应用的包管理</p>
-<ol>
-<li><p>ActivityInfo: 封装了在Mainifest文件中<activity></activity>和<receiver></receiver>之间的所有信息，包括name，icon, label, launchmod等</p>
-</li>
-<li><p>ServiceInfo: ServiceInfo与ActivityInfo类似，封装了<service></service>之间的所有信息</p>
-</li>
-<li><p>ApplicationInfo: 封装了 <application></application>之间的信息，特别的是，applicationinfo包含了很多flag，通过这些flag，可以很方便的判断应用的类型</p>
-</li>
-<li><p>PackageInfo: 封装了所有的activity，service等信息</p>
-</li>
-<li><p>ResolveInfo: 封装的是包含<intent>信息的上一级信息，所以可以返回Activityinfo, ServiceInfo等包含<intent>的信息，可以用来找到含有特定intent条件的包</intent></intent></p>
-</li>
-</ol>
-<h1 id="Android-Apk应用信息获取之ActivityMananger"><a href="#Android-Apk应用信息获取之ActivityMananger" class="headerlink" title="Android Apk应用信息获取之ActivityMananger"></a>Android Apk应用信息获取之ActivityMananger</h1><p>AM可以获取正在运行的应用程序信息。</p>
-<ol>
-<li>AcitivtyManager.MemoryInfo</li>
-</ol>
-<p>全局内存信息，availMem是系统可用内存，totalMem是总内存，threshold是低内存的阀值，lowMemory是检查是否处于低内存。</p>
-<ol>
-<li>Debug.MemoryInfo</li>
-</ol>
-<p>用于获取统计进程下的内存信息。数据是由dvm虚拟机提供的。</p>
-<ol>
-<li>RunningAppProcessInfo</li>
-</ol>
-<p>运行进程的信息</p>
-<ol>
-<li>RunningServiceInfo</li>
-</ol>
-<p>用于封装运行的服务信息。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/24/第八章Activity与Activity调用栈分析笔记/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/24/第八章Activity与Activity调用栈分析笔记/" itemprop="url">第八章Activity与Activity调用栈分析笔记</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-24T17:34:25+08:00">
-                2018-01-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Android任务栈简介"><a href="#Android任务栈简介" class="headerlink" title="Android任务栈简介"></a>Android任务栈简介</h1><p>andriod使用栈结构来管理activity</p>
-<h1 id="AndroidMainifest启动模式"><a href="#AndroidMainifest启动模式" class="headerlink" title="AndroidMainifest启动模式"></a>AndroidMainifest启动模式</h1><ol>
-<li>standard</li>
-</ol>
-<p>每次启动都会创建新的实例，覆盖在原来的activity上面</p>
-<ol>
-<li>singleTop</li>
-</ol>
-<p>每次启动时判断栈顶是否是要启动的activity，如果是则不创建新的而直接引用这个activity。不是的话则创建一个并启动。</p>
-<ol>
-<li>singleTask</li>
-</ol>
-<p>每次启动时判断整个栈是否有要启动的activity，如果有就将其以上的activity销毁（同一个app启动这个activity是销毁，不同app启动这个activity则会创建一个新的任务栈），如果activity在后台的一个栈中，后台这个任务栈将同时切换到前台。</p>
-<p>这种启动模式可以用来设置主activity，这样主activity启动别的activity，退出回到主activity时可以顺便销毁别的activity。</p>
-<ol>
-<li>singleInstance</li>
-</ol>
-<p>这种启动模式常用于需要与程序分离的界面，不同应用共同享用一个activity</p>
-<p>ps:不同栈是无法使用startActivityForResult()方法来获得数据的，只可以通过intent绑定来传。</p>
-<h1 id="Intent-Flag启动模式"><a href="#Intent-Flag启动模式" class="headerlink" title="Intent Flag启动模式"></a>Intent Flag启动模式</h1><p>介绍一些常用的Flag</p>
-<ol>
-<li>Intent.FLAG_ACTIVITY_NEW_TASK</li>
-</ol>
-<p>使用一个新的task来启动activity，启动的每个activity都将在一个新的task中。</p>
-<p>该flag通常使用在从service中启动activity的场景，由于在service中并不存在activity栈，所以使用该flag来创建一个新的activity栈，并创建新的activty实例。</p>
-<ol>
-<li>FLAG_ACTIVITY_SINGLE_TOP</li>
-</ol>
-<p>与singletop等同</p>
-<ol>
-<li>FLAG_ACTIVITY_CLEAR_TOP</li>
-</ol>
-<p>使用singletask模式来启动一个activity</p>
-<ol>
-<li>FLAG_ACTIVITY_NO_HISTORY</li>
-</ol>
-<p>使用这种模式启动activity，当该activity启动其他activity后，该activity就消失了，不会保存在栈中。</p>
-<h1 id="清空任务栈"><a href="#清空任务栈" class="headerlink" title="清空任务栈"></a>清空任务栈</h1><p>可以在mainifest中activity标签中使用以下几种属性来清理任务栈</p>
-<ol>
-<li>clearTaskOnLaunch</li>
-</ol>
-<p>每次返回该activity时，都将该activity之上的所有activity清除，通过这个属性，可以让这个task每次在初始化的时候，都只有这一个activity</p>
-<ol>
-<li>finishOnTaskLaunch</li>
-</ol>
-<p>当离开这个activity所处的task，用户在返回时，该activity就会被finish掉</p>
-<ol>
-<li>alwaysRetainTaskState</li>
-</ol>
-<p>如果将这个属性设为true，那么该activity所在的task将不受任何清理命令，一直保持当前task状态</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2016,7 +2035,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">77</span>
+                  <span class="site-state-item-count">79</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
