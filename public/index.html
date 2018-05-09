@@ -495,7 +495,66 @@
 <h3 id="避免使用终结（finalizer）方法"><a href="#避免使用终结（finalizer）方法" class="headerlink" title="避免使用终结（finalizer）方法"></a>避免使用终结（finalizer）方法</h3><p>终结方法通常不可预测，一般不可使用。</p>
 <p>jvm正确的执行对象的终结方法是顺利的回收。但是由于jvm不同，很有可能在不同的平台上不同的算法不同，导致产生的现象大相庭径。</p>
 <p>终结方法是以队列的形式进行回收，但是由于终结方法的优先级很低，不确定哪些线程会执行终结方法。因此会造成在终结方法中执行方法的速度小于进入终结方法的速度，会导致大量的回收对象堆积，以此产生oom。</p>
-<p>2018-05-08</p>
+<h2 id="对于所有对象都通用的方法"><a href="#对于所有对象都通用的方法" class="headerlink" title="对于所有对象都通用的方法"></a>对于所有对象都通用的方法</h2><p>这一章是针对Object类</p>
+<h3 id="覆盖equals是遵守通用约定"><a href="#覆盖equals是遵守通用约定" class="headerlink" title="覆盖equals是遵守通用约定"></a>覆盖equals是遵守通用约定</h3><h4 id="针对以下四点，不应该覆盖equals方法，同时不能让其他人调用使用"><a href="#针对以下四点，不应该覆盖equals方法，同时不能让其他人调用使用" class="headerlink" title="针对以下四点，不应该覆盖equals方法，同时不能让其他人调用使用"></a>针对以下四点，不应该覆盖equals方法，同时不能让其他人调用使用</h4><ol>
+<li><p>类的每个实例本质上都是唯一的：对于代表活动实体而不是值的类来说，object提供的equals是正确的。</p>
+</li>
+<li><p>不关心类是否提供了“逻辑相等”的测试功能：</p>
+</li>
+<li><p>超类已经覆盖了equals，从超类继承过来的行为对于子类也是合适的</p>
+</li>
+<li><p>类是私有的或是包级私有的，可以确定它的equals方法永远不会被调用：此时需要覆盖以防被意外调用。</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public boolean equals(Object o )&#123;</span><br><span class="line">	throw new AssertionError();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="如果需要覆盖时，需要遵守以下的规范，来自JavaSE6"><a href="#如果需要覆盖时，需要遵守以下的规范，来自JavaSE6" class="headerlink" title="如果需要覆盖时，需要遵守以下的规范，来自JavaSE6"></a>如果需要覆盖时，需要遵守以下的规范，来自JavaSE6</h4><ol>
+<li><p>自反性：对于任何非null的引用值x，x.equals(x)必须返回true</p>
+</li>
+<li><p>对称性：对于任何非null的引用值x,y,z，如果x.equals(y) == true, 那么y.equals(x) == true也必须成立</p>
+</li>
+<li><p>传递性：对于任何非null的引用值x,y,z，如果x.equals(y) == true, y.equals(z) == true,那么x.equals(z) == true也必须成立</p>
+</li>
+<li><p>一致性：对于任何非null的引用值x，y，只要equals的比较操作在对象中所用的信息没有被修改，那么无论调用多少次equals，返回结果必须是一样的</p>
+</li>
+<li><p>非空性：对于任何非null的引用值x，x.equals(null)必须返回false</p>
+</li>
+</ol>
+<h4 id="根据以上两个原则以及引申出来的原则，总结实现equals的窍门"><a href="#根据以上两个原则以及引申出来的原则，总结实现equals的窍门" class="headerlink" title="根据以上两个原则以及引申出来的原则，总结实现equals的窍门"></a>根据以上两个原则以及引申出来的原则，总结实现equals的窍门</h4><ol>
+<li><p>使用 == 操作符检查“参数是否为这个对象的引用”</p>
+</li>
+<li><p>使用 instanceof 操作符检查“参数是否为正确的类型”</p>
+</li>
+<li><p>把参数转换成正确的类型</p>
+</li>
+<li><p>对于该类中的每个“关键”域，检查参数中的域是否与该对象中对应的域相匹配（不能只针对某些关键条件来判断，而不是全部关键条件）</p>
+</li>
+<li><p>当编写完equals方法之后，应该检查对称性、传递性、一致性。</p>
+</li>
+</ol>
+<h3 id="覆盖equals时总要覆盖hashcode"><a href="#覆盖equals时总要覆盖hashcode" class="headerlink" title="覆盖equals时总要覆盖hashcode"></a>覆盖equals时总要覆盖hashcode</h3><p>由于HashMap,HashSet和HashTable这些散列集合。</p>
+<p>散列集合的关键域，就有hashcode，若不覆盖的话，就会产生问题。例如由于hashcode不同，导致两个equals为true的对象，放到了不同的散列桶中，因此导致get出来的值是不同的，违反了上面的规则。</p>
+<h4 id="覆盖hashcode的方法"><a href="#覆盖hashcode的方法" class="headerlink" title="覆盖hashcode的方法"></a>覆盖hashcode的方法</h4><ol>
+<li><p>将某个非零的常数值，保存在名为result的int类型的变量中。</p>
+</li>
+<li><p>对于对象中每个关键域f，完成以下步骤：</p>
+<p> a. 为该域计算int类型的散列码c：</p>
+<pre><code>i. f类型是boolean，则计算f?1:0
+ii. 如果该域是byte，char，short或者int类型，则计算(int)f
+iii. 如果该域是long类型，则计算(int)(f^(f&gt;&gt;32))
+iv. 如果该域是float类型，则计算Float.floatToIntBits(f)
+v. 如果该域是double类型，则计算Double.doubleToLongBits(f),然后跳到iii
+vi. 如果是对象引用，可以设计一个范式，针对这个范式来计算hashcode
+vii. 如果该域是一个数组，需要针对每一个元素计算一下，然后依据b来计算
+</code></pre><p> b. 按照 result = result * 31 + c</p>
+</li>
+</ol>
+<h3 id="始终覆盖toString"><a href="#始终覆盖toString" class="headerlink" title="始终覆盖toString"></a>始终覆盖toString</h3><p>使用tostring来进行关键的提示</p>
+<h3 id="谨慎的覆盖clone"><a href="#谨慎的覆盖clone" class="headerlink" title="谨慎的覆盖clone"></a>谨慎的覆盖clone</h3><p>克隆部分主要是针对object的clone来进行浅克隆的缺点分析，和深克隆的优点介绍。</p>
+<p>提供了一种不断调用构造器来进行clone的深克隆方法。事实上目前深克隆有了更好的stream方法，所以略过不讲。</p>
+<p>之前说过的newinstance方法，其实就是浅克隆</p>
+<h3 id="考虑实现comparable接口"><a href="#考虑实现comparable接口" class="headerlink" title="考虑实现comparable接口"></a>考虑实现comparable接口</h3><p>类实现了comparable接口，可以与许多泛型算法，以及依赖于该接口的集合实现进行协作。不过也同样要遵从自反性，对称性和传递性。</p>
+<p>由于类可能有很多个关键域，因此需要由最关键的域开始进行比较，直到所有的域都比较结束，才能算一个comparable接口实现结束</p>
+<p>2018.5.10</p>
 
           
         
