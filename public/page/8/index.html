@@ -229,6 +229,142 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/03/android事件拦截机制分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/03/android事件拦截机制分析/" itemprop="url">android事件拦截机制分析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-03T19:04:36+08:00">
+                2018-01-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>由于Android是树状结构，嵌套会导致事件发生区域重叠，针对重叠区域的处理，就叫事件拦截机制。</p>
+<p>我们现在假设有一个嵌套结构</p>
+<p>第一层： a-ViewGroup<br>第二层： b-ViewGroup<br>第三层： c-View</p>
+<p>重写viewgroup的三个方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public boolean dispatchTouchEvent(MotionEvent ev)&#123;</span><br><span class="line">	LogUtil.i(name+&quot;dispatch&quot;);</span><br><span class="line">	return super.dispatchTouchEvent(ev);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public boolean onInterceptTouchEvent(MotionEvent ev)&#123;</span><br><span class="line">	LogUtil.i(name+&quot;intecept&quot;);</span><br><span class="line">	return super.onInterceptTouchEvent(ev);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public boolean onTouchEvent(MotionEvent ev)&#123;</span><br><span class="line">	LogUtil.i(name+&quot;onTouch&quot;);</span><br><span class="line">	return super.onTouchEvent(ev);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由于view不需要重写onInterceptTouchEvent,只需要重写另外的两个事件即可。</p>
+<h1 id="点击c-–正常情况"><a href="#点击c-–正常情况" class="headerlink" title="点击c –正常情况"></a>点击c –正常情况</h1><p>Log显示为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">a dispatch</span><br><span class="line">a intercept</span><br><span class="line">b dispatch</span><br><span class="line">b intercept</span><br><span class="line">c dispatch</span><br><span class="line">c ontouch</span><br><span class="line">b ontouch</span><br><span class="line">a ontouch</span><br></pre></td></tr></table></figure></p>
+<p>事件的传递顺序为a-&gt;b-&gt;c， 事件传递的时候是先执行dispatchTouchEvent()方法，之后在执行onInterceptTouchEvent()方法。<br>事件处理的顺序为c-&gt;b-&gt;a</p>
+<p>事件传递的返回值很容易理解：True,拦截，不继续;False,不拦截，继续流程。<br>事件处理的返回值也类似：True,处理了，不用审核了;False,给上级处理。</p>
+<p>初始情况下，返回值都是false。</p>
+<h1 id="让a的onInterceptTouchEvent-返回true"><a href="#让a的onInterceptTouchEvent-返回true" class="headerlink" title="让a的onInterceptTouchEvent()返回true"></a>让a的onInterceptTouchEvent()返回true</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a dispatch</span><br><span class="line">a intercept</span><br><span class="line">a ontouch</span><br></pre></td></tr></table></figure>
+<p>很明显是a处截断了。</p>
+<h1 id="让b的onInterceptTouchEvent-返回true"><a href="#让b的onInterceptTouchEvent-返回true" class="headerlink" title="让b的onInterceptTouchEvent()返回true"></a>让b的onInterceptTouchEvent()返回true</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a dispatch</span><br><span class="line">a intercept</span><br><span class="line">b dispatch</span><br><span class="line">b intercept</span><br><span class="line">b ontouch</span><br><span class="line">a ontouch</span><br></pre></td></tr></table></figure>
+<p>很明显是b处截断了。</p>
+<h1 id="让c的onInterceptTouchEvent-返回true"><a href="#让c的onInterceptTouchEvent-返回true" class="headerlink" title="让c的onInterceptTouchEvent()返回true"></a>让c的onInterceptTouchEvent()返回true</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a dispatch</span><br><span class="line">a intercept</span><br><span class="line">b dispatch</span><br><span class="line">b intercept</span><br><span class="line">c dispatch</span><br><span class="line">c ontouch</span><br></pre></td></tr></table></figure>
+<p>解释一下ontouchevent为true的意义。<br>假如ontouchevent为false，代表这个ontouch事件没有结束，因此还会继续找别的事件来进行处理直到返回的ontouchevent为true。有一些view自己写了默认的ontouch事件，因此假如想继承一个有功能的view而又不想它产生ontouch效果，可以返回true来截断默认的ontouch事件。<br>一般情况下false可以起到添加额外效果的功能。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/03/android持久化存储/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1541,145 +1677,11 @@ BackpressureStrategy.MISSING
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/21/使用appveyor-xml-进行双端部署hexo/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/12/21/使用appveyor-xml-进行双端部署hexo/" itemprop="url">使用appveyor.xml 进行双端部署hexo</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-21T11:12:17+08:00">
-                2017-12-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="注册并登录AppVeyor"><a href="#注册并登录AppVeyor" class="headerlink" title="注册并登录AppVeyor"></a>注册并登录AppVeyor</h1><blockquote>
-<p>访问 <a href="https://ci.appveyor.com/login" target="_blank" rel="noopener">AppVeyor</a>,使用github登录即可。</p>
-</blockquote>
-<h1 id="添加project"><a href="#添加project" class="headerlink" title="添加project"></a>添加project</h1><blockquote>
-<p>在 <a href="https://ci.appveyor.com/projects/new" target="_blank" rel="noopener">project页面</a>,添加相应的source repo</p>
-</blockquote>
-<h1 id="添加appveyor-yml到source-repo"><a href="#添加appveyor-yml到source-repo" class="headerlink" title="添加appveyor.yml到source repo"></a>添加appveyor.yml到source repo</h1><blockquote>
-<p>appveyor如<a href="https://github.com/formulahendry/formulahendry.github.io.source/blob/master/appveyor.yml" target="_blank" rel="noopener">appveyor样例</a>,只需要更改 [Your Github Access Token]即可。</p>
-</blockquote>
-<h1 id="在repo-settings-Environment中添加四个变量"><a href="#在repo-settings-Environment中添加四个变量" class="headerlink" title="在repo/settings/Environment中添加四个变量"></a>在repo/settings/Environment中添加四个变量</h1><blockquote>
-<p>GIT_USER_EMAIL: github email<br>GIT_USER_NAME: github username<br>STATIC_SITE_REPO: blog repo site<br>TARGET_BRANCH: blog repo main branch (default is master)</p>
-</blockquote>
-<h1 id="完成"><a href="#完成" class="headerlink" title="完成"></a>完成</h1><blockquote>
-<p>背后的过程如下<br>Git push to Source Repo -&gt; AppVeyor CI -&gt; Update GitHub Pages Content Repo -&gt; Generate your Hexo blog site</p>
-</blockquote>
-<h1 id="出处"><a href="#出处" class="headerlink" title="出处"></a><a href="https://formulahendry.github.io/2016/12/04/hexo-ci/" target="_blank" rel="noopener">出处</a></h1>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span>
+    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1725,7 +1727,7 @@ BackpressureStrategy.MISSING
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">80</span>
+                  <span class="site-state-item-count">81</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

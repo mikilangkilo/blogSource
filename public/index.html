@@ -229,6 +229,138 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/12/2018第十九周工作小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/12/2018第十九周工作小结/" itemprop="url">2018第十九周工作小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-12T23:34:44+08:00">
+                2018-05-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>这一周主要任务是完成了好搭盒子2.0.2版本升级和上线。</p>
+<p>2.0.2版本主要是将会员系统更改了一下，同时更改了大量的ui，大量的工作是在业务代码上面。</p>
+<p>业务上面的东西可总结的比较少，不过这一周暴露了不少的问题。</p>
+<p>第一，待人处事方面。可能性格上面的原因，我总喜欢说一些冷话。比如说“我之前说过这个地方有问题”，“我之前反馈过这边设计不合理”等等。说实话，和产品的沟通家了一些这种话，会导致别人心情不好。这周我发现了不少这个方面的问题，说完之后别人的脸色就不好了。这部分要改。</p>
+<p>第二，口头禅方面。我最近发现我的口头禅“真的”，“没办法啊”，“我能怎么办”，这些不好，事实上在说这些话的时候，我压根没进脑子，单纯的应付式的谈话。这样很不好，给人一种不放在心上的感觉。</p>
+<p>第三，责任方面。我这个人有种压力一大，就开始烦躁的情况。这周由于任务划分不对，我给进奎的任务前期比较少，导致很多任务挤压在我头上，造成了我周四晚上一波情绪大反弹，我把一些气撒在了产品的头上。这个事后我立即发现并且做出了道歉，但是还是发生了。</p>
+<p>第四，产品优化方面。我发现我写的很多代码，没有考虑到性能，导致app卡顿现象比较严重，由于任务排期比较重，一直没有回头看。现在发现了几个明显的优化点，一是会员状态信息，可以使用本地存储，然后每次读取的时候走内存，只有在一些特定的情况下，比如说用户走了交押金系统，用户走了交会员费系统这些接口后，我清除会员状态并且重拉一下状态信息。二是每次获取account的时候，走了四次io，开销太大，这部分也需要更改。三是盒子部分的加载问题，也可以仿照会员状态更改来进行更改。</p>
+<p>针对以上问题，大概定了以下几个措施去规避。</p>
+<p>针对待人处事这部分，我仔细观察了一下，一定要像剑飞一样，脾气不能差，好好说话，有问题就仔细说出来。</p>
+<p>针对口头禅这一方面，我之后的谈话交流中，一定要认真进行交流，如果中途有事，就仔细说一下，不能这种应付式的谈话。</p>
+<p>针对责任方面，我需要仿照之前王洋每次对任务的划分安排，好好使用worktile，将任务仔细的划分开来，力争做到每个点都做完，都设计完，然后责任划分清晰后在动手进行设计安排。</p>
+<p>针对产品优化方面，近期主要是处理会员状态和account状态，不过这部分的时间安排需要在功能完成之后进行。</p>
+<p>完。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/08/2018第十八周工作小结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1524,141 +1656,11 @@ vii. 如果该域是一个数组，需要针对每一个元素计算一下，然
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/04/java克隆、浅克隆、深克隆/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/04/java克隆、浅克隆、深克隆/" itemprop="url">java克隆、浅克隆、深克隆</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-04T14:29:51+08:00">
-                2018-04-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="克隆"><a href="#克隆" class="headerlink" title="克隆"></a>克隆</h1><p>当我们需要有一个当前对象的克隆体，和当前对象完全相同的属性、功能，但又不想去仅仅创建一个对象的引用时，我们就需要对对象进行克隆。</p>
-<p>克隆clone，是创建了一个一摸一样的对象。该方法是object的方法，平时用不到是因为这个方法是protect属性的。</p>
-<p>需要用到clone方法的时候，直接覆盖父类的方法，定义成public，然后写super.clone()。或者直接自己写一个clone方法也可以。同时不要忘了记成clonable接口。</p>
-<h1 id="浅克隆"><a href="#浅克隆" class="headerlink" title="浅克隆"></a>浅克隆</h1><p>被复制对象的所有变量都含有与原来的对象相同的值，而所有的对其他对象的引用仍然指向原来的对象。换言之，浅复制仅仅复制所考虑的对象，而不复制它所引用的对象。</p>
-<p>继承自object的clone方法，就是浅克隆，除非对引用也使用clone的方法。</p>
-<p>没啥大用。</p>
-<h1 id="深克隆"><a href="#深克隆" class="headerlink" title="深克隆"></a>深克隆</h1><p>被复制对象的所有变量都含有与原来的对象相同的值，除去那些引用其他对象的变量。那些引用其他对象的变量将指向被复制过的新对象，而不再是原有的那些被引用的对象。换言之，深复制把要复制的对象所引用的对象都复制了一遍。</p>
-<p>深克隆可以使用序列化的方法。</p>
-<p>精髓主要是将对象写入流中，然后在从流中都取出来。这样就实现了一个对象的深克隆。</p>
-<p>前提是对象都是序列化的，不论成员还是引用。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public Object deepClone() throws IOException,OptionalDataException,ClassNotFoundException&#123;//将对象写到流里</span><br><span class="line">ByteArrayOutoutStream bo=new ByteArrayOutputStream();</span><br><span class="line">ObjectOutputStream oo=new ObjectOutputStream(bo);</span><br><span class="line">oo.writeObject(this);//从流里读出来</span><br><span class="line">ByteArrayInputStream bi=new ByteArrayInputStream(bo.toByteArray());</span><br><span class="line">ObjectInputStream oi=new ObjectInputStream(bi);</span><br><span class="line">return(oi.readObject());</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1704,7 +1706,7 @@ vii. 如果该域是一个数组，需要针对每一个元素计算一下，然
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">80</span>
+                  <span class="site-state-item-count">81</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
