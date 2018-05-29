@@ -229,6 +229,262 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/12/记一次“代码过期”错误/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/12/记一次“代码过期”错误/" itemprop="url">记一次“代码过期”错误</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-12T23:42:00+08:00">
+                2018-04-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最近太忙了，每天加班到十一点，都来不及写博客了。</p>
+<p>昨天晚上9点，我完成了一个feature，结果编译结束发现apk的hosttab点击事件无效了。</p>
+<p>懵逼，因为4点还是好的。</p>
+<p>于是回退代码，回退到4点，发现编译好了还是这个问题。懵逼。</p>
+<p>然后继续回退，回退到上次释放正确版本的地方，发现还是有这个问题，继续懵逼。</p>
+<p>继续回退，回退到上个人离职的时候，发现还是有这个问题。超级懵逼。</p>
+<p>也就是原本有用的代码，突然没用了。</p>
+<p>排查，发现tabhost的点击事件没传下去，继续排查，发现tabhost各个子tab的点击事件没接收到，然后写父类的ontouch事件，发现父类并没有拦截，而是返回给在上面的父类了。而各个父类都没有拦截。</p>
+<p>什么情况？</p>
+<p>然后不知道怎么回事了，彻底懵逼了。</p>
+<p>然后技术总监和我讲这种情况就应该对比二进制文件。</p>
+<p>于是反编译上个版本释放的apk，对比相同代码生成的apk，发现真有问题，butterknife生成代码的时候覆盖了之前的按钮。蛋疼</p>
+<p>原因是因为butterknife版本是snapshot，而有个人提交了一个错误的代码到butterknife中，导致我错误了。难受。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/05/2018第十三周工作小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/05/2018第十三周工作小结/" itemprop="url">2018第十三周工作小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-05T21:59:54+08:00">
+                2018-04-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>上周实在是太忙了，周六加班，周日睡了一天，结果工作小结都没有来的及写。</p>
+<p>不过还是写一下吧。</p>
+<p>上周主要任务是适配接口，当时想了一套wrapper来封装接口的做法。但是现在想想，那也只是一种取巧而已。其实数据结构的使用并没有那么复杂，而且在调整数据结构的时候也可以更大程度的理解流程。</p>
+<p>上周整周都在调试接口中度过，刚开始还差点没来得及，后来王洋回来调，才来的及的。</p>
+<p>这周他走了，在20号之前，整个项目是我一个人负责了。难受。想哭。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/04/java克隆、浅克隆、深克隆/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1423,269 +1679,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/22/android8-0-feature一览/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/22/android8-0-feature一览/" itemprop="url">android8.0-feature一览</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-22T22:16:52+08:00">
-                2018-03-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>android p出来了，是时候了解一波新特性了。</p>
-<h1 id="Notification-Channels"><a href="#Notification-Channels" class="headerlink" title="Notification Channels"></a>Notification Channels</h1><p>这个是从Android 8.0 引入的概念，目的是提供统一的系统来帮助用户管理通知，开发者可以为需要发送的每个不同的通知类型创建一个通知渠道。还可以创建通知渠道来反映应用的用户做出的选择。例如，可以为聊天应用的用户创建的每个聊天组建立单独的通知渠道。</p>
-<p>假如不使用channel的话，会不给发通知。</p>
-<h2 id="创建流程"><a href="#创建流程" class="headerlink" title="创建流程"></a>创建流程</h2><ul>
-<li>创建渠道</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.O) &#123;</span><br><span class="line">            NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);</span><br><span class="line"></span><br><span class="line">            NotificationChannel mChannel = new NotificationChannel(&quot;channel_01&quot;,</span><br><span class="line">                    &quot;消息推送&quot;, NotificationManager.IMPORTANCE_DEFAULT);</span><br><span class="line">            manager.createNotificationChannel(mChannel);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>构建通知</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Context context = DJApplication.getInstance();</span><br><span class="line">      Notification.Builder builder = new Notification.Builder(context);</span><br><span class="line">      builder.setTicker(&quot;开始下载&quot;);</span><br><span class="line">      builder.setSmallIcon(R.mipmap.ic_launcher);</span><br><span class="line">      builder.setLargeIcon(BitmapFactory.decodeResource(DJApplication.getInstance().getResources(), R.mipmap.ic_launcher));</span><br><span class="line">      builder.setAutoCancel(true);</span><br><span class="line">      PendingIntent pIntent = PendingIntent.getActivity(context, 0, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);</span><br><span class="line">      builder.setContentTitle(&quot;下载中&quot;);</span><br><span class="line">      builder.setContentIntent(pIntent);</span><br><span class="line">      builder.setContentText(text);</span><br><span class="line">      if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.O) &#123;</span><br><span class="line">          builder.setChannelId(&quot;channel_01&quot;);</span><br><span class="line">      &#125;</span><br><span class="line">      manager.notify(1,  builder.build());</span><br></pre></td></tr></table></figure>
-<h1 id="安装权限问题"><a href="#安装权限问题" class="headerlink" title="安装权限问题"></a>安装权限问题</h1><p>这次更新之后，下载和安装权限分离了，安装需要使用</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;uses-permission android:name=&quot;android.permission.REQUEST_INSTALL_PACKAGES&quot; /&gt;</span><br></pre></td></tr></table></figure>
-<p>该权限可以确保下载完成之后吊起安装程序</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/22/OSS服务器接入上传下载学习/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/22/OSS服务器接入上传下载学习/" itemprop="url">OSS服务器接入上传下载学习</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-22T15:20:50+08:00">
-                2018-03-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>主要是针对oss初始化的几种方式进行一个总结，下载上传部分精细的地方暂时不用深入（也没时间深入 lol）</p>
-<h1 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h1><h2 id="sts鉴权模式"><a href="#sts鉴权模式" class="headerlink" title="sts鉴权模式"></a>sts鉴权模式</h2><p>直接进行token的设置，即时自己单开一个请求获取ststoken，获取了token之后，将token的AccessKeyId，SecretKeyId，SecurityToken三个参数设置于OSSStsTokenCredentialProvider，然后用于初始化OSSCredentialProvider。之后便可以实例OSS的客户端了。</p>
-<p>该方法亦可以通过在OSSCredentialProvider的多态方法中加入token的回调接口，然后直接将这个参数进行oss的初始化。</p>
-<h2 id="通过自签名模式进行初始化。"><a href="#通过自签名模式进行初始化。" class="headerlink" title="通过自签名模式进行初始化。"></a>通过自签名模式进行初始化。</h2><p>自签名是将secretkeyid和secretkeyscret放在服务器端，然后请求的时候返回</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">signature = &quot;OSS &quot; + AccessKeyId + &quot;:&quot; + base64(hmac-sha1(AccessKeySecret, content))</span><br></pre></td></tr></table></figure>
-<p>本地重构一下OSSCredentialProvider的多态方法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">String endpoint = &quot;http://oss-cn-hangzhou.aliyuncs.com&quot;;</span><br><span class="line">credentialProvider = new OSSCustomSignerCredentialProvider() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public String signContent(String content) &#123;</span><br><span class="line">        // 您需要在这里依照OSS规定的签名算法，实现加签一串字符内容，并把得到的签名传拼接上AccessKeyId后返回</span><br><span class="line">        // 一般实现是，将字符内容post到您的业务服务器，然后返回签名</span><br><span class="line">        // 如果因为某种原因加签失败，描述error信息后，返回nil</span><br><span class="line">        // 以下是用本地算法进行的演示</span><br><span class="line">        return &quot;OSS &quot; + AccessKeyId + &quot;:&quot; + base64(hmac-sha1(AccessKeySecret, content));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">OSS oss = new OSSClient(getApplicationContext(), endpoint, credentialProvider);</span><br></pre></td></tr></table></figure>
-<p>亦可以进行token的设置。</p>
-<h2 id="直传模式"><a href="#直传模式" class="headerlink" title="直传模式"></a>直传模式</h2><p>后端返回policy，OSSAccessKeyId，Signature，然后组装body，带上file和filename，然后直接post给阿里云的服务器。</p>
-<p>简单粗暴，但是整个sdk基本上就没有使用了，sdk的分布下载，断点重传功能等等就白白浪废了。</p>
-<p>这个模式给web端用比较好。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1736,7 +1729,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">81</span>
+                  <span class="site-state-item-count">83</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

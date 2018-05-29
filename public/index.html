@@ -229,6 +229,270 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/28/2018第二十一周工作小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/28/2018第二十一周工作小结/" itemprop="url">2018第二十一周工作小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-28T11:29:49+08:00">
+                2018-05-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>这几周除了工作小结之外基本都没写别的，要改要改。</p>
+<p>这周主要是盒子2.0.4版本的升级。主要做了盒子部分的优化和搜索功能。</p>
+<p>盒子部分的问题这次主要是进行一次内存化的升级优化，将之前网页模式设计的盒子，变成一个本地保存的盒子。然后将不同的地方进行sp的存储，退出app的时候会进行上报，进入app的时候会根据是否有本地sp来进行选择性的恢复。</p>
+<p>盒子部分主要学到的几个点：</p>
+<ul>
+<li><p>维护对象长持有，可以让对象持有一个application context，这样对象就不会在运行中死去。刚开始使用的是dressingbox的context，这样与mainactivity生命一样，但是mainacitivity在登陆的过程会被杀死，这就导致了cartutil重刷。</p>
+</li>
+<li><p>本地存储维护三个状态：一个是原始的购物车数据，一个是变化的购物车数据，一个是变化的盒子数据，这样就可以根据其存储状态，判断上次是否传输成功，以及数据库的状态。</p>
+</li>
+<li><p>关于rxjava泄漏的修复，很多rxjava的处理没有注意，rxjava这种函数式编程核心还是回调以及接口，因此很多在onresume里面写的，或者在attachtowindow中写的没有注意在onpause或者ondestroy中取消，导致了较多的泄漏。不过注意到之后特意处理了一下，现在泄漏现象少很多。</p>
+</li>
+</ul>
+<p>除了以上的问题，还有一些问题需要注意：</p>
+<ul>
+<li><p>任务的分配，由于目前我是组内来的最早的员工，任务分配一开始是由我来分配，但是我总有一种对别人不放心的感觉，怕分给别人被拖累，所以能自己做的还是自己弄了。但是我一个人毕竟是来不及的，因此造成了原本周三发的版本，搞到了周五晚上才发，差点延期。现在懂了，关于任务的分配还是力争要做到合情合理，不能过分积压，也不能一点都没有。</p>
+</li>
+<li><p>rn的学习。辣鸡rn，毁我青春。</p>
+</li>
+<li><p>阿里云服务器的后台搭建。目前已经刷成了centos了，急需动手。</p>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/20/2018第二十周工作小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/20/2018第二十周工作小结/" itemprop="url">2018第二十周工作小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-20T21:29:59+08:00">
+                2018-05-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>这周周三上线了2.0.3版本，主要是针对盒子部分进行了流程的优化。</p>
+<p>这周有个比较大的感触，是产品为了完善用户转化率，不断的将一些要素提炼出来，然后放置在用户可见区域，不断的优化这一细节，导致最后呈现的版本，流程，和之前都不同了。这种产品思维，我可学习的地方很多。</p>
+<p>另外这周我可以说是入门了reactnative，我希望在移动端这边可以学习更多东西。所以通过reactnative，学习js的操作语法。同时对于ios的语法也要进行一定的学习。</p>
+<p>这次有一些想法，关于生活作息的。之前由于经常加班，导致精神紧张睡眠不足，晚上回去也没有时间进行学习。现在针对这个问题进行改变。</p>
+<p>每晚争取7。30左右下班，发版本晚一些可以。回来之后看一会儿书，10.30左右睡觉。保障8小时睡眠，然后第二天7点起床，七点半去公司，然后看2小时的书。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/12/2018第十九周工作小结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -686,7 +950,30 @@ vii. 如果该域是一个数组，需要针对每一个元素计算一下，然
 <p>之前说过的newinstance方法，其实就是浅克隆</p>
 <h3 id="考虑实现comparable接口"><a href="#考虑实现comparable接口" class="headerlink" title="考虑实现comparable接口"></a>考虑实现comparable接口</h3><p>类实现了comparable接口，可以与许多泛型算法，以及依赖于该接口的集合实现进行协作。不过也同样要遵从自反性，对称性和传递性。</p>
 <p>由于类可能有很多个关键域，因此需要由最关键的域开始进行比较，直到所有的域都比较结束，才能算一个comparable接口实现结束</p>
-<p>2018.5.10</p>
+<h2 id="类和接口"><a href="#类和接口" class="headerlink" title="类和接口"></a>类和接口</h2><h3 id="使类和成员的可访问性最小化"><a href="#使类和成员的可访问性最小化" class="headerlink" title="使类和成员的可访问性最小化"></a>使类和成员的可访问性最小化</h3><p>出于“封装”的特性，需要将类的方法进行访问性变更，仅仅暴露出一些需要暴露的方法进行模块间的沟通。</p>
+<p>有几个规定</p>
+<p>实例域不可公有，对于非final的实例域不可公有主要是针对线程安全。另外对于静态final域的对象来讲，需要确保其引用对象不是可变对象，否则也不可公有</p>
+<p>长度非0的数组，无论如何声明，也是可变的，因此对于数组的静态域返回，需要使用如下方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">private final static Thing[] PRIVATE_VALUES = &#123;...&#125;;</span><br><span class="line">public static final Thing[] values()&#123;</span><br><span class="line">	return PRIVATE_VALUES.clone();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="在公有域方法中使用访问方法，而不是公有域"><a href="#在公有域方法中使用访问方法，而不是公有域" class="headerlink" title="在公有域方法中使用访问方法，而不是公有域"></a>在公有域方法中使用访问方法，而不是公有域</h3><p>这就是使用get set等方法，而不是直接暴露出参数，来使用公有域。由于使用这种方法，可以确保通过自设的一些限制，确保返回的参数和自己需要的参数条件相当。</p>
+<h3 id="使可变性最小化"><a href="#使可变性最小化" class="headerlink" title="使可变性最小化"></a>使可变性最小化</h3><p>该例主要是针对不可变类的处理。不可变类是第一次构造时就赋予内部参数的类，类似String类。</p>
+<p>使类变成不可变类，需要遵循五条规则：</p>
+<ol>
+<li><p>不要提供任何会修改对象状态的方法</p>
+</li>
+<li><p>保证类不会被扩展：防止子类化，一般可以将这个类做成final的</p>
+</li>
+<li><p>使所有的域都是final的：使用系统的强制方式，可以清楚的表明意图</p>
+</li>
+<li><p>使所有的域都成为私有的：防止客户端获得访问可变对象的权限，并防止客户端直接修改这些对象。</p>
+</li>
+<li><p>确保对于任何可变组件的互斥访问：如果类具有指向可变对象的域，必须确保该类的客户端无法获得指向这些对象的引用。因此如果需要修改对象，提供set方法。</p>
+</li>
+</ol>
+<p>不可变对象比较简单，只有一种状态，即被创建时的状态，本质上是线程安全的，它们不要求同步。并发访问时不会破坏属性，因此可以被自由的共享，同时也不需要进行保护性拷贝。</p>
+<p>不仅可以共享不可变对象，甚至也可以共享它们的内部信息。</p>
+<p>不可变对象的唯一的缺点是，对于每个不同的值都要一个单独的对象。由于创建对象的代价可能很大，对于大型的对象，这样操作实在是损耗太大。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public class Complex&#123;</span><br><span class="line">	private final double re;</span><br><span class="line">	private final double im;</span><br><span class="line"></span><br><span class="line">	private Complex(double re, double im)&#123;</span><br><span class="line">		this.re = re;</span><br><span class="line">		this.im = im;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public static Complex valueOf(double re, double im)&#123;</span><br><span class="line">		return new Complex(re, im);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
           
         
@@ -1400,262 +1687,6 @@ vii. 如果该域是一个数组，需要针对每一个元素计算一下，然
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/12/记一次“代码过期”错误/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/12/记一次“代码过期”错误/" itemprop="url">记一次“代码过期”错误</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-12T23:42:00+08:00">
-                2018-04-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>最近太忙了，每天加班到十一点，都来不及写博客了。</p>
-<p>昨天晚上9点，我完成了一个feature，结果编译结束发现apk的hosttab点击事件无效了。</p>
-<p>懵逼，因为4点还是好的。</p>
-<p>于是回退代码，回退到4点，发现编译好了还是这个问题。懵逼。</p>
-<p>然后继续回退，回退到上次释放正确版本的地方，发现还是有这个问题，继续懵逼。</p>
-<p>继续回退，回退到上个人离职的时候，发现还是有这个问题。超级懵逼。</p>
-<p>也就是原本有用的代码，突然没用了。</p>
-<p>排查，发现tabhost的点击事件没传下去，继续排查，发现tabhost各个子tab的点击事件没接收到，然后写父类的ontouch事件，发现父类并没有拦截，而是返回给在上面的父类了。而各个父类都没有拦截。</p>
-<p>什么情况？</p>
-<p>然后不知道怎么回事了，彻底懵逼了。</p>
-<p>然后技术总监和我讲这种情况就应该对比二进制文件。</p>
-<p>于是反编译上个版本释放的apk，对比相同代码生成的apk，发现真有问题，butterknife生成代码的时候覆盖了之前的按钮。蛋疼</p>
-<p>原因是因为butterknife版本是snapshot，而有个人提交了一个错误的代码到butterknife中，导致我错误了。难受。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/05/2018第十三周工作小结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/05/2018第十三周工作小结/" itemprop="url">2018第十三周工作小结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-05T21:59:54+08:00">
-                2018-04-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>上周实在是太忙了，周六加班，周日睡了一天，结果工作小结都没有来的及写。</p>
-<p>不过还是写一下吧。</p>
-<p>上周主要任务是适配接口，当时想了一套wrapper来封装接口的做法。但是现在想想，那也只是一种取巧而已。其实数据结构的使用并没有那么复杂，而且在调整数据结构的时候也可以更大程度的理解流程。</p>
-<p>上周整周都在调试接口中度过，刚开始还差点没来得及，后来王洋回来调，才来的及的。</p>
-<p>这周他走了，在20号之前，整个项目是我一个人负责了。难受。想哭。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1706,7 +1737,7 @@ vii. 如果该域是一个数组，需要针对每一个元素计算一下，然
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">81</span>
+                  <span class="site-state-item-count">83</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
