@@ -512,9 +512,107 @@ db.col.find({$or:[{"by":"菜鸟教程"},{"title": "MongoDB 教程"}]}).pretty()
 ## and 和 or 同时
 
 ```
-db.col.find({"likes": {$gt:50}, $or: [{"by": "菜鸟教程"},{"title": "MongoDB 教程"}]}).pretty()
+db.col.find({"likes": {$gt:50}, $or: [{"by": "菜鸟教程"},{"title": "MongoDB 教程"}]}).pretty()	
 ```
 
+# type操作符
+
+1 -> double
+2 -> string
+3 -> object
+4 -> array
+5 -> binary data
+6 -> Undefined(deprecated)
+7 -> object id
+8 -> boolean
+9 -> date
+10 -> null
+11 -> regular expression
+
+13 -> javascript
+14 -> symbol
+15 -> javascript with scope
+16 -> 32-bit integer
+17 -> timestamp
+18 -> 64-bit integer
+
+255 -> min key(query with -1)
+127 -> max key
+
+
+需要查找title 类型为string的，如下
+```
+db.col.find({"title" : {$type : 2}})
+```
+
+# limit 和 skip
+
+```
+>db.COLLECTION_NAME.find().limit(NUMBER)
+```
+limit()方法接受一个数字参数，该参数指定从MongoDB中读取的记录条数。
+
+```
+>db.COLLECTION_NAME.find().limit(NUMBER).skip(NUMBER)
+```
+skip方法同样接受一个数字参数作为跳过的记录条数。
+
+# sort
+
+在MongoDB中使用使用sort()方法对数据进行排序，sort()方法可以通过参数指定排序的字段，并使用 1 和 -1 来指定排序的方式，其中 1 为升序排列，而-1是用于降序排列。
+
+```
+>db.COLLECTION_NAME.find().sort({KEY:1})
+```
+# 索引
+
+MongoDB使用 ensureIndex() 方法来创建索引。
+
+```
+>db.COLLECTION_NAME.ensureIndex({KEY:1})
+```
+
+语法中 Key 值为你要创建的索引字段，1为指定按升序创建索引，如果你想按降序来创建索引指定为-1即可。
+
+# 聚合
+
+主要用于处理数据(诸如统计平均值,求和等)，并返回计算后的数据结果。有点类似sql语句中的 count(*)。
+
+```
+>db.COLLECTION_NAME.aggregate(AGGREGATE_OPERATION)
+```
+
+$sum -> 计算总和 -> db.mycol.aggregate([{$group : {_id : "$by_user", num_tutorial : {$sum : "$likes"}}}])
+
+$avg -> 计算平均值 -> db.mycol.aggregate([{$group : {_id : "$by_user", num_tutorial : {$avg : "$likes"}}}])
+
+$min -> 获取集合中所有文档对应值最小值 -> db.mycol.aggregate([{$group : {_id : "$by_user", num_tutorial : {$min : "$likes"}}}])
+
+$max -> 获取集合中所有文档对应值得最大值 -> db.mycol.aggregate([{$group : {_id : "$by_user", num_tutorial : {$max : "$likes"}}}])
+
+$push -> 在结果文档中插入值到一个数组中 -> db.mycol.aggregate([{$group : {_id : "$by_user", url : {$push: "$url"}}}])
+
+$addToSet -> 在结果文档中插入值到一个数组中，但不创建副本 -> db.mycol.aggregate([{$group : {_id : "$by_user", url : {$addToSet : "$url"}}}])
+
+$first -> 根据资源文档的排序获取第一个文档数据 -> db.mycol.aggregate([{$group : {_id : "$by_user", first_url : {$first : "$url"}}}])
+
+$last -> 根据资源文档的排序获取最后一个文档数据 -> db.mycol.aggregate([{$group : {_id : "$by_user", last_url : {$last : "$url"}}}])
+
+# 复制
+
+MongoDB复制是将数据同步在多个服务器的过程。
+
+复制提供了数据的冗余备份，并在多个服务器上存储数据副本，提高了数据的可用性， 并可以保证数据的安全性。
+
+复制还允许您从硬件故障和服务中断中恢复数据。
+
+## 含义
+
+1 保障数据的安全性
+2 数据高可用性 (24*7)
+3 灾难恢复
+4 无需停机维护（如备份，重建索引，压缩）
+5 分布式读取数据
 
 
 

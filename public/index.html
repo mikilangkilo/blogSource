@@ -354,7 +354,35 @@
 <p>WHERE by=’菜鸟教程’ AND title=’MongoDB 教程’<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## or操作</span><br></pre></td></tr></table></figure></p>
 <p>db.col.find(<br>   {<br>      $or: [<br>         {key1: value1}, {key2:value2}<br>      ]<br>   }<br>).pretty()<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
 <p>db.col.find({$or:[{“by”:”菜鸟教程”},{“title”: “MongoDB 教程”}]}).pretty()<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## and 和 or 同时</span><br></pre></td></tr></table></figure></p>
-<p>db.col.find({“likes”: {$gt:50}, $or: [{“by”: “菜鸟教程”},{“title”: “MongoDB 教程”}]}).pretty()<br><code>`</code></p>
+<p>db.col.find({“likes”: {$gt:50}, $or: [{“by”: “菜鸟教程”},{“title”: “MongoDB 教程”}]}).pretty()<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"># type操作符</span><br><span class="line"></span><br><span class="line">1 -&gt; double</span><br><span class="line">2 -&gt; string</span><br><span class="line">3 -&gt; object</span><br><span class="line">4 -&gt; array</span><br><span class="line">5 -&gt; binary data</span><br><span class="line">6 -&gt; Undefined(deprecated)</span><br><span class="line">7 -&gt; object id</span><br><span class="line">8 -&gt; boolean</span><br><span class="line">9 -&gt; date</span><br><span class="line">10 -&gt; null</span><br><span class="line">11 -&gt; regular expression</span><br><span class="line"></span><br><span class="line">13 -&gt; javascript</span><br><span class="line">14 -&gt; symbol</span><br><span class="line">15 -&gt; javascript with scope</span><br><span class="line">16 -&gt; 32-bit integer</span><br><span class="line">17 -&gt; timestamp</span><br><span class="line">18 -&gt; 64-bit integer</span><br><span class="line"></span><br><span class="line">255 -&gt; min key(query with -1)</span><br><span class="line">127 -&gt; max key</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">需要查找title 类型为string的，如下</span><br></pre></td></tr></table></figure></p>
+<p>db.col.find({“title” : {$type : 2}})<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"># limit 和 skip</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>db.COLLECTION_NAME.find().limit(NUMBER)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">limit()方法接受一个数字参数，该参数指定从MongoDB中读取的记录条数。</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
+<p>db.COLLECTION_NAME.find().limit(NUMBER).skip(NUMBER)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">skip方法同样接受一个数字参数作为跳过的记录条数。</span><br><span class="line"></span><br><span class="line"># sort</span><br><span class="line"></span><br><span class="line">在MongoDB中使用使用sort()方法对数据进行排序，sort()方法可以通过参数指定排序的字段，并使用 1 和 -1 来指定排序的方式，其中 1 为升序排列，而-1是用于降序排列。</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
+<p>db.COLLECTION_NAME.find().sort({KEY:1})<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 索引</span><br><span class="line"></span><br><span class="line">MongoDB使用 ensureIndex() 方法来创建索引。</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
+<p>db.COLLECTION_NAME.ensureIndex({KEY:1})<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">语法中 Key 值为你要创建的索引字段，1为指定按升序创建索引，如果你想按降序来创建索引指定为-1即可。</span><br><span class="line"></span><br><span class="line"># 聚合</span><br><span class="line"></span><br><span class="line">主要用于处理数据(诸如统计平均值,求和等)，并返回计算后的数据结果。有点类似sql语句中的 count(*)。</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
+<p>db.COLLECTION_NAME.aggregate(AGGREGATE_OPERATION)<br><code>`</code></p>
+</blockquote>
+<p>$sum -&gt; 计算总和 -&gt; db.mycol.aggregate([{$group : {_id : “$by_user”, num_tutorial : {$sum : “$likes”}}}])</p>
+<p>$avg -&gt; 计算平均值 -&gt; db.mycol.aggregate([{$group : {_id : “$by_user”, num_tutorial : {$avg : “$likes”}}}])</p>
+<p>$min -&gt; 获取集合中所有文档对应值最小值 -&gt; db.mycol.aggregate([{$group : {_id : “$by_user”, num_tutorial : {$min : “$likes”}}}])</p>
+<p>$max -&gt; 获取集合中所有文档对应值得最大值 -&gt; db.mycol.aggregate([{$group : {_id : “$by_user”, num_tutorial : {$max : “$likes”}}}])</p>
+<p>$push -&gt; 在结果文档中插入值到一个数组中 -&gt; db.mycol.aggregate([{$group : {_id : “$by_user”, url : {$push: “$url”}}}])</p>
+<p>$addToSet -&gt; 在结果文档中插入值到一个数组中，但不创建副本 -&gt; db.mycol.aggregate([{$group : {_id : “$by_user”, url : {$addToSet : “$url”}}}])</p>
+<p>$first -&gt; 根据资源文档的排序获取第一个文档数据 -&gt; db.mycol.aggregate([{$group : {_id : “$by_user”, first_url : {$first : “$url”}}}])</p>
+<p>$last -&gt; 根据资源文档的排序获取最后一个文档数据 -&gt; db.mycol.aggregate([{$group : {_id : “$by_user”, last_url : {$last : “$url”}}}])</p>
+<h1 id="复制"><a href="#复制" class="headerlink" title="复制"></a>复制</h1><p>MongoDB复制是将数据同步在多个服务器的过程。</p>
+<p>复制提供了数据的冗余备份，并在多个服务器上存储数据副本，提高了数据的可用性， 并可以保证数据的安全性。</p>
+<p>复制还允许您从硬件故障和服务中断中恢复数据。</p>
+<h2 id="含义"><a href="#含义" class="headerlink" title="含义"></a>含义</h2><p>1 保障数据的安全性<br>2 数据高可用性 (24*7)<br>3 灾难恢复<br>4 无需停机维护（如备份，重建索引，压缩）<br>5 分布式读取数据</p>
 
           
         
