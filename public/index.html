@@ -1558,6 +1558,23 @@ vii. 如果该域是一个数组，需要针对每一个元素计算一下，然
 <p>不仅可以共享不可变对象，甚至也可以共享它们的内部信息。</p>
 <p>不可变对象的唯一的缺点是，对于每个不同的值都要一个单独的对象。由于创建对象的代价可能很大，对于大型的对象，这样操作实在是损耗太大。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public class Complex&#123;</span><br><span class="line">	private final double re;</span><br><span class="line">	private final double im;</span><br><span class="line"></span><br><span class="line">	private Complex(double re, double im)&#123;</span><br><span class="line">		this.re = re;</span><br><span class="line">		this.im = im;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public static Complex valueOf(double re, double im)&#123;</span><br><span class="line">		return new Complex(re, im);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="复合优先于继承"><a href="#复合优先于继承" class="headerlink" title="复合优先于继承"></a>复合优先于继承</h3><p>继承打破了封装性，当版本的升级导致父类的变化，会造成子类的破坏。因此需要进行复合。</p>
+<p>复合的意义是：不拓展现有的类，而是在新的类中增加一个私有域，它引用现有类的一个实例，这种设计被称作复合。</p>
+<p>现有的类变成了新类的一个组件，新类的每个实例方法都可以调用被包含的现有实例中对应的方法，并返回他的结果，这种方式称为转发。新的类被称为包装类。</p>
+<p>缺点：包装类不适合用于回调框架</p>
+<h3 id="要么为继承而设计，并提供文档说明，要么就禁止继承"><a href="#要么为继承而设计，并提供文档说明，要么就禁止继承" class="headerlink" title="要么为继承而设计，并提供文档说明，要么就禁止继承"></a>要么为继承而设计，并提供文档说明，要么就禁止继承</h3><p>不是为了继承而设计，并且没有文档说明，会导致子类的继承出现破坏性的问题。</p>
+<p>文档必须要精确的描述覆盖每个方法所带来的影响。</p>
+<h3 id="接口优于抽象类"><a href="#接口优于抽象类" class="headerlink" title="接口优于抽象类"></a>接口优于抽象类</h3><ol>
+<li><p>现有的类可以很容易被更新，以实现新的接口</p>
+</li>
+<li><p>接口是定义mixin(混合类型)的理想选择</p>
+</li>
+<li><p>接口允许构造非层次接口的类型框架</p>
+</li>
+</ol>
+<p>鉴于上上条“复合优先于继承”，如果使用接口的方式实现，包装类仍然完美使用</p>
+<h3 id="接口只用于定义类型"><a href="#接口只用于定义类型" class="headerlink" title="接口只用于定义类型"></a>接口只用于定义类型</h3><p>接口仅仅用于定义引用这个实例的类型，因此除此之外的接口都是不恰当的。</p>
+<h3 id="类层次由于标签类"><a href="#类层次由于标签类" class="headerlink" title="类层次由于标签类"></a>类层次由于标签类</h3><p>标签类很少有适用的时候，当编写一个包含显式标签域的类时，英国考虑    </p>
 
           
         
