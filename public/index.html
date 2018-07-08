@@ -229,6 +229,138 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/08/2018第二十七周工作小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/08/2018第二十七周工作小结/" itemprop="url">2018年二十七周工作小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-08T19:59:49+08:00">
+                2018-07-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>这周主要是完成了盒子2.1的迭代。ui部分进行了大规模的更改，写了较多的控件。</p>
+<p>不过这都不重要。这周的主要收获收获在对软件流程的突破。</p>
+<p>之前项目里面使用的是一个activity对应一个fragment，但是缺点在于启动模式基本上都是activityA -&gt; fragmentA -&gt; activityB -&gt; fragmentB -&gt; activityC -&gt; fragmentC，这种启动模式，基本上类似于activity启动的时候每次都开启一个栈，每个栈是独立的。</p>
+<p>不过这周想到一个比较好的方法，写代码的时候，仍然是一个activity对应一个fragment，不过启动的时候流程进行绑定化。</p>
+<p>举个例子，我们有一个页面a用于介绍会员的优点，有一个页面b用于用户进行会员付费，有一个页面c进行付费成功的提示。</p>
+<p>一般的情况，一次付费流程，是一个整的，不会出现付费成功，返回仍然是会员付费页面的现状，而应该是付费成功了，点击返回这个流程就会进行关闭。</p>
+<p>鉴于上面的流程，衍生出了会员介绍页面：activityA, fragmentA；会员付费页面：activityB, fragmentB; 付费成功页面：activityC, fragmentC</p>
+<p>从最基础的会员介绍开始，我们启动activityA,activityA的oncreate只写一个方法，就是启动fragmentA,显示介绍页面。fragmentA中有跳转的接口，跳到会员支付页面fragmentB，这个使用自己写的startFragment方法进行跳转，fragmentB又有支付宝或者微信的回调接口，回调跳转到fragmentC支付成功页面。到了fragmentC支付成功页面，返回按钮触发的就是finish当前的activity，因此此时一旦触发，整个流程就结束了。</p>
+<p>那为什么仍然要写成activity -&gt; fragment的模式呢？看上去好像activityB并没有使用。</p>
+<p>事实上业务上面有很多地方只有单独的一个接口，该接口是直接进入支付页面，因此此时可以使用start activityB -&gt; start fragmentB -&gt; start fragmentC这种模式，此时如果在fragmentB页面返回，会直接触发activtyB的销毁动作，也能因此成为一个独立的流程。</p>
+<p>这套方法的思想来自于activity的任务栈调度模式，模仿的是singletask，不过相对于activity的任务栈，在某些方面还是不足的，例如说重复创建，单一任务多次使用等。这套大概使用情景在于切片化，更多的好处还需要自己体会。</p>
+<p>不过称此夸一下，activity的启动，开销比较大，每次启动至少涉及到两次binder，而且activity的启动过于局限。fragment虽然没有完善的任务调度系统，不过好在碎片化开销不算大，哪怕我们知道他比较麻烦，但是起码也能保证一点就是写好了不会太差。</p>
+<p>目前对app的拆分大概能拆分成 application -&gt; activitys ,activity -&gt; fragments，感觉比以前的想法更为清晰。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/24/2018第二十五周工作小结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1610,140 +1742,6 @@ vii. 如果该域是一个数组，需要针对每一个元素计算一下，然
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/07/java编程思想第一章《对象导论》学习笔记/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/07/java编程思想第一章《对象导论》学习笔记/" itemprop="url">java编程思想第一章《对象导论》学习笔记</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-07T01:05:26+08:00">
-                2018-05-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>1.1 抽象过程</p>
-<ul>
-<li><p>万物皆为对象：将对象是为奇特的变量，他可以存储数据，还可以在自身上执行操作。</p>
-</li>
-<li><p>程序是对象的集合，它们通过发送消息来告知彼此所要做的：可以把消息想象为对某个特定对象的方法的调用请求。</p>
-</li>
-<li><p>每个对象都有自己的由其他对象所构成的存储：通过创建包含现有的对象的包的方式来创建新类型的对象。</p>
-</li>
-<li><p>每个对象都拥有其类型：每个类最重要的区别于其他类的特性就是可以发送什么样的消息给他。</p>
-</li>
-<li><p>某一特定类型的所有对象都可以接收同样的消息：可替代性是oop中最强有力的概念之一。</p>
-</li>
-</ul>
-<p>1.2 每个对象都有一个接口</p>
-<p>通过设计接口的形式，将对对象的每个请求定义下来。接口确定了对某一特定对象所能发出的请求。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1794,7 +1792,7 @@ vii. 如果该域是一个数组，需要针对每一个元素计算一下，然
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">87</span>
+                  <span class="site-state-item-count">88</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

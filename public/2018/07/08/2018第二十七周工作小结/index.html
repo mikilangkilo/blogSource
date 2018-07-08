@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="工作小结," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="这周主要是完成了盒子2.1的迭代。ui部分进行了大规模的更改，写了较多的控件。 不过这都不重要。这周的主要收获收获在对软件流程的突破。 之前项目里面使用的是一个activity对应一个fragment，但是缺点在于启动模式基本上都是activityA -&amp;gt; fragmentA -&amp;gt; activityB -&amp;gt; fragmentB -&amp;gt; activityC -&amp;gt; frag">
+<meta name="keywords" content="工作小结">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2018年二十七周工作小结">
+<meta property="og:url" content="http://yoursite.com/2018/07/08/2018第二十七周工作小结/index.html">
+<meta property="og:site_name" content="记录者">
+<meta property="og:description" content="这周主要是完成了盒子2.1的迭代。ui部分进行了大规模的更改，写了较多的控件。 不过这都不重要。这周的主要收获收获在对软件流程的突破。 之前项目里面使用的是一个activity对应一个fragment，但是缺点在于启动模式基本上都是activityA -&amp;gt; fragmentA -&amp;gt; activityB -&amp;gt; fragmentB -&amp;gt; activityC -&amp;gt; frag">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-07-08T13:26:22.916Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2018年二十七周工作小结">
+<meta name="twitter:description" content="这周主要是完成了盒子2.1的迭代。ui部分进行了大规模的更改，写了较多的控件。 不过这都不重要。这周的主要收获收获在对软件流程的突破。 之前项目里面使用的是一个activity对应一个fragment，但是缺点在于启动模式基本上都是activityA -&amp;gt; fragmentA -&amp;gt; activityB -&amp;gt; fragmentB -&amp;gt; activityC -&amp;gt; frag">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/07/08/2018第二十七周工作小结/"/>
+
+
+
+
+
+  <title>2018年二十七周工作小结 | 记录者</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">记录者</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我们坚持一件事情，并不是因为这样做了会有效果，而是坚信，这样做是对的。</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/08/2018第二十七周工作小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">2018年二十七周工作小结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-08T19:59:49+08:00">
+                2018-07-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这周主要是完成了盒子2.1的迭代。ui部分进行了大规模的更改，写了较多的控件。</p>
+<p>不过这都不重要。这周的主要收获收获在对软件流程的突破。</p>
+<p>之前项目里面使用的是一个activity对应一个fragment，但是缺点在于启动模式基本上都是activityA -&gt; fragmentA -&gt; activityB -&gt; fragmentB -&gt; activityC -&gt; fragmentC，这种启动模式，基本上类似于activity启动的时候每次都开启一个栈，每个栈是独立的。</p>
+<p>不过这周想到一个比较好的方法，写代码的时候，仍然是一个activity对应一个fragment，不过启动的时候流程进行绑定化。</p>
+<p>举个例子，我们有一个页面a用于介绍会员的优点，有一个页面b用于用户进行会员付费，有一个页面c进行付费成功的提示。</p>
+<p>一般的情况，一次付费流程，是一个整的，不会出现付费成功，返回仍然是会员付费页面的现状，而应该是付费成功了，点击返回这个流程就会进行关闭。</p>
+<p>鉴于上面的流程，衍生出了会员介绍页面：activityA, fragmentA；会员付费页面：activityB, fragmentB; 付费成功页面：activityC, fragmentC</p>
+<p>从最基础的会员介绍开始，我们启动activityA,activityA的oncreate只写一个方法，就是启动fragmentA,显示介绍页面。fragmentA中有跳转的接口，跳到会员支付页面fragmentB，这个使用自己写的startFragment方法进行跳转，fragmentB又有支付宝或者微信的回调接口，回调跳转到fragmentC支付成功页面。到了fragmentC支付成功页面，返回按钮触发的就是finish当前的activity，因此此时一旦触发，整个流程就结束了。</p>
+<p>那为什么仍然要写成activity -&gt; fragment的模式呢？看上去好像activityB并没有使用。</p>
+<p>事实上业务上面有很多地方只有单独的一个接口，该接口是直接进入支付页面，因此此时可以使用start activityB -&gt; start fragmentB -&gt; start fragmentC这种模式，此时如果在fragmentB页面返回，会直接触发activtyB的销毁动作，也能因此成为一个独立的流程。</p>
+<p>这套方法的思想来自于activity的任务栈调度模式，模仿的是singletask，不过相对于activity的任务栈，在某些方面还是不足的，例如说重复创建，单一任务多次使用等。这套大概使用情景在于切片化，更多的好处还需要自己体会。</p>
+<p>不过称此夸一下，activity的启动，开销比较大，每次启动至少涉及到两次binder，而且activity的启动过于局限。fragment虽然没有完善的任务调度系统，不过好在碎片化开销不算大，哪怕我们知道他比较麻烦，但是起码也能保证一点就是写好了不会太差。</p>
+<p>目前对app的拆分大概能拆分成 application -&gt; activitys ,activity -&gt; fragments，感觉比以前的想法更为清晰。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/工作小结/" rel="tag"># 工作小结</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/24/2018第二十五周工作小结/" rel="next" title="2018年第二十五周工作小结">
+                <i class="fa fa-chevron-left"></i> 2018年第二十五周工作小结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Sample</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">88</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sample</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
