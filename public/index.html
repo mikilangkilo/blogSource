@@ -1706,7 +1706,15 @@ vii. 如果该域是一个数组，需要针对每一个元素计算一下，然
 </ol>
 <p>鉴于上上条“复合优先于继承”，如果使用接口的方式实现，包装类仍然完美使用</p>
 <h3 id="接口只用于定义类型"><a href="#接口只用于定义类型" class="headerlink" title="接口只用于定义类型"></a>接口只用于定义类型</h3><p>接口仅仅用于定义引用这个实例的类型，因此除此之外的接口都是不恰当的。</p>
-<h3 id="类层次由于标签类"><a href="#类层次由于标签类" class="headerlink" title="类层次由于标签类"></a>类层次由于标签类</h3><p>标签类很少有适用的时候，当编写一个包含显式标签域的类时，英国考虑    </p>
+<h3 id="类层次由于标签类"><a href="#类层次由于标签类" class="headerlink" title="类层次由于标签类"></a>类层次由于标签类</h3><p>标签类很少有适用的时候，当编写一个包含显式标签域的类时，应当考虑是否应该不使用标签类，而是将标签放到同一个层次的结构中去。</p>
+<h3 id="用函数对象表示策略"><a href="#用函数对象表示策略" class="headerlink" title="用函数对象表示策略"></a>用函数对象表示策略</h3><p>java虽然没有高阶语言的函数式编程，也没有c语言类似的函数指针，但是可以使用对象引用来实现同样的功能。</p>
+<p>如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">class StringLengthComparator&#123;</span><br><span class="line">	public int compare(String s1, String s2)&#123;</span><br><span class="line">		return s1.length() - s2.length();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>改为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">class StringLengthComparator&#123;</span><br><span class="line">	private StringLengthComparator()&#123;&#125;;</span><br><span class="line">	public static final StringLengthComparator INSTANCE = new StringLengthComparator();</span><br><span class="line">	public int compare(String s1, String s2)&#123;</span><br><span class="line">		return s1.length() - s2.length();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>典型的具体策略类，是无状态的，没有域，所以所有的实例在功能上面都是等价的。</p>
+<h3 id="优先考虑静态成员类"><a href="#优先考虑静态成员类" class="headerlink" title="优先考虑静态成员类"></a>优先考虑静态成员类</h3><p>嵌套类是指被定义在另一个类的内部的类。嵌套类存在的目的应该只是为他的外围类提供服务。</p>
+<p>嵌套类分为四种：静态成员类，非静态成员类，匿名类和局部类，除了第一种之外，其他三种都被称为内部类。</p>
+<p>非静态成员类的每个实例都隐含着与外围类的一个外围实例相关联，创建需要外围类</p>
 
           
         

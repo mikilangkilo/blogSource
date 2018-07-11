@@ -386,8 +386,41 @@ public class Complex{
 
 ### 类层次由于标签类
 
-标签类很少有适用的时候，当编写一个包含显式标签域的类时，英国考虑	
+标签类很少有适用的时候，当编写一个包含显式标签域的类时，应当考虑是否应该不使用标签类，而是将标签放到同一个层次的结构中去。
 
+### 用函数对象表示策略
+
+java虽然没有高阶语言的函数式编程，也没有c语言类似的函数指针，但是可以使用对象引用来实现同样的功能。
+
+如
+```
+class StringLengthComparator{
+	public int compare(String s1, String s2){
+		return s1.length() - s2.length();
+	}
+}
+```
+改为
+
+```
+class StringLengthComparator{
+	private StringLengthComparator(){};
+	public static final StringLengthComparator INSTANCE = new StringLengthComparator();
+	public int compare(String s1, String s2){
+		return s1.length() - s2.length();
+	}
+}
+```
+
+典型的具体策略类，是无状态的，没有域，所以所有的实例在功能上面都是等价的。
+
+### 优先考虑静态成员类
+
+嵌套类是指被定义在另一个类的内部的类。嵌套类存在的目的应该只是为他的外围类提供服务。
+
+嵌套类分为四种：静态成员类，非静态成员类，匿名类和局部类，除了第一种之外，其他三种都被称为内部类。
+
+非静态成员类的每个实例都隐含着与外围类的一个外围实例相关联，创建需要外围类
 
 
 
