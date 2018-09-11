@@ -430,10 +430,43 @@ class StringLengthComparator{
 
 私有静态成员类的一中常见用法是用来代表外围类所代表的对象的组件。
 
-例如一个map实例，它把键和值对应起来，许多map实现的
+例如一个map实例，它把键和值对应起来，许多map实现的内部都有一个entry对象，对应于map中的每个键值对。虽然每个entry都与一个map关联，但是entry上的方法并不需要访问该map，因此，使用非静态成员来标识entry是很浪费的，如果不用static修饰，那么每个entry中将会包含一个指向该map的引用。
 
+#### 匿名类
 
+匿名类没有名字，他不是外围类的成员，他并不与其他的成员一起被申明，匿名类除了被申明的时候之外，是无法实例化的，无法进行instanceof测试，或者任何需要命名类的其他事情。
 
+```
+abstract class Father(){
+....
+}
+public class Test{
+   Father f1 = new Father(){ .... }  //这里就是有个匿名内部类
+}
+```
+
+#### 局部类
+
+局部类用的很少，局部类只在本地范围内有效。
+
+```
+public class Test {
+    {
+        class AA{}//块内局部类
+    }
+    public Test(){
+        class AA{}//构造器内局部类
+    }
+    public static void main(String[] args){
+    }
+    public void test(){
+        class AA{}//方法内局部类
+    }
+}
+```
+局部类最多只能有final修饰，但不同的是，块内局部类有enclose class属性，而构造器局部类有enclose constructor属性，方法局部类有enclose method属性，嘛，其实很好理解的吧，一看就知道。
+
+## 泛型
 
 
 
