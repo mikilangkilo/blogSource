@@ -229,6 +229,530 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/28/2018第二十一周工作小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/28/2018第二十一周工作小结/" itemprop="url">2018第二十一周工作小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-28T11:29:49+08:00">
+                2018-05-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>这几周除了工作小结之外基本都没写别的，要改要改。</p>
+<p>这周主要是盒子2.0.4版本的升级。主要做了盒子部分的优化和搜索功能。</p>
+<p>盒子部分的问题这次主要是进行一次内存化的升级优化，将之前网页模式设计的盒子，变成一个本地保存的盒子。然后将不同的地方进行sp的存储，退出app的时候会进行上报，进入app的时候会根据是否有本地sp来进行选择性的恢复。</p>
+<p>盒子部分主要学到的几个点：</p>
+<ul>
+<li><p>维护对象长持有，可以让对象持有一个application context，这样对象就不会在运行中死去。刚开始使用的是dressingbox的context，这样与mainactivity生命一样，但是mainacitivity在登陆的过程会被杀死，这就导致了cartutil重刷。</p>
+</li>
+<li><p>本地存储维护三个状态：一个是原始的购物车数据，一个是变化的购物车数据，一个是变化的盒子数据，这样就可以根据其存储状态，判断上次是否传输成功，以及数据库的状态。</p>
+</li>
+<li><p>关于rxjava泄漏的修复，很多rxjava的处理没有注意，rxjava这种函数式编程核心还是回调以及接口，因此很多在onresume里面写的，或者在attachtowindow中写的没有注意在onpause或者ondestroy中取消，导致了较多的泄漏。不过注意到之后特意处理了一下，现在泄漏现象少很多。</p>
+</li>
+</ul>
+<p>除了以上的问题，还有一些问题需要注意：</p>
+<ul>
+<li><p>任务的分配，由于目前我是组内来的最早的员工，任务分配一开始是由我来分配，但是我总有一种对别人不放心的感觉，怕分给别人被拖累，所以能自己做的还是自己弄了。但是我一个人毕竟是来不及的，因此造成了原本周三发的版本，搞到了周五晚上才发，差点延期。现在懂了，关于任务的分配还是力争要做到合情合理，不能过分积压，也不能一点都没有。</p>
+</li>
+<li><p>rn的学习。辣鸡rn，毁我青春。</p>
+</li>
+<li><p>阿里云服务器的后台搭建。目前已经刷成了centos了，急需动手。</p>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/20/2018第二十周工作小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/20/2018第二十周工作小结/" itemprop="url">2018第二十周工作小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-20T21:29:59+08:00">
+                2018-05-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>这周周三上线了2.0.3版本，主要是针对盒子部分进行了流程的优化。</p>
+<p>这周有个比较大的感触，是产品为了完善用户转化率，不断的将一些要素提炼出来，然后放置在用户可见区域，不断的优化这一细节，导致最后呈现的版本，流程，和之前都不同了。这种产品思维，我可学习的地方很多。</p>
+<p>另外这周我可以说是入门了reactnative，我希望在移动端这边可以学习更多东西。所以通过reactnative，学习js的操作语法。同时对于ios的语法也要进行一定的学习。</p>
+<p>这次有一些想法，关于生活作息的。之前由于经常加班，导致精神紧张睡眠不足，晚上回去也没有时间进行学习。现在针对这个问题进行改变。</p>
+<p>每晚争取7。30左右下班，发版本晚一些可以。回来之后看一会儿书，10.30左右睡觉。保障8小时睡眠，然后第二天7点起床，七点半去公司，然后看2小时的书。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/12/2018第十九周工作小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/12/2018第十九周工作小结/" itemprop="url">2018第十九周工作小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-12T23:34:44+08:00">
+                2018-05-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>这一周主要任务是完成了好搭盒子2.0.2版本升级和上线。</p>
+<p>2.0.2版本主要是将会员系统更改了一下，同时更改了大量的ui，大量的工作是在业务代码上面。</p>
+<p>业务上面的东西可总结的比较少，不过这一周暴露了不少的问题。</p>
+<p>第一，待人处事方面。可能性格上面的原因，我总喜欢说一些冷话。比如说“我之前说过这个地方有问题”，“我之前反馈过这边设计不合理”等等。说实话，和产品的沟通家了一些这种话，会导致别人心情不好。这周我发现了不少这个方面的问题，说完之后别人的脸色就不好了。这部分要改。</p>
+<p>第二，口头禅方面。我最近发现我的口头禅“真的”，“没办法啊”，“我能怎么办”，这些不好，事实上在说这些话的时候，我压根没进脑子，单纯的应付式的谈话。这样很不好，给人一种不放在心上的感觉。</p>
+<p>第三，责任方面。我这个人有种压力一大，就开始烦躁的情况。这周由于任务划分不对，我给进奎的任务前期比较少，导致很多任务挤压在我头上，造成了我周四晚上一波情绪大反弹，我把一些气撒在了产品的头上。这个事后我立即发现并且做出了道歉，但是还是发生了。</p>
+<p>第四，产品优化方面。我发现我写的很多代码，没有考虑到性能，导致app卡顿现象比较严重，由于任务排期比较重，一直没有回头看。现在发现了几个明显的优化点，一是会员状态信息，可以使用本地存储，然后每次读取的时候走内存，只有在一些特定的情况下，比如说用户走了交押金系统，用户走了交会员费系统这些接口后，我清除会员状态并且重拉一下状态信息。二是每次获取account的时候，走了四次io，开销太大，这部分也需要更改。三是盒子部分的加载问题，也可以仿照会员状态更改来进行更改。</p>
+<p>针对以上问题，大概定了以下几个措施去规避。</p>
+<p>针对待人处事这部分，我仔细观察了一下，一定要像剑飞一样，脾气不能差，好好说话，有问题就仔细说出来。</p>
+<p>针对口头禅这一方面，我之后的谈话交流中，一定要认真进行交流，如果中途有事，就仔细说一下，不能这种应付式的谈话。</p>
+<p>针对责任方面，我需要仿照之前王洋每次对任务的划分安排，好好使用worktile，将任务仔细的划分开来，力争做到每个点都做完，都设计完，然后责任划分清晰后在动手进行设计安排。</p>
+<p>针对产品优化方面，近期主要是处理会员状态和account状态，不过这部分的时间安排需要在功能完成之后进行。</p>
+<p>完。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/08/2018第十八周工作小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/08/2018第十八周工作小结/" itemprop="url">2018第十八周工作小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-08T00:24:47+08:00">
+                2018-05-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>5月份已经过去了，进入公司也已经超过2个月了，事实上给我带来的感觉不是很好。</p>
+<p>ios的两位同事都离开了公司，他们的想法我也知道一些。</p>
+<p>和vp的聊天，发现可能对我还是有一些意见的。很担心转正的时候被使绊子。</p>
+<p>不过没办法，所有的事情光担心可不行。</p>
+<p>上周的工作主要是做了2.0.1版本的迭代。加了一些新的功能，例如微信绑定手机号，个性化推荐等等。</p>
+<p>主要问题是发版本的时候出现的，一个是关于constantlayout的布局使用不规范，基准view放在的错误的地方，导致27版本的buildtool的布局器编译不通过。后来采取的重新画布局的方法规避。</p>
+<p>这次编译也让我感觉了一些问题，虽然在debug阶段，或者说做别的事情上面，还可以，但是编译不是很熟练导致最后进行发版本的时候卡顿。</p>
+<p>现在使用台式机编译，效率好很多。但是还是要注意。</p>
+<p>ps：和涛哥的谈话，说实话让我感觉我在他眼里有很多问题，我甚至觉得他有些劝退我。希望不是吧，希望只是我自己多想了。我并没有不努力。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/07/effective-java学习笔记/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -474,8 +998,37 @@ vii. 如果该域是一个数组，需要针对每一个元素计算一下，然
 <p>典型的具体策略类，是无状态的，没有域，所以所有的实例在功能上面都是等价的。</p>
 <h3 id="优先考虑静态成员类"><a href="#优先考虑静态成员类" class="headerlink" title="优先考虑静态成员类"></a>优先考虑静态成员类</h3><p>嵌套类是指被定义在另一个类的内部的类。嵌套类存在的目的应该只是为他的外围类提供服务。</p>
 <p>嵌套类分为四种：静态成员类，非静态成员类，匿名类和局部类，除了第一种之外，其他三种都被称为内部类。</p>
-<p>非静态成员类的每个实例都隐含着与外围类的一个外围实例相关联，创建需要外围类</p>
-
+<p>非静态成员类的每个实例都隐含着与外围类的一个外围实例相关联，创建需要外围类的存在。没有外围实例，想创建非静态成员类是基本上不存在的。</p>
+<p>一般非静态成员类都是使用常见的adapter来实现，他允许外部类的实例被看做是另一个不相关的类的实例。</p>
+<p>因此，成员类不要求访问外部实例，希望外部实例以外的对象调用，就需要将static修饰符放在声明中。</p>
+<h4 id="私有静态成员类"><a href="#私有静态成员类" class="headerlink" title="私有静态成员类"></a>私有静态成员类</h4><p>私有静态成员类的一中常见用法是用来代表外围类所代表的对象的组件。</p>
+<p>例如一个map实例，它把键和值对应起来，许多map实现的内部都有一个entry对象，对应于map中的每个键值对。虽然每个entry都与一个map关联，但是entry上的方法并不需要访问该map，因此，使用非静态成员来标识entry是很浪费的，如果不用static修饰，那么每个entry中将会包含一个指向该map的引用。</p>
+<h4 id="匿名类"><a href="#匿名类" class="headerlink" title="匿名类"></a>匿名类</h4><p>匿名类没有名字，他不是外围类的成员，他并不与其他的成员一起被申明，匿名类除了被申明的时候之外，是无法实例化的，无法进行instanceof测试，或者任何需要命名类的其他事情。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">abstract class Father()&#123;</span><br><span class="line">....</span><br><span class="line">&#125;</span><br><span class="line">public class Test&#123;</span><br><span class="line">   Father f1 = new Father()&#123; .... &#125;  //这里就是有个匿名内部类</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="局部类"><a href="#局部类" class="headerlink" title="局部类"></a>局部类</h4><p>局部类用的很少，局部类只在本地范围内有效。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">    &#123;</span><br><span class="line">        class AA&#123;&#125;//块内局部类</span><br><span class="line">    &#125;</span><br><span class="line">    public Test()&#123;</span><br><span class="line">        class AA&#123;&#125;//构造器内局部类</span><br><span class="line">    &#125;</span><br><span class="line">    public static void main(String[] args)&#123;</span><br><span class="line">    &#125;</span><br><span class="line">    public void test()&#123;</span><br><span class="line">        class AA&#123;&#125;//方法内局部类</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>局部类最多只能有final修饰，但不同的是，块内局部类有enclose class属性，而构造器局部类有enclose constructor属性，方法局部类有enclose method属性，嘛，其实很好理解的吧，一看就知道。</p>
+<h2 id="泛型"><a href="#泛型" class="headerlink" title="泛型"></a>泛型</h2><h3 id="请不要在新代码中使用原生态类型"><a href="#请不要在新代码中使用原生态类型" class="headerlink" title="请不要在新代码中使用原生态类型"></a>请不要在新代码中使用原生态类型</h3><p>每种范型其实都是一组参数化的类型，他是一种原生态类型（rawtype），即不带任何实际类型参数的泛型名称。</p>
+<p>在不确定或者不在乎集合中元素类型的情况下，可以参考以下方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">static int numElementsInCommon(Set s1, Set s2)&#123;</span><br><span class="line">	int result = 0;</span><br><span class="line">	for (Object o1 : s1)&#123;</span><br><span class="line">		if(s2.contains(o1))&#123;</span><br><span class="line">			result ++;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用原生类型是可以在不关心参数类型的情况下替代泛型，缺很危险，不过泛型也提供了一种安全的替代方式。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Set&lt;E&gt;   ---&gt;   Set&lt;?&gt; //可以持有任何集合</span><br></pre></td></tr></table></figure>
+<p>对于泛型使用instanceof的首选方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if (o instanceof Set)&#123;</span><br><span class="line">	Set&lt;?&gt; m = (Set&lt;?&gt;)o;</span><br><span class="line">	//一旦确定这个o是个set，就必须将它装换位通配符类型Set&lt;?&gt;而不是原生的Set，这是个受检的转换。</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="消除非受检警告"><a href="#消除非受检警告" class="headerlink" title="消除非受检警告"></a>消除非受检警告</h3><p>类似非受检警告如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Set&lt;Lark&gt; exaltation = new HashSet();</span><br><span class="line"></span><br><span class="line">[unchecked] unchecked conversion</span><br></pre></td></tr></table></figure></p>
+<p>需要改为如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Set&lt;Lark&gt; exaltation = new HashSet&lt;Lark&gt;();</span><br></pre></td></tr></table></figure></p>
+<p> 无法消除的时候，可以使用注解来压制这条警告。但是压制的时候代表仍然可能是有问题的，所以最好做一些备注或者catch</p>
+<h3 id="列表优先于数组"><a href="#列表优先于数组" class="headerlink" title="列表优先于数组"></a>列表优先于数组</h3><p>数组是covariant的，代表如果某个对象a是对象b的子类型，那么a[]也一定是b[]的子类型。</p>
+<p>而数组就是invariant的，对于任意两个不同的类型ab，并不能说a的list是b的list的子类，也不能说b的list是a的list的父类。</p>
+<p>事实上，本来就应该是如同list这样，数组这样反而是有缺陷的。</p>
+<p>数组会在运行时才知道并检查他们的类型，而泛型则是通过擦除来实现的。正因如此，泛型可以与没有使用泛型的代码随意进行互用。</p>
+<p>而泛型数组则是不建议创建的，每个不可具化的数组会得到一条警告，除了禁止并且避免在api中混合使用泛型和可变参数之外，别无他法。</p>
+<p>创建泛型数组，可以使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">elements = (E[]) new Object[DEFAULT_INITIAL_CAPACITY];</span><br></pre></td></tr></table></figure></p>
+<h3 id="优先使用泛型"><a href="#优先使用泛型" class="headerlink" title="优先使用泛型"></a>优先使用泛型</h3><p>使用泛型的步骤，可以先使用object，在不使用任何object内在方法以及实例方法的时候，可以完整实现一个类，即可替换使用泛型。</p>
+<h3 id="优先考虑泛型方法"><a href="#优先考虑泛型方法" class="headerlink" title="优先考虑泛型方法"></a>优先考虑泛型方法</h3><p>核心步骤是使用泛型单例工厂方法，不单单可以通过泛型进行类型擦除，也适配了针对不同对象进行不同创建的问题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface Comparable&lt;T&gt;&#123;</span><br><span class="line">	int compareTo(T o);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public static &lt;T extends Comparable&lt;T&gt;&gt; T max(List&lt;T&gt; list)&#123;</span><br><span class="line">	....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>类似上述这种，就解决了不同类型的对象比较的问题，所需要的对象仅仅需要在编译过程中实现了comparable，即可参与到比较中来。而回避了类似string和int之间的比较类型。</p>
+<h3 id="利用有限的通配符来提升api的灵活性"><a href="#利用有限的通配符来提升api的灵活性" class="headerlink" title="利用有限的通配符来提升api的灵活性"></a>利用有限的通配符来提升api的灵活性</h3>
           
         
       
@@ -1188,600 +1741,11 @@ vii. 如果该域是一个数组，需要针对每一个元素计算一下，然
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/12/记一次“代码过期”错误/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/12/记一次“代码过期”错误/" itemprop="url">记一次“代码过期”错误</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-12T23:42:00+08:00">
-                2018-04-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>最近太忙了，每天加班到十一点，都来不及写博客了。</p>
-<p>昨天晚上9点，我完成了一个feature，结果编译结束发现apk的hosttab点击事件无效了。</p>
-<p>懵逼，因为4点还是好的。</p>
-<p>于是回退代码，回退到4点，发现编译好了还是这个问题。懵逼。</p>
-<p>然后继续回退，回退到上次释放正确版本的地方，发现还是有这个问题，继续懵逼。</p>
-<p>继续回退，回退到上个人离职的时候，发现还是有这个问题。超级懵逼。</p>
-<p>也就是原本有用的代码，突然没用了。</p>
-<p>排查，发现tabhost的点击事件没传下去，继续排查，发现tabhost各个子tab的点击事件没接收到，然后写父类的ontouch事件，发现父类并没有拦截，而是返回给在上面的父类了。而各个父类都没有拦截。</p>
-<p>什么情况？</p>
-<p>然后不知道怎么回事了，彻底懵逼了。</p>
-<p>然后技术总监和我讲这种情况就应该对比二进制文件。</p>
-<p>于是反编译上个版本释放的apk，对比相同代码生成的apk，发现真有问题，butterknife生成代码的时候覆盖了之前的按钮。蛋疼</p>
-<p>原因是因为butterknife版本是snapshot，而有个人提交了一个错误的代码到butterknife中，导致我错误了。难受。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/05/2018第十三周工作小结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/05/2018第十三周工作小结/" itemprop="url">2018第十三周工作小结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-05T21:59:54+08:00">
-                2018-04-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>上周实在是太忙了，周六加班，周日睡了一天，结果工作小结都没有来的及写。</p>
-<p>不过还是写一下吧。</p>
-<p>上周主要任务是适配接口，当时想了一套wrapper来封装接口的做法。但是现在想想，那也只是一种取巧而已。其实数据结构的使用并没有那么复杂，而且在调整数据结构的时候也可以更大程度的理解流程。</p>
-<p>上周整周都在调试接口中度过，刚开始还差点没来得及，后来王洋回来调，才来的及的。</p>
-<p>这周他走了，在20号之前，整个项目是我一个人负责了。难受。想哭。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/04/java克隆、浅克隆、深克隆/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/04/java克隆、浅克隆、深克隆/" itemprop="url">java克隆、浅克隆、深克隆</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-04T14:29:51+08:00">
-                2018-04-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="克隆"><a href="#克隆" class="headerlink" title="克隆"></a>克隆</h1><p>当我们需要有一个当前对象的克隆体，和当前对象完全相同的属性、功能，但又不想去仅仅创建一个对象的引用时，我们就需要对对象进行克隆。</p>
-<p>克隆clone，是创建了一个一摸一样的对象。该方法是object的方法，平时用不到是因为这个方法是protect属性的。</p>
-<p>需要用到clone方法的时候，直接覆盖父类的方法，定义成public，然后写super.clone()。或者直接自己写一个clone方法也可以。同时不要忘了记成clonable接口。</p>
-<h1 id="浅克隆"><a href="#浅克隆" class="headerlink" title="浅克隆"></a>浅克隆</h1><p>被复制对象的所有变量都含有与原来的对象相同的值，而所有的对其他对象的引用仍然指向原来的对象。换言之，浅复制仅仅复制所考虑的对象，而不复制它所引用的对象。</p>
-<p>继承自object的clone方法，就是浅克隆，除非对引用也使用clone的方法。</p>
-<p>没啥大用。</p>
-<h1 id="深克隆"><a href="#深克隆" class="headerlink" title="深克隆"></a>深克隆</h1><p>被复制对象的所有变量都含有与原来的对象相同的值，除去那些引用其他对象的变量。那些引用其他对象的变量将指向被复制过的新对象，而不再是原有的那些被引用的对象。换言之，深复制把要复制的对象所引用的对象都复制了一遍。</p>
-<p>深克隆可以使用序列化的方法。</p>
-<p>精髓主要是将对象写入流中，然后在从流中都取出来。这样就实现了一个对象的深克隆。</p>
-<p>前提是对象都是序列化的，不论成员还是引用。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public Object deepClone() throws IOException,OptionalDataException,ClassNotFoundException&#123;//将对象写到流里</span><br><span class="line">ByteArrayOutoutStream bo=new ByteArrayOutputStream();</span><br><span class="line">ObjectOutputStream oo=new ObjectOutputStream(bo);</span><br><span class="line">oo.writeObject(this);//从流里读出来</span><br><span class="line">ByteArrayInputStream bi=new ByteArrayInputStream(bo.toByteArray());</span><br><span class="line">ObjectInputStream oi=new ObjectInputStream(bi);</span><br><span class="line">return(oi.readObject());</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/01/LruCache缓存源码解析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/01/LruCache缓存源码解析/" itemprop="url">LruCache缓存源码解析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-01T12:26:43+08:00">
-                2018-04-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>以前曾经在volley中使用networkimageview的时候使用过lrucache，当时以为这只是一个第三方的开源框架。昨天在网上找安卓的缓存框架的时候看到了lrucache，居然是android.util包下面的。所以这次就着源码看看是个怎么缓存的原理。</p>
-<h1 id="类解释"><a href="#类解释" class="headerlink" title="类解释"></a>类解释</h1><p>首先看一下这个类官方的解释。</p>
-<ul>
-<li>A cache that holds strong references to a limited number of values. Each time</li>
-<li>a value is accessed, it is moved to the head of a queue. When a value is</li>
-<li>added to a full cache, the value at the end of that queue is evicted and may</li>
-<li>become eligible for garbage collection.</li>
-</ul>
-<p>这个类是一个用于对有限的值持有强引用的缓存类。</p>
-<p>每次一个值被获取了，它将被挪到队列的头部。</p>
-<p>每当一个值被加入完全缓存（full-cache,完全缓存模式，讲一个对象完全的加载到内存中，而非只加载其映射关系。对应的还有Partial Cache，部分缓存模式，部分缓存模式多数用于加载对象的部分，用于判断对象是否曾经加载过，或者是否需要再次加载），缓存队列末尾的值将会被驱逐，丢失了强引用的关系，就会变得可以被gc清除。</p>
-<ul>
-<li><p>If your cached values hold resources that need to be explicitly released,</p></li>
-<li>override {@link #entryRemoved}.</li>
-</ul>
-<p>如果希望避免部分资源被lrucache缓存，可以继承entryremoved</p>
-<ul>
-<li><p>If a cache miss should be computed on demand for the corresponding keys,</p></li>
-<li>override {@link #create}. This simplifies the calling code, allowing it to</li>
-<li>assume a value will always be returned, even when there’s a cache miss.</li>
-</ul>
-<p>如果需要对一个响应返回一个完整的缓存，但是这个缓存目前是缺失状态，可以继承create方法，这样可以使得针对这个响应总是可以有回应，即时目前是缓存缺失的状态，也可以构造一个回应。</p>
-<ul>
-<li><p>By default, the cache size is measured in the number of entries. Override</p></li>
-<li>{@link #sizeOf} to size the cache in different units. For example, this cache</li>
-<li>is limited to 4MiB of bitmaps:</li>
-<li><pre>   {@code</pre></li>
-<li>int cacheSize = 4 <em> 1024 </em> 1024; // 4MiB</li>
-<li>LruCache&lt;String, Bitmap&gt; bitmapCache = new LruCache&lt;String, Bitmap&gt;(cacheSize) {</li>
-<li>protected int sizeOf(String key, Bitmap value) {</li>
-<li>return value.getByteCount();</li>
-<li>}</li>
-<li>}}</li>
-</ul>
-<p>缓存的数量是通过对象的数量来确定的。继承sizeOf方法可以使用不同的单位来计算缓存。（该方法提供的例子是用于限制缓存，那缓存不够怎么办？一张bitmap一般有8m啊？事实上它并不会精确计算占用的内存，只能说你说a有3m，总共给30m的缓存的话，他就会放最多10个a，事实上a并不一定只有3m，当然这也没必要关心，在不同的地方自己精确赋一下就好了）</p>
-<ul>
-<li><p>This class is thread-safe. Perform multiple cache operations atomically by</p></li>
-<li>synchronizing on the cache: <pre>   {@code</pre></li>
-<li>synchronized (cache) {</li>
-<li>if (cache.get(key) == null) {</li>
-<li>cache.put(key, value);</li>
-<li>}</li>
-<li>}}</li>
-</ul>
-<p>该类是线程安全的，主要是对缓存操作的部分都加了锁。</p>
-<ul>
-<li><p>This class does not allow null to be used as a key or value. A return</p></li>
-<li>value of null from {@link #get}, {@link #put} or {@link #remove} is</li>
-<li>unambiguous: the key was not in the cache.</li>
-</ul>
-<p>该类不允许空指针被使用作为key或者value。</p>
-<ul>
-<li><p>This class appeared in Android 3.1 (Honeycomb MR1); it’s available as part</p></li>
-<li>of <a href="http://developer.android.com/sdk/compatibility-library.html" target="_blank" rel="noopener">Android’s</a></li>
-<li>Support Package for earlier releases.</li>
-</ul>
-<p>该类在android3.1出现。</p>
-<h1 id="源码探究"><a href="#源码探究" class="headerlink" title="源码探究"></a>源码探究</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">private final LinkedHashMap&lt;K, V&gt; map;</span><br></pre></td></tr></table></figure>
-<p> 使用了linkedHashMap的方法来存储数据。有向图就是强引用方式，key在，value在。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/** Size of this cache in units. Not necessarily the number of elements. */</span><br><span class="line">private int size;</span><br><span class="line">   private int maxSize;</span><br><span class="line"></span><br><span class="line">   private int putCount;</span><br><span class="line">   private int createCount;</span><br><span class="line">   private int evictionCount;</span><br><span class="line">   private int hitCount;</span><br><span class="line">   private int missCount;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @param maxSize for caches that do not override &#123;@link #sizeOf&#125;, this is</span><br><span class="line"> *     the maximum number of entries in the cache. For all other caches,</span><br><span class="line"> *     this is the maximum sum of the sizes of the entries in this cache.</span><br><span class="line"> */</span><br><span class="line">public LruCache(int maxSize) &#123;</span><br><span class="line">    if (maxSize &lt;= 0) &#123;</span><br><span class="line">        throw new IllegalArgumentException(&quot;maxSize &lt;= 0&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    this.maxSize = maxSize;</span><br><span class="line">    this.map = new LinkedHashMap&lt;K, V&gt;(0, 0.75f, true);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>构造方面需要给一个maxSize，该参数是用于在为定义sizeof的对象计算容量大小</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Sets the size of the cache.</span><br><span class="line"> *</span><br><span class="line"> * @param maxSize The new maximum size.</span><br><span class="line"> */</span><br><span class="line">public void resize(int maxSize) &#123;</span><br><span class="line">    if (maxSize &lt;= 0) &#123;</span><br><span class="line">        throw new IllegalArgumentException(&quot;maxSize &lt;= 0&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    synchronized (this) &#123;</span><br><span class="line">        this.maxSize = maxSize;</span><br><span class="line">    &#125;</span><br><span class="line">    trimToSize(maxSize);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>重新设计maxsize</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Returns the value for &#123;@code key&#125; if it exists in the cache or can be</span><br><span class="line"> * created by &#123;@code #create&#125;. If a value was returned, it is moved to the</span><br><span class="line"> * head of the queue. This returns null if a value is not cached and cannot</span><br><span class="line"> * be created.</span><br><span class="line"> */</span><br><span class="line">public final V get(K key) &#123;</span><br><span class="line">    if (key == null) &#123;</span><br><span class="line">        throw new NullPointerException(&quot;key == null&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    V mapValue;</span><br><span class="line">    synchronized (this) &#123;</span><br><span class="line">        mapValue = map.get(key);</span><br><span class="line">        if (mapValue != null) &#123;</span><br><span class="line">            hitCount++;</span><br><span class="line">            return mapValue;</span><br><span class="line">        &#125;</span><br><span class="line">        missCount++;</span><br><span class="line">    &#125;</span><br><span class="line">     /*</span><br><span class="line">     * Attempt to create a value. This may take a long time, and the map</span><br><span class="line">     * may be different when create() returns. If a conflicting value was</span><br><span class="line">     * added to the map while create() was working, we leave that value in</span><br><span class="line">     * the map and release the created value.</span><br><span class="line">     */</span><br><span class="line"></span><br><span class="line">    V createdValue = create(key);</span><br><span class="line">    if (createdValue == null) &#123;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    synchronized (this) &#123;</span><br><span class="line">        createCount++;</span><br><span class="line">        mapValue = map.put(key, createdValue);</span><br><span class="line"></span><br><span class="line">        if (mapValue != null) &#123;</span><br><span class="line">            // There was a conflict so undo that last put</span><br><span class="line">            map.put(key, mapValue);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            size += safeSizeOf(key, createdValue);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    if (mapValue != null) &#123;</span><br><span class="line">        entryRemoved(false, key, createdValue, mapValue);</span><br><span class="line">        return mapValue;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        trimToSize(maxSize);</span><br><span class="line">        return createdValue;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>get的时候加锁，每次有返回的话，hitcount自增。没有返回代表是缺失缓存，misscount自增。</p>
-<p>若找不到值，会调用createvalue来创建，创建成功，createcount自增，失败就代表没有该缓存内容，直接终端。创建成功同时加入到map里面，map的size会增加。</p>
-<p>创建出来的mapvalue会执行entryremoved的检查，对有设置过不加入的参数进行操作。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Called for entries that have been evicted or removed. This method is</span><br><span class="line"> * invoked when a value is evicted to make space, removed by a call to</span><br><span class="line"> * &#123;@link #remove&#125;, or replaced by a call to &#123;@link #put&#125;. The default</span><br><span class="line"> * implementation does nothing.</span><br><span class="line"> *</span><br><span class="line"> * &lt;p&gt;The method is called without synchronization: other threads may</span><br><span class="line"> * access the cache while this method is executing.</span><br><span class="line"> *</span><br><span class="line"> * @param evicted true if the entry is being removed to make space, false</span><br><span class="line"> *     if the removal was caused by a &#123;@link #put&#125; or &#123;@link #remove&#125;.</span><br><span class="line"> * @param newValue the new value for &#123;@code key&#125;, if it exists. If non-null,</span><br><span class="line"> *     this removal was caused by a &#123;@link #put&#125;. Otherwise it was caused by</span><br><span class="line"> *     an eviction or a &#123;@link #remove&#125;.</span><br><span class="line"> */</span><br><span class="line">protected void entryRemoved(boolean evicted, K key, V oldValue, V newValue) &#123;&#125;</span><br></pre></td></tr></table></figure>
-<p>entryRemoved的方法准确的说法是用于吊起被驱逐和移除的对象。确保key对应的value可以是正确的，newvalue为空的话就代表是移除老的对象。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Remove the eldest entries until the total of remaining entries is at or</span><br><span class="line"> * below the requested size.</span><br><span class="line"> *</span><br><span class="line"> * @param maxSize the maximum size of the cache before returning. May be -1</span><br><span class="line"> *            to evict even 0-sized elements.</span><br><span class="line"> */</span><br><span class="line">public void trimToSize(int maxSize) &#123;</span><br><span class="line">    while (true) &#123;</span><br><span class="line">        K key;</span><br><span class="line">        V value;</span><br><span class="line">        synchronized (this) &#123;</span><br><span class="line">            if (size &lt; 0 || (map.isEmpty() &amp;&amp; size != 0)) &#123;</span><br><span class="line">                throw new IllegalStateException(getClass().getName()</span><br><span class="line">                        + &quot;.sizeOf() is reporting inconsistent results!&quot;);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (size &lt;= maxSize) &#123;</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            Map.Entry&lt;K, V&gt; toEvict = map.eldest();</span><br><span class="line">            if (toEvict == null) &#123;</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            key = toEvict.getKey();</span><br><span class="line">            value = toEvict.getValue();</span><br><span class="line">            map.remove(key);</span><br><span class="line">            size -= safeSizeOf(key, value);</span><br><span class="line">            evictionCount++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        entryRemoved(true, key, value, null);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>trimToSize方法是针对目前队列中的对象，移除最老的。移除的操作就是移除了key，去掉强引用的部分。移除完之后要减去移除的大小，之后移除数自增，确保安全之后将之前的key，映射关系改为一个null，这个移除的数量并不是固定的，这是一个死循环，会移除到size小于maxsize，或者最老的是空。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Removes the entry for &#123;@code key&#125; if it exists.</span><br><span class="line"> *</span><br><span class="line"> * @return the previous value mapped by &#123;@code key&#125;.</span><br><span class="line"> */</span><br><span class="line">public final V remove(K key) &#123;</span><br><span class="line">    if (key == null) &#123;</span><br><span class="line">        throw new NullPointerException(&quot;key == null&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    V previous;</span><br><span class="line">    synchronized (this) &#123;</span><br><span class="line">        previous = map.remove(key);</span><br><span class="line">        if (previous != null) &#123;</span><br><span class="line">            size -= safeSizeOf(key, previous);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (previous != null) &#123;</span><br><span class="line">        entryRemoved(false, key, previous, null);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return previous;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>remove操作和之前的那个操作几乎一样，移除，如果曾经存在就在此赋空。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Clear the cache, calling &#123;@link #entryRemoved&#125; on each removed entry.</span><br><span class="line"> */</span><br><span class="line">public final void evictAll() &#123;</span><br><span class="line">    trimToSize(-1); // -1 will evict 0-sized elements</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这是移除所有的元素</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@Override public synchronized final String toString() &#123;</span><br><span class="line">    int accesses = hitCount + missCount;</span><br><span class="line">    int hitPercent = accesses != 0 ? (100 * hitCount / accesses) : 0;</span><br><span class="line">    return String.format(&quot;LruCache[maxSize=%d,hits=%d,misses=%d,hitRate=%d%%]&quot;,</span><br><span class="line">            maxSize, hitCount, missCount, hitPercent);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>toString方法可以看到状态。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Returns a copy of the current contents of the cache, ordered from least</span><br><span class="line"> * recently accessed to most recently accessed.</span><br><span class="line"> */</span><br><span class="line">public synchronized final Map&lt;K, V&gt; snapshot() &#123;</span><br><span class="line">    return new LinkedHashMap&lt;K, V&gt;(map);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>snapshot直接一个以自己map构造的对象。（这种避免返回自身的操作值得学习）</p>
-<h1 id="学习心得"><a href="#学习心得" class="headerlink" title="学习心得"></a>学习心得</h1><p>整个LruCache的作用，说到底就是针对gc的树状搜索删除算法的一种方案。<br>但是我们平时使用的时候，需要针对几个地方进行定制，一是sizeof,二是removeentry。</p>
-<p>整个缓存还是在内存中的，所以lrucache是一种内存缓存框架。</p>
-<h1 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h1><p>value最好放软应用对象，确保释放之后的第一次gc就可以回收。<br>设置maxsize，可以使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Runtime.getRuntime().maxMemory()</span><br></pre></td></tr></table></figure></p>
-<p>也可针对不同情况进行设置。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1827,7 +1791,7 @@ vii. 如果该域是一个数组，需要针对每一个元素计算一下，然
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">89</span>
+                  <span class="site-state-item-count">93</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

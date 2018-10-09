@@ -229,6 +229,580 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/13/androidscroll分析笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/13/androidscroll分析笔记/" itemprop="url">androidscroll分析笔记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-13T15:42:18+08:00">
+                2018-01-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="android坐标系"><a href="#android坐标系" class="headerlink" title="android坐标系"></a>android坐标系</h1><p>在android中，将屏幕最左上角的顶点作为android坐标系的原点，往右是x轴正方向，往下是y轴正方向。</p>
+<h1 id="视图坐标系"><a href="#视图坐标系" class="headerlink" title="视图坐标系"></a>视图坐标系</h1><p>视图坐标系原点以父视图左上角为坐标原点。</p>
+<h1 id="触控事件-MotionEvent"><a href="#触控事件-MotionEvent" class="headerlink" title="触控事件 - MotionEvent"></a>触控事件 - MotionEvent</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public static final int ACTION_DOWN = 0;//单击触摸按下动作</span><br><span class="line">public static final int ACTION_UP = 1;//单击触摸离开动作</span><br><span class="line">public static final int ACTION_MOVE = 2;//触摸点移动动作</span><br><span class="line">public static final int ACTION_CANCEL = 3;//触摸动作取消</span><br><span class="line">public static final int ACTION_OUTSIDE = 4;//触摸动作超出边界</span><br><span class="line">public static final int ACTION_POINTER_DOWN = 5;//多点触摸按下动作</span><br><span class="line">public static final int ACTION_POINTER_UP = 6;//多点离开动作</span><br></pre></td></tr></table></figure>
+<h2 id="ACTION-CANCEL"><a href="#ACTION-CANCEL" class="headerlink" title="ACTION_CANCEL"></a>ACTION_CANCEL</h2><p>当你的手指（或者其它）移动屏幕的时候会触发这个事件，比如当你的手指在屏幕上拖动一个listView或者一个ScrollView而不是去按上面的按钮时会触发这个事件。</p>
+<p>在设计设置页面的滑动开关时，如果不监听ACTION_CANCEL，在滑动到中间时，如果你手指上下移动，就是移动到开关控件之外，则此时会触发ACTION_CANCEL，而不是ACTION_UP，造成开关的按钮停顿在中间位置。</p>
+<p>意思就是，当用户保持按下操作，并从你的控件转移到外层控件时，会触发ACTION_CANCEL，建议进行处理～</p>
+<p>当前的手势被中断，不会再接收到关于它的记录。<br>推荐将这个事件作为 ACTION_UP 来看待，但是要区别于普通的 ACTION_UP</p>
+<p>话说回来，平常还真碰不到这个事件，习惯上就直接当 ACTION_UP 处理了就</p>
+<p>例如：上层 View 是一个 RecyclerView，它收到了一个 ACTION_DOWN 事件，由于这个可能是点击事件，所以它先传递给对应 ItemView，询问 ItemView 是否需要这个事件，然而接下来又传递过来了一个 ACTION_MOVE 事件，且移动的方向和 RecyclerView 的可滑动方向一致，所以 RecyclerView 判断这个事件是滚动事件，于是要收回事件处理权，这时候对应的 ItemView 会收到一个 ACTION_CANCEL ，并且不会再收到后续事件。</p>
+<h2 id="ACTION-OUTSIDE"><a href="#ACTION-OUTSIDE" class="headerlink" title="ACTION_OUTSIDE"></a>ACTION_OUTSIDE</h2><p>一个触摸事件已经发生了UI元素的正常范围之外。因此不再提供完整的手势，只提供 运动/触摸 的初始位置。dialog,popupwindow中比较常见</p>
+<h2 id="ACTION-POINTER-DOWN"><a href="#ACTION-POINTER-DOWN" class="headerlink" title="ACTION_POINTER_DOWN"></a>ACTION_POINTER_DOWN</h2><p>这个代表用户的第二根手指（之后动手的一根）触摸了屏幕，可以getactionindex获取某一根手指的数字来判断</p>
+<h2 id="ACTION-POINTER-UP"><a href="#ACTION-POINTER-UP" class="headerlink" title="ACTION_POINTER_UP"></a>ACTION_POINTER_UP</h2><p>同第二根手指离开了屏幕</p>
+<h1 id="获取坐标的方法"><a href="#获取坐标的方法" class="headerlink" title="获取坐标的方法"></a>获取坐标的方法</h1><h2 id="View提供的方法（以父布局为坐标系）"><a href="#View提供的方法（以父布局为坐标系）" class="headerlink" title="View提供的方法（以父布局为坐标系）"></a>View提供的方法（以父布局为坐标系）</h2><p>getTop():自身到其父布局顶点的距离<br>getLeft():<br>getRight():<br>getBottom():</p>
+<h2 id="MotionEvent提供的方法"><a href="#MotionEvent提供的方法" class="headerlink" title="MotionEvent提供的方法"></a>MotionEvent提供的方法</h2><p>getX():获取点击事件距离空间左边的距离<br>getY():<br>getRawX():获取点击事件距离整个屏幕左边的距离<br>getRawY():</p>
+<h1 id="实现滑动效果的7种方法"><a href="#实现滑动效果的7种方法" class="headerlink" title="实现滑动效果的7种方法"></a>实现滑动效果的7种方法</h1><ol>
+<li><p>layout方法<br>在ACTION_MOVE中计算偏移量，在action_down中记录触摸点的坐标，并且在move中进行计算偏移量，然后调用view的layout方法来进行调整。</p>
+</li>
+<li><p>offsetLeftAndRight和offsetTopAndBottom<br>使用方法和layout一样，差别是一个需要x的偏移一个需要y的偏移</p>
+</li>
+<li><p>LayoutParams</p>
+</li>
+</ol>
+<p>layoutParams保留了一个view的参数，可以改变view的layoutParams然后setLayoutParams进行更改。</p>
+<ol>
+<li>scrollto和scrollby</li>
+</ol>
+<p>scrollby(offsetx，offsety)，该方法会造成所有子view移动。因此需要对view的父view使用这个方法，</p>
+<ol>
+<li>Scroller</li>
+</ol>
+<p>scroller可以通过重写view的computeScroll方法，通过获取当前滚动值，来进行不断的瞬间移动，实现整体上的平移效果<br>ps：computeScroll方法是不会自动调用的，只能通过invalidate() -&gt; draw() -&gt; computeScroll()来间接调用该方法。<br>之后使用startScroll即可。</p>
+<ol>
+<li><p>属性动画</p>
+</li>
+<li><p>ViewDragHelper</p>
+</li>
+</ol>
+<p>viewdraghelper是谷歌在support库中提供的drawerlayout和slidingpanelayout两个布局中使用的，用法较为复杂。</p>
+<ol>
+<li>初始化viewdraghelper</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mViewDragHelper = ViewDragHelper.create(this, callback);</span><br></pre></td></tr></table></figure>
+<ol>
+<li>拦截事件</li>
+</ol>
+<p>将事件传递给viewdraghelper处理<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public boolean onInterceptTouchEvent(MotionEvent ev)&#123;</span><br><span class="line">	return mViewDragHelper.shouldInterceptTouchEvent(ev);</span><br><span class="line">&#125;</span><br><span class="line">@Override</span><br><span class="line">public boolean onTouchEvent(MotionEvent ev)&#123;</span><br><span class="line">	mViewDragHelper.processTouchEvent(event);</span><br><span class="line">	return true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>处理computeScroll()</li>
+</ol>
+<p>与scroller相似的，需要处理一个computescroll()方法，因为viewdraghelper内部也是使用scroller实现平滑移动的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public void computeScroll()&#123;</span><br><span class="line">	if(mViewdragHelper.continueSettling(true))&#123;</span><br><span class="line">		ViewCompat.postInvalidateOnAnimation(this);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>处理回调</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">private ViewDragHelper.Callback callback = new ViewDragHelper.Callback()&#123;</span><br><span class="line">	@Override</span><br><span class="line">	public boolean tryCaptureView(View child, int pointerId)&#123;</span><br><span class="line">		return false;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用上述回调，对child进行判断，如果是需要拖动view，就可以返回true</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public int clampViewPositionVertical(View child, int top, int dy)&#123;</span><br><span class="line">	return top;</span><br><span class="line">&#125;</span><br><span class="line">@Override</span><br><span class="line">public int clampViewPositionHorizontal(View child, int left, int dx)&#123;</span><br><span class="line">	return left;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用如上方法，来对滑动效果进行设置，返回的top和left为垂直和水平方向上面的距离。dy表示比较前一次的增量</p>
+<ol>
+<li>拖动结束之后，子View回到原来的位置</li>
+</ol>
+<p>该效果可以通过监听action_up事件，并通过调用Scroller类来实现。<br>在viewdraghelper中可以重写onViewRelased()方法来实现。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public void onViewReleased(View releasedChild, float xvel, float yvel)&#123;</span><br><span class="line">	super.onViewReleased(releasedChild, xvel, yvel);</span><br><span class="line">	if(mMianView.getLeft()&lt;500)&#123;</span><br><span class="line">		mViewDragHelper.smoothSlideViewTo(mMainView, 0, 0);</span><br><span class="line">		ViewCompat.postInvalidateOnAnimation(DragViewGroup.this);</span><br><span class="line">	&#125;else&#123;</span><br><span class="line">		mViewDragHelper.smoothSlideViewTo(mMainView, 300, 0);</span><br><span class="line">		ViewCompat.postInvalidateOnAnimation(DragViewGroup.this);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样就可以做到滑动距离小于500时回到原来的位置。</p>
+<p>除了以上内容，还有大量的监听事件可以用来处理各种事件。<br>onViewCaptured():在用户触摸到view后回调<br>onViewDragStateChanged():在拖拽状态改变时回调<br>onViewPositionChanged():这个事件在位置改变时回调</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/12/某金融公司面试小记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/12/某金融公司面试小记/" itemprop="url">某金融公司面试小记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-12T20:38:32+08:00">
+                2018-01-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>前几天在boss直聘上面接到了一个面试邀请，hr蛮真诚的，今天下午请了半天年假去试试。</p>
+<h1 id="笔试"><a href="#笔试" class="headerlink" title="笔试"></a>笔试</h1><p>首先是笔试，笔试第一题是Math.round(11.5)和Math.round(-11.5)的值,我居然没用过，当时猜的12和-11，还猜对了。</p>
+<p>挑有印象的写。</p>
+<p>之后是问intent能传送哪些内容，serizable，parcel，bundle，charsquence,当时忘了，就写了个parcel和bundle，回来一看其实都能..</p>
+<p>之后的一些字符串处理的<br>StringBuffer str = new StringBuffer(“hello”);<br>str.append(“world”);<br>当然输出hello world了</p>
+<p>List<integer> listA = new ArrayList&lt;&gt;();<br>listA.add(1);<br>listA.add(2);<br>List<integer> listB = new ArrayList&lt;&gt;(listA);<br>Collections.copy(listA, listB);<br>这时候listb还是1，2</integer></integer></p>
+<p>fragment在activity中使用和fragment中使用的差别：<br>记得就是fragmentmanager的差别，context的差别。</p>
+<p>解释一下DVM中的线程和linux中线程的区别：<br>DVM指dalivk的虚拟机。每一个Android应用程序都在它自己的进程中运行，都拥有一个独立的Dalvik虚拟机实例。而每一个DVM都是在Linux 中的一个进程，所以说可以认为是同一个概念。<br>这题不会。</p>
+<p>笔试大概就这么多了。</p>
+<h1 id="一面"><a href="#一面" class="headerlink" title="一面"></a>一面</h1><p>一面是个android的leader，刚开始还不是很打开话夹子，问我为啥走，问我做了哪些工作。居然还把我app开发说成只有6个月，丫的。<br>这个leader感觉没问啥高深的问题，我居然都想不起来了。但我的确有几个没回答的上来..汗怎么忘了。</p>
+<p>感觉好像对大学学java的比较歧视，以为我没有多深的java功底。</p>
+<p>后来问我kotlin的一些相关的，高阶编程，我以为是函数式编程，拿python的高阶函数去说，还居然蒙对了。<br>还问我h5会不会，我说只会一丁点，node会不会，只会搭博客，python会不会，这个有。没问c我有点诧异。</p>
+<p>问了我一个问题，关于activity的启动模式的，四种我都熟了，后来问我假如这四种同时添加，栈内什么情况，我说正确的，后来问我怎么从a回退到c，我真不知道这个，只能从activitymanager获取stack这个角度来说，这样获取了实例可以直接启动。</p>
+<h1 id="二面"><a href="#二面" class="headerlink" title="二面"></a>二面</h1><p>二面是项目经理，这是大神，上来就是一系列由浅入深的题目，让我用mvp设计一个架构，保证耦合度低和热插拔，这部分是接口分离的原则来设计，这部分真不了解。<br>之后问我一些别的内容，数据结构方面的，set vector的区别，我居然说vector是线程安全的，但是好像不止这些，其内部指责都不同。<br>还问了我一些内容，可是好多我都忘了- -汗。</p>
+<h1 id="三面"><a href="#三面" class="headerlink" title="三面"></a>三面</h1><p>三面是个证券经理，既然是证券经理，为啥揪着我简历上面的技术栈问..蛋疼</p>
+<h1 id="四面"><a href="#四面" class="headerlink" title="四面"></a>四面</h1><p>四面是个妹子，和我讲了一些公司的发展，薪酬方面的，大概扣多少钱五险之类的。</p>
+<h1 id="五面"><a href="#五面" class="headerlink" title="五面"></a>五面</h1><p>五面是联系我去公司的hr，他和我讲了好久公司发展的内容，其实我写的预期薪资并不高啊，最后成功的从税前13扯到了税后11-12，其实还不错。不过明显的他有点慌，他的意思是希望我接到offer能早点去，不要太拖，不要被别的公司高不到5k的offer挖走。汗，加5k是他妈18k了，我哪里值这么多钱。</p>
+<h1 id="心得"><a href="#心得" class="headerlink" title="心得"></a>心得</h1><p>安卓开发自己还是投入了不少心血的，虽然一年半的从业经验，还是收获了不少东西，这次面试也证明了自己的能力。不再是当年在传音的时候任人宰割的那个我了。</p>
+<h1 id="期望"><a href="#期望" class="headerlink" title="期望"></a>期望</h1><p>希望能拿到offer吧，税后12我就去，11以内我就放弃。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/11/快速排序/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/11/快速排序/" itemprop="url">快速排序</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-11T22:32:16+08:00">
+                2018-01-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>快速排序是内部排序中交换排序的一种。</p>
+<h1 id="算法思想"><a href="#算法思想" class="headerlink" title="算法思想"></a>算法思想</h1><p>1）选择一个基准元素,通常选择第一个元素或者最后一个元素,</p>
+<p>2）通过一趟排序讲待排序的记录分割成独立的两部分，其中一部分记录的元素值均比基准元素值小。另一部分记录的 元素值比基准值大。</p>
+<p>3）此时基准元素在其排好序后的正确位置</p>
+<p>4）然后分别对这两部分记录用同样的方法继续进行排序，直到整个序列有序。</p>
+<h1 id="空间复杂度"><a href="#空间复杂度" class="headerlink" title="空间复杂度"></a>空间复杂度</h1><p>O(1)</p>
+<h1 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h1><p>最理想 O(nlogn) 最差时间O(n^2)</p>
+<h1 id="算法实现思想"><a href="#算法实现思想" class="headerlink" title="算法实现思想"></a>算法实现思想</h1><h1 id="java实现"><a href="#java实现" class="headerlink" title="java实现"></a>java实现</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">public void sort(int[] a)&#123;</span><br><span class="line">	int start = 0;</span><br><span class="line">	int end = a.length-1;</span><br><span class="line">	int key = a[low];</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	while(end&gt;start)&#123;</span><br><span class="line">		//从后往前比较</span><br><span class="line">		while(end&gt;start&amp;&amp;a[end]&gt;=key)  //如果没有比关键值小的，比较下一个，直到有比关键值小的交换位置，然后又从前往后比较</span><br><span class="line">		end--;</span><br><span class="line">		if(a[end]&lt;=key)&#123;</span><br><span class="line">			int temp = a[end];</span><br><span class="line">			a[end] = a[start];</span><br><span class="line">			a[start] = temp;</span><br><span class="line">		&#125;</span><br><span class="line">		//从前往后比较</span><br><span class="line">		while(end&gt;start&amp;&amp;a[start]&lt;=key)//如果没有比关键值大的，比较下一个，直到有比关键值大的交换位置</span><br><span class="line">		start++;</span><br><span class="line">		if(a[start]&gt;=key)&#123;</span><br><span class="line">			int temp = a[start];</span><br><span class="line">			a[start] = a[end];</span><br><span class="line">			a[end] = temp;</span><br><span class="line">		&#125;</span><br><span class="line">		//此时第一次循环比较结束，关键值的位置已经确定了。左边的值都比关键值小，右边的值都比关键值大，但是两边的顺序还有可能是不一样的，进行下面的递归调用</span><br><span class="line">	&#125;</span><br><span class="line">	//递归</span><br><span class="line">	if(start&gt;low) sort(a,low,start-1);//左边序列。第一个索引位置到关键值索引-1</span><br><span class="line">	if(end&lt;high) sort(a,end+1,high);//右边序列。从关键值索引+1到最后一个</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="c实现"><a href="#c实现" class="headerlink" title="c实现"></a>c实现</h1><h1 id="python实现"><a href="#python实现" class="headerlink" title="python实现"></a>python实现</h1>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/11/冒泡排序/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/11/冒泡排序/" itemprop="url">冒泡排序</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-11T21:52:24+08:00">
+                2018-01-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>冒泡排序是内部排序中交换排序的一种。</p>
+<h1 id="算法思想"><a href="#算法思想" class="headerlink" title="算法思想"></a>算法思想</h1><p>对当前还未排序好的范围内的全部数，自上而下对相邻的两个数进行比较和调整，大的下沉，小的上浮。</p>
+<h1 id="空间复杂度"><a href="#空间复杂度" class="headerlink" title="空间复杂度"></a>空间复杂度</h1><p>只是互换，为O(1)</p>
+<h1 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h1><p>两次循环，故为O(n^2)</p>
+<h1 id="算法实现思想"><a href="#算法实现思想" class="headerlink" title="算法实现思想"></a>算法实现思想</h1><p>每当两相邻的数比较后发现它们的排序与排序要求相反时，就将它们互换。</p>
+<h1 id="java实现"><a href="#java实现" class="headerlink" title="java实现"></a>java实现</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public int[] bubbleSort(int[] array)&#123;</span><br><span class="line">	int[] arr = array;</span><br><span class="line">	for(int i = 0; i &lt; array.length - 1; i ++)&#123;</span><br><span class="line">		for(int j = 0; j &lt; array.length - i - 1; j ++)&#123;</span><br><span class="line">			if(arr[j] &gt; arr[j+1])&#123;</span><br><span class="line">				int temp = arr[j];</span><br><span class="line">				arr[j] = arr[j+1];</span><br><span class="line">				arr[j+1] = temp;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return arr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="c实现"><a href="#c实现" class="headerlink" title="c实现"></a>c实现</h1><h1 id="python实现"><a href="#python实现" class="headerlink" title="python实现"></a>python实现</h1>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/09/堆排序/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1013,576 +1587,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/05/2018第一周工作小结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/05/2018第一周工作小结/" itemprop="url">2018第一周工作小结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-05T22:18:49+08:00">
-                2018-01-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>这一周由于元旦的关系，只上了四天班。2017上半年的时候在传音工作，那时候每天都要写日报，然后周五要写周报，当时写的实在是痛苦，结果来崇杏之后，一天日报都没有写过。</p>
-<p>刚开始的确很爽，可是年底总结的时候发现写不出什么来了，对于半年多的工作只有一个浅薄的印象，大致知道做了哪些项目，可是项目相关都有些模糊了。因此重拾写周报的习惯，希望今年能够有一些改变。</p>
-<p>这周由于spirtMonitor项目需要重新制作ui，前几天陈哥还没有做完效果，因此先将之前做的肺科医院订餐管理后台先进行微信登陆的集成。</p>
-<p>微信的集成刚开始准备我这边获取相关的token，然后直接与服务器对接。但是当我获取了openid之后，后端说微信开放平台的openid与公众平台的openid不同，只可以使用unionid来对接。同时还有个问题，就是我这边无法直接使用获取的unionid来进行对接，不可以把appid和secretid放在app里面，防止别人抓包。</p>
-<p>因此需要重新设置一个模式，使用appid加微信登陆获取的一次性code，将code传回服务器，在服务器里面进行处理，之后返回一个处理完毕的token，我在app这边做一个持久化，这个token有效期三天，我根据token是否过期进行重新获取code，重复之上的行为即可。因此等待张凯把后端处理完我才可以进行之后的行动。</p>
-<p>关于token，我和张凯交流的时候有个设想，我这边将code，使用query的方式添加到url的末尾，然后使用浏览器传出去，之后浏览器走之前微信公众号的那个端口，走完之后浏览器返回值，然后浏览器吊起我的程序。这个方法感觉是可行的，但是当时考虑到跨域的问题没有实现。</p>
-<p>晚上关于这个问题搜索了一下，主要针对是如何使用webview来吊起activity。</p>
-<p>结果显示，的确如果直接发intent吊起webview会出现跨域的问题，但是可以本地写一个html页面来解决跨域的问题。</p>
-<p><a href="http://www.cnblogs.com/yejiurui/p/3413796.html" target="_blank" rel="noopener">使用webview吊起activity</a></p>
-<p>这样给我一个想法。由于安卓跨域保护的问题，很多和浏览器协作的方面，比如说之前做的，hybirdapp调用本地视频的功能，可以截取webview的url，然后吊起本地的html来加载视频。不过这个方式对于那种内嵌的视频可能不好用，内嵌的视频还是需要使用webserver来进行视频的提供。但是也是一种思路。</p>
-<p>明天做一下相关的demo。</p>
-<p>微信集成搞了2天，之后陈总那边的ui好了，因此需要重新更改ui。</p>
-<p>之前使用animation的方式，对textview进行动画的设置，这样会在更新的时候触发动画，但是动画的效果不是很好看，之后恰好看到了一个app，使用的是每次更新的时候数字从小到大的方式。刚好找到了一个库，单纯的一个自定义view，直接继承了textview，使用的一个valueAmatior动画，这个动画里面添加了一个animationListener，在这个监听器里面进行了textview的设值。值的范围从设置的开端到末端。这个设置的动画和我之前设置的对比就完全不同了，感觉十分好。</p>
-<p>周四周五大概就做了这几件事。晚上回来的路上，在想关于借口查询的问题，我之前使用的是定时去查询接口的方式，但是之前了解了一个关于http长连接的方式，实时聊天软件就是使用的长连接的效果，这方面也需要了解一下。</p>
-<p>因此本周的收获如下：</p>
-<ol>
-<li>了解了如何使用valueAmator来进行动画的更新。</li>
-<li>了解了如何集成微信</li>
-</ol>
-<p>遗留未解决的问题如下：</p>
-<ol>
-<li>使用本地静态html来进行get操作，对返回值过滤来吊起app并且获取返回值</li>
-<li>学习使用长链接的方式来进行接口的查询</li>
-</ol>
-<p>周末的任务：</p>
-<ol>
-<li>解决遗留问题</li>
-<li>处理一下williamchart的ui更改</li>
-<li>研究一下安卓的渐变色，圆心渐变和直线渐变</li>
-</ol>
-<p>有时间的话：</p>
-<ol>
-<li>学习一下常用的排序算法</li>
-<li>继续学习安卓群英传</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/03/android事件分发机制/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/03/android事件分发机制/" itemprop="url">android事件分发机制</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-03T23:10:07+08:00">
-                2018-01-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>假如一个button<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">button.setOnClickListener(new OnClickListener()&#123;</span><br><span class="line">	@Override</span><br><span class="line">	public void onClick(View v)&#123;</span><br><span class="line">		Log.d(&quot;TAG&quot;,&quot;onClick execute&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
-<p>同时设置ontouch事件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">button.setOnTouchListener(new OnTouchListener()&#123;</span><br><span class="line">	@Override</span><br><span class="line">	public boolean onTouch(View v, MotionEvent event)&#123;</span><br><span class="line">		Log.d(&quot;TAG&quot;,&quot;onTouch execute, action &quot;+ event.getAction());</span><br><span class="line">		return false;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>点击按钮log如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">onTouch execute, action 0</span><br><span class="line">onTouch execute, action 1</span><br><span class="line">onClick execute</span><br></pre></td></tr></table></figure></p>
-<p>onTouch是优先于onClick执行的，并且onTouch执行了2次，一次是ACTION_DOWN,一次是ACTION_UP。<br>顺序是先经过onTouch，在传递到onClick。</p>
-<p>将ontouch返回值改为true，在运行一次，会发现onClick不再执行，这就是拦截了。</p>
-<h1 id="dispatchTouchEvent"><a href="#dispatchTouchEvent" class="headerlink" title="dispatchTouchEvent"></a>dispatchTouchEvent</h1><p>任何view被触摸，一定会执行dispatchTouchEvent这个方法。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public boolean dispatchTouchEvent(MotionEvent event) &#123;  </span><br><span class="line">    if (mOnTouchListener != null &amp;&amp; (mViewFlags &amp; ENABLED_MASK) == ENABLED &amp;&amp;  </span><br><span class="line">            mOnTouchListener.onTouch(this, event)) &#123;  </span><br><span class="line">        return true;  </span><br><span class="line">    &#125;  </span><br><span class="line">    return onTouchEvent(event);  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这段代码很明显的指出了，首先会执行的是set的onTouchListener的onTouch事件，之后才会执行自身的onTouchEvent事件。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line">public boolean onTouchEvent(MotionEvent event) &#123;  </span><br><span class="line">    final int viewFlags = mViewFlags;  </span><br><span class="line">    if ((viewFlags &amp; ENABLED_MASK) == DISABLED) &#123;  </span><br><span class="line">        // A disabled view that is clickable still consumes the touch  </span><br><span class="line">        // events, it just doesn&apos;t respond to them.  </span><br><span class="line">        return (((viewFlags &amp; CLICKABLE) == CLICKABLE ||  </span><br><span class="line">                (viewFlags &amp; LONG_CLICKABLE) == LONG_CLICKABLE));  </span><br><span class="line">    &#125;  </span><br><span class="line">    if (mTouchDelegate != null) &#123;  </span><br><span class="line">        if (mTouchDelegate.onTouchEvent(event)) &#123;  </span><br><span class="line">            return true;  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">    if (((viewFlags &amp; CLICKABLE) == CLICKABLE ||  </span><br><span class="line">            (viewFlags &amp; LONG_CLICKABLE) == LONG_CLICKABLE)) &#123;  </span><br><span class="line">        switch (event.getAction()) &#123;  </span><br><span class="line">            case MotionEvent.ACTION_UP:  </span><br><span class="line">                boolean prepressed = (mPrivateFlags &amp; PREPRESSED) != 0;  </span><br><span class="line">                if ((mPrivateFlags &amp; PRESSED) != 0 || prepressed) &#123;  </span><br><span class="line">                    // take focus if we don&apos;t have it already and we should in  </span><br><span class="line">                    // touch mode.  </span><br><span class="line">                    boolean focusTaken = false;  </span><br><span class="line">                    if (isFocusable() &amp;&amp; isFocusableInTouchMode() &amp;&amp; !isFocused()) &#123;  </span><br><span class="line">                        focusTaken = requestFocus();  </span><br><span class="line">                    &#125;  </span><br><span class="line">                    if (!mHasPerformedLongPress) &#123;  </span><br><span class="line">                        // This is a tap, so remove the longpress check  </span><br><span class="line">                        removeLongPressCallback();  </span><br><span class="line">                        // Only perform take click actions if we were in the pressed state  </span><br><span class="line">                        if (!focusTaken) &#123;  </span><br><span class="line">                            // Use a Runnable and post this rather than calling  </span><br><span class="line">                            // performClick directly. This lets other visual state  </span><br><span class="line">                            // of the view update before click actions start.  </span><br><span class="line">                            if (mPerformClick == null) &#123;  </span><br><span class="line">                                mPerformClick = new PerformClick();  </span><br><span class="line">                            &#125;  </span><br><span class="line">                            if (!post(mPerformClick)) &#123;  </span><br><span class="line">                                performClick();  </span><br><span class="line">                            &#125;  </span><br><span class="line">                        &#125;  </span><br><span class="line">                    &#125;  </span><br><span class="line">                    if (mUnsetPressedState == null) &#123;  </span><br><span class="line">                        mUnsetPressedState = new UnsetPressedState();  </span><br><span class="line">                    &#125;  </span><br><span class="line">                    if (prepressed) &#123;  </span><br><span class="line">                        mPrivateFlags |= PRESSED;  </span><br><span class="line">                        refreshDrawableState();  </span><br><span class="line">                        postDelayed(mUnsetPressedState,  </span><br><span class="line">                                ViewConfiguration.getPressedStateDuration());  </span><br><span class="line">                    &#125; else if (!post(mUnsetPressedState)) &#123;  </span><br><span class="line">                        // If the post failed, unpress right now  </span><br><span class="line">                        mUnsetPressedState.run();  </span><br><span class="line">                    &#125;  </span><br><span class="line">                    removeTapCallback();  </span><br><span class="line">                &#125;  </span><br><span class="line">                break;  </span><br><span class="line">            case MotionEvent.ACTION_DOWN:  </span><br><span class="line">                if (mPendingCheckForTap == null) &#123;  </span><br><span class="line">                    mPendingCheckForTap = new CheckForTap();  </span><br><span class="line">                &#125;  </span><br><span class="line">                mPrivateFlags |= PREPRESSED;  </span><br><span class="line">                mHasPerformedLongPress = false;  </span><br><span class="line">                postDelayed(mPendingCheckForTap, ViewConfiguration.getTapTimeout());  </span><br><span class="line">                break;  </span><br><span class="line">            case MotionEvent.ACTION_CANCEL:  </span><br><span class="line">                mPrivateFlags &amp;= ~PRESSED;  </span><br><span class="line">                refreshDrawableState();  </span><br><span class="line">                removeTapCallback();  </span><br><span class="line">                break;  </span><br><span class="line">            case MotionEvent.ACTION_MOVE:  </span><br><span class="line">                final int x = (int) event.getX();  </span><br><span class="line">                final int y = (int) event.getY();  </span><br><span class="line">                // Be lenient about moving outside of buttons  </span><br><span class="line">                int slop = mTouchSlop;  </span><br><span class="line">                if ((x &lt; 0 - slop) || (x &gt;= getWidth() + slop) ||  </span><br><span class="line">                        (y &lt; 0 - slop) || (y &gt;= getHeight() + slop)) &#123;  </span><br><span class="line">                    // Outside button  </span><br><span class="line">                    removeTapCallback();  </span><br><span class="line">                    if ((mPrivateFlags &amp; PRESSED) != 0) &#123;  </span><br><span class="line">                        // Remove any future long press/tap checks  </span><br><span class="line">                        removeLongPressCallback();  </span><br><span class="line">                        // Need to switch from pressed to not pressed  </span><br><span class="line">                        mPrivateFlags &amp;= ~PRESSED;  </span><br><span class="line">                        refreshDrawableState();  </span><br><span class="line">                    &#125;  </span><br><span class="line">                &#125;  </span><br><span class="line">                break;  </span><br><span class="line">        &#125;  </span><br><span class="line">        return true;  </span><br><span class="line">    &#125;  </span><br><span class="line">    return false;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>当事件为MotionEvent.ACTION_UP时，如果该控件可点击，会执行performClick()</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public boolean performClick() &#123;  </span><br><span class="line">    sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_CLICKED);  </span><br><span class="line">    if (mOnClickListener != null) &#123;  </span><br><span class="line">        playSoundEffect(SoundEffectConstants.CLICK);  </span><br><span class="line">        mOnClickListener.onClick(this);  </span><br><span class="line">        return true;  </span><br><span class="line">    &#125;  </span><br><span class="line">    return false;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>从源码可以看出，基本上每一次事件，都会return 一个true，也就是消耗掉这次事件了。而之后的事件会重新进入，这也和之前的截断事件机制符合。</p>
-<h1 id="onTouch和onTouchEvent有什么区别，又该如何使用？"><a href="#onTouch和onTouchEvent有什么区别，又该如何使用？" class="headerlink" title="onTouch和onTouchEvent有什么区别，又该如何使用？"></a>onTouch和onTouchEvent有什么区别，又该如何使用？</h1><p>从源码中可以看出，这两个方法都是在View的dispatchTouchEvent中调用的，onTouch优先于onTouchEvent执行。如果在onTouch方法中通过返回true将事件消费掉，onTouchEvent将不会再执行。<br>另外需要注意的是，onTouch能够得到执行需要两个前提条件，第一mOnTouchListener的值不能为空，第二当前点击的控件必须是enable的。因此如果你有一个控件是非enable的，那么给它注册onTouch事件将永远得不到执行。对于这一类控件，如果我们想要监听它的touch事件，就必须通过在该控件中重写onTouchEvent方法来实现。</p>
-<h1 id="为什么给ListView引入了一个滑动菜单的功能，ListView就不能滚动了？"><a href="#为什么给ListView引入了一个滑动菜单的功能，ListView就不能滚动了？" class="headerlink" title="为什么给ListView引入了一个滑动菜单的功能，ListView就不能滚动了？"></a>为什么给ListView引入了一个滑动菜单的功能，ListView就不能滚动了？</h1><p>比如说左右滑的时候，还是正常的左右滑。<br>但是上下滑的时候，会出现一个问题，就是listview无法上下滑动，这主要是事件被scrollview给消耗掉了，需要在触摸的时候，scrollview不进行截断操作，让事件能够传递下去。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/03/android事件拦截机制分析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/03/android事件拦截机制分析/" itemprop="url">android事件拦截机制分析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-03T19:04:36+08:00">
-                2018-01-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>由于Android是树状结构，嵌套会导致事件发生区域重叠，针对重叠区域的处理，就叫事件拦截机制。</p>
-<p>我们现在假设有一个嵌套结构</p>
-<p>第一层： a-ViewGroup<br>第二层： b-ViewGroup<br>第三层： c-View</p>
-<p>重写viewgroup的三个方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public boolean dispatchTouchEvent(MotionEvent ev)&#123;</span><br><span class="line">	LogUtil.i(name+&quot;dispatch&quot;);</span><br><span class="line">	return super.dispatchTouchEvent(ev);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public boolean onInterceptTouchEvent(MotionEvent ev)&#123;</span><br><span class="line">	LogUtil.i(name+&quot;intecept&quot;);</span><br><span class="line">	return super.onInterceptTouchEvent(ev);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public boolean onTouchEvent(MotionEvent ev)&#123;</span><br><span class="line">	LogUtil.i(name+&quot;onTouch&quot;);</span><br><span class="line">	return super.onTouchEvent(ev);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>由于view不需要重写onInterceptTouchEvent,只需要重写另外的两个事件即可。</p>
-<h1 id="点击c-–正常情况"><a href="#点击c-–正常情况" class="headerlink" title="点击c –正常情况"></a>点击c –正常情况</h1><p>Log显示为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">a dispatch</span><br><span class="line">a intercept</span><br><span class="line">b dispatch</span><br><span class="line">b intercept</span><br><span class="line">c dispatch</span><br><span class="line">c ontouch</span><br><span class="line">b ontouch</span><br><span class="line">a ontouch</span><br></pre></td></tr></table></figure></p>
-<p>事件的传递顺序为a-&gt;b-&gt;c， 事件传递的时候是先执行dispatchTouchEvent()方法，之后在执行onInterceptTouchEvent()方法。<br>事件处理的顺序为c-&gt;b-&gt;a</p>
-<p>事件传递的返回值很容易理解：True,拦截，不继续;False,不拦截，继续流程。<br>事件处理的返回值也类似：True,处理了，不用审核了;False,给上级处理。</p>
-<p>初始情况下，返回值都是false。</p>
-<h1 id="让a的onInterceptTouchEvent-返回true"><a href="#让a的onInterceptTouchEvent-返回true" class="headerlink" title="让a的onInterceptTouchEvent()返回true"></a>让a的onInterceptTouchEvent()返回true</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a dispatch</span><br><span class="line">a intercept</span><br><span class="line">a ontouch</span><br></pre></td></tr></table></figure>
-<p>很明显是a处截断了。</p>
-<h1 id="让b的onInterceptTouchEvent-返回true"><a href="#让b的onInterceptTouchEvent-返回true" class="headerlink" title="让b的onInterceptTouchEvent()返回true"></a>让b的onInterceptTouchEvent()返回true</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a dispatch</span><br><span class="line">a intercept</span><br><span class="line">b dispatch</span><br><span class="line">b intercept</span><br><span class="line">b ontouch</span><br><span class="line">a ontouch</span><br></pre></td></tr></table></figure>
-<p>很明显是b处截断了。</p>
-<h1 id="让c的onInterceptTouchEvent-返回true"><a href="#让c的onInterceptTouchEvent-返回true" class="headerlink" title="让c的onInterceptTouchEvent()返回true"></a>让c的onInterceptTouchEvent()返回true</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a dispatch</span><br><span class="line">a intercept</span><br><span class="line">b dispatch</span><br><span class="line">b intercept</span><br><span class="line">c dispatch</span><br><span class="line">c ontouch</span><br></pre></td></tr></table></figure>
-<p>解释一下ontouchevent为true的意义。<br>假如ontouchevent为false，代表这个ontouch事件没有结束，因此还会继续找别的事件来进行处理直到返回的ontouchevent为true。有一些view自己写了默认的ontouch事件，因此假如想继承一个有功能的view而又不想它产生ontouch效果，可以返回true来截断默认的ontouch事件。<br>一般情况下false可以起到添加额外效果的功能。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/03/android持久化存储/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/03/android持久化存储/" itemprop="url">android持久化存储</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-03T14:57:26+08:00">
-                2018-01-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="内部存储（internalStorage）"><a href="#内部存储（internalStorage）" class="headerlink" title="内部存储（internalStorage）"></a>内部存储（internalStorage）</h1><p>data文件夹就是我们常说的内部存储，其中有两个文件夹需要关注，一个是app文件夹，一个是data文件夹。</p>
-<h2 id="app文件夹"><a href="#app文件夹" class="headerlink" title="app文件夹"></a>app文件夹</h2><p>app文件夹里存放着我们所有安装的app的apk文件。</p>
-<h2 id="data文件夹"><a href="#data文件夹" class="headerlink" title="data文件夹"></a>data文件夹</h2><p>这个文件夹里面都是一些包名，打开这些包名会看到：</p>
-<ol>
-<li>data/data/包名/shared_prefs</li>
-<li>data/data/包名/databases</li>
-<li>data/data/包名/files</li>
-<li>data/data/包名/cache</li>
-</ol>
-<p>sharedPreferenced的时候，数据持久化存储于本地，其实就是存在这个文件中的xml文件里面。<br>数据库文件就是存储于databases文件夹中。<br>普通数据存储在files中。<br>缓存文件存储在cache文件夹中。</p>
-<h1 id="外部存储（externalStorage）"><a href="#外部存储（externalStorage）" class="headerlink" title="外部存储（externalStorage）"></a>外部存储（externalStorage）</h1><p>外部存储是我们平时操作最多的，外部存储一般就是我们看到的storage文件夹，当然也有mnt文件夹，不同厂家有可能不一样。<br>一般来讲storage文件夹中有一个sdcard文件夹，这个文件夹中的文件又分为两类，一类是公有目录，一类是私有目录。公有目录又分为九大类，比如说DCIM、DOWNLOAD等这种系统为我们创建的文件夹。私有目录就是android这种文件夹，这个文件夹打开之后里面有一个data文件夹，打开这个data文件夹，里面有许多包名组成的文件夹。</p>
-<h1 id="存储操作"><a href="#存储操作" class="headerlink" title="存储操作"></a>存储操作</h1><h2 id="文件存储"><a href="#文件存储" class="headerlink" title="文件存储"></a>文件存储</h2><p>文件存储的所有文件默认放在/data/data/<packagename>/file/目录下</packagename></p>
-<h3 id="文件写入"><a href="#文件写入" class="headerlink" title="文件写入"></a>文件写入</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public void save(String inputText)&#123;</span><br><span class="line">	FIleOutputStream out = null;</span><br><span class="line">	BufferedWriter writer = null;</span><br><span class="line">	try&#123;</span><br><span class="line">		out = openFileOutput(&quot;data&quot;, Context.MODE_PRIVATE);</span><br><span class="line">		writer = new BufferedWriter(new OutputStreamWriter(out));</span><br><span class="line">		writer.write(inputText);</span><br><span class="line">	&#125;catch(FileNotFoundException e)&#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125;catch(IOException e)&#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125;finally&#123;</span><br><span class="line">		if(writer != null)&#123;</span><br><span class="line">			try&#123;</span><br><span class="line">				writer.close();</span><br><span class="line">			&#125;catch(IOException e)&#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="文件读取"><a href="#文件读取" class="headerlink" title="文件读取"></a>文件读取</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">public String load()&#123;</span><br><span class="line">	FileInputStream in = null;</span><br><span class="line">	BufferedReader reader = null;</span><br><span class="line">	StringBuilder content = new StringBuilder();</span><br><span class="line">	try&#123;</span><br><span class="line">		in = openFileInput(&quot;data&quot;);</span><br><span class="line">		reader = new BufferedReader(new InputStreamReader(in));</span><br><span class="line">		String line = &quot;&quot;;</span><br><span class="line">		while((line = reader.readLine()) != null)&#123;</span><br><span class="line">			content.append(line);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;catch(FileNotFoundException e)&#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125;catch(IOException e)&#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125;finally&#123;</span><br><span class="line">		if(reader != null)&#123;</span><br><span class="line">			try&#123;</span><br><span class="line">				reader.close();</span><br><span class="line">			&#125;catch(IOException e)&#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return content.toString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="SharePreferences"><a href="#SharePreferences" class="headerlink" title="SharePreferences"></a>SharePreferences</h2><p>Sharepreference默认放在/data/data/<packagename>/file/目录下</packagename></p>
-<h3 id="SharedPreferences写入"><a href="#SharedPreferences写入" class="headerlink" title="SharedPreferences写入"></a>SharedPreferences写入</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SharedPreferences.Editor editor = getSharedPreferences(&quot;data&quot;, MODE_PRIVATE).edit();</span><br><span class="line">editor.putString(&quot;et_inputText&quot;, &quot;sharePreferences test&quot;);</span><br><span class="line">editor.commit();</span><br></pre></td></tr></table></figure>
-<h3 id="SharedPreferences读取"><a href="#SharedPreferences读取" class="headerlink" title="SharedPreferences读取"></a>SharedPreferences读取</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SharedPreferences sp = getSharedPreferences(&quot;data&quot;, MODE_PRIVATE);</span><br><span class="line">String input = sp.getString(&quot;et_inputText&quot;, &quot;请输入用户名&quot;);//第二个参数是为空的默认信息</span><br></pre></td></tr></table></figure>
-<h2 id="SQLite数据库存储"><a href="#SQLite数据库存储" class="headerlink" title="SQLite数据库存储"></a>SQLite数据库存储</h2><p>sqlite文件默认放在/data/data/<packagename>/datanases/目录下</packagename></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public class MyDataBaseHelper extends SQLiteOpenHelper&#123;</span><br><span class="line">	private static final String CREATE_BOOK = &quot;create table Book(id integer primary key autoincrement, author text, price real, pages integer, name text)&quot;;</span><br><span class="line">	private static final String CREATE_CATEGORY = &quot;create table Category(id integer primary key autoincrement, category_name text, category_code integer)&quot;;</span><br><span class="line">	private Context mContext;</span><br><span class="line">	public MyDataBaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version)&#123;</span><br><span class="line">		super(context, name, factory, version);</span><br><span class="line">		mContext = context;</span><br><span class="line">	&#125;</span><br><span class="line">	@Override</span><br><span class="line">	public void onCreate(SQLiteDatabase db)&#123;</span><br><span class="line">		db.execSQL(CREATE_BOOK);</span><br><span class="line">		db.execSQL(CREATE_CATEGORY);</span><br><span class="line">		Toast.makeText(mContext, &quot;create succeed&quot;, Toast.LENGTH_SHORT).show();</span><br><span class="line">	&#125;</span><br><span class="line">	@Override</span><br><span class="line">	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)&#123;</span><br><span class="line">		db.execSQL(&quot;drop table if exists Book&quot;);</span><br><span class="line">		db.execSQL(&quot;drop table if exists Category&quot;);</span><br><span class="line">		onCreate(db);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="创建数据库"><a href="#创建数据库" class="headerlink" title="创建数据库"></a>创建数据库</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dbHelper = new MyDataBaseHelper(this, &quot;BookStore.db&quot;, null, 2);</span><br></pre></td></tr></table></figure>
-<h3 id="插入数据"><a href="#插入数据" class="headerlink" title="插入数据"></a>插入数据</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">SQLiteDatabase db = dbHelper.getWritableDatabase();</span><br><span class="line">ContentValues values = new ContentValues();</span><br><span class="line">values.put(&quot;name&quot;, &quot;Effective Java&quot;);</span><br><span class="line">values.put(&quot;author&quot;, &quot;Joshua Bloch&quot;);</span><br><span class="line">values.put(&quot;pages&quot;, 454);</span><br><span class="line">values.put(&quot;price&quot;, 16.96);</span><br><span class="line">db.insert(&quot;Book&quot;, null, values);</span><br></pre></td></tr></table></figure>
-<h3 id="更新数据"><a href="#更新数据" class="headerlink" title="更新数据"></a>更新数据</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ContentValues values = new ContentValues();</span><br><span class="line">values.put(&quot;price&quot;, 198.00);</span><br><span class="line">SQLiteDatabase db = dbHelper.getReadableDatabase();</span><br><span class="line">db.updata(&quot;Book&quot;, values, &quot;name=?&quot;,new String[]&#123;&apos;Android Programme&apos;&#125;);</span><br></pre></td></tr></table></figure>
-<h3 id="删除行"><a href="#删除行" class="headerlink" title="删除行"></a>删除行</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SQLiteDatabase db = dbHelper.getWritableDatabase();</span><br><span class="line">db.delete(&quot;Book&quot;, &quot;pages &gt; ?&quot;, new String[]&#123;&quot;500&quot;&#125;);</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1628,7 +1637,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">89</span>
+                  <span class="site-state-item-count">93</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

@@ -468,15 +468,96 @@ public class Test {
 
 ## 泛型
 
+### 请不要在新代码中使用原生态类型
+
+每种范型其实都是一组参数化的类型，他是一种原生态类型（rawtype），即不带任何实际类型参数的泛型名称。
+
+在不确定或者不在乎集合中元素类型的情况下，可以参考以下方式
+
+```
+static int numElementsInCommon(Set s1, Set s2){
+	int result = 0;
+	for (Object o1 : s1){
+		if(s2.contains(o1)){
+			result ++;
+		}
+	}
+	return result;
+}
+```
+
+使用原生类型是可以在不关心参数类型的情况下替代泛型，缺很危险，不过泛型也提供了一种安全的替代方式。
+
+```
+Set<E>   --->   Set<?> //可以持有任何集合
+```
+
+对于泛型使用instanceof的首选方法：
+```
+if (o instanceof Set){
+	Set<?> m = (Set<?>)o;
+	//一旦确定这个o是个set，就必须将它装换位通配符类型Set<?>而不是原生的Set，这是个受检的转换。
+}
+```
+
+### 消除非受检警告
+
+类似非受检警告如下：
+```
+Set<Lark> exaltation = new HashSet();
+
+[unchecked] unchecked conversion
+```
+
+需要改为如下：
+```
+Set<Lark> exaltation = new HashSet<Lark>();
+```
+
+ 无法消除的时候，可以使用注解来压制这条警告。但是压制的时候代表仍然可能是有问题的，所以最好做一些备注或者catch
 
 
+### 列表优先于数组
+
+数组是covariant的，代表如果某个对象a是对象b的子类型，那么a[]也一定是b[]的子类型。
+
+而数组就是invariant的，对于任意两个不同的类型ab，并不能说a的list是b的list的子类，也不能说b的list是a的list的父类。
+
+事实上，本来就应该是如同list这样，数组这样反而是有缺陷的。
+
+数组会在运行时才知道并检查他们的类型，而泛型则是通过擦除来实现的。正因如此，泛型可以与没有使用泛型的代码随意进行互用。
+
+而泛型数组则是不建议创建的，每个不可具化的数组会得到一条警告，除了禁止并且避免在api中混合使用泛型和可变参数之外，别无他法。
+
+创建泛型数组，可以使用
+```
+elements = (E[]) new Object[DEFAULT_INITIAL_CAPACITY];
+```
+
+### 优先使用泛型
+
+使用泛型的步骤，可以先使用object，在不使用任何object内在方法以及实例方法的时候，可以完整实现一个类，即可替换使用泛型。
+
+### 优先考虑泛型方法
+
+核心步骤是使用泛型单例工厂方法，不单单可以通过泛型进行类型擦除，也适配了针对不同对象进行不同创建的问题
+
+```
+public interface Comparable<T>{
+	int compareTo(T o);
+}
+```
 
 
+```
+public static <T extends Comparable<T>> T max(List<T> list){
+	....
+}
+```
 
+类似上述这种，就解决了不同类型的对象比较的问题，所需要的对象仅仅需要在编译过程中实现了comparable，即可参与到比较中来。而回避了类似string和int之间的比较类型。
 
-
-
-
+### 利用有限的通配符来提升api的灵活性
 
 
 
