@@ -1,0 +1,1 @@
+<button type="button" onclick="alert('欢迎!')">点我!</button>

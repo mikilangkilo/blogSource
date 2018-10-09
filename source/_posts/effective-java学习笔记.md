@@ -559,21 +559,165 @@ public static <T extends Comparable<T>> T max(List<T> list){
 
 ### 利用有限的通配符来提升api的灵活性
 
+在部分情况下面，使用<? extends E>的方式来进行处理参数类型，有效的避免了部分不兼容接口的数据问题。和上一章讲的类似。
+```
+public void pushAll(Iterable<? extends E> src){
+	for (E e: src){
+		push(e);
+	}
+}
+```
+另外提到了一个<? super E>的方式，同上面的不同，这种方式是指?是E的超类
+对应的方法就是popAll
+```
+public void popAll(Collection<? super E> dst){
+	while(!isEmpty()){
+		dst.add(pop());
+	}
+}
+```
+需要记得步骤PECS： producer-extends, consumer-super
 
+针对既可以消费，也可以生产的，可以使用下述方式
+```
+	static <E> E reduce(List<? extends E> list, Function<E> f, E initVal);
+```
+这样基本上可以确保，list的值可以被f消费，同时list又可以作为一个消费者返回正确的结果。
 
+ps:
 
+```
+   static <E> E reduce(List<E> list, Function<? super E> f, E initVal);
+```
+应该也是可以的，相同的意义
 
+### 优先考虑类型安全的异构容器
 
+一般来讲，泛型用于实现一些容器，这些容器大部分包含了单个参数或者类似map的2个参数。如果想要实现更多参数，就需要使用到这章的内容。
 
+实现一个简单的多参数泛型结构
 
+```
+public class Favorites{
+	public <T> void putFavourite(Class<T> type, T instance);
+	public <T> getFavourite(Class<T> type);
+}
+```
+使用的方法如下：
+```
+public static void main(String[] args){
+	Favourite f = new Favourites();
+	f.putFavourite(String.class, "Java");
+	f.putFavourite(Integer.class, 0x000fffff);
+	f.putFavourite(Class.class, Favourite.class);
+	String favouritString = f.getFavourite(String.class);
+	int favouriteInteger = f.getFavourite(Integer.class);
+	Class<?> favouritClass = f.getFavourite(Class.class);
+	System.out.printf("%s %x %s %n", favouritString, favouriteInteger, favouritClass.getName());
+}
+```
 
+其中涉及到了Favourites的实现
 
+```
+public class Favourites{
+	private Map<Class<?>, Object> favourites = new HashMap<Class<?>, Object>();
 
+	public <T> void putFavourite(Class<T> type, T instance){
+		if(type == null){
+			throw new NullPointerException("Type is null");
+		}
+		favourites.put(type, instance);
+	}
 
+	public <T> T getFavourite(Class<T> type){
+		return type.cast(favourites.get(type));
+	}
+}
+```
 
+这种模式是单key的，所以一个类，只可以对应一个值，实现一个数据库的单列是可以的
 
+其中注意到一点，type.cast()方法，是Class的方法，通过这个方法基本上可以活用泛型。这种type被称为类型，type token被称为类型令牌
 
+```
+@SuppressWarnings("unchecked")
+public T cast(Object obj) {
+    if (obj != null && !isInstance(obj))
+        throw new ClassCastException(cannotCastMsg(obj));
+    return (T) obj;
+}
+```
+ps: Class类中自带了很多有用的方法，有空的时候可以看看
 
+## 枚举和注解
+
+枚举和注解都是jdk1.5发布的
+
+### 用enum代替int常量
+
+一般情况下使用int常量来做flag，会出现常量重复的现象，尤其是自己不注意的时候，可能两个命名不同的变量，却有相同的int值。在部分情况下会导致判断失误的现象
+
+而采用枚举类型则可以完全避免这些问题
+
+```
+public enum Apple{ FUJI, PIPPIN, GRANNY_SMITH }
+
+public enum Orange{ NAVEL, TEMPLE, BLOOD }
+```
+
+枚举的本质是通过公有的静态final域为每个枚举常量导出类型的类，由于没有可以访问的构造器，枚举类型是真正的final，并且是实例受控的，不可能进行拓展。他们是单例的泛型化，本质上是单元素的枚举
+
+枚举还提供了多个同名常量的在多个枚举类型中可以有自己的命名空间，可以和平相处。
+
+一个正常的有些复杂度的枚举类型：
+
+```
+public enum Planet{
+	MERCURY(3.302e+23, 2.439e6),
+	VENUS(4.869e+24, 6.052e6),
+	EARTH(5.975e+24, 6.378e6);
+	private final double mass;
+	private final double radius;
+	private final double surfaceGravity;
+	private static final double G = 6.67300e-11;
+
+	Planet(double mass, double radius){
+		this.mass = mass;
+		this.radius = radius;
+		surfaceGravity = G * mass / (radius * radius);
+	}
+
+	public double mass(){
+		return mass;
+	}
+
+	public double radius(){
+		return radius;
+	}
+
+	public double surfaceGravity(){
+		return surfaceGravity;
+	}
+
+	public double surfaceWeight(double mass){
+		return mass * surfaceGravity;
+	}
+}
+```
+使用的方法如下：
+
+```
+public class WeightTable{
+	public static void main(String[] args){
+		double earthWeight = Double.parseDouble(args[0]);
+		double nass = earthWeight/ Planet.EARTH.surfaceGravity();
+		for  (Planet p : Planet.values()){
+			System.out.printf("Weight on %s is %f%n",p, p.surfaceWeight(mass));
+		}
+	}
+}
+```
 
 
 
