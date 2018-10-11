@@ -229,6 +229,134 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/14/2018第二周工作小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/14/2018第二周工作小结/" itemprop="url">2018第二周工作小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-14T22:15:58+08:00">
+                2018-01-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>这周的工作小结拖到了周末才写，不过还是写一下吧。</p>
+<p>这周的主要工作还是搞那个williamchart的图表，解决了数据填充的问题，中间组件传输仍然是使用了eventbus来传输。</p>
+<p>一个技术难点突破是，在响应式中做上游下游的响应操作，这次主要是了解了rxjava的map和flatmap的差别。map主要是直接将第一个参数传到下游，这有一个问题，就是假如上游是一个observable，那仍然会传一个observable。因此map的使用场景主要是用在由上游传递一些固定参数的。flatmap则是可以将上游的observable进行转换，将observable获得的东西传到下游。</p>
+<p>除此之外还学到一个就是emitter，这个可以控制下游的生命周期，但是只可以控制onnext和oncomplete。但是忽略了这点会导致oncomplete无法执行。</p>
+<p>大概就是学了上面两个技术点，其余大部分时间用于处理graphq的语句，返回数值的处理了，没想到居然用了一周的时间。不过周五请假也算就用了四天。</p>
+<p>之后的任务，数据是好了，但是需要改ui了，点击的ui要改，滑动曲线的ui也要改，还有一些杂七杂八的ui。</p>
+<p>给自己定了3天的工作计划，希望周三晚上能处理完毕吧。</p>
+<p>这周开始给自己打分，以后每周都是周日开始写本周总结，并且定下下周的任务，之后按照下周的任务完成度来给自己打分。</p>
+<p>本周开始的话，那我给上周打个98分吧，少两分怕自己骄傲～</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/13/androidscroll分析笔记/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1458,135 +1586,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/06/使用浏览器唤起app/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/06/使用浏览器唤起app/" itemprop="url">使用浏览器唤起app</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-06T18:38:38+08:00">
-                2018-01-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>浏览器唤起app，其实很简单，是使用manifest中注册scheme的方式来设置。</p>
-<p>manifest中注册如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;intent-filter&gt;</span><br><span class="line">    &lt;action android:name=&quot;android.intent.action.VIEW&quot;/&gt;</span><br><span class="line">    &lt;category android:name=&quot;android.intent.category.DEFAULT&quot; /&gt;</span><br><span class="line">    &lt;category android:name=&quot;android.intent.category.BROWSABLE&quot; /&gt;</span><br><span class="line">    &lt;data android:scheme=&quot;myapp&quot; android:host=&quot;jp.app&quot; android:pathPrefix=&quot;/openwith&quot;/&gt;</span><br><span class="line">&lt;/intent-filter&gt;</span><br></pre></td></tr></table></figure>
-<p>这段代表了唤起方式可以由浏览器唤起，data方面重要的是写scheme，之后的host和pathprefix都是无关紧要的。</p>
-<p>assets文件夹里面放静态html页面，使用webview来load。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;a href=&quot;myapp://jp.app/openwith?name=zhangsan&amp;age=26&quot;&gt;启动应用程序&lt;/a&gt;</span><br></pre></td></tr></table></figure>
-<p>启动的activity里面接受intent<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">if(Intent.ACTION_VIEW.equals(action))&#123;</span><br><span class="line">    Uri uri = i_getvalue.getData();</span><br><span class="line">    if(uri != null)&#123;</span><br><span class="line">        String name = uri.getQueryParameter(&quot;name&quot;);</span><br><span class="line">        String age= uri.getQueryParameter(&quot;age&quot;);</span><br><span class="line">        Log.d(getClass().getName(),name+age);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>可以接收到intent里面包含的信息。</p>
-<p>针对昨天的问题，如何从html中get一个接口的数据，然后返回吊起activity，可以直接使用script来fetch（url），针对内容对唤起的activity后缀加内容。</p>
-<p>目前关于这个问题还是涉及到跨域的情况，张凯说使用301转发，周宇说跨域需要接口支持。我也不知道该怎么办了。周一去公司的时候查一下接口能不能跨域再说。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1637,7 +1636,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-count">94</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1650,7 +1649,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>

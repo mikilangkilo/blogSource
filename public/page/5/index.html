@@ -229,6 +229,167 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/07/clean架构学习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/07/clean架构学习/" itemprop="url">clean架构学习</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-07T09:50:22+08:00">
+                2018-03-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="clean架构图"><a href="#clean架构图" class="headerlink" title="clean架构图"></a>clean架构图</h1><p><img src="/images/架构/clean架构图.jpg" alt="clean架构图"></p>
+<h1 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h1><p>内层不能依赖外层，即内层不知道有关外层的任何事情，所以这个架构是向内依赖的。</p>
+<h1 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h1><p>Clean架构可以使你的代码有如下特性：</p>
+<ul>
+<li><p>独立于架构</p>
+</li>
+<li><p>易于测试</p>
+</li>
+<li><p>独立于UI</p>
+</li>
+<li><p>独立于数据库</p>
+</li>
+<li><p>独立于任何外部类库</p>
+</li>
+</ul>
+<h1 id="clean在android中的体现"><a href="#clean在android中的体现" class="headerlink" title="clean在android中的体现"></a>clean在android中的体现</h1><ul>
+<li><p>外层：实现层</p>
+</li>
+<li><p>中层：接口适配层</p>
+</li>
+<li><p>内层：逻辑层</p>
+</li>
+</ul>
+<p>接口实现层是体现架构细节的地方。实现架构的代码是所有不用来解决问题的代码，这包括所有与安卓相关的东西，比如创建Activity和Fragment，发送Intent以及其他联网与数据库的架构相关的代码。</p>
+<p>添加接口适配层的目的就是桥接逻辑层和架构层的代码。</p>
+<p>最重要的是逻辑层，这里包含了真正解决问题的代码。这一层不包含任何实现架构的代码，不用模拟器也应能运行这里的代码。这样一来你的逻辑代码就有了易于测试、开发和维护的优点。这就是Clean架构的一个主要的好处。</p>
+<h1 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h1><p>一般来说一个安卓应用的结构如下：</p>
+<p>外层项目包：UI，Storage，Network等等。</p>
+<p>中层项目包：Presenter，Converter。</p>
+<p>内层项目包：Interactor，Model，Repository，Executor。</p>
+<h2 id="外层"><a href="#外层" class="headerlink" title="外层"></a>外层</h2><p>外层体现了框架的细节。</p>
+<p>UI – 包括所有的Activity，Fragment，Adapter和其他UI相关的Android代码。</p>
+<p>Storage – 用于让交互类获取和存储数据的接口实现类，包含了数据库相关的代码。包括了如ContentProvider或DBFlow等组件。</p>
+<p>Network – 网络操作。</p>
+<h2 id="中层"><a href="#中层" class="headerlink" title="中层"></a>中层</h2><p>桥接实现代码与逻辑代码的Glue Code。</p>
+<p>Presenter – presenter处理UI事件，如单击事件，通常包含内层Interactor的回调方法。</p>
+<p>Converter – 负责将内外层的模型互相转换。</p>
+<h2 id="内层"><a href="#内层" class="headerlink" title="内层"></a>内层</h2><p>内层包含了最高级的代码，里面都是POJO类，这一层的类和对象不知道外层的任何信息，且应能在任何JVM下运行。</p>
+<p>Interactor – Interactor中包含了解决问题的逻辑代码。这里的代码在后台执行，并通过回调方法向外层传递事件。在其他项目中这个模块被称为用例Use Case。一个项目中可能有很多小Interactor，这符合单一职责原则，而且这样更容易让人接受。</p>
+<p>Model – 在业务逻辑代码中操作的业务模型。</p>
+<p>Repository – 包含接口让外层类实现，如操作数据库的类等。Interactor用这些接口的实现类来读取和存储数据。这也叫资源库模式Repository Pattern。</p>
+<p>Executor – 通过Worker Thread Executor让Interactor在后台执行。一般不需要修改这个包里的代码。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/02/2018第九周工作小结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1602,132 +1763,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/13/2018第七周工作小结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/02/13/2018第七周工作小结/" itemprop="url">2018第七周工作小结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-13T23:16:05+08:00">
-                2018-02-13
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>这周除了学习还是学习，学习了测试规范和测试用例，美中不足的是用了很久但是没有什么效果。</p>
-<p>明天就放假了，需要安排一下新年的计划安排。<br>简要地说就是为了开年做的准备。</p>
-<ol>
-<li>完善简历知识点，对薄弱的地方进行强化。</li>
-<li>写一个视频监控出来。</li>
-</ol>
-<p>大致就这两个，其实难度还蛮大的。时间安排明天车上的时候想。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1778,7 +1813,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">93</span>
+                  <span class="site-state-item-count">94</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1791,7 +1826,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
