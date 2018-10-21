@@ -747,7 +747,7 @@ enummap可以规避这个问题，但是看起来其实可用性不是很高。m
 
 通过接口使得枚举拓展化，通过枚举来实现接口，这样使得枚举可以伸缩，虽然无法编写可拓展的枚举类型，但是这样却可以进行枚举的模拟
 
-## 注解优先于命名模式
+### 注解优先于命名模式
 
 命名模式有几个缺点:
 1 文字拼写错误会导致失败，比如说测试用例需要test开头，这样就会导致写错test就失败
@@ -758,16 +758,67 @@ enummap可以规避这个问题，但是看起来其实可用性不是很高。m
 
 通过注解可以完美的处理上述问题
 
+### 坚持使用override接口
 
+有助于编译器检查
 
+### 用标记接口定义类型
 
+标记接口类似于retrofit的标记方式，优点是可以精确的被锁定
 
+## 方法
 
+### 检查参数的有效性
 
+对于公开的方法，可以直接使用@throws标签进行标注，然后代码中判断
 
+非公开的方法，使用assert即可
 
+### 必要时进行保护性拷贝
 
+一个例子
 
+```
+public Period(Data start, Data end){
+	if(start.compareTo(end)){
+		throw new IllegalArgumentException(start + "after" + end);
+	}
+	this.start = start;
+	this.end = end;
+}
+```
+
+由于传入的Data事实上是可变的，因此一旦在构造完之后，再次修改的话，会造成条件不成立。
+
+```
+public Period(Data start, Data end){
+	if(start.compareTo(end)){
+		throw new IllegalArgumentException(start + "after" + end);
+	}
+	this.start = new Data(start.getTime());
+	this.end = new Data(end.getTime());
+}
+```
+使用这种方式就可以避免上述问题
+
+但是仍然有一种无法避免，就是暴露了相关参数，然后通过get接口获取之后直接更改。
+
+```
+public Data getStart(){
+	return new Data(start.getTime());
+}
+```
+因此在get中也需要进行保护措施
+
+### 谨慎设计方法签名
+
+1 谨慎的选择方法的名称
+
+2 不要过分追求提供便利的方法：主要原则是出于维护性的考虑，每个方法都应该尽其所能，而不应该过度耦合
+
+3 避免过长的参数列表：最多四个参数
+
+### 慎用重载
 
 
 
