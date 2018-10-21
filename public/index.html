@@ -229,6 +229,294 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/20/android渠道包打包取舍以及打包流程分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/20/android渠道包打包取舍以及打包流程分析/" itemprop="url">android渠道包打包取舍以及打包流程分析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-20T16:20:28+08:00">
+                2018-10-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="前述"><a href="#前述" class="headerlink" title="前述"></a>前述</h1><p>刚开始接手好搭的时候，用的是美团的多渠道打包方案，但是当时前人写的代码有些问题。</p>
+<p>当时的流程大致是：打包一个包，然后解压，修改META-INFO,之后重新压缩，过程中会生成一个额外的包含渠道名的文件。</p>
+<p>这样的好处是解压之后重新压缩，并不需要重新编译，也不需要重新签名。</p>
+<p>但是当时在apk启动的时候使用的读取渠道包的方式也是和官网提供的一样，没有变化。是启动时解压apk，然后读取相对应的文件。</p>
+<h1 id="过去方式的缺点"><a href="#过去方式的缺点" class="headerlink" title="过去方式的缺点"></a>过去方式的缺点</h1><p>由于需要启动的时候解压apk，整个过程耗时大约200ms，而且是每次都会出现的。加上前人对于性能的优化也不是很在心，当时刚接手的时候启动速度十分慢（大约1-2秒的卡顿）。</p>
+<p>后来不得已，出于性能的考虑，对这个动了刀子。</p>
+<h1 id="变化"><a href="#变化" class="headerlink" title="变化"></a>变化</h1><p>由于刚开始的渠道包并不算太多，因此第一个考虑就是使用gradle的变体来进行更改。</p>
+<p>变体是官方提供的，使用变体的话，平时打包也可以直接选定打什么包。对于项目来讲，省了不少时间。</p>
+<h1 id="变体带来的缺点"><a href="#变体带来的缺点" class="headerlink" title="变体带来的缺点"></a>变体带来的缺点</h1><p>后期由于项目规模大了起来，增加了5个渠道，全渠道打包时间一下子长了很多，由刚开始的40分钟，猛增到一小时20多分钟。同时市场那边的意思是后期还会继续扩充渠道。</p>
+<p>因此现在必须要更改一下这个打包方式。</p>
+<h1 id="想法1-raw"><a href="#想法1-raw" class="headerlink" title="想法1-raw"></a>想法1-raw</h1><p>第一种想法是脱离美团打包，通过自己设置资源文件夹下面的raw目录，来进行打包，raw文件在android里面是不会编译成二进制文件的，会原样保留到apk里面。在app启动的时候直接读raw文件。<br>但是这种想法刚说出来就被进奎否了，当时的问题出在raw文件需要进行重新编译，否则不会出现在R.java中，而如果使用apktool重新编译，效率基本上和变体是55开。</p>
+<h1 id="想法2-asset"><a href="#想法2-asset" class="headerlink" title="想法2-asset"></a>想法2-asset</h1><p>第二种想法是第一种想法的补充，既然raw文件需要通过编译来生成r，那我们找一个不需要编译的，想法很简单，打包之后直接塞一个文件到asset里面，这个文件就是配置文件，每次打包之后，解压，然后复制相对应渠道的配置文件到asset里面，这样就可以避免需要回编译的目的了。但是这个方法需要进行重新签名。</p>
+<h1 id="想法3-美团方案优化"><a href="#想法3-美团方案优化" class="headerlink" title="想法3-美团方案优化"></a>想法3-美团方案优化</h1><p>在目前不需要配置额外的配置目录的情况下，想法2其实是有些牛刀小用了。事实上我们完全可以在美团的打包方案上面进行优化。美团提供的打包方案，当时细细想想，完全没有必要每次启动apk的时候都去读取。仅仅需要第一次打开app的时候，读取并写入sp中，之后每次读取sp，如果没有在去重新读取即可。这样可以省了好多事情。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>鉴于目前项目的规格以及需求，仅仅在需要扩充渠道的时候，仅仅需要重启美团的优化方案，同时优化每次编译的选项即可。但是在后续需要用到不同配置文件的时候，就需要使用想法2的方法，美团的方案不够支持那么详细。</p>
+<p>同时鉴于此，也算研究了一下app打包流程，顺便总结一下。</p>
+<h1 id="打包流程"><a href="#打包流程" class="headerlink" title="打包流程"></a>打包流程</h1><p><img src="/images/android/androidpackageimage.png" alt="打包流程"></p>
+<p>从官方图可以很明显的看出流程变化。</p>
+<ol>
+<li>资源文件是通过aapt来进行打包的，aapt全称是Android Asset Packaging Tool，可以看出来，aapt打包生成了2个东西，一个是R,一个是compiled resources，像想法一之中的raw就是生成在r里面，compiled resources 是asset文件夹下面的东西，这些东西不会参与打包，而是直接被压缩进apk.</li>
+</ol>
+<p>关于asset和raw我之前一直认为raw是原封不动，不会编译成二进制，今天才知道两个相同点都是原封不动不会被编译成二进制。差别就是读写方式不同。因此想法1本来就是错误的。</p>
+<ol>
+<li><p>java编译器同时编译三者，一是代码，二是r文件，三是aidl编译下来的java接口。编译成class之后，然后和第三方class一起并到dex中（dex是好几个class合并起来的）。<br>看到这边有个疑问，为什么是class？我们所知道的第三方包，有时候是使用aar的形式来进行依赖的，aar包含了资源文件，但是我查了一下，如果是aar的话。将会被打包到class.jar中，应该就是先打包到jar中，然后又会被放到dex中</p>
+</li>
+<li><p>asset， resource， dex 三者就可以打包成一个apk了，此时使用apkbuilder即可，打包成一个未签名的apk。</p>
+</li>
+<li><p>apk好了之后使用jarsigner来进行签名</p>
+</li>
+<li><p>按理说签名完之后就应该结束了，为什么还会有个zipaligh呢？</p>
+</li>
+</ol>
+<p>zipalign的效果：zipalign是一个对齐工具，android基于linux，因此资源也是仿照linux来的，在多进程需要寻找资源的时候，最好的方式是按照linux架构来设计数据摆放位置，因此最好的是放在4字节层，这样子的话系统就不需要读取所有的文件，而直接可以类似链表的形式知道什么资源在什么地方。这样节省了大量的内存。因此这个步骤我们称之为对齐</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/18/binder机制学习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/18/binder机制学习/" itemprop="url">binder机制学习</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-18T22:42:23+08:00">
+                2018-10-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>binder平时总听过，但是原理只知道是ipc，也就是进程间通信。但是真正的原理其实还是不理解。</p>
+<h1 id="binder位置"><a href="#binder位置" class="headerlink" title="binder位置"></a>binder位置</h1><p>binder介于framework和systemservice之间，属于让开发者来调用系统层接口的方法。</p>
+<h1 id="ipc"><a href="#ipc" class="headerlink" title="ipc"></a>ipc</h1><p>ipc全称是inter-process communication,进程间通讯</p>
+<p>ipc的方式有很多种，socket，共享内存，管道，消息队列</p>
+<h2 id="socket"><a href="#socket" class="headerlink" title="socket"></a>socket</h2><p>socket实现进程间通讯，是基于tcpip协议来实现的，一般实现tcp，如果是udp也是可以的，udp是两个socket但是无连接。<br>通过tcp实现ipc的原理<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">客户端程序通过socket发送一系列信息到传输层的tcp，然后往下传，通过网络层，网络接口层，然后在往上传到网络层，然后传到服务端的传输层tcp，然后由服务器的socket接收到，之后回传也是相同的</span><br></pre></td></tr></table></figure></p>
+<p>缺点是需传输效率较低，一般只用在不同机器，或者跨网络的通行</p>
+<h2 id="共享内存"><a href="#共享内存" class="headerlink" title="共享内存"></a>共享内存</h2><p>共享内存的ipc，传输的对象一般都是可描述的，所以都用序列化，创建共享内存就使用memoryfile即可</p>
+<p>这样构建的内存可以让其他进程共享</p>
+<p>共享内存的优点在于无需复制，速度快，共享缓冲区直接附加到进程虚拟地址空间。缺点在于同步问题不好解决</p>
+<h2 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h2><p>消息队列就是messagequeue<br>实现的思路<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">在进程a中创建一个message，讲这个message对象通过imessenger.send(message)方法传递到进程b中</span><br><span class="line">send(message)会使用一个parcel对象对message对象编集，再将parcel对象传递到进程b中，然后解编集，得到一个和进程a中message对象内容一样的对象，在将message对象加入到b的消息队列里面，handler会处理它</span><br></pre></td></tr></table></figure></p>
+<p>消息队列的好处是比较方便，缺点是信息复制2次，有额外的cpu消耗，不是很适合频繁或者信息量大的通信</p>
+<h2 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h2><p>管道是比较古老的通信方式，包括无名管道和有名管道，前者是父子进程间的通信，后者用于运行同一机器上的任意两个进程间的通信。实现方式是pipe，利用管道的有handler（此处需要研究一下handler的实现原理）</p>
+<p>管道创建时分配了一个page大小的内存（page？）缓存区大小比较有限</p>
+<h1 id="Binder"><a href="#Binder" class="headerlink" title="Binder"></a>Binder</h1><p>binder ipc属于c/s结构，client部分是用户代码，最终会调用binder driver的transact接口，binder driver会调用server</p>
+<p>client:用户需要实现的代码，如aidl自动生成的接口类<br>binder driver：在内核层实现的driver<br>server：这个server就是service中onbind返回的ibinder对象</p>
+<p>binder driver这块并不需要用户知道，server中会开启一个线程池（防止任务积压，也需要做好同步措施）去处理客户端调用</p>
+<p>对于调用binder driver中的transact接口，客户端可以手动调用，也可以通过aidl的方式生成的代理类来调用，服务端可以继承binder对象，也可以继承aidl生成的接口类的stub对象</p>
+<h1 id="实现环节"><a href="#实现环节" class="headerlink" title="实现环节"></a>实现环节</h1><p>//todo</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/10/2018第三季度复盘（第40周）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1330,257 +1618,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/06/python操作mongodb/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/06/python操作mongodb/" itemprop="url">python操作mongodb</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-06T11:35:26+08:00">
-                2018-06-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="连接mongodb"><a href="#连接mongodb" class="headerlink" title="连接mongodb"></a>连接mongodb</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python</span><br><span class="line"># -*- coding:utf-8 -*-</span><br><span class="line"></span><br><span class="line">from pymongo import MongoClient</span><br><span class="line"></span><br><span class="line">conn = MongoClient(&apos;192.168.0.113&apos;, 27017)</span><br><span class="line">db = conn.mydb  ##连接mydb数据库，没有则自动创建</span><br><span class="line">my_set = db.test_set  # 使用test_set集合，没有则自动创建</span><br></pre></td></tr></table></figure>
-<h1 id="插入数据"><a href="#插入数据" class="headerlink" title="插入数据"></a>插入数据</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">my_set.insert(&#123;&quot;name&quot;:&quot;zhangsan&quot;,&quot;age&quot;:18&#125;)</span><br><span class="line"></span><br><span class="line"># 或</span><br><span class="line"></span><br><span class="line">my_set.save(&#123;&quot;name&quot;:&quot;zhangsan&quot;,&quot;age&quot;,18&#125;)</span><br></pre></td></tr></table></figure>
-<p>#插入多条</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">users=[&#123;&quot;name&quot;:&quot;zhangsan&quot;,&quot;age&quot;:18&#125;,&#123;&quot;name&quot;:&quot;lisi&quot;,&quot;age&quot;:18&#125;]</span><br><span class="line">my_set.insert(users)</span><br><span class="line"></span><br><span class="line"># 或</span><br><span class="line"></span><br><span class="line">my_set.save(users)</span><br></pre></td></tr></table></figure>
-<h1 id="查询数据"><a href="#查询数据" class="headerlink" title="查询数据"></a>查询数据</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 查询全部</span><br><span class="line">for i in my_set.find():</span><br><span class="line">	print(i)</span><br><span class="line"></span><br><span class="line"># 查询name = zhangsan 的</span><br><span class="line"></span><br><span class="line">for i in my_set.find(&#123;&quot;name&quot;:&quot;zhangsan&quot;&#125;):</span><br><span class="line">	print(i)</span><br><span class="line">print(my_set.find_one(&#123;&quot;name&quot;:&quot;zhangsan&quot;&#125;))</span><br></pre></td></tr></table></figure>
-<h1 id="更新数据"><a href="#更新数据" class="headerlink" title="更新数据"></a>更新数据</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">my_set.update(</span><br><span class="line">	&lt;query&gt;,  #查询条件</span><br><span class="line">	&lt;update&gt;,  #update的对象和一些更新操作符</span><br><span class="line">	&#123;</span><br><span class="line">		upsert: &lt;boolean&gt; # 如果不存在update的记录，是否插入</span><br><span class="line">		multi: &lt;boolean&gt; # 可选，mongodb默认是false，只更新找到的第一条记录</span><br><span class="line">		writeConcern: &lt;document&gt; # 可选，抛出异常的级别</span><br><span class="line">	&#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">my_set.update(&#123;&quot;name&quot;:&quot;zhangsan&quot;&#125;,&#123;&apos;$set&apos;:&#123;&quot;age&quot;:20&#125;&#125;)</span><br></pre></td></tr></table></figure>
-<h1 id="删除数据"><a href="#删除数据" class="headerlink" title="删除数据"></a>删除数据</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">my_set.remove(</span><br><span class="line">	&lt;query&gt;,  # 可选：删除的文档的条件</span><br><span class="line">	&#123;</span><br><span class="line">		justOne: &lt;boolean&gt;</span><br><span class="line">		writeConcern: &lt;document&gt;</span><br><span class="line">	&#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 删除name = lisi的全部记录</span><br><span class="line">my_set.remove(&#123;&apos;name&apos;:&apos;zhangsan&apos;&#125;)</span><br><span class="line"></span><br><span class="line"># 删除name=lisi的某个id的记录</span><br><span class="line">id = my_set.find_one(&#123;&quot;name&quot;:&quot;zhangsan&quot;&#125;)[&quot;_id&quot;]</span><br><span class="line">my_set.remove(id)</span><br><span class="line"></span><br><span class="line"># 删除集合里的所有记录</span><br><span class="line">db.users.remove()</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/04/2018第二十二周工作小结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/04/2018第二十二周工作小结/" itemprop="url">2018第二十二周工作小结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-04T14:28:49+08:00">
-                2018-06-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>上周的任务是完成了盒子2.0.5的上线。这次主要是做了一些小的修改和修复。</p>
-<p>工作并没有学到多少，清闲反而有些不习惯。</p>
-<p>除此之外学习了mongodb，和后台搭建的一些知识，做了记录。</p>
-<p>本周转正，祝顺利。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1631,7 +1668,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">94</span>
+                  <span class="site-state-item-count">96</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

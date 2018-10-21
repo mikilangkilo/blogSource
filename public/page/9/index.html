@@ -229,6 +229,266 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/08/直接插入排序/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/08/直接插入排序/" itemprop="url">直接插入排序</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-08T22:29:59+08:00">
+                2018-01-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>直接插入排序属于排序中的内部排序的插入排序的一种。</p>
+<h1 id="算法思想"><a href="#算法思想" class="headerlink" title="算法思想"></a>算法思想</h1><p>直接将一个记录插入到已排序好的有序列表中，从而得到一个新的，记录数增1的有序表。</p>
+<h1 id="空间复杂度"><a href="#空间复杂度" class="headerlink" title="空间复杂度"></a>空间复杂度</h1><p>只需要一个待记录的空间，空间复杂度为O(1)</p>
+<h1 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h1><p>最好情况下，已有列表有序且正序，只需要插入一次，比较n-1次，移动0次<br>最坏情况下，已有列表有序但是倒序，需要全部更改，比较n-1次，移动n-1次，复杂度为O(n^2)</p>
+<h1 id="算法实现思想"><a href="#算法实现思想" class="headerlink" title="算法实现思想"></a>算法实现思想</h1><p>把它当作一个牌堆，现在从第一张开始抽。（开启一个循环，循环长度为数组的长度）</p>
+<p>假如抽的这一张比右手第一张小，代表需要插到前面。（a[j] &lt; a[j-1]）</p>
+<p>从右手第二张开始往左看，如果找到有比抽到的这张小的，插到这张的后面。<br>这个过程需要将每个比抽到的这大的往后挪一位，</p>
+<p>小技巧，将手中最右边这张先拿出去，然后将抽到的这张加到最右边，然后从最右边开始排序，排序完毕之后将拿出去的这张重新加到最右边。</p>
+<h2 id="java实现"><a href="#java实现" class="headerlink" title="java实现"></a>java实现</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public static int[] insertSort(int[] array)&#123;</span><br><span class="line">	int[] arr = array;</span><br><span class="line">	int temp;</span><br><span class="line">	for(int i = 1; i &lt; arr.length; i++)&#123;</span><br><span class="line">		for(int j = i; j &gt;= 1 &amp;&amp; arr[j - 1] &gt; arr[j]; j-- )&#123;</span><br><span class="line">			temp = arr[j];</span><br><span class="line">			arr[j] = arr[j - 1];</span><br><span class="line">			arr[j - 1] = temp;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return arr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="c实现"><a href="#c实现" class="headerlink" title="c实现"></a>c实现</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">int inser_sort(int s[], int length)&#123;</span><br><span class="line">	int i, j, t;</span><br><span class="line">	for (i = 1; i &lt; length; i++)&#123;</span><br><span class="line">		for (j = i - 1; j &gt; -1 &amp;&amp; s[j] &gt; t; j--)&#123;</span><br><span class="line">			t = s[i];</span><br><span class="line">			s[j + 1] = s[j];</span><br><span class="line">			s[j] = t;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="python实现"><a href="#python实现" class="headerlink" title="python实现"></a>python实现</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">def insertSort(a):</span><br><span class="line">	length = len(targetList)</span><br><span class="line">	for i in range(1, length:</span><br><span class="line">		j = i - 1</span><br><span class="line">		if (target[i] &lt; targetList[j])&#123;</span><br><span class="line">			temp = targetList[i]</span><br><span class="line">			target[i] = targetList[j]</span><br><span class="line">			j = j - 1</span><br><span class="line">			while j &gt; 0 and targetList[j] &gt; temp:</span><br><span class="line">				targetList[j + 1] = targetList[j]</span><br><span class="line">				j = j - 1</span><br><span class="line">			targetList[j + 1] = temp</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/07/android消息推送/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/07/android消息推送/" itemprop="url">android消息推送</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-07T18:48:46+08:00">
+                2018-01-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>之前与服务器通信的时候，使用的是handler轮询的机制，固定几秒来查一次接口数据。</p>
+<p>这样做有两个弊端，一个是当app被注销的时候，无法实现通知的功能。另一个是轮询无法达到实时性的地步。</p>
+<p>同时无法实现消息推送的功能。</p>
+<p>im通信的原理：客户端a发送消息-&gt;服务端处理-&gt;发送给客户端b</p>
+<p>消息推送的原理：客户端a发送消息-&gt;服务端处理-&gt;发送给客户端a</p>
+<h1 id="长连接和短连接"><a href="#长连接和短连接" class="headerlink" title="长连接和短连接"></a>长连接和短连接</h1><ol>
+<li><p>长连接：客户端和服务器之间始终建立着一个通信连接，在连接没有中断之前，客户端和服务器之间可以随时通信<br>典型范例 socket<br>长连接实现的实时通讯，称作推送</p>
+</li>
+<li><p>短连接：通信双方有数据交互时，就建立一个连接，数据发送完成后，断开此连接<br>典型范例 http<br>短连接实现的实时通讯，称作轮询</p>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/06/使用浏览器唤起app/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1380,266 +1640,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/31/ios-stanford-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/12/31/ios-stanford-1/" itemprop="url">ios-stanford-1</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-31T21:44:56+08:00">
-                2017-12-31
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="what‘s-in-iOS？"><a href="#what‘s-in-iOS？" class="headerlink" title="what‘s in iOS？"></a>what‘s in iOS？</h1><h2 id="Core-OS"><a href="#Core-OS" class="headerlink" title="Core OS:"></a>Core OS:</h2><p>iOS基本就是一个基于Unix的操作系统，它大量借鉴了Mac OS X的内核部分。<br>所以Core OS部分，包含了Sockets,Security,BSD,Mach 3.0,OSX Kernal, Power Management, Keychain Access, Certifications, File System Bonjour.这些实现一个操作系统的部分。</p>
-<h2 id="Core-Services"><a href="#Core-Services" class="headerlink" title="Core Services:"></a>Core Services:</h2><p>这是一个能够让开发者使用大量的面向对象编程技术，但这层不包括ui，而是更多用于通过面向对象编程的方式访问硬件或者访问网络等等。我们需要耗费很多的时间，因为我们需要这些原始组件来建立更高的层。<br>包括了Collections,Address Book,Networking,FileAccess, SQLite, CoreLocation,Net Services, Threading, Preferences, URL Utilities.</p>
-<h2 id="Media"><a href="#Media" class="headerlink" title="Media"></a>Media</h2><p>Core Audio, OpenAL, Audio Mixing, Audio Mixing, Audio Recording, Video Playback, JPEG/PNG/TIFF, PDF, Quartz(2D), Core Animation, OpenGL ES.</p>
-<h2 id="Cocoa-Touch"><a href="#Cocoa-Touch" class="headerlink" title="Cocoa Touch"></a>Cocoa Touch</h2><p>Multi-Touch, Alerts, Core Motion, Web View, View Hierarchy, Map kit, Localization, Image Picker, Controls, Camera<br>使用这些与用户互动</p>
-<h1 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h1><p>MVC是一种设计模式，更有利于阅读代码。而iOS从一开始就使用MVC设计，这是构建iOS的一种方法。</p>
-<h1 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h1>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/23/爬虫相关/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/12/23/爬虫相关/" itemprop="url">爬虫相关</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-23T17:21:18+08:00">
-                2017-12-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="概念相关："><a href="#概念相关：" class="headerlink" title="概念相关："></a>概念相关：</h1><h2 id="所有网站皆可爬"><a href="#所有网站皆可爬" class="headerlink" title="所有网站皆可爬"></a>所有网站皆可爬</h2><p>互联网的内容都是人写出来的，而且都是偷懒写出来的（不会第一页是a，下一页是8），所以肯定有规律，这就给人有了爬取的可能，可以说，天下没有不能爬的网站</p>
-<h2 id="框架不变"><a href="#框架不变" class="headerlink" title="框架不变"></a>框架不变</h2><p>网站不同，但是原理都类似，大部分爬虫都是从 发送请求——获得页面——解析页面——下载内容——储存内容 这样的流程来进行，只是用的工具不同</p>
-<h1 id="基础相关"><a href="#基础相关" class="headerlink" title="基础相关"></a>基础相关</h1><h2 id="python-基础"><a href="#python-基础" class="headerlink" title="python 基础"></a>python 基础</h2><p>list，dict：用来序列化你爬的东西<br>切片：用来对爬取的内容进行分割，生成<br>条件判断（if等）：用来解决爬虫过程中哪些要哪些不要的问题<br>循环和迭代（for while ）：用来循环，重复爬虫动作<br>文件读写操作：用来读取参数、保存爬下来的内容等</p>
-<h2 id="网页基本知识"><a href="#网页基本知识" class="headerlink" title="网页基本知识"></a>网页基本知识</h2><p>基本的HTML语言知识（知道href等大学计算机一级内容即可）<br>理解网站的发包和收包的概念（POST GET）<br>稍微一点点的js知识，用于理解动态网页（当然如果本身就懂当然更好啦）</p>
-<h2 id="分析语言相关"><a href="#分析语言相关" class="headerlink" title="分析语言相关"></a>分析语言相关</h2><h3 id="正则表达式：扛把子技术，总得会最基础的"><a href="#正则表达式：扛把子技术，总得会最基础的" class="headerlink" title="正则表达式：扛把子技术，总得会最基础的"></a>正则表达式：扛把子技术，总得会最基础的</h3><p><img src="/images/爬虫相关/正则.jpg" alt="正则表达式"></p>
-<h3 id="xpath：高效的分析语言，表达清晰简单，掌握了以后基本可以不用正则"><a href="#xpath：高效的分析语言，表达清晰简单，掌握了以后基本可以不用正则" class="headerlink" title="xpath：高效的分析语言，表达清晰简单，掌握了以后基本可以不用正则"></a><a href="http://www.w3school.com.cn/xpath/" target="_blank" rel="noopener">xpath</a>：高效的分析语言，表达清晰简单，掌握了以后基本可以不用正则</h3><h3 id="BeautifulSoup：美丽汤模块解析网页神器-一款神器，如果不用一些爬虫框架（如后文讲到的scrapy），配合request，urllib等模块（后面会详细讲），可以编写各种小巧精干的爬虫脚本"><a href="#BeautifulSoup：美丽汤模块解析网页神器-一款神器，如果不用一些爬虫框架（如后文讲到的scrapy），配合request，urllib等模块（后面会详细讲），可以编写各种小巧精干的爬虫脚本" class="headerlink" title="BeautifulSoup：美丽汤模块解析网页神器,一款神器，如果不用一些爬虫框架（如后文讲到的scrapy），配合request，urllib等模块（后面会详细讲），可以编写各种小巧精干的爬虫脚本"></a><a href="http://beautifulsoup.readthedocs.io/zh_CN/latest/" target="_blank" rel="noopener">BeautifulSoup</a>：美丽汤模块解析网页神器,一款神器，如果不用一些爬虫框架（如后文讲到的scrapy），配合request，urllib等模块（后面会详细讲），可以编写各种小巧精干的爬虫脚本</h3><h2 id="辅助工具相关"><a href="#辅助工具相关" class="headerlink" title="辅助工具相关"></a>辅助工具相关</h2><h3 id="F12开发者工具"><a href="#F12开发者工具" class="headerlink" title="F12开发者工具"></a>F12开发者工具</h3><ol>
-<li>看源代码：快速定位元素</li>
-<li>分析xpath：1、此处建议谷歌系浏览器,可以在源码界面直接右键看</li>
-</ol>
-<h3 id="抓包工具"><a href="#抓包工具" class="headerlink" title="抓包工具"></a>抓包工具</h3><p>推荐httpfox，火狐浏览器下的插件,比谷歌火狐系自带的F12工具都要好，可以方便查看网站收包发包的信息</p>
-<h3 id="XPATH-CHECKER-火狐插件）"><a href="#XPATH-CHECKER-火狐插件）" class="headerlink" title="XPATH CHECKER (火狐插件）"></a>XPATH CHECKER (火狐插件）</h3><p>非常不错的xpath测试工具，但是有几个坑，都是个人踩过的，，在此告诫大家：     1、xpath checker生成的是绝对路径，遇到一些动态生成的图标（常见的有列表翻页按钮等），飘忽不定的绝对路径很有可能造成错误，所以这里建议在真正分析的时候，只是作为参考     2、记得把如下图xpath框里的“x:”去掉，貌似这个是早期版本xpath的语法，目前已经和一些模块不兼容（比如scrapy），还是删去避免报错</p>
-<h3 id="正则表达式测试工具"><a href="#正则表达式测试工具" class="headerlink" title="正则表达式测试工具"></a>正则表达式测试工具</h3><p><a href="http://tool.oschina.net/regex/" target="_blank" rel="noopener">在线正则表达式测试</a><br>拿来多练练手，也辅助分析！里面有很多现成的正则表达式可以用，也可以进行参考！</p>
-<h2 id="爬虫模块相关"><a href="#爬虫模块相关" class="headerlink" title="爬虫模块相关"></a>爬虫模块相关</h2><p>urllib urllib2 requests </p>
-<h3 id="现成模块-scrapy"><a href="#现成模块-scrapy" class="headerlink" title="现成模块 scrapy"></a>现成模块 scrapy</h3><h3 id="动态页面解决-selenium-phantomJS"><a href="#动态页面解决-selenium-phantomJS" class="headerlink" title="动态页面解决 selenium phantomJS"></a>动态页面解决 selenium phantomJS</h3><h3 id="反爬虫策略验证码"><a href="#反爬虫策略验证码" class="headerlink" title="反爬虫策略验证码"></a>反爬虫策略验证码</h3><p>PIL opencv pybrain 打码平台</p>
-<h2 id="数据库相关"><a href="#数据库相关" class="headerlink" title="数据库相关"></a>数据库相关</h2><p>mysql， mongodb， sqlite</p>
-<h2 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h2><p>numpy 数据分析，类似matlab的模块<br>pandas（基于numpy的数据分析模块，相信我，如果你不是专门搞TB级数据的，这个就够了）</p>
-<h2 id="技术进阶"><a href="#技术进阶" class="headerlink" title="技术进阶"></a>技术进阶</h2><p>多线程、分布式</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1690,7 +1690,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">94</span>
+                  <span class="site-state-item-count">96</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
