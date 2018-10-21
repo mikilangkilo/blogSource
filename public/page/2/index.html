@@ -229,6 +229,137 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/24/2018第二十五周工作小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/24/2018第二十五周工作小结/" itemprop="url">2018年第二十五周工作小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-24T19:14:24+08:00">
+                2018-06-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>即将迭代盒子2.1版本，所以这周做了一些准备工作。</p>
+<p>首先是专题部分的完成，单纯的通过了recyclerview的联动实现了一些小的控件，性能还可以，但是绘制的时候发现总是出现掉帧的现象。</p>
+<p>android的刷新频率是60hz，所以每秒绘制60次，每16ms绘制一次，但是这次发现有些绘制时间高达19ms，导致一帧绘制不起来，出现了一些卡顿的现象。</p>
+<p>经过部分分析，发现一个是recyclerview图形层级比较高，带来了绘制卡顿，优化之后仍然绘制过慢。</p>
+<p>最后行动是将所有的view统一，撤销所有的background，将scrollview的内容做缓存，将所有的网络数据接口做24小时的内存缓存。目前结果是第一次加载时卡顿，之后正常。</p>
+<p>这周工作上面只做了这些事。</p>
+<p>另外这周对自己的水平产生了一些疑问，相对于苏展、朱曦他们大我一届的人来讲，我的水平和他们相差还是比较大的。他们关注点更多的在一些我看不到的地方，比如说计算机理论，算法方面，甚至计算机硬件方面。和他们聊天的时候觉得他们什么都懂，攒机、rom、编译器选择、各大ide的比较，甚至连喷windows，喷mac，喷linux，姿势水平都比我高很多。</p>
+<p>这让我想到刚工作的时候，上级带我做职业规划的时候说的一句话：如果局限在一个方面，三两年就会厌倦，只有持续的多方面发展，才能有一个完善的职业规划。</p>
+<p>他们恰巧是兴趣带动了行动，行动也反过来增加了兴趣。</p>
+<p>反过来看我，自从刚毕业的时候，进入了手机开发行业，至今刚好两年多，一直在android和java的深坑中刻苦攀爬，偶尔有个兴趣爱好，也是以金钱为导向。这样的确使得自己变得很累。</p>
+<p>如果想持之以恒的发展下去，必然要发展一些兴趣，而这些兴趣也必须以一些有效的手段来规划，才能达到不浪费时间的目的。</p>
+<p>暂时思考方向如上，行动方向暂时未知。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/06/python操作mongodb/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1692,173 +1823,6 @@ vii. 如果该域是一个数组，需要针对每一个元素计算一下，然
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/03/针对activity栈启动模式进行fragment栈的引申/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/03/针对activity栈启动模式进行fragment栈的引申/" itemprop="url">针对activity栈启动模式进行fragment栈的引申</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-03T23:30:29+08:00">
-                2018-05-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>“one activity for the whole app, you can use fragments, just don’t use the backstack with fragments”</p>
-<p>— jake·warton</p>
-<p>安卓开发有其独特的魅力，相对于每个页面不断的切换，事实上前端开发从安卓的角度来看可以有不同的作为。</p>
-<p>比如说jake·warton所说的只使用一个activity窗口，外加很多个碎片，来组成一个app。这句话很好理解，可是后面的这半句话是什么意思呢？主要是fragment的后台管理栈比较不容易操控。</p>
-<p>所以我们需要了解一下如何操控这个栈。这次就从activity的启动模式来分析。</p>
-<ul>
-<li>standard</li>
-</ul>
-<p>默认的启动模式，对fragment来讲，在basefragment中抽取activity的stackedfragments，每次新建一个fragment时，创建一个新的加入到栈顶即可。</p>
-<ul>
-<li>singleTop</li>
-</ul>
-<p>在栈顶的话，启动还是会转到自己，而不在栈顶的话就会新建。这个属性对fragment来讲不怎么实用，没怎么遇到过这种情形，如果要用的话，就判断之前的栈顶是否和新传入的相同，相同的话，就仍然返回的自身，不同就创建一个。</p>
-<ul>
-<li>singleTask</li>
-</ul>
-<p>在栈内的话，启动一个实例，就会启动栈内的。这个属性比较好用，对fragment来讲，可以用这个来做很多事情，包括回去的时候直接pop起到了cleartop的效果。</p>
-<p>开发中还遇到相似的，一次传入三到四个fragment，如果有其中的fragment在栈上方，立即返回他，中断其余判断。这种操作其实就是遍历栈而已，不过能够在fragment多复用的情况下，找到当前回归路径，省了很多其他的事情。</p>
-<ul>
-<li>singleinstance</li>
-</ul>
-<p>每次开辟一个新的栈，这个在fragment中没用，因为只有唯一的一个栈在activity中。</p>
-<ul>
-<li>FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS</li>
-</ul>
-<p>对activity来讲，新的Activity不会在最近启动的Activity的列表中保存。对fragment来讲，就是新启动的不入栈，可以考虑设计一个固定大小的栈的时候，只有固定的几个fragment可以用于入栈，其余的都不入。不过这个设计要考虑一下，返回哪些栈。</p>
-<p>实际效果可能就是切了很多个页面，最后一个回退，回退到了很久之前的一个页面。使用情景比较局限。</p>
-<ul>
-<li>FLAG_ACTIVITY_FORWARD_RESULT</li>
-</ul>
-<p>这个是startactivityforresult的标志位，同样的也可以设计一个startfragmentforresult。事实上也就是在进入这个fragment的时候，basefragment记录一下resultcode的值，然后回退的时候，将这个result值传入到栈顶即可。</p>
-<ul>
-<li>FLAG_ACTIVITY_NO_HISTORY</li>
-</ul>
-<p>单纯的不入栈的操作。</p>
-<ul>
-<li>FLAG_ACTIVITY_REORDER_TO_FRONT</li>
-</ul>
-<p>该标志位是用于启动时挪动activity栈的，对fragment同样可以设计，不过较为复杂，可以从栈内取出，重新排序之后插入。比较不好的是可能会遗漏状态。</p>
-<ul>
-<li>FLAG_ACTIVITY_NEW_TASK</li>
-</ul>
-<p>同 singinstance</p>
-<ul>
-<li>FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET</li>
-</ul>
-<p>对activity来讲，是当新进入的activity携带这个标志时，就会清理栈。fragment同样可以设计，若有个携带该标记的进入，也可以清空。虽然我目前仍然是使用老的回到最起初的fragment，不过效果可能没这个设计的好。</p>
-<p>大致就这些。针对fragment设计一个单独的有特征的栈，我个人觉得是使用fragment代替activity的第一步。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1909,7 +1873,7 @@ vii. 如果该域是一个数组，需要针对每一个元素计算一下，然
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">96</span>
+                  <span class="site-state-item-count">97</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
