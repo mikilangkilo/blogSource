@@ -229,6 +229,253 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/22/viewstub的作用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/22/viewstub的作用/" itemprop="url">viewstub的作用</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-22T23:53:18+08:00">
+                2018-10-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>viewstub和merge标签基本上都属于android开发强求优化的时候需要注意的事情。</p>
+<p>viewstub的大致作用是用于替换布局。与include这种将布局模块化的不同，viewstub主要的场景是用于分布加载，或者说延迟加载。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;ViewStub</span><br><span class="line">        android:id=&quot;@+id/map_stub&quot;</span><br><span class="line">        android:layout_width=&quot;fill_parent&quot;</span><br><span class="line">        android:layout_height=&quot;fill_parent&quot;</span><br><span class="line">        android:inflatedId=&quot;@+id/map_view&quot;</span><br><span class="line">        android:layout=&quot;@layout/map&quot; /&gt;</span><br></pre></td></tr></table></figure>
+<p>一般来讲viewstub就是这样，包含一个inflatedid，和一个layout，当viewstub被inflate时或者被设置为visiable时，viewstub属性就会消失，取而代之的是layout，并且此时viewstub的id也会消失，新的布局的id就是inflatedid，之后如果在要使用viewstub的布局的话，就需要直接调inflatedid了。viewstub老的id寻找的布局将为null</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/22/merge标签的作用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/22/merge标签的作用/" itemprop="url">merge标签的作用</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-22T21:09:18+08:00">
+                2018-10-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>merge标签的作用是用于减少一层布局的。</p>
+<p>事实上很多时候如果单控件的话，可以直接使用控件来当root使用。</p>
+<p>但是一旦控件比较多的话，那就没办法了，此时就需要使用merge标签来减少一层布局了。</p>
+<p>merge标签一般的作用就是替代framelayout，当绘制绘制到他的时候，会主动跳过布局而直接绘制其包含的内容。但是缺点或者说局限就是只能使用framelayout的布局来布局。</p>
+<p>另外merge只能用作根布局，且如果想使用inflater来inflate的话，attachtoroot一定要写成true</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/21/为什么在activity触发ondestroy的时候内部类可能产生泄露/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -314,7 +561,7 @@
 <h1 id="loginChecker优化"><a href="#loginChecker优化" class="headerlink" title="loginChecker优化"></a>loginChecker优化</h1><p>代码中为了方便做登录的检查，同时为了防止包过大，没有使用切片，而是写了一个loginchecker辅助类</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br></pre></td><td class="code"><pre><span class="line">package com.haomaiyi.base.util;</span><br><span class="line"></span><br><span class="line">import android.annotation.SuppressLint;</span><br><span class="line">import android.app.Activity;</span><br><span class="line">import android.text.TextUtils;</span><br><span class="line"></span><br><span class="line">import com.haomaiyi.base.updatemanager.Logger;</span><br><span class="line">import com.haomaiyi.fittingroom.AppApplication;</span><br><span class="line">import com.haomaiyi.fittingroom.domain.interactor.account.GetCurrentAccount;</span><br><span class="line">import com.haomaiyi.fittingroom.domain.model.account.Account;</span><br><span class="line">import com.haomaiyi.fittingroom.domain.model.account.AnonymousAccount;</span><br><span class="line">import com.haomaiyi.fittingroom.ui.LoginActivity;</span><br><span class="line">import com.orhanobut.hawk.Hawk;</span><br><span class="line">import com.trello.rxlifecycle2.LifecycleProvider;</span><br><span class="line"></span><br><span class="line">import javax.inject.Inject;</span><br><span class="line"></span><br><span class="line">import io.reactivex.Observable;</span><br><span class="line">import io.reactivex.android.schedulers.AndroidSchedulers;</span><br><span class="line">import io.reactivex.schedulers.Schedulers;</span><br><span class="line"></span><br><span class="line">@SuppressLint(&quot;CheckResult&quot;)</span><br><span class="line">public class LoginChecker &#123;</span><br><span class="line"></span><br><span class="line">    private static LoginChecker instance;</span><br><span class="line">    public LoginProceed proceed;</span><br><span class="line">    @Inject</span><br><span class="line">    GetCurrentAccount getCurrentAccount;</span><br><span class="line">    //    private boolean loginStat = false;</span><br><span class="line">    private int uid = -1;</span><br><span class="line">    private boolean logSuccess = false;</span><br><span class="line"></span><br><span class="line">    public LoginChecker() &#123;</span><br><span class="line">        AppApplication.getInstance().getUserComponent().inject(this);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static LoginChecker getInstance() &#123;</span><br><span class="line">        if (instance == null) &#123;</span><br><span class="line">            synchronized (LoginChecker.class) &#123;</span><br><span class="line">                if (instance == null) &#123;</span><br><span class="line">                    instance = new LoginChecker();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return instance;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void onLoginStart() &#123;</span><br><span class="line">        logSuccess = false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void onLoginFinish() &#123;</span><br><span class="line">        // TODO: 2018/9/30</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public LgnStat getLoginStat() &#123;</span><br><span class="line">        Account ac = getCurrentAccount.executeSync();</span><br><span class="line">        LgnStat stat;</span><br><span class="line">        if (ac instanceof AnonymousAccount) &#123;</span><br><span class="line">            stat = LgnStat.ANONYMOUS;</span><br><span class="line">        &#125; else if (TextUtils.isEmpty(ac.getPhonenumber())) &#123;</span><br><span class="line">            stat = LgnStat.NEED_NUMBER;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            stat = LgnStat.COMPLETE;</span><br><span class="line">        &#125;</span><br><span class="line">        return stat;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getUid() &#123;</span><br><span class="line">        uid = getCurrentAccount.executeSync().getId();</span><br><span class="line">        return uid;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setUid(int uid) &#123;</span><br><span class="line">        this.uid = uid;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void check(LifecycleProvider lifecycle, LoginCallback callback) &#123;</span><br><span class="line"></span><br><span class="line">        final Observable&lt;Account&gt; ob = getCurrentAccount.getObservable()</span><br><span class="line">                .subscribeOn(Schedulers.io())</span><br><span class="line">                .observeOn(AndroidSchedulers.mainThread());</span><br><span class="line"></span><br><span class="line">        if (lifecycle != null)</span><br><span class="line">            ob.compose(lifecycle.bindToLifecycle());</span><br><span class="line"></span><br><span class="line">        ob.subscribe(ac -&gt; &#123;</span><br><span class="line">            uid = ac.getId();</span><br><span class="line">            LgnStat stat;</span><br><span class="line">            if (ac instanceof AnonymousAccount) &#123;</span><br><span class="line">                stat = LgnStat.ANONYMOUS;</span><br><span class="line">            &#125; else if (TextUtils.isEmpty(ac.getPhonenumber())) &#123;</span><br><span class="line">                stat = LgnStat.NEED_NUMBER;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                stat = LgnStat.COMPLETE;</span><br><span class="line">            &#125;</span><br><span class="line">            callback.onLogin(stat);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void loginAndproceed(Activity src, LifecycleProvider lifecycleProvider, LoginProceed proceed) &#123;</span><br><span class="line">        Logger.i(&quot;check=&quot; + this);</span><br><span class="line">        check(lifecycleProvider, new LoginCallback() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onLogin(LgnStat stat) &#123;</span><br><span class="line">                switch (stat) &#123;</span><br><span class="line">                    case ANONYMOUS:</span><br><span class="line">                        LoginChecker.this.proceed = proceed;</span><br><span class="line">                        LoginActivity.start(src);</span><br><span class="line">                        break;</span><br><span class="line">                    case NEED_NUMBER:</span><br><span class="line">                        LoginChecker.this.proceed = proceed;</span><br><span class="line">                        LoginActivity.start(src, LgnStat.NEED_NUMBER);</span><br><span class="line">                        break;</span><br><span class="line">                    case COMPLETE:</span><br><span class="line">                        proceed.onProceed();</span><br><span class="line">                        break;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Must be called after cancel login behavior.</span><br><span class="line">     */</span><br><span class="line">    public void clear() &#123;</span><br><span class="line">        proceed = null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Must be called after login success.</span><br><span class="line">     */</span><br><span class="line">    public boolean consume(int id, LoginActivity act) &#123;</span><br><span class="line">        uid = id;</span><br><span class="line">        Hawk.put(&quot;SHOW_GIFT&quot;, true);</span><br><span class="line">        if (proceed == null)</span><br><span class="line">            return false;</span><br><span class="line">        proceed.onLoginAndProceed(id, act);</span><br><span class="line">        proceed = null;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public enum LgnStat &#123;</span><br><span class="line">        // 匿名用户</span><br><span class="line">        ANONYMOUS,</span><br><span class="line">        // 有手机号</span><br><span class="line">        COMPLETE,</span><br><span class="line">        // 无手机号</span><br><span class="line">        NEED_NUMBER</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public interface LoginProceed &#123;</span><br><span class="line">        void onProceed();</span><br><span class="line"></span><br><span class="line">        void onLoginAndProceed(int id, LoginActivity act);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public interface LoginCallback &#123;</span><br><span class="line">        void onLogin(LgnStat loginStat);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这个类虽然不是内部类，但是其携带的内部类以接口形式获取了activity，以activity作为实例，做了一些别的事情。而且有个最重要的问题，就是启动loginactivity的时候使用的是获取的实例。同时整个类又绑定了lifecycle。这就导致了一个很有趣的问题，就是当使用实例来启动的时候触发了onpause和onstop，此时刚好gc，导致无法回收。</p>
-<p>因此此时需要更改几个地方，一是不在使用原来传过来的activity，改用application的context，这样就不会再出现强制捆绑的地方。其次是将该类中使用到的任何引用的地方改成weakreference。</p>
+<p>因此此时需要更改几个地方，一是不在使用原来传过来的activity，改用application的context，这样就不会再出现强制捆绑的地方。其次是将该类中使用到的任何引用的地方改成weakreference。atu</p>
 
           
         
@@ -1356,271 +1603,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/16/2018第二十八周工作小结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/16/2018第二十八周工作小结/" itemprop="url">2018第二十八周工作小结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-16T11:30:29+08:00">
-                2018-07-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本周完成了盒子2.1.0的绝大多数功能，等着周一上架。</p>
-<p>这次开发遇到了巨大的问题。在上上周一根据时间计划安排来确定了时间，结果噩梦般的产品后续大概全面改版外加更新了接近100%的内容，然而deadline没有变。</p>
-<p>第28周的工作压力特别大，每天搞到9点多，周末还来加班，总算紧赶慢赶赶完了。</p>
-<p>总结一下工作遇到的内容。</p>
-<p>首先是功能开发，本次更新了整个流程，因此开发了不少新功能和新需求。</p>
-<p>盒子页面直接取消，变成了一个常驻的view，如果此时使用单独的view区域的话，工作量比较大，因此改成了单一的popupwindow，不过是常驻的，每个使用的地方直接发一个eventbus即可。</p>
-<p>订单流程的更改，做了实时订单更新的操作，由于需要与盒子同步，因此直接使用了cartutil中的更新类来实时更新，比较取巧。</p>
-<p>另外写了一些单独抽出来的页面，对于页面之间的回调，反转等写了较多的操作。</p>
-<p>遇到的问题除了一些比较小的之外，有印象的特殊的有2个。</p>
-<p>一个是妆容算法功能丢失问题，新的版本发现妆容无效了，debug发现妆容文件丢失，切release版本之后发现妆容有但是仍然无效。检查了一通之后发现是新的登陆流程简化把妆容也给简化了，导致妆容一直没有初始化。同时由于debug版本不会执行妆容文件的压缩，导致debug即使添加了登陆流程，也依旧无效。总结下来这个地方当时是2个不确定点，而且运行环境不同，也算一个不确定点。</p>
-<p>解决这个问题并没有花费太多时间，修改了初始妆容的地方，然后单步调试到了jni，发现native代码没有执行，之后对比编译脚本，发现是debug包不会打包压缩妆容的步骤。但是因为这个原因和leader产生了一些争执，他认为单步调试可以解决一切。但是事实上单步调试一般只会用在有唯一一个变量或者变量串行的情况下，而在变量并行的时候，如果看不懂流程，而是光调试，那是毫无作用的。</p>
-<p>还有一个问题，是关于和产品的交涉。由于第一版给的设计图基本上就是一个原型图，过于草率，当时开会大家过目之后觉得还可以，就这么做了。导致后期交涉十分无力。产品一天能改三版，设计又不懂逻辑，没版都能缺个七八个点，导致那边越改，我们这边越麻烦，火气也越大。</p>
-<p>事实上对于产品来讲，他们并不会意识到我们在做什么，他们很直观的认为某个功能不麻烦，于是一系列不麻烦的小功能凑成了一个大麻烦。这在前期还好，可改动的机会比较多。但是后期房子都起好了再让我们打个壁炉基本上就需要砸墙了。砸墙的时间是个巨大的问题。所以关于这种情况，我们理智沟通一下其实还是可以的，明确告知这个需求和那个需求或许会有冲突，如果非要加的话需要时间，而且不排除会有很多bug。这样产品也会为了项目周期的稳定性而进行必要的取舍。事实上很多需求，他们也不知道应不应该加。</p>
-<p>这周的工作大致如上。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/08/2018第二十七周工作小结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/08/2018第二十七周工作小结/" itemprop="url">2018年二十七周工作小结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-08T19:59:49+08:00">
-                2018-07-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>这周主要是完成了盒子2.1的迭代。ui部分进行了大规模的更改，写了较多的控件。</p>
-<p>不过这都不重要。这周的主要收获收获在对软件流程的突破。</p>
-<p>之前项目里面使用的是一个activity对应一个fragment，但是缺点在于启动模式基本上都是activityA -&gt; fragmentA -&gt; activityB -&gt; fragmentB -&gt; activityC -&gt; fragmentC，这种启动模式，基本上类似于activity启动的时候每次都开启一个栈，每个栈是独立的。</p>
-<p>不过这周想到一个比较好的方法，写代码的时候，仍然是一个activity对应一个fragment，不过启动的时候流程进行绑定化。</p>
-<p>举个例子，我们有一个页面a用于介绍会员的优点，有一个页面b用于用户进行会员付费，有一个页面c进行付费成功的提示。</p>
-<p>一般的情况，一次付费流程，是一个整的，不会出现付费成功，返回仍然是会员付费页面的现状，而应该是付费成功了，点击返回这个流程就会进行关闭。</p>
-<p>鉴于上面的流程，衍生出了会员介绍页面：activityA, fragmentA；会员付费页面：activityB, fragmentB; 付费成功页面：activityC, fragmentC</p>
-<p>从最基础的会员介绍开始，我们启动activityA,activityA的oncreate只写一个方法，就是启动fragmentA,显示介绍页面。fragmentA中有跳转的接口，跳到会员支付页面fragmentB，这个使用自己写的startFragment方法进行跳转，fragmentB又有支付宝或者微信的回调接口，回调跳转到fragmentC支付成功页面。到了fragmentC支付成功页面，返回按钮触发的就是finish当前的activity，因此此时一旦触发，整个流程就结束了。</p>
-<p>那为什么仍然要写成activity -&gt; fragment的模式呢？看上去好像activityB并没有使用。</p>
-<p>事实上业务上面有很多地方只有单独的一个接口，该接口是直接进入支付页面，因此此时可以使用start activityB -&gt; start fragmentB -&gt; start fragmentC这种模式，此时如果在fragmentB页面返回，会直接触发activtyB的销毁动作，也能因此成为一个独立的流程。</p>
-<p>这套方法的思想来自于activity的任务栈调度模式，模仿的是singletask，不过相对于activity的任务栈，在某些方面还是不足的，例如说重复创建，单一任务多次使用等。这套大概使用情景在于切片化，更多的好处还需要自己体会。</p>
-<p>不过称此夸一下，activity的启动，开销比较大，每次启动至少涉及到两次binder，而且activity的启动过于局限。fragment虽然没有完善的任务调度系统，不过好在碎片化开销不算大，哪怕我们知道他比较麻烦，但是起码也能保证一点就是写好了不会太差。</p>
-<p>目前对app的拆分大概能拆分成 application -&gt; activitys ,activity -&gt; fragments，感觉比以前的想法更为清晰。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1671,7 +1653,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">97</span>
+                  <span class="site-state-item-count">99</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

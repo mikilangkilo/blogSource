@@ -229,6 +229,310 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/19/multidex错误小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/19/multidex错误小结/" itemprop="url">multidex错误小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-19T11:49:44+08:00">
+                2018-03-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最近项目中遇到一个问题，是关于multidex的。</p>
+<p>multidex是android提供的一个分包工具，将原来的一个dex分为一个主dex入口和很多子dex，然后让虚拟机进行加载。</p>
+<p>谷歌在L版本之前使用的dalvik虚拟机，这个虚拟机有一个坏处，他加载dex原本只设计了一个加载方式，就是只加载查询dex的第一个dex，因此假如使用了multidex分包策略时，必须设置编译的时候将什么放在主dex中，否则代码量一大，必然出现notfound，notdefined之类的找不到未命名未初始化的错误。</p>
+<p>L之后使用了art虚拟机，就不再有这方面的问题。</p>
+<p>这个问题很严重，导致了公司软件在android l以下的手机debug的时候打不开。</p>
+<p>后来发现了一个神奇的事情。debug的时候，混淆开关是关着的，release的时候，混淆开关是开着的。结果release的版本可以顺利运行。</p>
+<p>事实证明，虽然dalvik仍然只是加载一个主dex，这个主dex除了项目搭建的时候每个类都做了细致的标明，否则的确会出问题，但是若使用混淆，通过映射的方式，将代码映射开来，这样就有效避免了这个问题。</p>
+<p>因此在android 5.0以下的手机需要分包，可以使用该方法。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/14/ARouter组件化框架学习笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/14/ARouter组件化框架学习笔记/" itemprop="url">ARouter组件化框架学习笔记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-14T16:29:53+08:00">
+                2018-03-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>ARouter是用于组件化的比较好的一个方案，不过性能方面肯定不如直接跳转。</p>
+<h1 id="基本使用方法"><a href="#基本使用方法" class="headerlink" title="基本使用方法"></a>基本使用方法</h1><ul>
+<li>添加依赖</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">    defaultConfig &#123;</span><br><span class="line">	...</span><br><span class="line">	javaCompileOptions &#123;</span><br><span class="line">	    annotationProcessorOptions &#123;</span><br><span class="line">		arguments = [ moduleName : project.getName() ]</span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">dependencies &#123;</span><br><span class="line">    // 替换成最新版本, 需要注意的是api</span><br><span class="line">    // 要与compiler匹配使用，均使用最新版可以保证兼容</span><br><span class="line">    compile &apos;com.alibaba:arouter-api:x.x.x&apos;</span><br><span class="line">    annotationProcessor &apos;com.alibaba:arouter-compiler:x.x.x&apos;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line">// 旧版本gradle插件(&lt; 2.2)，可以使用apt插件，配置方法见文末&apos;其他#4&apos;</span><br><span class="line">// Kotlin配置参考文末&apos;其他#5&apos;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>添加注解</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Route(path = &quot;/test/activity&quot;)</span><br><span class="line">public class YourActivity extend Activity &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>初始化sdk</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if (isDebug()) &#123;           // 这两行必须写在init之前，否则这些配置在init过程中将无效</span><br><span class="line">    ARouter.openLog();     // 打印日志</span><br><span class="line">    ARouter.openDebug();   // 开启调试模式(如果在InstantRun模式下运行，必须开启调试模式！线上版本需要关闭,否则有安全风险)</span><br><span class="line">&#125;</span><br><span class="line">ARouter.init(mApplication); // 尽可能早，推荐在Application中初始化</span><br></pre></td></tr></table></figure>
+<ul>
+<li>进行路由操作</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 1. 应用内简单的跳转(通过URL跳转在&apos;进阶用法&apos;中)</span><br><span class="line">ARouter.getInstance().build(&quot;/test/activity&quot;).navigation();</span><br><span class="line"></span><br><span class="line">// 2. 跳转并携带参数</span><br><span class="line">ARouter.getInstance().build(&quot;/test/1&quot;)</span><br><span class="line">			.withLong(&quot;key1&quot;, 666L)</span><br><span class="line">			.withString(&quot;key3&quot;, &quot;888&quot;)</span><br><span class="line">			.withObject(&quot;key4&quot;, new Test(&quot;Jack&quot;, &quot;Rose&quot;))</span><br><span class="line">			.navigation();</span><br></pre></td></tr></table></figure>
+<ul>
+<li>混淆</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-keep public class com.alibaba.android.arouter.routes.**&#123;*;&#125;</span><br><span class="line">-keep class * implements com.alibaba.android.arouter.facade.template.ISyringe&#123;*;&#125;</span><br><span class="line"></span><br><span class="line"># 如果使用了 byType 的方式获取 Service，需添加下面规则，保护接口</span><br><span class="line">-keep interface * implements com.alibaba.android.arouter.facade.template.IProvider</span><br><span class="line"></span><br><span class="line"># 如果使用了 单类注入，即不定义接口实现 IProvider，需添加下面规则，保护实现</span><br><span class="line">-keep class * implements com.alibaba.android.arouter.facade.template.IProvider</span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用gradle进行路由表的自动加载</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">apply plugin: &apos;com.alibaba.arouter&apos;</span><br><span class="line"></span><br><span class="line">buildscript &#123;</span><br><span class="line">    repositories &#123;</span><br><span class="line">        jcenter()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    dependencies &#123;</span><br><span class="line">        classpath &quot;com.alibaba:arouter-register:1.0.0&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="进阶使用方法"><a href="#进阶使用方法" class="headerlink" title="进阶使用方法"></a>进阶使用方法</h1><ul>
+<li>通过url跳转<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 新建一个Activity用于监听Schame事件,之后直接把url传递给ARouter即可</span><br><span class="line">public class SchameFilterActivity extends Activity &#123;</span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">	super.onCreate(savedInstanceState);</span><br><span class="line"></span><br><span class="line">	Uri uri = getIntent().getData();</span><br><span class="line">	ARouter.getInstance().build(uri).navigation();</span><br><span class="line">	finish();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>mainfest<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;activity android:name=&quot;.activity.SchameFilterActivity&quot;&gt;</span><br><span class="line">	&lt;!-- Schame --&gt;</span><br><span class="line">	&lt;intent-filter&gt;</span><br><span class="line">	    &lt;data</span><br><span class="line">		android:host=&quot;m.aliyun.com&quot;</span><br><span class="line">		android:scheme=&quot;arouter&quot;/&gt;</span><br><span class="line"></span><br><span class="line">	    &lt;action android:name=&quot;android.intent.action.VIEW&quot;/&gt;</span><br><span class="line"></span><br><span class="line">	    &lt;category android:name=&quot;android.intent.category.DEFAULT&quot;/&gt;</span><br><span class="line">	    &lt;category android:name=&quot;android.intent.category.BROWSABLE&quot;/&gt;</span><br><span class="line">	&lt;/intent-filter&gt;</span><br><span class="line">&lt;/activity&gt;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>解析url中的参数</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">// 为每一个参数声明一个字段，并使用 @Autowired 标注</span><br><span class="line">// URL中不能传递Parcelable类型数据，通过ARouter api可以传递Parcelable对象</span><br><span class="line">@Route(path = &quot;/test/activity&quot;)</span><br><span class="line">public class Test1Activity extends Activity &#123;</span><br><span class="line">    @Autowired</span><br><span class="line">    public String name;</span><br><span class="line">    @Autowired</span><br><span class="line">    int age;</span><br><span class="line">    @Autowired(name = &quot;girl&quot;) // 通过name来映射URL中的不同参数</span><br><span class="line">    boolean boy;</span><br><span class="line">    @Autowired</span><br><span class="line">    TestObj obj;    // 支持解析自定义对象，URL中使用json传递</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">	super.onCreate(savedInstanceState);</span><br><span class="line">	ARouter.getInstance().inject(this);</span><br><span class="line"></span><br><span class="line">	// ARouter会自动对字段进行赋值，无需主动获取</span><br><span class="line">	Log.d(&quot;param&quot;, name + age + boy);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 如果需要传递自定义对象，需要实现 SerializationService,并使用@Route注解标注(方便用户自行选择序列化方式)，例如：</span><br><span class="line">@Route(path = &quot;/service/json&quot;)</span><br><span class="line">public class JsonServiceImpl implements SerializationService &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void init(Context context) &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public &lt;T&gt; T json2Object(String text, Class&lt;T&gt; clazz) &#123;</span><br><span class="line">        return JSON.parseObject(text, clazz);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String object2Json(Object instance) &#123;</span><br><span class="line">        return JSON.toJSONString(instance);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>声明拦截器</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// 比较经典的应用就是在跳转过程中处理登陆事件，这样就不需要在目标页重复做登陆检查</span><br><span class="line">// 拦截器会在跳转之间执行，多个拦截器会按优先级顺序依次执行</span><br><span class="line">@Interceptor(priority = 8, name = &quot;测试用拦截器&quot;)</span><br><span class="line">public class TestInterceptor implements IInterceptor &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void process(Postcard postcard, InterceptorCallback callback) &#123;</span><br><span class="line">	...</span><br><span class="line">	callback.onContinue(postcard);  // 处理完成，交还控制权</span><br><span class="line">	// callback.onInterrupt(new RuntimeException(&quot;我觉得有点异常&quot;));      // 觉得有问题，中断路由流程</span><br><span class="line"></span><br><span class="line">	// 以上两种至少需要调用其中一种，否则不会继续路由</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void init(Context context) &#123;</span><br><span class="line">	// 拦截器的初始化，会在sdk初始化的时候调用该方法，仅会调用一次</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>处理跳转结果</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// 使用两个参数的navigation方法，可以获取单次跳转的结果</span><br><span class="line">ARouter.getInstance().build(&quot;/test/1&quot;).navigation(this, new NavigationCallback() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void onFound(Postcard postcard) &#123;</span><br><span class="line">      ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onLost(Postcard postcard) &#123;</span><br><span class="line">	...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>自定义全局降级策略</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 实现DegradeService接口，并加上一个Path内容任意的注解即可</span><br><span class="line">@Route(path = &quot;/xxx/xxx&quot;)</span><br><span class="line">public class DegradeServiceImpl implements DegradeService &#123;</span><br><span class="line">  @Override</span><br><span class="line">  public void onLost(Context context, Postcard postcard) &#123;</span><br><span class="line">	// do something.</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @Override</span><br><span class="line">  public void init(Context context) &#123;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>为目标页面声明更多信息</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 我们经常需要在目标页面中配置一些属性，比方说&quot;是否需要登陆&quot;之类的</span><br><span class="line">// 可以通过 Route 注解中的 extras 属性进行扩展，这个属性是一个 int值，换句话说，单个int有4字节，也就是32位，可以配置32个开关</span><br><span class="line">// 剩下的可以自行发挥，通过字节操作可以标识32个开关，通过开关标记目标页面的一些属性，在拦截器中可以拿到这个标记进行业务逻辑判断</span><br><span class="line">@Route(path = &quot;/test/activity&quot;, extras = Consts.XXXX)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>通过依赖注入解耦:服务管理(一) 暴露服务</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">// 声明接口,其他组件通过接口来调用服务</span><br><span class="line">public interface HelloService extends IProvider &#123;</span><br><span class="line">    String sayHello(String name);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 实现接口</span><br><span class="line">@Route(path = &quot;/service/hello&quot;, name = &quot;测试服务&quot;)</span><br><span class="line">public class HelloServiceImpl implements HelloService &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String sayHello(String name) &#123;</span><br><span class="line">	return &quot;hello, &quot; + name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void init(Context context) &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>通过依赖注入解耦:服务管理(二) 发现服务</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">    @Autowired</span><br><span class="line">    HelloService helloService;</span><br><span class="line"></span><br><span class="line">    @Autowired(name = &quot;/service/hello&quot;)</span><br><span class="line">    HelloService helloService2;</span><br><span class="line"></span><br><span class="line">    HelloService helloService3;</span><br><span class="line"></span><br><span class="line">    HelloService helloService4;</span><br><span class="line"></span><br><span class="line">    public Test() &#123;</span><br><span class="line">	ARouter.getInstance().inject(this);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void testService() &#123;</span><br><span class="line">	 // 1. (推荐)使用依赖注入的方式发现服务,通过注解标注字段,即可使用，无需主动获取</span><br><span class="line">	 // Autowired注解中标注name之后，将会使用byName的方式注入对应的字段，不设置name属性，会默认使用byType的方式发现服务(当同一接口有多个实现的时候，必须使用byName的方式发现服务)</span><br><span class="line">	helloService.sayHello(&quot;Vergil&quot;);</span><br><span class="line">	helloService2.sayHello(&quot;Vergil&quot;);</span><br><span class="line"></span><br><span class="line">	// 2. 使用依赖查找的方式发现服务，主动去发现服务并使用，下面两种方式分别是byName和byType</span><br><span class="line">	helloService3 = ARouter.getInstance().navigation(HelloService.class);</span><br><span class="line">	helloService4 = (HelloService) ARouter.getInstance().build(&quot;/service/hello&quot;).navigation();</span><br><span class="line">	helloService3.sayHello(&quot;Vergil&quot;);</span><br><span class="line">	helloService4.sayHello(&quot;Vergil&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="原理解析"><a href="#原理解析" class="headerlink" title="原理解析"></a>原理解析</h1>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/14/混淆学习/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1274,353 +1578,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/23/大话多线程阅读笔记/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/02/23/大话多线程阅读笔记/" itemprop="url">大话多线程阅读笔记</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-23T23:05:12+08:00">
-                2018-02-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本篇文章主要是针对技术掘金上面《大话android多线程》进行笔记总结，好记性不如烂笔头。</p>
-<h1 id="Thread和Runnable的联系和区别"><a href="#Thread和Runnable的联系和区别" class="headerlink" title="Thread和Runnable的联系和区别"></a>Thread和Runnable的联系和区别</h1><p>线程的创建有两种方式，一种是重写runnable的run方法然后放到thread中，一种是重写thread的run方法</p>
-<h2 id="两者的联系"><a href="#两者的联系" class="headerlink" title="两者的联系"></a>两者的联系</h2><ol>
-<li>thread实现了runnable接口</li>
-<li>都需要重写run方法</li>
-</ol>
-<h2 id="两者的区别"><a href="#两者的区别" class="headerlink" title="两者的区别"></a>两者的区别</h2><ol>
-<li>实现runnable的类更具有健壮性，避免了单继承的局限</li>
-<li>runnable更容易实现资源共享，能多个线程同时处理一个资源</li>
-</ol>
-<h2 id="两者的比较"><a href="#两者的比较" class="headerlink" title="两者的比较"></a>两者的比较</h2><p>使用runnable创建的多线程，若是同一个runnable，那么运行的时候实际上执行的是同一个任务，共享的是相同的资源。<br>相反，使用thread创建的多线程，则是不同的任务，也不会共享相同的资源。</p>
-<h1 id="Synchronized使用解析"><a href="#Synchronized使用解析" class="headerlink" title="Synchronized使用解析"></a>Synchronized使用解析</h1><p>多线程的环境下面，很容易出现不同步的情况下，条件a为当b大于0的时候，b自减，结果1号线程2号线程同时进行操作，1号线程快2号线程几毫秒，对1号线程来讲，a成立，在1号线程准备对b进行操作的时候，2号线程进来，2号线程在判断的时候发现a也成立，而此时1号线程在2号线程判断之后顺利的进行的b的自减操作，此时2号线程虽然条件不成立，但是仍然需要进行b操作，此时就会产生一系列的问题。</p>
-<p>锁的作用，便是对方法块进行同步操作。在一个对象操作该方法的时候，另一个对象无法操作，等第一个对象操作完毕，该方法块才可以让别的对象操作。</p>
-<p>synchronized (obj){}同步代码块和用synchronized声明方法的作用基本一致，都是对synchronized作用范围内的代码进行加锁保护，其区别在于synchronized同步代码块使用更加灵活、轻巧，synchronized (obj){}括号内的对象参数即为该代码块持有锁的对象</p>
-<h2 id="同步方法和静态同步方法"><a href="#同步方法和静态同步方法" class="headerlink" title="同步方法和静态同步方法"></a>同步方法和静态同步方法</h2><ul>
-<li>synchronized声明非静态方法、同步代码块的synchronized (this){}和synchronized (非this对象){}这三者持有锁的对象为实例对象（类的实例对象可以有很多个），线程想要执行该synchronized作用范围内的同步代码，需获得对象锁。</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public class SynchronizedTest &#123;</span><br><span class="line">    public synchronized void test1()&#123;</span><br><span class="line">        //持有锁的对象为SynchronizedTest的实例对象</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void test2()&#123;</span><br><span class="line">        synchronized (this)&#123;</span><br><span class="line">            //持有锁的对象为SynchronizedTest的实例对象</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private String obj = &quot;obj&quot;;</span><br><span class="line">    public void test3()&#123;</span><br><span class="line">        synchronized (obj)&#123;</span><br><span class="line">            //持有锁的对象为obj</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>synchronized声明静态方法以及同步代码块的synchronized (类.class){}这两者持有锁的对象为Class对象（每个类只有一个Class对象，而Class对象是Java类编译后生成的.class文件，它包含了与类有关的信息），线程想要执行该synchronized作用范围内的同步代码，需获得类锁</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class SynchronizedTest &#123;</span><br><span class="line">    public static synchronized void test4()&#123;</span><br><span class="line">        //持有锁的对象为SynchronizedTest的Class对象（SynchronizedTest.class）</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void test5()&#123;</span><br><span class="line">        synchronized (SynchronizedTest.class)&#123;</span><br><span class="line">            //持有锁的对象为SynchronizedTest的Class对象（SynchronizedTest.class）</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>若synchronized同步方法（代码块）持有锁的对象不同，则多线程执行相应的同步代码时互不干扰；若相同，则获得该对象锁的线程先执行同步代码，其他访问同步代码的线程会被阻塞并等待锁的释放</p>
-<h1 id="线程间的通信机制之Handler"><a href="#线程间的通信机制之Handler" class="headerlink" title="线程间的通信机制之Handler"></a>线程间的通信机制之Handler</h1><p>handler了解的还是比较多的，扫盲一下。</p>
-<ol>
-<li>主线程的looper在应用开始前系统就已经创建好了，需要在主线程往子线程发射消息，需要在子线程重写looper并开启循环</li>
-</ol>
-<p>重写方式如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">public class HandlerTestActivity extends AppCompatActivity &#123;</span><br><span class="line">    private Handler handler2;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_handler_test);</span><br><span class="line">        TestThread testThread = new TestThread();</span><br><span class="line">        testThread.start();</span><br><span class="line"></span><br><span class="line">        while (true)&#123;//保证testThread.looper已经初始化</span><br><span class="line">            if(testThread.looper!=null)&#123;</span><br><span class="line">                handler2 = new Handler(testThread.looper)&#123;</span><br><span class="line">                    @Override</span><br><span class="line">                    public void handleMessage(Message msg) &#123;//子线程收到消息后执行</span><br><span class="line">                        switch (msg.what)&#123;</span><br><span class="line">                            case CODE_TEST_FOUR:</span><br><span class="line">                                Log.e(TAG,&quot;收到主线程发送的消息&quot;);</span><br><span class="line">                                break;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;;</span><br><span class="line"></span><br><span class="line">                handler2.sendEmptyMessage(CODE_TEST_FOUR);//在主线程中发送消息</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    private class TestThread extends Thread&#123;</span><br><span class="line">        private Looper looper;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            super.run();</span><br><span class="line">            Looper.prepare();//创建该子线程的Looper实例</span><br><span class="line">            looper = Looper.myLooper();//取出该子线程的Looper实例</span><br><span class="line">            Looper.loop();//开始循环</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>虽然可以使用继承一个线程然后开looper的方式进行子线程设置looper，不过仍然是比较麻烦，直接使用handlerthread便可直接解决该问题。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">handler2 = new Handler(handlerThread.getLooper())&#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void handleMessage(Message msg) &#123;//子线程收到消息后执行</span><br><span class="line">                switch (msg.what)&#123;</span><br><span class="line">                    case CODE_TEST_FOUR:</span><br><span class="line">                        Log.e(TAG,&quot;收到主线程发送的消息&quot;);</span><br><span class="line">                        break;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br></pre></td></tr></table></figure>
-<p>这样子在主线程中使用handler便可直接获取子线程的looper，然后进行通信。</p>
-<ol>
-<li><p>子线程和子线程之间进行通信，其实也就是子线程a能否获得子线程b的looper这个问题，如上使用handlerthread或者直接使用继承然后写一个get方法获取looper也可以。</p>
-</li>
-<li><p>messagequeue其实是looper中包含的，并不能将他们区分开来看。</p>
-</li>
-</ol>
-<h1 id="callable、future、futuretask"><a href="#callable、future、futuretask" class="headerlink" title="callable、future、futuretask"></a>callable、future、futuretask</h1><h2 id="使用callable方式创建线程"><a href="#使用callable方式创建线程" class="headerlink" title="使用callable方式创建线程"></a>使用callable方式创建线程</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">public static class TestCallable implements Callable&#123;</span><br><span class="line">	private int ticket = 10;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public String call() throws Exception &#123;</span><br><span class="line">		System.out.println(Thread.currentThread().getName() + &quot;：我买几个橘子去。你就在此地，不要走动&quot; + &quot; 时间：&quot; + getTime());</span><br><span class="line">		Thread.sleep(2000);//模拟买橘子的时间</span><br><span class="line">		System.out.println(Thread.currentThread().getName() + &quot;：橘子卖完了&quot; + &quot; 时间：&quot; + getTime());</span><br><span class="line">		</span><br><span class="line">		throw new NullPointerException(&quot;橘子卖完了&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public static void main(String args[])&#123;</span><br><span class="line">	TestCallable callable = new TestCallable();</span><br><span class="line">	FutureTask&lt;String&gt; futureTask = new FutureTask&lt;String&gt;(callable);</span><br><span class="line"></span><br><span class="line">	Thread thread1 = new Thread(futureTask, &quot;爸爸&quot;);</span><br><span class="line">	thread1.start();</span><br><span class="line"></span><br><span class="line">	//也可以用threadpool</span><br><span class="line">	//ExecutorService executor = Executors.newCachedThreadPool();</span><br><span class="line">	//Future&lt;String&gt; future = executor.submit(callable);</span><br><span class="line"></span><br><span class="line">	System.out.println(&quot;儿子站在原地&quot; + &quot; 时间：&quot; + getTime());//验证主线程的执行情况</span><br><span class="line">	try&#123;</span><br><span class="line">		System.out.println(futureTask.get());</span><br><span class="line">		System.out.println(&quot;儿子收到橘子&quot; + &quot; 时间：&quot; + getTime());//验证主线程的执行情况</span><br><span class="line">	&#125;catch (InterruptedException | ExecutionException e)&#123;</span><br><span class="line">		System.out.println(&quot;儿子没收到橘子&quot; + &quot; 时间：&quot; + getTime());//验证主线程的执行情况</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ol>
-<li><p>Callable在被线程执行后，可以提供一个返回值，我们可以通过Future的get()方法拿到这个值</p>
-</li>
-<li><p>Future是一个接口，而FutureTask实现了RunnableFuture接口，RunnableFuture继承了Runnable接口和Future接口</p>
-</li>
-<li><p>与runnable不同的两点：</p>
-</li>
-</ol>
-<p>1。FutureTask用于异步获取执行结果或取消执行任务的场景，它的主要功能有：<br>可以判断任务是否完成<br>可以获取任务执行结果<br>可以中断任务</p>
-<p>2。Callable的call()方法可以抛出异常，我们可以在尝试执行get()方法时捕获这个异常</p>
-<ol>
-<li><p>FutureTask可以确保任务只执行一次</p>
-</li>
-<li><p>我们在某条线程执行get()方法时，该线程会被阻塞，直到Future拿到Callable.call()方法的返回值。</p>
-</li>
-</ol>
-<p>在UI线程中使用时（尤其是后续还有更新UI的操作）要特别注意这点，以免造成界面卡顿。那么要如何处理这种多线程执行耗时任务，等待结果，然后再更新UI的情况呢？handler</p>
-<h1 id="ThreadPoolExecutor"><a href="#ThreadPoolExecutor" class="headerlink" title="ThreadPoolExecutor"></a>ThreadPoolExecutor</h1><h2 id="new-Thread-的缺点"><a href="#new-Thread-的缺点" class="headerlink" title="new Thread()的缺点"></a>new Thread()的缺点</h2><p>• 每次new Thread()耗费性能<br>• 调用new Thread()创建的线程缺乏管理，被称为野线程，而且可以无限制创建，之间相互竞争，会导致过多占用系统资源导致系统瘫痪<br>• 不利于扩展，比如如定时执行、定期执行、线程中断 </p>
-<h2 id="线程池的优点"><a href="#线程池的优点" class="headerlink" title="线程池的优点"></a>线程池的优点</h2><p>• 重用存在的线程，减少对象创建、消亡的开销，性能佳<br>• 可有效控制最大并发线程数，提高系统资源的使用率，同时避免过多资源竞争，避免堵塞<br>• 提供定时执行、定期执行、单线程、并发数控制等功能</p>
-<h2 id="参数解析"><a href="#参数解析" class="headerlink" title="参数解析"></a>参数解析</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public ThreadPoolExecutor(int corePoolSize,</span><br><span class="line">		  int maximumPoolSize,</span><br><span class="line">		  long keepAliveTime,</span><br><span class="line">		  TimeUnit unit,</span><br><span class="line">		  BlockingQueue&lt;Runnable&gt; workQueue,</span><br><span class="line">		  ThreadFactory threadFactory,</span><br><span class="line">		  RejectedExecutionHandler handler)</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/23/android横竖屏切换总结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/02/23/android横竖屏切换总结/" itemprop="url">android横竖屏切换总结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-23T00:08:15+08:00">
-                2018-02-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>昨天看网上一个关于横竖屏切换的总结，里面说不设置activity的configChanges时，在竖屏切换横屏时会进行两次生命周期的加载，看到这个就很疑惑，为什么两次呢？结果试了一下，大相径庭。</p>
-<p>设备 samsung-galaxy-mega2</p>
-<ul>
-<li>不设置configChanges时，从横屏切换到竖屏时的生命周期</li>
-</ul>
-<p>onPause -&gt; onSaveInstanceState -&gt; onStop -&gt; onDestroy -&gt; onCreate -&gt; onStart -&gt; onRestoreInstanceState -&gt; onResume</p>
-<p>很明显，是一次activity的销毁和重建，onPause之后便进行了onSaveInstanceState 而onResume之前也进行了onRestoreInstanceState。很正常</p>
-<ul>
-<li>不设置configChanges时，从竖屏切换到横屏时的生命周期</li>
-</ul>
-<p>onPause -&gt; onSaveInstanceState -&gt; onStop -&gt; onDestroy -&gt; onCreate -&gt; onStart -&gt; onRestoreInstanceState -&gt; onResume</p>
-<p>和1状态一毛一样。并没有走两次。</p>
-<ul>
-<li>设置configChanges = “orientation”时，从横屏切换到竖屏时的生命周期</li>
-</ul>
-<p>onPause -&gt; onSaveInstanceState -&gt; onStop -&gt; onDestroy -&gt; onCreate -&gt; onStart -&gt; onRestoreInstanceState -&gt; onResume</p>
-<p>也是一毛一样</p>
-<ul>
-<li>设置configChanges = “orientation”时，从竖屏切换到横屏的生命周期</li>
-</ul>
-<p>onPause -&gt; onSaveInstanceState -&gt; onStop -&gt; onDestroy -&gt; onCreate -&gt; onStart -&gt; onRestoreInstanceState -&gt; onResume</p>
-<p>也是一毛一样</p>
-<p>这就代表着configChanges = “orientation”没有任何作用</p>
-<ul>
-<li>设置configChanges = “orientation|keyboardHidden”时，从横屏切换到竖屏 &amp;&amp; 竖屏切换到横屏的生命周期</li>
-</ul>
-<p>onPause -&gt; onSaveInstanceState -&gt; onStop -&gt; onDestroy -&gt; onCreate -&gt; onStart -&gt; onRestoreInstanceState -&gt; onResume</p>
-<p>依旧一毛一样</p>
-<ul>
-<li>设置configChanges = “orientation|keyboardHidden|screensize”时，从横屏切换到竖屏 &amp;&amp; 竖屏切换到横屏的生命周期</li>
-</ul>
-<p>只走了onConfigurationChanged这一个方法。</p>
-<ul>
-<li>只设置configChanges = “screensize” || 只设置configChanges = “orientation”,从横屏切换到竖屏 || 竖屏切换到横屏的生命周期</li>
-</ul>
-<p>onPause -&gt; onSaveInstanceState -&gt; onStop -&gt; onDestroy -&gt; onCreate -&gt; onStart -&gt; onRestoreInstanceState -&gt; onResume</p>
-<p>代表只设置一个是无效的</p>
-<ul>
-<li>只设置configChanges = “keyboardHidden|screensize”,从横屏切换到竖屏 &amp;&amp; 竖屏切换到横屏的生命周期</li>
-</ul>
-<p>onPause -&gt; onSaveInstanceState -&gt; onStop -&gt; onDestroy -&gt; onCreate -&gt; onStart -&gt; onRestoreInstanceState -&gt; onResume</p>
-<p>仍旧无效</p>
-<ul>
-<li>只设置configChanges = “orientation|screensize”,从横屏切换到竖屏 || 竖屏切换到横屏的生命周期</li>
-</ul>
-<p>只走了onConfigurationChanged这一个方法。</p>
-<h6 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h6><p>若activity的configChanges没有设置，或者设置却没有同时设置 orientation 和 screensize时，会导致activity销毁重建。</p>
-<p>而若是设置了configChanges = “orientation|screensize”,则不会销毁，只会走onConfigurationChanged。</p>
-<p>和网上的内容大相径庭。若是偏信网上的内容，这部分的知识点就是错误的理解。</p>
-<h6 id="心得"><a href="#心得" class="headerlink" title="心得"></a>心得</h6><p>实践出真知！！！！！不能过于相信网上的内容，要自己动手实践一下。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1671,7 +1628,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">97</span>
+                  <span class="site-state-item-count">99</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
