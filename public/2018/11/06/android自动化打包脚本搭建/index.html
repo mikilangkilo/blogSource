@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="android," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="从之前分析学习安卓的打包流程，然后参考各式方案，再结合项目需求，定下了一套目前来讲比较好的打包方法。 原理安卓打包流程如下 通过apkbuilder构建之后就形成了未签名的apk包，然后通过jarsinger进行签名之后，就会生成签名的apk包。 换言之，在jarsinger签名之前的任何步骤，进行的操作，都需要重新经过apkbuilder，否则就不会生效，类似于R文件的生成，假如在apkbuil">
+<meta name="keywords" content="android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android自动化打包脚本搭建">
+<meta property="og:url" content="http://yoursite.com/2018/11/06/android自动化打包脚本搭建/index.html">
+<meta property="og:site_name" content="记录者">
+<meta property="og:description" content="从之前分析学习安卓的打包流程，然后参考各式方案，再结合项目需求，定下了一套目前来讲比较好的打包方法。 原理安卓打包流程如下 通过apkbuilder构建之后就形成了未签名的apk包，然后通过jarsinger进行签名之后，就会生成签名的apk包。 换言之，在jarsinger签名之前的任何步骤，进行的操作，都需要重新经过apkbuilder，否则就不会生效，类似于R文件的生成，假如在apkbuil">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/android/androidpackageimage.png">
+<meta property="og:updated_time" content="2018-11-12T05:35:20.981Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="android自动化打包脚本搭建">
+<meta name="twitter:description" content="从之前分析学习安卓的打包流程，然后参考各式方案，再结合项目需求，定下了一套目前来讲比较好的打包方法。 原理安卓打包流程如下 通过apkbuilder构建之后就形成了未签名的apk包，然后通过jarsinger进行签名之后，就会生成签名的apk包。 换言之，在jarsinger签名之前的任何步骤，进行的操作，都需要重新经过apkbuilder，否则就不会生效，类似于R文件的生成，假如在apkbuil">
+<meta name="twitter:image" content="http://yoursite.com/images/android/androidpackageimage.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/11/06/android自动化打包脚本搭建/"/>
+
+
+
+
+
+  <title>android自动化打包脚本搭建 | 记录者</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">记录者</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我们坚持一件事情，并不是因为这样做了会有效果，而是坚信，这样做是对的。</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/06/android自动化打包脚本搭建/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">android自动化打包脚本搭建</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-06T17:25:39+08:00">
+                2018-11-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>从之前分析学习安卓的打包流程，然后参考各式方案，再结合项目需求，定下了一套目前来讲比较好的打包方法。</p>
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>安卓打包流程如下<br><img src="/images/android/androidpackageimage.png" alt="打包流程"></p>
+<p>通过apkbuilder构建之后就形成了未签名的apk包，然后通过jarsinger进行签名之后，就会生成签名的apk包。</p>
+<p>换言之，在jarsinger签名之前的任何步骤，进行的操作，都需要重新经过apkbuilder，否则就不会生效，类似于R文件的生成，假如在apkbuilder之后重新想塞入一些资源，那么R文件是读不出来这些文件的。同时如果资源文件的错位，或许会导致之后索引产生一系列问题。最大的问题是，假如改了apkbuilder涉及的文件，会导致签名校验失败。</p>
+<p>因此只能通过不参与签名校验的文件进行操作，唯一可以改的就是META-INF目录。</p>
+<p>所以将需要放置的文件放到META-INF目录之后在进行对齐即可。</p>
+<h1 id="项目变更"><a href="#项目变更" class="headerlink" title="项目变更"></a>项目变更</h1><p>由于市场的要求，我们的app在不同的平台上有不同的名字，比如在baidu上面，就是“好搭盒子”，而在小米和搜狗市场上面，叫“好搭盒子-穿衣搭配”，在其余的市场上面，叫”好搭盒子-教你穿衣搭配”。</p>
+<p>虽然看起来只是名字的改变，但是如果通过打包想法来讲，改名字需要改manifest，这样就会导致签名验证失败，因此无法通过manifest改名字。</p>
+<p>我的想法和行动是仍旧构建变体，分三个，一个是shortname变体，一个是middlename变体，另一个是longname变体，其实还有一种，是测试时候的dev变体（因为测试人员需要知道我给他的是debug包，通过名字知道是最直接的）</p>
+<p>因此通过输入渠道的变化，构造不同的变体，但是对于已有构建好的就不需要重复构建了。</p>
+<h1 id="打包脚本"><a href="#打包脚本" class="headerlink" title="打包脚本"></a>打包脚本</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br></pre></td><td class="code"><pre><span class="line"># coding=utf-8</span><br><span class="line">import zipfile</span><br><span class="line">import shutil</span><br><span class="line">import os</span><br><span class="line">import sys</span><br><span class="line">import requests</span><br><span class="line">import json</span><br><span class="line">import urllib2</span><br><span class="line">import subprocess</span><br><span class="line">import pwd</span><br><span class="line">import os</span><br><span class="line">import re</span><br><span class="line"></span><br><span class="line">findline = u&quot;(versionCode\s+:.+)&quot;</span><br><span class="line">findversion = u&quot;([0-9]+)&quot;</span><br><span class="line">findversionname = u&quot;(?&lt;= versionName      : \&quot;).+?(?=\&quot;)&quot;</span><br><span class="line">depgradlefilepath = &quot;dependencies.gradle&quot;</span><br><span class="line">BRANCH = &quot;dev&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def release(channelName):</span><br><span class="line">    channelName = channelName</span><br><span class="line">    print &apos;start build &apos; + channelName</span><br><span class="line"></span><br><span class="line">    apk = &apos;./app/build/outputs/apk/dev/release/app-dev-release.apk&apos;</span><br><span class="line">    hasApk = os.path.exists(apk)</span><br><span class="line">    path = &apos;./release_apks/dev/&apos;</span><br><span class="line">    clean_code = subprocess.check_call(&quot;./gradlew clean&quot;, shell=True)</span><br><span class="line">    if clean_code != 0:</span><br><span class="line">        print &quot;clean failed&quot;</span><br><span class="line">        sys.exit()</span><br><span class="line">    if channelName == &apos;long&apos;:</span><br><span class="line">        apk = &apos;./app/build/outputs/apk/longname/release/app-longname-release.apk&apos;</span><br><span class="line">        path = &apos;./release_apks/long/&apos;</span><br><span class="line">        if os.path.exists(&quot;release_apks/long&quot;):</span><br><span class="line">            shutil.rmtree(&quot;release_apks/long&quot;)</span><br><span class="line">        print &quot;delete exist release_apks/long success&quot;</span><br><span class="line">        os.mkdir(&quot;release_apks/long&quot;)</span><br><span class="line">        assemble_release_code = subprocess.check_call(&quot;./gradlew assembleLongnameRelease&quot;,</span><br><span class="line">                                                      shell=True)</span><br><span class="line">    elif channelName == &apos;short&apos;:</span><br><span class="line">        apk = &apos;./app/build/outputs/apk/shortname/release/app-shortname-release.apk&apos;</span><br><span class="line">        path = &apos;./release_apks/short/&apos;</span><br><span class="line">        if os.path.exists(&quot;release_apks/short&quot;):</span><br><span class="line">            shutil.rmtree(&quot;release_apks/short&quot;)</span><br><span class="line">        print &quot;delete exist release_apks/short success&quot;</span><br><span class="line">        os.mkdir(&quot;release_apks/short&quot;)</span><br><span class="line">        assemble_release_code = subprocess.check_call(&quot;./gradlew assembleShortnameRelease&quot;,</span><br><span class="line">                                                      shell=True)</span><br><span class="line">    elif channelName == &apos;middle&apos;:</span><br><span class="line">        apk = &apos;./app/build/outputs/apk/middlename/release/app-middlename-release.apk&apos;</span><br><span class="line">        path = &apos;./release_apks/middle/&apos;</span><br><span class="line">        if os.path.exists(&quot;release_apks/middle&quot;):</span><br><span class="line">            shutil.rmtree(&quot;release_apks/middle&quot;)</span><br><span class="line">        print &quot;delete exist release_apks/middle success&quot;</span><br><span class="line">        os.mkdir(&quot;release_apks/middle&quot;)</span><br><span class="line">        assemble_release_code = subprocess.check_call(&quot;./gradlew assembleMiddlenameRelease&quot;,</span><br><span class="line">                                                      shell=True)</span><br><span class="line">    else:</span><br><span class="line">        if os.path.exists(&quot;release_apks/dev&quot;):</span><br><span class="line">            shutil.rmtree(&quot;release_apks/dev&quot;)</span><br><span class="line">        print &quot;delete exist release_apks/dev success&quot;</span><br><span class="line">        os.mkdir(&quot;release_apks/dev&quot;)</span><br><span class="line">        assemble_release_code = subprocess.check_call(&quot;./gradlew assembleDevRelease&quot;, shell=True)</span><br><span class="line"></span><br><span class="line">    if assemble_release_code != 0:</span><br><span class="line">        print &quot;assembleRelease failed&quot;</span><br><span class="line">        sys.exit()</span><br><span class="line"></span><br><span class="line">    emptyFile = &apos;xxx.txt&apos;</span><br><span class="line">    f = open(emptyFile, &apos;w&apos;)</span><br><span class="line">    f.close()</span><br><span class="line"></span><br><span class="line">    if channelName == &apos;long&apos;:</span><br><span class="line">        with open(&apos;channelNameLong.txt&apos;, &apos;r&apos;) as f:</span><br><span class="line">            contens = f.read()</span><br><span class="line">        lines = contens.split(&apos;\n&apos;)</span><br><span class="line">    elif channelName == &apos;short&apos;:</span><br><span class="line">        with open(&apos;channelNameShort.txt&apos;, &apos;r&apos;) as f:</span><br><span class="line">            contens = f.read()</span><br><span class="line">        lines = contens.split(&apos;\n&apos;)</span><br><span class="line">    elif channelName == &apos;middle&apos;:</span><br><span class="line">        with open(&apos;channelNameMiddle.txt&apos;, &apos;r&apos;) as f:</span><br><span class="line">            contens = f.read()</span><br><span class="line">        lines = contens.split(&apos;\n&apos;)</span><br><span class="line">    else:</span><br><span class="line">        with open(&apos;devChannel.txt&apos;, &apos;r&apos;) as f:</span><br><span class="line">            contens = f.read()</span><br><span class="line">        lines = contens.split(&apos;\n&apos;)</span><br><span class="line"></span><br><span class="line">    if not os.path.exists(path):</span><br><span class="line">        os.mkdir(path)</span><br><span class="line">    else:</span><br><span class="line">        for f in os.listdir(path):</span><br><span class="line">            if not f.endswith(&apos;.gitignore&apos;):</span><br><span class="line">                os.remove(path + f)</span><br><span class="line"></span><br><span class="line">    for line in lines:</span><br><span class="line">        print line</span><br><span class="line">        channel = &apos;channel_&apos; + line</span><br><span class="line">        destfile = path + &apos;%s.apk&apos; % channel</span><br><span class="line">        shutil.copyfile(apk, destfile)</span><br><span class="line">        zipped = zipfile.ZipFile(destfile, &apos;a&apos;, zipfile.ZIP_DEFLATED)</span><br><span class="line">        channelFile = &quot;META-INF/&#123;channelname&#125;&quot;.format(channelname=channel)</span><br><span class="line">        zipped.write(emptyFile, channelFile)</span><br><span class="line">        zipped.close()</span><br><span class="line">    os.remove(&apos;./xxx.txt&apos;)</span><br><span class="line"></span><br><span class="line">    for f in os.listdir(path):</span><br><span class="line">        if f.endswith(&apos;.apk&apos;):</span><br><span class="line">            os.system(&apos;zipalign -f -v 4 &apos; + path + f + &apos; &apos; + path + &apos;temp-&apos; + f)</span><br><span class="line">            os.remove(path + f)</span><br><span class="line"></span><br><span class="line">    for f in os.listdir(path):</span><br><span class="line">        if f.startswith(&apos;temp-&apos;):</span><br><span class="line">            os.system(&apos;zipalign -f -v 4 &apos; + path + f + &apos; &apos; + path + f.replace(&apos;temp-&apos;, &apos;&apos;))</span><br><span class="line">            os.remove(path + f)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def versionCodePlusPlus(msg):</span><br><span class="line">    gitstash = subprocess.check_call(&quot;git stash&quot;, shell=True)</span><br><span class="line">    if gitstash != 0:</span><br><span class="line">        print &quot;git stash fail&quot;</span><br><span class="line">        sys.exit()</span><br><span class="line">    print &quot;git stash success&quot;</span><br><span class="line">    gitcheckout = subprocess.check_call(&quot;git checkout &quot; + BRANCH, shell=True)</span><br><span class="line">    if gitcheckout != 0:</span><br><span class="line">        print &quot;git checkout dev fail&quot;</span><br><span class="line">        sys.exit()</span><br><span class="line">    print &quot;git checkout dev success&quot;</span><br><span class="line">    gitfetchall = subprocess.check_call(&quot;git fetch --all&quot;, shell=True)</span><br><span class="line">    if gitfetchall != 0:</span><br><span class="line">        print &quot;git fetch all fail&quot;</span><br><span class="line">        sys.exit()</span><br><span class="line">    gitresetall = subprocess.check_call(&quot;git reset --hard origin/&quot; + BRANCH, shell=True)</span><br><span class="line">    if gitresetall != 0:</span><br><span class="line">        print &quot;git reset hard origin dev fail&quot;</span><br><span class="line">        sys.exit()</span><br><span class="line">    gitpull = subprocess.check_call(&quot;git pull&quot;, shell=True)</span><br><span class="line">    if gitpull != 0:</span><br><span class="line">        print &quot;git pull fail&quot;</span><br><span class="line">        sys.exit()</span><br><span class="line">    print &quot;git pull success&quot;</span><br><span class="line"></span><br><span class="line">    originContent = open(depgradlefilepath).read()</span><br><span class="line">    originVersionCodeLine = re.search(findline, originContent).group(0)</span><br><span class="line">    originVersionCodeString = re.search(findversion, originVersionCodeLine).group(0)</span><br><span class="line">    versionname = re.search(findversionname, originContent).group(0)</span><br><span class="line">    originVersionCode = int(originVersionCodeString)</span><br><span class="line">    finalVersionCode = originVersionCode + 1</span><br><span class="line">    finalVersionCodeLine = &quot;versionCode      : &quot; + str(finalVersionCode) + &quot;,&quot;</span><br><span class="line">    finalContent = originContent.replace(originVersionCodeLine, finalVersionCodeLine, 1)</span><br><span class="line">    open(depgradlefilepath, &apos;w&apos;).write(finalContent)</span><br><span class="line">    gitadd = subprocess.check_call(&quot;git add .&quot;, shell=True)</span><br><span class="line">    if gitadd != 0:</span><br><span class="line">        print &quot;git add failed&quot;</span><br><span class="line">        sys.exit()</span><br><span class="line">    gitCommit = subprocess.check_call(</span><br><span class="line">        u&quot;git commit -m \&quot;build/auto increase versionCode = &quot; + str(</span><br><span class="line">            finalVersionCode) + &quot;,&quot; + msg + &quot;\&quot;&quot;,</span><br><span class="line">        shell=True)</span><br><span class="line">    if gitCommit != 0:</span><br><span class="line">        print &quot;gitCommit failed&quot;</span><br><span class="line">        sys.exit()</span><br><span class="line">    gitPush = subprocess.check_call(</span><br><span class="line">        &quot;git push origin &quot; + BRANCH, shell=True</span><br><span class="line">    )</span><br><span class="line">    if gitPush != 0:</span><br><span class="line">        print &quot;gitpush failed&quot;</span><br><span class="line">        sys.exit()</span><br><span class="line"></span><br><span class="line">    gitpull = subprocess.check_call(&quot;git pull&quot;, shell=True)</span><br><span class="line">    if gitpull != 0:</span><br><span class="line">        print &quot;git pull fail&quot;</span><br><span class="line">        sys.exit()</span><br><span class="line">    print &quot;git pull success&quot;</span><br><span class="line">    return finalVersionCode, versionname</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    if os.path.exists(&quot;release_apks&quot;):</span><br><span class="line">        shutil.rmtree(&quot;release_apks&quot;)</span><br><span class="line">        print &quot;delete exist release_apks success&quot;</span><br><span class="line">    os.mkdir(&quot;release_apks&quot;)</span><br><span class="line"></span><br><span class="line">    if os.path.exists(&quot;app/build&quot;):</span><br><span class="line">        shutil.rmtree(&quot;app/build&quot;)</span><br><span class="line">    print &quot;delete exist release_apks success&quot;</span><br><span class="line">    channel = &apos;dev&apos;</span><br><span class="line">    if len(sys.argv) &gt;= 2:</span><br><span class="line">        channel = sys.argv[1]</span><br><span class="line">    versionCodePlusPlus(channel)</span><br><span class="line">    release(channel)</span><br></pre></td></tr></table></figure>
+<p>其中做了一个额外的动作，就是versioncode++这个操作，这个主要也是项目需要，每次build的包，需要有迹可溯，因此每次build都会使versioncode+1，并且进行提交。</p>
+<p>上面是打包的流程，还有个全渠道打包的执行文件就比较简单了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"># coding=utf-8</span><br><span class="line">from release import release, versionCodePlusPlus,BRANCH,findline,findversion,findversionname,depgradlefilepath</span><br><span class="line">import os</span><br><span class="line">import shutil</span><br><span class="line">import subprocess</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">FLAVOR_FILE = &apos;all_channels.txt&apos;</span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    if os.path.exists(&quot;release_apks&quot;):</span><br><span class="line">        shutil.rmtree(&quot;release_apks&quot;)</span><br><span class="line">        print &quot;delete exist release_apks success&quot;</span><br><span class="line">    if os.path.exists(&quot;app/build&quot;):</span><br><span class="line">        shutil.rmtree(&quot;app/build&quot;)</span><br><span class="line">    print &quot;delete exist release_apks success&quot;</span><br><span class="line">    os.mkdir(&quot;release_apks&quot;)</span><br><span class="line"></span><br><span class="line">    versionCodePlusPlus(&apos;short&apos;)</span><br><span class="line">    release(&apos;short&apos;)</span><br><span class="line">    versionCodePlusPlus(&apos;middle&apos;)</span><br><span class="line">    release(&apos;middle&apos;)</span><br><span class="line">    versionCodePlusPlus(&apos;long&apos;)</span><br><span class="line">    release(&apos;long&apos;)</span><br></pre></td></tr></table></figure>
+<p>因为也不算涉及到公司机密，以上都是很常规的操作，留下来做个备注防止以后采坑</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/android/" rel="tag"># android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/22/viewstub的作用/" rel="next" title="viewstub的作用">
+                <i class="fa fa-chevron-left"></i> viewstub的作用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Sample</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">100</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#原理"><span class="nav-number">1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#项目变更"><span class="nav-number">2.</span> <span class="nav-text">项目变更</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#打包脚本"><span class="nav-number">3.</span> <span class="nav-text">打包脚本</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sample</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -229,6 +229,136 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/01/2018第三十周工作小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/01/2018第三十周工作小结/" itemprop="url">2018第三十周工作小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-01T10:12:30+08:00">
+                2018-08-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>因为人手不够的关系，这两周被抽调搞自动化编译渠道包的脚本制作中。</p>
+<p>自动化编译之前使用的是美团的方法，通过解压压缩包然后写到META-INF中，然后再app启动的时候解压文件，读取meta-inf，然后写到app的渠道中。</p>
+<p>但是这次做的是通过gradle的productFlavors进行变体构建，在编译时直接使用写好的falvors来进行编译。</p>
+<p>老方法的好处是编译快，但是打开app的过程中需要进行解压的操作，解压其实是一个比较耗时的过程，因此会降低app的启动时间。</p>
+<p>现在的方法是为了减少启动时间，但是大大增加了编译的时间，编译时间由原来的10分钟，暴涨到40-50分钟。</p>
+<p>不过好处是更换之后的启动速度有了良好的降低。</p>
+<p>言归正传</p>
+<p>这次脚本的写法，主要是在执行gradlew xxxRelease之前和之后的一些操作。</p>
+<p>之前：选定分支，从分支上面来拉最新的代码，之后修改version code，自动增1，然后将代码提交到服务器。</p>
+<p>中间：执行gradlew xxxrelease命令</p>
+<p>之后：编译完成之后，依次将文件从build目录中重命名并且移出build文件夹，放入上传文件夹，之后将mapping文件也放入上传文件夹。全部结束之后上传至ftp。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/16/2018第二十八周工作小结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1461,134 +1591,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/08/2018第十八周工作小结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/08/2018第十八周工作小结/" itemprop="url">2018第十八周工作小结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-08T00:24:47+08:00">
-                2018-05-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>5月份已经过去了，进入公司也已经超过2个月了，事实上给我带来的感觉不是很好。</p>
-<p>ios的两位同事都离开了公司，他们的想法我也知道一些。</p>
-<p>和vp的聊天，发现可能对我还是有一些意见的。很担心转正的时候被使绊子。</p>
-<p>不过没办法，所有的事情光担心可不行。</p>
-<p>上周的工作主要是做了2.0.1版本的迭代。加了一些新的功能，例如微信绑定手机号，个性化推荐等等。</p>
-<p>主要问题是发版本的时候出现的，一个是关于constantlayout的布局使用不规范，基准view放在的错误的地方，导致27版本的buildtool的布局器编译不通过。后来采取的重新画布局的方法规避。</p>
-<p>这次编译也让我感觉了一些问题，虽然在debug阶段，或者说做别的事情上面，还可以，但是编译不是很熟练导致最后进行发版本的时候卡顿。</p>
-<p>现在使用台式机编译，效率好很多。但是还是要注意。</p>
-<p>ps：和涛哥的谈话，说实话让我感觉我在他眼里有很多问题，我甚至觉得他有些劝退我。希望不是吧，希望只是我自己多想了。我并没有不努力。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1639,7 +1641,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">99</span>
+                  <span class="site-state-item-count">100</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
