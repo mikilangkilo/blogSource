@@ -229,6 +229,301 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/16/2018第三十六周工作小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/16/2018第三十六周工作小结/" itemprop="url">2018第三十六周工作小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-16T22:51:04+08:00">
+                2018-09-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本周主要任务是2.2.1的迭代计划，自从2.2.0发版以后，小程序端，ios端的进度都大大落后于android。我们也进入了喜闻乐见的等进度阶段。</p>
+<p>本周个人主要负责商品详情页面的优化。这次主要是借鉴淘宝的布局，做了较大量的优化。</p>
+<p>优化方面一是接口部分的抽离，将逻辑部分放在p层，视图放在v层，隔离开来，逻辑因此较为清晰，对比前人的过程式编程，感觉光编译器编译都快了很多。</p>
+<p>优化第二方面是布局的优化，还是老样子，一层constaintlayout解决问题。从爆红的过度绘制一下子变成了淡绿，打开页面的速度也快了很多。</p>
+<p>优化第三方面是父类的精简，经过仔细排查，最终抽丝剥茧下来了一个比较简单的activitybase，上层是rxactivity，在上层就是appcompatactivity。对比之前的fragmeng-&gt;appbasefragment-&gt;basefragment-&gt;rxbasefragment,以及对应的activity，光这一方面就精简了8层。打开速度快也不是没有原因的。</p>
+<p>优化第四方面是接口的生命周期绑定，之前只是在ondestroy中集中处理了接口，但是大部分的跳转，切换，接口并未做处理，这样在接口请求时切换了，就造成了泄漏。这次直接统一compose到了rxlifecycle中，连destroy中都不需要处理。</p>
+<p>不过这次让做一个属性动画，加入购物车的时候进行弹跳的一个动画布局，我搞了2天，原本准备搞个抛物线结束，结果三点计算抛物线公式忘了，自己推了2个小时，还推了个错的，debug了半天才发现。之后和ios商量，他们说应该用贝塞尔曲线，我又去翻以前的贝塞尔曲线的笔记，结果公式是以前就总结好的，但是好像是错的，怎么画都不对头。网上找了一圈还是没找到相关的对的例子。明天上班的时候去和ios的讨论讨论。</p>
+<p>以上为本周的工作内容。</p>
+<p>最近沉迷dnf无法自拔，结果今天给封号了一天，日。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/29/2018八月-第三十一周到三十五周-工作小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/29/2018八月-第三十一周到三十五周-工作小结/" itemprop="url">2018八月-第三十一周到三十五周-工作小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-29T18:37:05+08:00">
+                2018-08-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>这个月都没有写小结，发生了很多事情，都没有来的及记录。</p>
+<p>首先是公司进入了a轮的加速期，为了提高转化率使投资人满意，所有人都进入了8月的倒计时奋战期。其实和之前差不多，唯一变的是每周一开需求大会，之前都会假意征求一下开发的意见，现在这个流程也省略了。</p>
+<p>其次是由于好几个前端跑路，导致之前做的很多动态页面需要本地化，也相当于增加了业务量。</p>
+<p>这个月基本上是围绕着优化，订单来工作的。</p>
+<p>首先讲讲优化。</p>
+<ul>
+<li>ui优化</li>
+</ul>
+<p>app在oppor9m上面贼卡，一方面是过度绘制比较严重，二方面是内存泄漏比较严重。之前写布局很多地方都用的relativylayout或者framelayout，嵌套比较严重，红色过度绘制的区域十分多，查看gpu绘制，发现滑动的时候绘制较多，在专题详情页面尤其明显。</p>
+<p>– 过度绘制</p>
+<p>因此对主要流程，主要流程的卡顿页面做了调整，完全按照constraintlayout的设计规则，无论多复杂的布局，统一使用一层或者2层（带scrollview）的布局结构。写的十分顺畅，使用的过程中完善了我对于constraintlayout的理解，包括guideline，group，基准点等。constraintlayou有一个问题，就是背景问题，以往的情况下，习惯性的使用linearlayout，或者部分布局包装，然后针对包装布局进行背景设置，但是在constraintlayout下面，其实单层布局不是很好设置背景，只可以使用单独的一层view来在之前设置，但是view的下方padding就有一些问题，尤其是在提前布局的情况下。针对这个情况，我通过guideline和viewtip来解决，不过这样多了很多奇怪的点，这些点也只可以通过group来进行布局的绑定。</p>
+<p>整个constraintlayout给我的感觉，是牺牲了逻辑效率，带来布局效率，很多的逻辑牵扯在的xml中，而代码中我们一般指判断view是否显示，但是这样就会导致xml中的部分逻辑在不显示的情况下，产生了偏差。因此我觉得在大多数遇到逻辑复杂的布局排列中，还是不要轻易强行单层布局，逻辑偏差带来的时间损失，绝对比使用嵌套布局之后在进行代码优化的多。</p>
+<p>– bitmap大图</p>
+<p>由于我们的项目就是围绕着人脸，身材，妆容这些来进行的，这些无一例外都是bitmap的使用者。</p>
+<p>整合人脸，整合身材，整合妆容之后形成的完整的人模型，原本需要占用大约5m的内存。在优化之前，很多地方使用的是fragmentpageradapter，每个fragment持有很多的bitmap，当时算了一下，一个framgent如果在不上滑加载更多的时候，会持有8个bitmap对象，就是约40m内存。</p>
+<p>在2.1.3版本上面，anr的发生率提高到了14%，绝大多数都是在首页滑动的时候产生的卡死。</p>
+<p>针对这个问题，也做了针对性的优化。首先是使用fragmentstatepageradapter，这样可以在fragment进入销毁流程的时候，释放引用而让他自然销毁。这样首先是切换的时候内存占用问题解决了。</p>
+<p>其次是单fragment下滑导致的内存占用问题。刚开始使用的recyclerview，为了让用户有比较好的体验（雾），而将最大item设为了20（大雾）。这下子用户上滑超过20个，光bitmap 的占用率就飙升到了100m，还不谈item的其他内存占用问题。在一般的华为和oppo手机上面，光这项就吃掉了分给app的50%以上的内存。基本上这个时候如果系统在吃点内存，app就anr了。</p>
+<p>因此针对这个问题，想到的是动态持有，根据可用内存堆分配来实时更新缓存堆的内容。使用的是比较常见的lrucache，但是这个lrucache只缓存了bitmap的信息，item其余的信息就直接释放了，这样动态缓存1/4最大内存堆的内存，同时也保证了bitmap加载不会有太多的问题。</p>
+<p>使用缓存有个小问题，就是强制刷新的时候不注意的话其实是无法清除的，强制刷新的时候得clearcache。</p>
+<p>– bimap色深</p>
+<p>在解决了缓存占用问题之后，基于bitmap的内存问题其实得到了很大的解决。但是仍然有一个巨大的问题，就是bitmap的加载速度。</p>
+<p>即使缓存到lrucache里面，也得首先下载下来，在普通4g网大约200K下载速度的时候，一张基准图下载需要大约0.5-1秒，但是经过渲染和加载，总共大约需要1.5秒的样子才可以呈现，这个速度实在是很慢。</p>
+<p>处理这个的问题一般就是从图片质量上面入手，图片存储方式一般是写死的，虽然我们使用的是oss，可以通过传递参数到服务器，来获取不同的图片大小，但是在做到这个地步之后，就是图像的渲染，也就是从网上下载的数据映射到bitmap上面的这个过程。</p>
+<p>一般的bitmap是rgb888，一个像素占3Byte，我用的手机5.5英寸，1080x1920像素，一般图片设置大约140dp宽高，也就是约420x420像素，占用内存就是420x420x3 = 516K,jpg的压缩率我不是很清楚，大约在10%-90%之间，也就是这么一个呈现为516k的图片，大约需要下载5-50k之间的样子，专题详情页面的大图，宽度是130dp，高度是400dp，就一下子扩了将近3倍，下载如果在200k就要全速一秒了。</p>
+<p>流量并不是很关心的事情，下载其实也不是很关心的事情，因为我无法决定用户的网速，那是framework的事情，我只可以确保下载的内容到本机能够快速加载出来。因此采取的措施是压缩色深，从rgb888，压缩到rgb565，然后压缩到了rgb444。图片质量压缩到如此之低，基本上是能接受的极限了。改完之后速度大约快了一点，加载的时候下载完的条结束就可以出来了。</p>
+<p>– 主线程任务过多引起的卡顿</p>
+<p>在sku详情页面，逻辑是这样的，2线并行，1线先请求人体数据，人体数据的返回值会引起整个页面结构的初始化，2线后行，直接请求sku的数据，进行数据的web填充。问题出现在这两条线都涉及到了ui的修改，所以都跑在主线程，还有个问题是双线有依赖，会导致加载的时候互相调用，而在安卓中很少对于view进行上锁措施，因此此时的操作极为繁琐，而且卡顿及其严重。</p>
+<p>针对此问题主要是优化主线程任务措施，rxjava中其实还是比较好做的，一来使用concat操作符，二来在数据初始化的步骤可以放到子线程，之后实现的操作可以放到主线程，逻辑复杂的部分可以放在子线程，结果传到主线程。（此处mark一下，需要对rxjava的原理做个完整的学习）</p>
+<p>双线我通过整合成为单线，然后线程切换的方式，加载速度，滑动速度响应都足够了。</p>
+<ul>
+<li>性能优化</li>
+</ul>
+<p>– 内存泄漏</p>
+<p>之前项目中整合了lecancary，每次gc和泄漏的时候会弹出提示，但是在项目中的表现并不好，一来是fragment和activity的多层引用，基类中有很多资源持有引用，而这些引用是后来自己手动释放的，但是在lecancary中就会爆这些引用泄漏了，其二是我们所有的网络代码通过clean的结构，在最顶层使用dagger来解耦，因此造成了在ondestroy过程中会销毁，但是切换过程中并不会销毁。切换的过程需要等待，但是这个过程已经造成了泄漏。</p>
+<p>采取的措施比较粗暴，就是直接在切换的时候触发presenter的destroy方法，这样切换的时候，会先关闭引用，之后在切换，切换之后销毁自己，这就是比较正常的过程了。</p>
+<p>– oom</p>
+<p>oom的问题就如同bitmap大图的问题，掠过不讲</p>
+<ul>
+<li>订单流程</li>
+</ul>
+<p>整个订单流程进行了完整的更新，大部分计算价格的部分给予后台来处理，不在由前端显示相关内容，对于我们来讲逻辑更新容易很多。出问题的地方是由于都给予后台显示了，前端势必要判断是否成功，失败的处理逻辑等等。因此针对网络失败的地方做了处理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">private void handleHttpError(Throwable e)&#123;</span><br><span class="line">        if (e instanceof RuntimeException)&#123;</span><br><span class="line">            if (e.getCause() instanceof ConnectException)&#123;</span><br><span class="line">                mEventBus.post(new OnHttpErrorEvent(&quot;连接失败，请检查网络后再试&quot;));</span><br><span class="line">            &#125;</span><br><span class="line">            if (e.getCause() instanceof SocketTimeoutException)&#123;</span><br><span class="line">                mEventBus.post(new OnHttpErrorEvent(&quot;请求超时，请检查网络后再试&quot;));</span><br><span class="line">            &#125;</span><br><span class="line">            if (e.getCause() instanceof UnknownHostException)&#123;</span><br><span class="line">                mEventBus.post(new OnHttpErrorEvent(&quot;域名连接失败，请检查网络后再试&quot;));</span><br><span class="line">            &#125;</span><br><span class="line">            if (e.getCause() instanceof NetworkErrorException)&#123;</span><br><span class="line">                mEventBus.post(new OnHttpErrorEvent(&quot;网络异常，请检查网络后再试&quot;));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if (e instanceof ConnectException)&#123;</span><br><span class="line">            mEventBus.post(new OnHttpErrorEvent(&quot;连接失败，请检查网络后再试&quot;));</span><br><span class="line">        &#125;</span><br><span class="line">        if (e instanceof SocketTimeoutException)&#123;</span><br><span class="line">            mEventBus.post(new OnHttpErrorEvent(&quot;请求超时，请检查网络后再试&quot;));</span><br><span class="line">        &#125;</span><br><span class="line">        if (e instanceof UnknownHostException)&#123;</span><br><span class="line">            mEventBus.post(new OnHttpErrorEvent(&quot;域名连接失败，请检查网络后再试&quot;));</span><br><span class="line">        &#125;</span><br><span class="line">        if (e instanceof NetworkErrorException)&#123;</span><br><span class="line">            mEventBus.post(new OnHttpErrorEvent(&quot;网络异常，请检查网络后再试&quot;));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>处理方式如上，主要是针对rxjava网络异常的各个问题进行鉴别性操作，然后根据不同的类型显示不同的页面。</p>
+<p>大致分了2种页面，一种是正常的失败，没有数据的那种，叫emptyview，还有一种就是网络失败的，叫errorview，都是可以抽出来单独做的。</p>
+<p>除此之外由于大多都是业务方面的内容，可总结的比较少。</p>
+<p>能够抽出来说的有一点，是优惠卷的ui处理方面，一般是使用recyclerview，但是由于用户的优惠卷比较少，我使用的是普通的linearlayout，通过addview来进行加载视图，问题是无法通过recyclerview那种通过一张表来更改数据和view。我需要维护2个表，一个是选中的view表，一个是所有的view表，每次点击的时候需要从选中表中进行遍历，然后处理一些关于选中优惠卷的县骨干内容，本次版本主要是互斥卷和叠加卷的逻辑问题。处理完之后会重新刷新选中表。这样一定程度上是牺牲了代码简洁，而照顾了加载速度。其实recyclerview也有很多bug，比如说每次notifydatasetchanged，数据源变更会强制触发重新刷新的功能，这就不适合数据源并不多的情况。而且recycerview本身作为一个较为重型的控件，处理单纯的几个view，有些大材小用。</p>
+<p>大致如上，四周都没什么时间好好整理一下，做项目的时候总是想着要总结总结，但是到了要总结的时候，仿佛踩过的坑，处理过的问题，都一下子不见了。脑袋里就剩下了最近处理的一些问题。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/01/2018第三十周工作小结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1335,267 +1630,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/20/2018第二十周工作小结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/20/2018第二十周工作小结/" itemprop="url">2018第二十周工作小结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-20T21:29:59+08:00">
-                2018-05-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>这周周三上线了2.0.3版本，主要是针对盒子部分进行了流程的优化。</p>
-<p>这周有个比较大的感触，是产品为了完善用户转化率，不断的将一些要素提炼出来，然后放置在用户可见区域，不断的优化这一细节，导致最后呈现的版本，流程，和之前都不同了。这种产品思维，我可学习的地方很多。</p>
-<p>另外这周我可以说是入门了reactnative，我希望在移动端这边可以学习更多东西。所以通过reactnative，学习js的操作语法。同时对于ios的语法也要进行一定的学习。</p>
-<p>这次有一些想法，关于生活作息的。之前由于经常加班，导致精神紧张睡眠不足，晚上回去也没有时间进行学习。现在针对这个问题进行改变。</p>
-<p>每晚争取7。30左右下班，发版本晚一些可以。回来之后看一会儿书，10.30左右睡觉。保障8小时睡眠，然后第二天7点起床，七点半去公司，然后看2小时的书。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/12/2018第十九周工作小结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/12/2018第十九周工作小结/" itemprop="url">2018第十九周工作小结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-12T23:34:44+08:00">
-                2018-05-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>这一周主要任务是完成了好搭盒子2.0.2版本升级和上线。</p>
-<p>2.0.2版本主要是将会员系统更改了一下，同时更改了大量的ui，大量的工作是在业务代码上面。</p>
-<p>业务上面的东西可总结的比较少，不过这一周暴露了不少的问题。</p>
-<p>第一，待人处事方面。可能性格上面的原因，我总喜欢说一些冷话。比如说“我之前说过这个地方有问题”，“我之前反馈过这边设计不合理”等等。说实话，和产品的沟通家了一些这种话，会导致别人心情不好。这周我发现了不少这个方面的问题，说完之后别人的脸色就不好了。这部分要改。</p>
-<p>第二，口头禅方面。我最近发现我的口头禅“真的”，“没办法啊”，“我能怎么办”，这些不好，事实上在说这些话的时候，我压根没进脑子，单纯的应付式的谈话。这样很不好，给人一种不放在心上的感觉。</p>
-<p>第三，责任方面。我这个人有种压力一大，就开始烦躁的情况。这周由于任务划分不对，我给进奎的任务前期比较少，导致很多任务挤压在我头上，造成了我周四晚上一波情绪大反弹，我把一些气撒在了产品的头上。这个事后我立即发现并且做出了道歉，但是还是发生了。</p>
-<p>第四，产品优化方面。我发现我写的很多代码，没有考虑到性能，导致app卡顿现象比较严重，由于任务排期比较重，一直没有回头看。现在发现了几个明显的优化点，一是会员状态信息，可以使用本地存储，然后每次读取的时候走内存，只有在一些特定的情况下，比如说用户走了交押金系统，用户走了交会员费系统这些接口后，我清除会员状态并且重拉一下状态信息。二是每次获取account的时候，走了四次io，开销太大，这部分也需要更改。三是盒子部分的加载问题，也可以仿照会员状态更改来进行更改。</p>
-<p>针对以上问题，大概定了以下几个措施去规避。</p>
-<p>针对待人处事这部分，我仔细观察了一下，一定要像剑飞一样，脾气不能差，好好说话，有问题就仔细说出来。</p>
-<p>针对口头禅这一方面，我之后的谈话交流中，一定要认真进行交流，如果中途有事，就仔细说一下，不能这种应付式的谈话。</p>
-<p>针对责任方面，我需要仿照之前王洋每次对任务的划分安排，好好使用worktile，将任务仔细的划分开来，力争做到每个点都做完，都设计完，然后责任划分清晰后在动手进行设计安排。</p>
-<p>针对产品优化方面，近期主要是处理会员状态和account状态，不过这部分的时间安排需要在功能完成之后进行。</p>
-<p>完。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1641,7 +1680,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">100</span>
+                  <span class="site-state-item-count">102</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
