@@ -229,7 +229,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/14/项目base部分总结/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/16/网络协议基础/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sample">
@@ -248,7 +248,367 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/11/14/项目base部分总结/" itemprop="url">项目base部分总结</a></h1>
+                <a class="post-title-link" href="/2018/11/16/网络协议基础/" itemprop="url">网络协议基础</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-16T11:22:09+08:00">
+                2018-11-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="OSI网络分层"><a href="#OSI网络分层" class="headerlink" title="OSI网络分层"></a>OSI网络分层</h1><p>网络分层就是OSI七层结构，另外还有个TCPIP五层结构，我从最底层开始总结</p>
+<h2 id="物理层"><a href="#物理层" class="headerlink" title="物理层"></a>物理层</h2><p>职责：建立、维护、断开物理连接</p>
+<p>物理层是一个点对点的数据直链，并不一定可靠，物理层是通过拓扑结构进行连接，但始终保障能够连通。</p>
+<h3 id="物理层传输原理"><a href="#物理层传输原理" class="headerlink" title="物理层传输原理"></a>物理层传输原理</h3><p>物理层主要功能是传输比特流。其传输原理是将需要传输的信息按照ASCII编码转化为二进制代码，然后将二进制代码通过数据信号编码器转换为一种电信号，最后信号由发送端的发送设备通过传输介质发送到接受端计算机。传输的信号分为模电和数电，解析方法是调制和解调</p>
+<h3 id="物理层总结"><a href="#物理层总结" class="headerlink" title="物理层总结"></a>物理层总结</h3><p>物理层的传输方式和解析方式大部分是本科阶段通信原理学习的内容，另外传输的协议比如说数电，模电，多路复用，时分复用，波分复用等等。对移动端来讲物理层可控太少，了解其职责和大致原理即可。</p>
+<h2 id="数据链路层"><a href="#数据链路层" class="headerlink" title="数据链路层"></a>数据链路层</h2><p>职责：建立逻辑连接，进行硬件地址寻址，差错校验等功能</p>
+<p>数据链路层是一个数据传输通道，位于物理层和网络层之间，是数据传输过程中比较重要的一层。物理层提供的的传输媒介、连接在通讯时只是暂时的，而数据链路的功能就是通过建立通信连接和拆除通信连接这种数据收发方式，而承担数据链路功能的设备就是数据链路层设备</p>
+<h3 id="数据链路层设备"><a href="#数据链路层设备" class="headerlink" title="数据链路层设备"></a>数据链路层设备</h3><ol>
+<li>网卡</li>
+</ol>
+<p>作用：网卡是连接计算机与网络的硬件设备，不仅能实现与局域网传输介质之间的物理连接和电信号连接，还涉及了帧的发送与接收、帧的封装与拆封、介质访问控制、数据的编码与解码以及数据缓存的功能</p>
+<ol>
+<li>网桥</li>
+</ol>
+<p>作用：实现局域网互联的存储转发设备，网桥从一个局域网接收mac帧、拆封、校对、校验之后，按照另一个局域网的格式重新组装，发往它的物理层</p>
+<ol>
+<li>交换机</li>
+</ol>
+<p>是一种用于电信号转发的网络设备，可以把传输的信息送到符合要求的设备上面</p>
+<h3 id="数据链路层基础知识"><a href="#数据链路层基础知识" class="headerlink" title="数据链路层基础知识"></a>数据链路层基础知识</h3><ol>
+<li>mac地址</li>
+</ol>
+<p>mac地址用来表示互联网上面每一个站点的标识符，采用十六进制，共6个字节<br>输入ipconfig/all 中的物理地址及是mac地址</p>
+<ol>
+<li>数据帧</li>
+</ol>
+<p>数据帧是数据链路层的协议数据单元，它包括三部分：帧头，数据部分，帧尾。帧头帧尾是控制信息，数据部分包含了需要传输的数据</p>
+<ol>
+<li>载波监听多路访问技术 CSMA/CD</li>
+</ol>
+<p>发送数据前监听信道是否空闲，若空闲就立即发送信道，否则就等待一段时间直至信道中的信息传输结束后再发送数据，若在上一段信息发送结束后，同时又两个或两个以上节点都提出发送请求，则判定为冲突，冲突会立即停止发送数据，等待一段时间之后再重新尝试</p>
+<h2 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h2><p>职责：进行逻辑地址寻址，实现不同网络之间的路径选择</p>
+<p>网络层将多个通络通过路由器互连成一个互连网络，让网络中的多台计算机可以互相通信。网络层最重要的是ip协议，在网络层需要实现数据报文的分片与组装、同时需要提供路由选择。</p>
+<p>和网络层搭配使用的是ARP(地址解析协议)，ICMP(互联网控制报文协议)，IGMP(网际管理协议)</p>
+<h3 id="ARP-address-resolution-protocol"><a href="#ARP-address-resolution-protocol" class="headerlink" title="ARP (address resolution protocol)"></a>ARP (address resolution protocol)</h3><p>在实际过程中，知道一个主机或者路由器的ip地址，并不知道对应的mac地址，因此可以通过arp协议，用目的ip地址得到mac地址。</p>
+<p>原理：在每台安装tcpip协议的电脑路由器里都有一个arp缓存表，表里的ip地址与mac地址是一一对应的。当发送数据时，主机a会在自己的arp缓存表中寻找是否有目标ip地址，如果找到就知道目标对应的mac地址，直接将mac地址写入帧里面发送即可。如果没有找到，就会在网络上发送一个广播(ARP REQUEST)，这个request的目标mac地址是”FF.FF.FF.FF.FF.FF”，携带的信息是查询目标ip地址。网络上面不是这个ip地址的主机不会响应这个arp查询，只有ip地址为这个的目标主机才会响应，并且发送一个ARP RESPONSE, 携带的信息是目标ip的mac地址，这样就回复回来的时候就知道目标的mac地址了，并且会更新arp缓存表（arp缓存表使用的是老化机制，一段时间不使用就会删除，因此长度并不会特别长）</p>
+<h3 id="ICMP-internet-control-message-protocol"><a href="#ICMP-internet-control-message-protocol" class="headerlink" title="ICMP (internet control message protocol)"></a>ICMP (internet control message protocol)</h3><p>通信环境中可能存在各种问题，这些问题的反馈需要让开发者知道并且应对，因此就有了ICMP协议，该协议与传输协议不同，他一般并不用于两点间传输数据，而常常用于返回错误的信息或分析路由。</p>
+<p>ICMP主要功能：1、确认ip包是否成功到达目标地址 2、通知在发送过程中ip包被丢弃的原因 3、ICMP是基于ip协议制作的，但是并不是传输层的功能，因此仍然是网络层协议 4、ICMP只能用于IPV4, 能用于IPV6的icmp叫做ICMPV6</p>
+<p>常用的ICMP技术，像是 ping， traceroute命令</p>
+<h2 id="IGMP-internet-group-management-protocol"><a href="#IGMP-internet-group-management-protocol" class="headerlink" title="IGMP (internet group management protocol)"></a>IGMP (internet group management protocol)</h2><p>跨越多个网络的组播转发必须要依赖于路由器，路由器为建立转发路由必须要了解每个组员在internet中的分布，这要求主机将自己所在的组播组通知给本地路由器，这也是建立组播转发路由的基础。主机与本地路由器之间使用igmp来进行组播组成员信息的交互。</p>
+<p>IGMP提供了再转发组播数据包到达目的地的最后阶段所需要的信息，实现双向的功能：<br>1.主机通过igmp通知路由器希望接受或离开某个特定组播组的信息<br>2.路由器通过IGMP周期性的查询局域网内的组播组成员是否处于活动状态，实现所连网段组成员关系的手机与维护。</p>
+<h2 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h2><p>职责：在网络的各个节点之间可靠的分发数据包，实现应用进程间的端到端通信，同时向应用层提供通信服务</p>
+<p>原理：通过多路复用和解复用技术，发送方的不同的应用进程都可以使用同一个传输层协议传送数据，接收方的传输层剥去报文首部之后能把这些数据正确的传输的正确的应用进程之间。</p>
+<p>传输层就是知名协议UDP和TCP的所在。</p>
+<h3 id="UDP-user-datagram-protocol-用户数据协议"><a href="#UDP-user-datagram-protocol-用户数据协议" class="headerlink" title="UDP(user datagram protocol) 用户数据协议"></a>UDP(user datagram protocol) 用户数据协议</h3><p>UDP特性：一个数据包就能完成任务，不需要分段，不需要建立会话，不需要流量控制，是种不可靠的传输方式。</p>
+<h4 id="UDP的优点"><a href="#UDP的优点" class="headerlink" title="UDP的优点"></a>UDP的优点</h4><ol>
+<li>开销更小</li>
+</ol>
+<p>对比于tcp， udp的首部只有8个字节，而tcp有20个字节和40个字节的可选项</p>
+<ol>
+<li>速度更快</li>
+</ol>
+<p>UDP发送数据之前没有TCP的连接建立过程，而TCP则提供了过多的保护，在及时性上面做了很多的妥协</p>
+<h4 id="UDP的主要问题"><a href="#UDP的主要问题" class="headerlink" title="UDP的主要问题"></a>UDP的主要问题</h4><ol>
+<li>丢失和乱序</li>
+</ol>
+<p>因为UDP不提供ACK、序列号等机制，所以是没有办法知道是否有报文丢失以及接收方到达等报文书序是否和发送方的报文数据一样</p>
+<ol>
+<li>差错</li>
+</ol>
+<p>对于差错问题可以通过校验和等检测到，但是不提供差错纠正</p>
+<ol>
+<li>数据完整性</li>
+</ol>
+<p>UDP协议头部虽然有16位的校验和，但是IPV4不强制执行，所以说UDP无法保证数据的完整性</p>
+<h4 id="UDP如何解决传输的问题"><a href="#UDP如何解决传输的问题" class="headerlink" title="UDP如何解决传输的问题"></a>UDP如何解决传输的问题</h4><p>1、 数据完整性</p>
+<p>加上一个16或者32位的CRC验证字段</p>
+<p>2、 乱序</p>
+<p>加上一个数据包序列号SEQ</p>
+<p>3、 丢包</p>
+<p>加上和TCP类似的ACK机制，进行确认和重传</p>
+<p>因此推荐使用RUDP（reliable udp）</p>
+<h3 id="TCP-transmission-control-protocol-传输控制协议"><a href="#TCP-transmission-control-protocol-传输控制协议" class="headerlink" title="TCP(transmission control protocol) 传输控制协议"></a>TCP(transmission control protocol) 传输控制协议</h3><h4 id="TCP头部图"><a href="#TCP头部图" class="headerlink" title="TCP头部图"></a>TCP头部图</h4><p><img src="/images/网络协议/TCP头部图.png" alt="tcp头部图"></p>
+<p>tcp头部添加了20个字节，总计160位来进行数据的控制</p>
+<p>其中选项还可以在多添加40个字节</p>
+<p>因此头部的必要信息比较多，也是确保数据可靠的基础</p>
+<h4 id="TCP连接管理机制"><a href="#TCP连接管理机制" class="headerlink" title="TCP连接管理机制"></a>TCP连接管理机制</h4><p>连接tcp需要三次握手，断开tcp需要四次挥手</p>
+<h5 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h5><p>第一次：</p>
+<p>客户端发送给服务器，通知服务器需要建立连接</p>
+<p>第二次：</p>
+<p>服务器发送给客户端，通知客户端服务器收到连接请求</p>
+<p>第三次：</p>
+<p>客户端发送给服务器，通知服务器客户端收到了服务器的回应</p>
+<p>详细解释：</p>
+<p>1, TCP服务器进程先创建传输控制块TCB, 时刻准备接受客户端进程的连接请求, 此时服务器就进入了 LISTEN（监听）状态<br>2, TCP客户端进程也是先创建传输控制块TCB, 然后向服务器发出连接请求报文，此时报文首部中的同步标志位SYN=1, 同时选择一个初始序列号 seq = x, 此时，TCP客户端进程进入了 SYN-SENT（同步已发送状态）状态。TCP规定, SYN报文段（SYN=1的报文段）不能携带数据，但需要消耗掉一个序号。<br>3, TCP服务器收到请求报文后, 如果同意连接, 则发出确认报文。确认报文中的 ACK=1, SYN=1, 确认序号是 x+1, 同时也要为自己初始化一个序列号 seq = y, 此时, TCP服务器进程进入了SYN-RCVD（同步收到）状态。这个报文也不能携带数据, 但是同样要消耗一个序号。<br>4, TCP客户端进程收到确认后还, 要向服务器给出确认。确认报文的ACK=1，确认序号是 y+1，自己的序列号是 x+1.<br>5, 此时，TCP连接建立，客户端进入ESTABLISHED（已建立连接）状态。当服务器收到客户端的确认后也进入ESTABLISHED状态，此后双方就可以开始通信了。</p>
+<ul>
+<li>为什么不用两次握手？</li>
+</ul>
+<p>主要是为了防止已经失效的连接请求报文突然又传回服务器，如果是已经失效的，第三次就无法成立，因此第三次是为了确保网络停滞时间不会导致连接失效</p>
+<ul>
+<li>为什么不用四次？</li>
+</ul>
+<p>四次的话其实就是服务器在通知一次客户端，其实没有必要了，多余了</p>
+<h5 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h5><p>第一次：客户端通知服务器端，要释放连接了，并且客户端进入终止等待1状态</p>
+<p>第二次：服务器收到客户端的释放连接的请求，通知客户端自己已经收到释放连接的请求</p>
+<p>第三次：客户端收到服务器的确认释放连接请求，客户端进入终止等待2状态，而服务器将最后的数据发送完毕后，就向客户端发送连接释放报文</p>
+<p>第四次：客户端收到连接释放报文，向服务端发出确认释放，之后就进入了时间等待状态，等到2个最长报文段寿命时间结束后，客户端就撤销相应的TCB，并且进入close状态，而服务端在接收到了这个确认信息后，不需要等待，而直接进入close状态。因此服务端结束的时间比客户端早一些</p>
+<ul>
+<li>为什么客户端在第四次挥手的时候需要等待两个最长报文寿命时间呢？</li>
+</ul>
+<p>第一：保证客户端发送的最后一个ACK报文能够到达服务器，因为这个ACK报文可能丢失，丢失的话服务端就无法知道收到回应，因此如果最后一个ACK报文丢失的话，服务端会再次发送，在两个最长报文寿命时间内，客户端有可能收到第二次请求确认的报文</p>
+<p>第二：防止已经失效的请求报文，客户端等待的两个最长报文寿命的时间中，可以确保本次tcp连接产生的所有报文段都从网络中消失，这样新的连接就不会出现旧连接的请求报文</p>
+<ul>
+<li>为什么建立连接需要三次，而释放连接需要四次？</li>
+</ul>
+<p>因为释放的时候不确定是否有数据没有发送完毕，因此需要确保数据全部发送完毕，这样多了一次，而如果释放的时候没有数据的话，其实可以看做三次，即第二次和第三次合并</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/16/2018年第44周工作小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/16/2018年第44周工作小结/" itemprop="url">2018年第44周工作小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-16T11:21:57+08:00">
+                2018-11-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>好几周没有写工作小结了。上个月母亲生病，请假回去，加上十月份国庆节，前前后后只持续工作了一周左右，工作上面的事情大都委托给同组的同事帮忙了。</p>
+<p>所以这个月才开始继续写工作小结。</p>
+<p>十一月的工作主要是针对商品缺货现象进行优化。产品部门给了两个个需求点，一是增加会员专区，二是进行缺货订阅推送。这两个需求点演化为很多独立或者不独立的需求。</p>
+<h2 id="增加会员专区"><a href="#增加会员专区" class="headerlink" title="增加会员专区"></a>增加会员专区</h2><p>增加会员专区的目的是将部分商品从所有商品中拉出来，保证这些商品能够给VIP选择，这样至少能保证在货源不足的情况下付费用户能够选择。针对该问题我们开发需要做的是加入VIP专区，针对商品是否是vip设置专门的标识，另外在打包的流程中需要额外将成为会员的路径加上。</p>
+<p>增加会员标识有些问题，比如说对非会员用户，需要显示成为会员的区域，但是对于已是会员的用户，就需要遮蔽这个区域，这个地方以前的做法是在activity的onresume的时候做检查，检查一遍会员的状态，但是其实商品详情页面如果总这样做的话，onresume里面做的事情过于多了。</p>
+<p>我看了一下别的app，像京东这种支持无限订单模式的，返回的状态刷新不是在onresume里面的，而是返回时直接显示出来改变的结果。因此我判断此处使用的应该是广播的方式。因此我觉得在设计app的activity的时候需要将视图同时与广播绑定，在广播发送来的时候，直接针对广播的内容进行相关行为的实施。因此在封装activity的时候，其实需要额外开辟一个针对广播的ui修改区。当然这个广播只需要是应用内广播即可，我使用eventbus来实现了一款。不过鉴于发送广播会造成ui修改，而在activity内的相关行为，一般造成相同ui修改，也会同时发个广播，此时就需要鉴别一下，不要重复刷新。</p>
+<p>说道eventbus，在支付宝和微信的回调处理的时候，我也使用的是eventbus，假以时日需要总结一下eventbus原理。</p>
+<h2 id="sku订阅推送"><a href="#sku订阅推送" class="headerlink" title="sku订阅推送"></a>sku订阅推送</h2><p>订阅推送是上周提出的需求，但是这周才开始实施，期初的想法是一个spu可以订阅一个缺货的sku，这样在sku到货的时候通过推送来唤醒用户。</p>
+<p>因此需要在商品详情页面进行订阅功能的添加。但是后来说需要在确认订单页面也同样进行订阅功能的添加，这就将原本的一个spu订阅一个sku的需求变更了，变成了一个spu可以订阅多个sku，相关的逻辑也需要进行改变。</p>
+<p>订单流程页面，一直是独立发起，但是并未有比较好的处理措施。由于订单流程本来自身支持很多跳转，而跳转到的页面又支持相应的订单发起，因此其实应该将订单发起页面做成singletask模式，这样可以保证订单发起页面的独立性。但是回来的时候，需要做本地的刷新措施。</p>
+<p>回到这个问题，单sku订阅spu涉及到订阅和取消订阅的关系，订阅的时候代表这个spu中的这个sku被订阅，取消订阅也只能说是这个sku被取消订阅。而单品详情页面则拥有取消全部的关系。另外由于订单流程页面并未做单栈模式，所以也有在别的订单流程进行了操作，回到这个未关闭的流程时需要处理订阅的相关消息。</p>
+<p>因此此处也使用的广播模式，两种广播，一种是携带了单独sku的广播，这类广播获取之后只需要判断sku的id是否是自己的id，然后做相应的处理即可。另外一种广播是携带了spu信息的广播，这类广播获取之后只需要判断spuid和自己携带的spuid是否相同，如果相同并且为取消订阅的时候，就可以直接取消自己的订阅关系。</p>
+<h2 id="bug修复类"><a href="#bug修复类" class="headerlink" title="bug修复类"></a>bug修复类</h2><p>ui那边提出了一个修改建议，需要将所有的button通用为一个style，这个比较好做，在别的页面都处理的很好，但是在物流页面发现button点击失效</p>
+<p>原来的布局</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;android.support.constraint.ConstraintLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</span><br><span class="line">    android:layout_width=&quot;match_parent&quot;</span><br><span class="line">    android:layout_height=&quot;match_parent&quot;</span><br><span class="line">    xmlns:tools=&quot;http://schemas.android.com/tools&quot;</span><br><span class="line">    android:background=&quot;@color/color_half_alpha_black&quot;</span><br><span class="line">    xmlns:app=&quot;http://schemas.android.com/apk/res-auto&quot;&gt;</span><br><span class="line">    &lt;View</span><br><span class="line">        android:id=&quot;@+id/view_background&quot;</span><br><span class="line">        app:layout_constraintTop_toTopOf=&quot;parent&quot;</span><br><span class="line">        app:layout_constraintStart_toStartOf=&quot;parent&quot;</span><br><span class="line">        app:layout_constraintEnd_toEndOf=&quot;parent&quot;</span><br><span class="line">        app:layout_constraintBottom_toBottomOf=&quot;@id/text_confirm&quot;</span><br><span class="line">        android:background=&quot;@color/white&quot;</span><br><span class="line">        android:layout_marginTop=&quot;135dp&quot;</span><br><span class="line">        android:layout_width=&quot;match_parent&quot;</span><br><span class="line">        android:layout_height=&quot;0dp&quot;/&gt;</span><br><span class="line"></span><br><span class="line">    &lt;TextView</span><br><span class="line">        android:id=&quot;@+id/text_confirm&quot;</span><br><span class="line">        android:layout_width=&quot;match_parent&quot;</span><br><span class="line">        android:layout_height=&quot;49dp&quot;</span><br><span class="line">        android:text=&quot;我知道了&quot;</span><br><span class="line">        style=&quot;@style/BlackButtonStyle&quot;</span><br><span class="line">        app:layout_constraintBottom_toBottomOf=&quot;parent&quot;</span><br><span class="line">        /&gt;</span><br><span class="line"></span><br><span class="line">    &lt;TextView</span><br><span class="line">        android:id=&quot;@+id/text_express_name&quot;</span><br><span class="line">        tools:text=&quot;顺丰快递&quot;</span><br><span class="line">        app:layout_constraintTop_toTopOf=&quot;@id/view_background&quot;</span><br><span class="line">        app:layout_constraintStart_toStartOf=&quot;@id/view_background&quot;</span><br><span class="line">        app:layout_constraintEnd_toEndOf=&quot;@id/view_background&quot;</span><br><span class="line">        android:layout_marginTop=&quot;20dp&quot;</span><br><span class="line">        android:textSize=&quot;15dp&quot;</span><br><span class="line">        android:textColor=&quot;@color/black&quot;</span><br><span class="line">        android:layout_width=&quot;wrap_content&quot;</span><br><span class="line">        android:layout_height=&quot;wrap_content&quot; /&gt;</span><br><span class="line">    &lt;TextView</span><br><span class="line">        android:id=&quot;@+id/text_express_number&quot;</span><br><span class="line">        tools:text=&quot;（运单编号：3832333043290）&quot;</span><br><span class="line">        app:layout_constraintTop_toBottomOf=&quot;@id/text_express_name&quot;</span><br><span class="line">        app:layout_constraintStart_toStartOf=&quot;@id/view_background&quot;</span><br><span class="line">        app:layout_constraintEnd_toEndOf=&quot;@id/view_background&quot;</span><br><span class="line">        android:layout_marginTop=&quot;10dp&quot;</span><br><span class="line">        android:textColor=&quot;@color/color_666666&quot;</span><br><span class="line">        android:layout_width=&quot;wrap_content&quot;</span><br><span class="line">        android:layout_height=&quot;wrap_content&quot; /&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;View</span><br><span class="line">        android:id=&quot;@+id/divider_express_number&quot;</span><br><span class="line">        android:layout_width=&quot;0dp&quot;</span><br><span class="line">        app:layout_constraintTop_toBottomOf=&quot;@id/text_express_number&quot;</span><br><span class="line">        app:layout_constraintStart_toStartOf=&quot;@id/view_background&quot;</span><br><span class="line">        app:layout_constraintEnd_toEndOf=&quot;@id/view_background&quot;</span><br><span class="line">        android:layout_marginTop=&quot;20dp&quot;</span><br><span class="line">        android:background=&quot;@color/color_ececec&quot;</span><br><span class="line">        android:layout_marginStart=&quot;20dp&quot;</span><br><span class="line">        android:layout_marginEnd=&quot;20dp&quot;</span><br><span class="line">        android:layout_height=&quot;0.5dp&quot;/&gt;</span><br><span class="line">    &lt;ScrollView</span><br><span class="line">        android:id=&quot;@+id/scroll_view&quot;</span><br><span class="line">        app:layout_constraintTop_toBottomOf=&quot;@id/divider_express_number&quot;</span><br><span class="line">        app:layout_constraintStart_toStartOf=&quot;@id/view_background&quot;</span><br><span class="line">        app:layout_constraintEnd_toEndOf=&quot;@id/view_background&quot;</span><br><span class="line">        app:layout_constraintBottom_toBottomOf=&quot;@id/view_background&quot;</span><br><span class="line">        android:layout_width=&quot;match_parent&quot;</span><br><span class="line">        android:layout_height=&quot;0dp&quot;&gt;</span><br><span class="line">        &lt;LinearLayout</span><br><span class="line">            android:id=&quot;@+id/container_logistic&quot;</span><br><span class="line">            android:orientation=&quot;vertical&quot;</span><br><span class="line">            android:paddingTop=&quot;5dp&quot;</span><br><span class="line">            android:layout_width=&quot;match_parent&quot;</span><br><span class="line">            android:layout_height=&quot;wrap_content&quot;&gt;</span><br><span class="line">            &lt;include</span><br><span class="line">                android:visibility=&quot;gone&quot;</span><br><span class="line">                tools:visibility=&quot;visible&quot;</span><br><span class="line">                layout=&quot;@layout/item_popupwindow_logistic&quot;/&gt;</span><br><span class="line">        &lt;/LinearLayout&gt;</span><br><span class="line">    &lt;/ScrollView&gt;</span><br><span class="line">&lt;/android.support.constraint.ConstraintLayout&gt;</span><br></pre></td></tr></table></figure>
+<p>当时只知道从layoutinspecter中发现布局存在，并且点击事件没有更改。当时做的措施是将id为text_confirm的控件挪到底部，挪到底部保证这个view最后被绘制并且不会被覆盖。但是今天检查了一下发现其实是scrollview的布局的底部写错了，应该以text_confirm的头部为底。当时分析的时候没有注重到这个，而且从布局分析器上面来看其实很难看出这个问题。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/14/项目架构总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/14/项目架构总结/" itemprop="url">项目架构总结</a></h1>
         
 
         <div class="post-meta">
@@ -300,7 +660,38 @@
       
         
           
-            
+            <p>该篇文章主要是分析一下目前项目的架构。</p>
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>好搭作为一个较为成熟的软件，从2016年我刚毕业的那年开始进行设计架构，到现在过了整整2年了。经手该项目的有大约20人了，我算是第四代接手这个项目的人。</p>
+<h1 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h1><h2 id="clean结构"><a href="#clean结构" class="headerlink" title="clean结构"></a>clean结构</h2><p><img src="/images/架构/clean架构图.png" alt="clean结构示意图"></p>
+<p>一开始看到这个架构是挺懵逼的，以前听说的时候知道这个架构是谷歌的，主要是用于项目架构，目的是为了解耦。</p>
+<p>项目中依托clean架构搭建了一套完整的解耦系统。</p>
+<h3 id="domain层"><a href="#domain层" class="headerlink" title="domain层"></a>domain层</h3><p>domian层是最内层，提供了项目的基础架构，包括了接口，util方法类（可以被视为实体类），model（完整的实体对象），event（消息通知的实体对象），exception（所有的自定义异常实体对象）</p>
+<p>另外提供了精华处，针对网络的封装实体对象，interactor</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface InteractorExecutor extends Executor &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这是一个内部写的interactorexcutor，其实就是继承了executor，作为处理runnable的方式。</p>
+<p>另外还写了一个PostInteractionThread，作为获取线程的方式。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface PostInteractionThread &#123;</span><br><span class="line">    Scheduler getScheduler();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>仅提供了很简单的方法</p>
+<p>interactor类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br></pre></td><td class="code"><pre><span class="line">public abstract class Interactor&lt;T&gt; &#123;</span><br><span class="line"></span><br><span class="line">    private static final boolean isDelay3Second = false;</span><br><span class="line">    protected PostInteractionThread postInteractionThread;</span><br><span class="line">    protected InteractorExecutor interactorExecutor;</span><br><span class="line">    private EventBus mEventBus;</span><br><span class="line">    private Disposable subscription = Disposables.empty();</span><br><span class="line"></span><br><span class="line">    public Interactor(InteractorExecutor interactorExecutor, PostInteractionThread postInteractionThread) &#123;</span><br><span class="line">        this.postInteractionThread = postInteractionThread;</span><br><span class="line">        this.interactorExecutor = interactorExecutor;</span><br><span class="line"></span><br><span class="line">        mEventBus = EventBus.getDefault();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected abstract Observable&lt;T&gt; buildObservable();</span><br><span class="line"></span><br><span class="line">    protected void checkConditions() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public T executeSync() &#123;</span><br><span class="line">        return buildObservable().blockingFirst();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void execute(Consumer&lt;? super T&gt; onNext) &#123;</span><br><span class="line">        execute(onNext, null, null);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void execute(Consumer&lt;? super T&gt; onNext, Consumer&lt;Throwable&gt; onError) &#123;</span><br><span class="line">        execute(onNext, onError, null);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void execute(Consumer&lt;? super T&gt; onNext, Consumer&lt;Throwable&gt; onError, Action onComplete) &#123;</span><br><span class="line"></span><br><span class="line">        execute(</span><br><span class="line">                new Observer&lt;T&gt;() &#123;</span><br><span class="line">                    @Override</span><br><span class="line">                    public void onError(Throwable e) &#123;</span><br><span class="line">                        Throwable t = new Exception();</span><br><span class="line">                        if (e instanceof HttpException) &#123;</span><br><span class="line">                            if (((HttpException) e).code() == 401) &#123;</span><br><span class="line">                                HttpException s = (HttpException) e;</span><br><span class="line">                                if (s != null &amp;&amp; s.response() != null &amp;&amp; s.response().errorBody() != null) &#123;</span><br><span class="line">                                    try &#123;</span><br><span class="line">                                        HttpErrorBody body = new Gson().fromJson(s.response().errorBody().string(), HttpErrorBody.class);</span><br><span class="line">                                        if (body != null &amp;&amp; body.getError_reason() != null &amp;&amp; body.getError_reason().startsWith(&quot;AuthenticationFailed&quot;)) &#123;</span><br><span class="line">                                            //todo</span><br><span class="line">                                        &#125; else &#123;</span><br><span class="line">                                            mEventBus.post(new OnAuthExpiredEvent());</span><br><span class="line">                                        &#125;</span><br><span class="line">                                    &#125; catch (IOException e1) &#123;</span><br><span class="line">                                        e1.printStackTrace();</span><br><span class="line">                                        mEventBus.post(new OnAuthExpiredEvent());</span><br><span class="line">                                    &#125;</span><br><span class="line">                                &#125; else &#123;</span><br><span class="line">                                    mEventBus.post(new OnAuthExpiredEvent());</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125; else if (((HttpException) e).code() == 400 || ((HttpException) e).code() == 403 || ((HttpException) e).code() == 500) &#123;</span><br><span class="line">                                try &#123;</span><br><span class="line">                                    if (((HttpException) e).response() != null &amp;&amp; ((HttpException) e).response().errorBody() != null) &#123;</span><br><span class="line">                                        String json = ((HttpException) e).response().errorBody().string();</span><br><span class="line">                                        HttpErrorBody body = new Gson().fromJson(json, HttpErrorBody.class);</span><br><span class="line">                                        HttpErrorMessageBody messageBody = new Gson().fromJson(json, HttpErrorMessageBody.class);</span><br><span class="line">                                        if (body != null &amp;&amp; body.getError_reason() != null) &#123;</span><br><span class="line">//                                            mEventBus.post(new OnHttpErrorEvent(body.getError_reason()));</span><br><span class="line">                                        &#125; else if (messageBody != null &amp;&amp; messageBody.getMessage() != null) &#123;</span><br><span class="line">                                            mEventBus.post(new OnHttpErrorEvent(messageBody.getCode(), messageBody.getMessage()));</span><br><span class="line">                                        &#125; else &#123;</span><br><span class="line">                                            mEventBus.post(new OnHttpErrorEvent(&quot;网络异常，请稍后再试&quot;));</span><br><span class="line">                                        &#125;</span><br><span class="line">                                        t = new Exception(messageBody.getMessage());</span><br><span class="line">                                    &#125;</span><br><span class="line"></span><br><span class="line">                                &#125; catch (Exception e1) &#123;</span><br><span class="line">                                    e1.printStackTrace();</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                        if (onError == null || subscription.isDisposed()) &#123;</span><br><span class="line">                            e.printStackTrace();</span><br><span class="line">                        &#125; else &#123;</span><br><span class="line">                            try &#123;</span><br><span class="line">                                onError.accept(t);</span><br><span class="line">                            &#125; catch (Exception e1) &#123;</span><br><span class="line">                                e1.printStackTrace();</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                        handleHttpError(e);</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    @Override</span><br><span class="line">                    public void onComplete() &#123;</span><br><span class="line">                        if (onComplete != null &amp;&amp; !subscription.isDisposed()) &#123;</span><br><span class="line">                            try &#123;</span><br><span class="line">                                onComplete.run();</span><br><span class="line">                            &#125; catch (Exception e) &#123;</span><br><span class="line">                                onError(e);</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    @Override</span><br><span class="line">                    public void onSubscribe(Disposable d) &#123;</span><br><span class="line">                        subscription = d;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    @Override</span><br><span class="line">                    public void onNext(T t) &#123;</span><br><span class="line">                        if (onNext != null &amp;&amp; !subscription.isDisposed()) &#123;</span><br><span class="line">                            try &#123;</span><br><span class="line">                                onNext.accept(t);</span><br><span class="line">                            &#125; catch (Exception e) &#123;</span><br><span class="line">                                onError(e);</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void execute(Observer&lt;T&gt; observer) &#123;</span><br><span class="line">        Observable&lt;T&gt; observable;</span><br><span class="line">        try &#123;</span><br><span class="line">            checkConditions();</span><br><span class="line">            observable = buildObservable();</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            observable = Observable.create(observableEmitter -&gt; observableEmitter.onError(e));</span><br><span class="line">        &#125;</span><br><span class="line">        // cancel latest execution</span><br><span class="line">        cancel();</span><br><span class="line">        if (isDelay3Second) &#123;</span><br><span class="line">            observable.subscribeOn(Schedulers.io())</span><br><span class="line">                    .delay(3, TimeUnit.SECONDS)</span><br><span class="line">                    .observeOn(postInteractionThread.getScheduler())</span><br><span class="line">                    .subscribe(observer);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            observable.subscribeOn(Schedulers.io())</span><br><span class="line">                    .observeOn(AndroidSchedulers.mainThread())</span><br><span class="line">                    .subscribe(observer);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void cancel() &#123;</span><br><span class="line">        if (!subscription.isDisposed()) &#123;</span><br><span class="line">            subscription.dispose();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public boolean isCancel() &#123;</span><br><span class="line">        return subscription == null || subscription.isDisposed();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Observable&lt;T&gt; getObservable() &#123;</span><br><span class="line">        return buildObservable();</span><br><span class="line">    &#125;</span><br><span class="line">    private void handleHttpError(Throwable e) &#123;</span><br><span class="line">        if (e instanceof RuntimeException) &#123;</span><br><span class="line">            if (e.getCause() instanceof ConnectException) &#123;</span><br><span class="line">                mEventBus.post(new OnHttpErrorEvent(&quot;连接失败，请检查网络后再试&quot;));</span><br><span class="line">            &#125;</span><br><span class="line">            if (e.getCause() instanceof SocketTimeoutException) &#123;</span><br><span class="line">                mEventBus.post(new OnHttpErrorEvent(&quot;请求超时，请检查网络后再试&quot;));</span><br><span class="line">            &#125;</span><br><span class="line">            if (e.getCause() instanceof UnknownHostException) &#123;</span><br><span class="line">                mEventBus.post(new OnHttpErrorEvent(&quot;域名连接失败，请检查网络后再试&quot;));</span><br><span class="line">            &#125;</span><br><span class="line">            if (e.getCause() instanceof NetworkErrorException) &#123;</span><br><span class="line">                mEventBus.post(new OnHttpErrorEvent(&quot;网络异常，请检查网络后再试&quot;));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if (e instanceof ConnectException) &#123;</span><br><span class="line">            mEventBus.post(new OnHttpErrorEvent(&quot;连接失败，请检查网络后再试&quot;));</span><br><span class="line">        &#125;</span><br><span class="line">        if (e instanceof SocketTimeoutException) &#123;</span><br><span class="line">            mEventBus.post(new OnHttpErrorEvent(&quot;请求超时，请检查网络后再试&quot;));</span><br><span class="line">        &#125;</span><br><span class="line">        if (e instanceof UnknownHostException) &#123;</span><br><span class="line">            mEventBus.post(new OnHttpErrorEvent(&quot;域名连接失败，请检查网络后再试&quot;));</span><br><span class="line">        &#125;</span><br><span class="line">        if (e instanceof NetworkErrorException) &#123;</span><br><span class="line">            mEventBus.post(new OnHttpErrorEvent(&quot;网络异常，请检查网络后再试&quot;));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>interactor可以说是整个domain的精华，首先包装了observable，然后在执行部分统一处理了异常等。并且切换线程也提供了统一的处理方式，这样完善的避免了OKhttp无法统一的问题。从上层提供了处理的机制。而且此处需要的是observable，刚好可以通过retrofit2进行提供。这样就形成了一个闭环，只需要对接interactor，然后接上retrofit提供的接口即可完整的处理网络请求。</p>
+<p>domain中除了基类interactor，另外还提供了一系列基于基类interactor衍生的网络请求实体类，虽然此处这些实体类的存在仅仅使用到了接口来实现。接口的具体实现还需要更上一层来完成。但是巧妙的是此处通过dagger的注入，将上层提供的实现方法注入到了下层，这样实现的底层可以直接拿来用。</p>
+<h3 id="data层"><a href="#data层" class="headerlink" title="data层"></a>data层</h3><p>domain层是独立的，无任何模块依赖，而data层就是domain层更上一层的，仅仅只依赖于domain模块。</p>
+<p>data层是数据层，此处主要是处理或者说提供数据。domain层需要的接口实现就是在data层实现好了通过dagger注入到底层。</p>
+<p>data层除了数据提供者这一个身份外，还有一个数据缓存者这个身份。整个data在关键的地方，比如说userbody，usercache等地方设置了三级缓存。这样完整的实现了一个数据层的功能。</p>
+<p>data层对于数据的处理方面集中在获取，提供，以及保存。将数据隔离的效果很明显能够大幅度解耦。</p>
+<p>如果data层不隔离，那么获取的数据，存储的数据，提供者，三者会混乱，在A区域获取的数据可能和B区域获取的数据不同。当处于不同模块的代码进行相同的缓存，又会导致缓存不同步，而相同的代码进行不同的缓存，更是乱七八糟。因此这一层做隔离，哪怕是仅仅只有数据区域做隔离，总好过数据区域掺杂在不同的区域而导致相同的数据采用了过多缓存步骤。</p>
+<p>另外项目中提供的缓存方法，主要是ACache和Lrucache这两个老牌的库,</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">public interface CacheStore &#123;</span><br><span class="line">    int NONE_TIME = 0;</span><br><span class="line">    int DURATION_ONE_MINUTE = 60;</span><br><span class="line">    int DURATION_ONE_HOUR = DURATION_ONE_MINUTE * 60;</span><br><span class="line">    int DURATION_THREE_HOUR = DURATION_ONE_HOUR * 3;</span><br><span class="line">    int DURATION_ONE_DAY = DURATION_ONE_HOUR * 24;</span><br><span class="line">    int DURATION_FIVE_MINUTE = DURATION_ONE_MINUTE * 5;</span><br><span class="line"></span><br><span class="line">    void put(String key, byte[] data);</span><br><span class="line">    void put(String key, byte[] data, int duration);</span><br><span class="line">    byte[] get(String key);</span><br><span class="line">    void put(String key, Serializable obj);</span><br><span class="line">    void put(String key, Serializable obj, int duration);</span><br><span class="line">    Object getAsObject(String key);</span><br><span class="line">    void put(String key, boolean value);</span><br><span class="line">    boolean getAsBoolean(String key);</span><br><span class="line">    void clear();</span><br><span class="line">    void remove(String key);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>实现缓存使用的就是这个模板，这个模板演化为两个，一个memstore，一个DiskcatchStore。memstore就是内存缓存，仿照的是Lrucache，主要是规避gc的清除，实现的原理看一下就懂了。diskcatchstore就是文件缓存，使用的是Acache来实现的，甚至可以说是一个封装而已。</p>
+<p>实现缓存有个方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void put(String key, Serializable obj, int duration);</span><br></pre></td></tr></table></figure></p>
+<p>其中有保存时长，这个保留的时长会转化为当前时间+时长的时间戳，将和data一起包装起来存储，在取出保存的data时会进行判断，如果携带了时间信息，就对时间进行判断，如果时间过期，那么在memcache里面就是移除这个key，在Acache里面也是相同的原理</p>
+<h3 id="baselibrary层"><a href="#baselibrary层" class="headerlink" title="baselibrary层"></a>baselibrary层</h3><p>baselibrary是data层之上的一层。如果说domain是心脏，data是血液的话，那么baselibrary就是骨架。</p>
+<p>baselibrary将所有用到的库进行综合，自我封装，以及改写，然后通过暴露api的方式让上层可以直接使用暴露出来的api</p>
+<p>到baselibrary这一层截止，整个项目的脚手架就已经都搭建ok，也就是到这一层为止，整个项目的核心基本上就已经完成。如果需要热插拔，使用我们的项目另外新建一个新的项目的话，那么只需要将baselibrary这一层以下的进行迁移，然后复写逻辑即可。</p>
+<p>baselibrary在后期逐渐演化为和app混合了。</p>
+<h3 id="app层"><a href="#app层" class="headerlink" title="app层"></a>app层</h3><p>app是整个项目的逻辑层，当然也做了很多初始化的工作，最重要的比如说dagger的初始化工作，app层就像是肌肉，在肌肉填充满了之后，才会成为一个正常的人。</p>
+
           
         
       
@@ -419,7 +810,13 @@
       
         
           
-            
+            <h1 id="tree"><a href="#tree" class="headerlink" title="tree"></a>tree</h1><h2 id="构造"><a href="#构造" class="headerlink" title="构造"></a>构造</h2><p>树的构造很简单，节点的思想。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">class TreeNode&#123;</span><br><span class="line">	Object element;</span><br><span class="line">	TreeNode firstChild;</span><br><span class="line">	TreeNode nextSibling;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="示意图"><a href="#示意图" class="headerlink" title="示意图"></a>示意图</h2><p><img src="/images/数据结构/tree图1.png" alt="树示意图"></p>
+<h2 id="先序遍历"><a href="#先序遍历" class="headerlink" title="先序遍历"></a>先序遍历</h2><p>先序遍历的思想是对节点的处理工作在他的子节点处理之前执行，显示结果为D-&gt;L-&gt;R<br>对示意图的先序遍历，结果为：ABDECFG</p>
+<h2 id="中序遍历"><a href="#中序遍历" class="headerlink" title="中序遍历"></a>中序遍历</h2><p>中序遍历的思想是先对左节点优先处理，之后在处理自己，最后处理右节点，显示结果为 L-&gt;D-&gt;R<br>对示意图的中序遍历，结果为：DBEAFCG</p>
+<h2 id="后序遍历"><a href="#后序遍历" class="headerlink" title="后序遍历"></a>后序遍历</h2><p>后序遍历的思想是优先处理子节点，最后处理自己，子节点的处理优先是左节点，显示结果为L-&gt;R-&gt;D<br>对示意图的后序遍历，结果为：DEBFGCA</p>
+
           
         
       
@@ -1257,299 +1654,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/10/2018第三季度复盘（第40周）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/10/2018第三季度复盘（第40周）/" itemprop="url">2018第三季度复盘（第40周）</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-10T21:04:59+08:00">
-                2018-10-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>十一国庆过去了，回首一年过去3/4了，有必要做一个复盘操作了。</p>
-<ul>
-<li>项目</li>
-</ul>
-<p>过去的这些时间里面，绝大多数时间在项目中度过。<br>刚开始独自一个人完成了软件从1.9.3到2.0.1一个大版本一个小版本的升级，之后进奎来了，两个人协助做了2.0.1到2.0.6版本的升级，然后又加了苏展，三个人从2.0.6升到了现在的2.3.0。</p>
-<p>细数了一下，在好搭的7个月里面，完成了11个版本。</p>
-<p>版本升级其实很耗费精力，尤其是换了3个产品，3个ui，设计风格都推翻重来了几次，更是极度累的。</p>
-<p>刚开始我以为我不会撑到试用期结束，后来我以为我不会撑过半年，结果也都撑过来了。长叹一声。</p>
-<p>项目的细节基本上都总结在工作小结里面了，所以略过不表。</p>
-<ul>
-<li>读书</li>
-</ul>
-<p>开年计划，准备读够10本书，并以此列了一些书单，但是后期项目忙了，大部分都鸽了，目前读了《Android群英传》、《javascript dom编程艺术》和《博弈论》，但是只能说读过。<br>目前在读的《effective-java》算是做了一些笔记，不过才读到第六章，还有四章，估计月内能读完吧。<br>之后需要读的就是《http权威指南》，说来发笑，做移动端的居然没读过这个，这个是决定月内要开读的。<br>另外上次写的《csapp》这本书，仔细看看，实在是太过底层。底层打基础虽好，但是对目前这个阶段是没有什么意义的。<br>读书暂时不立宏愿了。</p>
-<ul>
-<li>减肥</li>
-</ul>
-<p>失败</p>
-<ul>
-<li>掌握新的语言</li>
-</ul>
-<p>失败，俄语只能喊ypa</p>
-<ul>
-<li>github每日更新</li>
-</ul>
-<p>失败，这个原因比较多，最大的原因是工作繁忙，另外染上了游戏的恶习，还好迷途知返。</p>
-<ul>
-<li>戒烟</li>
-</ul>
-<p>失败</p>
-<ul>
-<li>健身房一周去2-3次</li>
-</ul>
-<p>因为搬家健身房卡已经转让，不能说失败吧，至少当时是每周都去2-3次</p>
-<ul>
-<li>每日早饭必须要吃</li>
-</ul>
-<p>成功</p>
-<ul>
-<li>23:00前必须睡</li>
-</ul>
-<p>失败</p>
-<ul>
-<li>下一阶段计划</li>
-</ul>
-<p>此计划只适合个人</p>
-<ol>
-<li>晚上只吃一碗饭</li>
-<li>github每日更新</li>
-<li>制作自动化脚本，和建宇合作，看看能不能出售</li>
-<li>没了</li>
-</ol>
-<p>此次计划比较简洁明了，可行性比较高。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/25/2018第三十七周工作小结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/25/2018第三十七周工作小结/" itemprop="url">2018第三十七周工作小结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-25T09:49:14+08:00">
-                2018-09-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>上周大概做了几件小事，一是完善了app的相关细节，二是修了很多medel的bug，三是发了个版。很惭愧。</p>
-<p>现在想来上周有两件事做的不好，一是读书，effective-java大概看了三次，但是一章都没看完。二是娱乐，赶上了中秋，却躺了三天。</p>
-<p>上周从网上打印了本csapp，这周开读吧。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1600,7 +1704,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">102</span>
+                  <span class="site-state-item-count">104</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1613,7 +1717,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
