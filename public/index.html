@@ -229,6 +229,132 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/25/2018年第四十六周工作小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/25/2018年第四十六周工作小结/" itemprop="url">2018年第四十六周工作小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-25T22:55:08+08:00">
+                2018-11-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本周的主要工作是完成了medel放大，手势滑动，以及分享到app等功能。</p>
+<p>medel放大主要使用的是photoview的改写版本，因为产品要求不支持反转，因此读了一下代码去掉了反转的操作，放大的弹性指数用的是正常的2.5倍。medel放大，手势等等业务逻辑写的都比较简单。</p>
+<p>这次medel的放大页面，需要使用viewpager进行滑动更改，因此这就需要了进行medel的bitmap缓存，按照以往的写法，这个地方应该写一个lrucache，配套SoftReference<bitmap>来使用，但是调试过程中发现了一些问题。</bitmap></p>
+<p>softreference是当内存不足的时候会被强制回收，lrucache里面携带的是linkedlist，直接使用key指向该软引用，lrucache里面会记录目前保留下来的数量，然后作对比。但是比较神奇的是，发现了lrucache里面记录的数量大于0，但是linkedlist里面size却为0了。做了两个对比，当不使用软引用，直接使用携带bitmap，发现并不会出现这种情况。关于这个问题查了一下，其实jvm并不希望我们使用软引用，因为无法确定何时回收比较好，因此此处回收的机制并不是当内存不足的时候才回收，由于给了1/8最大可用内存，因此此处应该是触发了一个最大内存限制，导致直接被强制回收了所有软引用的地方，导致发生了这个问题。另外实验了一下，在recyclerview中，当view被回收复用的时候，此时使用软引用就不会触发这个问题，因为当view被回收复用的时候，此时就会释放该部分指向，当这部分到了内存限制的时候回被自然的回收，但是viewpager中view不会被回收，而且我没有设置最大页面的offset，导致这个问题发生。</p>
+<p>因此以后使用到软引用的时候，不能光认为是内存不足就会被回收，要做好直接被回收的准备，否则就不应该使用软引用。</p>
+<p>另外这次关于medel的设计，是在spu详情页面，spu详情页面跳出medel预览，然后medel预览还可以跳转详情，这涉及一个无限跳转的问题，测试发现一个详情页面占用起码300M内存，但是如果是相同的大概只会增加100M，但是如果无限跳转肯定会导致内存不足的问题，从淘宝测试了一下，淘宝最多只允许三个页面跳转，因此我们也需要考虑到这个问题。</p>
+<p>下个版本需要设计一下页面多级跳转的问题。目前思想是在activty栈里面做一些设置，在相同activity过多的时候，采取旧页面强制销毁的方式，然后启动新的页面，这样应该可以解决这个问题</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/16/网络协议基础/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -339,7 +465,7 @@
 <h3 id="ICMP-internet-control-message-protocol"><a href="#ICMP-internet-control-message-protocol" class="headerlink" title="ICMP (internet control message protocol)"></a>ICMP (internet control message protocol)</h3><p>通信环境中可能存在各种问题，这些问题的反馈需要让开发者知道并且应对，因此就有了ICMP协议，该协议与传输协议不同，他一般并不用于两点间传输数据，而常常用于返回错误的信息或分析路由。</p>
 <p>ICMP主要功能：1、确认ip包是否成功到达目标地址 2、通知在发送过程中ip包被丢弃的原因 3、ICMP是基于ip协议制作的，但是并不是传输层的功能，因此仍然是网络层协议 4、ICMP只能用于IPV4, 能用于IPV6的icmp叫做ICMPV6</p>
 <p>常用的ICMP技术，像是 ping， traceroute命令</p>
-<h2 id="IGMP-internet-group-management-protocol"><a href="#IGMP-internet-group-management-protocol" class="headerlink" title="IGMP (internet group management protocol)"></a>IGMP (internet group management protocol)</h2><p>跨越多个网络的组播转发必须要依赖于路由器，路由器为建立转发路由必须要了解每个组员在internet中的分布，这要求主机将自己所在的组播组通知给本地路由器，这也是建立组播转发路由的基础。主机与本地路由器之间使用igmp来进行组播组成员信息的交互。</p>
+<h3 id="IGMP-internet-group-management-protocol"><a href="#IGMP-internet-group-management-protocol" class="headerlink" title="IGMP (internet group management protocol)"></a>IGMP (internet group management protocol)</h3><p>跨越多个网络的组播转发必须要依赖于路由器，路由器为建立转发路由必须要了解每个组员在internet中的分布，这要求主机将自己所在的组播组通知给本地路由器，这也是建立组播转发路由的基础。主机与本地路由器之间使用igmp来进行组播组成员信息的交互。</p>
 <p>IGMP提供了再转发组播数据包到达目的地的最后阶段所需要的信息，实现双向的功能：<br>1.主机通过igmp通知路由器希望接受或离开某个特定组播组的信息<br>2.路由器通过IGMP周期性的查询局域网内的组播组成员是否处于活动状态，实现所连网段组成员关系的手机与维护。</p>
 <h2 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h2><p>职责：在网络的各个节点之间可靠的分发数据包，实现应用进程间的端到端通信，同时向应用层提供通信服务</p>
 <p>原理：通过多路复用和解复用技术，发送方的不同的应用进程都可以使用同一个传输层协议传送数据，接收方的传输层剥去报文首部之后能把这些数据正确的传输的正确的应用进程之间。</p>
@@ -406,6 +532,41 @@
 <li>为什么建立连接需要三次，而释放连接需要四次？</li>
 </ul>
 <p>因为释放的时候不确定是否有数据没有发送完毕，因此需要确保数据全部发送完毕，这样多了一次，而如果释放的时候没有数据的话，其实可以看做三次，即第二次和第三次合并</p>
+<h4 id="窗口滑动"><a href="#窗口滑动" class="headerlink" title="窗口滑动"></a>窗口滑动</h4><p>TCP的滑动窗口以字节为单位，用三个指针进行表示，当窗口内连续报文段被确认收到后，可以将窗口向前滑动，窗口大小应等于缓存区大小</p>
+<h4 id="窗口滑动协议"><a href="#窗口滑动协议" class="headerlink" title="窗口滑动协议"></a>窗口滑动协议</h4><p>只有在接受窗口向前滑动时（与此同时也发送了确认），发送窗口才可能向前滑动，收发两端的窗口按照以上规律不断的向前滑动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">当发送窗口和接受窗口的大小都等于1时，就是停止等待协议。</span><br><span class="line">当发送窗口大于1，而接收窗口小于1时，就是回退N步协议。</span><br><span class="line">当发送窗口和接受窗口的大小均大于1时，就是选择重发协议。</span><br></pre></td></tr></table></figure>
+<p>重发是对回退的补充，由于回退会导致从漏掉的帧到已接受的所有帧全部丢弃，浪费了带宽，而重发则是直接对漏掉的帧进行补充</p>
+<h3 id="传输层其他协议"><a href="#传输层其他协议" class="headerlink" title="传输层其他协议"></a>传输层其他协议</h3><p>传输层还有SPX, NetBIOS,NetBEUI等协议</p>
+<h2 id="会话层"><a href="#会话层" class="headerlink" title="会话层"></a>会话层</h2><p>职责：主机间通讯，管理应用程序之间的会话。建立在传输层之上，利用传输层提供的服务，使应用建立和维持会话，并能使会话得到同步。会话层使用校验点可使通信会话在通信失效时从校验点继续恢复通信。</p>
+<h3 id="主要功能"><a href="#主要功能" class="headerlink" title="主要功能"></a>主要功能</h3><p>1、为会话实体间建立连接</p>
+<p>2、进行数据传输</p>
+<p>3、连接释放</p>
+<h3 id="具体理解"><a href="#具体理解" class="headerlink" title="具体理解"></a>具体理解</h3><p>会话层主要是通过调用传输层来建立会话</p>
+<h2 id="表示层"><a href="#表示层" class="headerlink" title="表示层"></a>表示层</h2><p>职责：表示层向上对应用层服务，向下接受来自会话层的服务，表示层为在引用过程之间传送的信息提供表示方法的服务，只关心信息发出的语法和语义。</p>
+<h3 id="主要功能-1"><a href="#主要功能-1" class="headerlink" title="主要功能"></a>主要功能</h3><p>表示层早期是用来转换字符数据的编码，提供格式化的表示和转换数据服务，数据的压缩和解压缩，加密和解密等工作，但是现在应用层可以做表示层可以做的事情，所以一般根据TCPIP五层协议，表示层会话层和应用层都可以合为应用层</p>
+<h2 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h2><p>职责：应用层直接和应用程序接口并且提供常见的网络应用服务，应用层也会向表示层发出请求，应用层是开放系统的最高层，是直接为应用进程提供服务的。</p>
+<p>应用层协议较多，有FTP、SMTP、HTTP等</p>
+<p>着重学习一下HTTPS</p>
+<h3 id="https"><a href="#https" class="headerlink" title="https"></a>https</h3><p>https协议主要针对解决http协议以下不足：<br>1.通信使用明文（不加密），内容可能会被窃听<br>2.不验证通信方身份，应此可能遭遇伪装<br>3.无法证明报文的完整性（即准确性），所以可能已遭篡改<br>http+加密+认证+完整性保护=https</p>
+<h4 id="https-和http主要的区别"><a href="#https-和http主要的区别" class="headerlink" title="https 和http主要的区别"></a>https 和http主要的区别</h4><ol>
+<li>https需要ca证书</li>
+<li>https是具有安全性的ssl加密传输协议，http是明文传输</li>
+<li>http和https使用完全不同的连接方式，用的端口也不一样，http是80端口，https是443端口</li>
+<li>http是无状态的，而https是有ssl+http协议构建的可进行加密传输、身份认证的网络协议，比http协议安全</li>
+</ol>
+<h4 id="握手过程"><a href="#握手过程" class="headerlink" title="握手过程"></a>握手过程</h4><ol>
+<li>客户端向服务器传送客户端ssl协议的版本号，加密算法的种类，产生的随机数、以及其他服务器和客户端之间通讯需要的各种信息</li>
+<li>服务器向客户端传送ssl协议的版本号、加密算法的种类、随机数以及其他相关信息，同时服务器还向客户端传送自己的证书</li>
+<li>客户端利用服务器传过来的信息验证服务器的合法性，服务器的合法性包括：证书是否过期，ca证书是否可靠，证书的公钥能否解开服务器证书的发行者数字签名，证书上面的域名是否和服务器的实际域名相匹配。如果不合法，通讯将断开，否则将继续进行下面的步骤</li>
+<li>客户端随机产生一个用于后面通讯的“对称密码”，然后服务器的公钥对其加密，然后将加密后的“预主密码“传给服务器</li>
+<li>如果服务器要求客户的身份认证，用户可以建立一个随机数然后对其数据签名，然后将这个含有签名的随机数和客户自己的证书以及加密过的”预主密码“一起传给服务器</li>
+<li>如果服务器要求客户的身份认证，服务器必须检验客户证书和签名随机数的合法性，具体的合法性检验过程包括：客户的证书使用日期是否有效，提供的ca是否可靠，ca的公钥能否正确解开客户端证书的发行ca签名，检查客户的证书是否在证书废止列表中。如果不合法，通讯立即终端，否则服务器将用自己的私钥解药加密的预主密码，然后执行一系列步骤产生主通讯密码。客户端也同样的步骤产生主通讯密码</li>
+<li>服务器和客户端用相同的主密码。一个对称秘钥用于ssl协议的安全数据通讯的加解密通讯，同时在ssl通讯过程中还要完成数据通讯的完整性，防止数据通讯中的任何变化</li>
+<li>客户端向服务器发出信息，指明后续通讯将使用主密码为堆成密码，同时通知服务器本次握手过程结束</li>
+<li>服务器向客户端发出信息，指明后续通讯将使用主密码为对称密码，同时通知客户端本次握手过程结束</li>
+<li>ssl的握手部分结束，安全通道的通讯开始，客户端和服务端开始使用相同的对称秘钥进行数据通讯，同时检查通讯完整性</li>
+</ol>
+<p>概括，https在客户端生成秘钥并传递给服务端的时候，采取的是非对称加密，而秘钥在服务端手里的时候，之后采取的就是对称加密。单向验证是指客户端对服务端进行身份验证，验证是否可靠，而双向验证则是服务端也同时验证客户端，双向验证常见于企业应用</p>
 
           
         
@@ -816,6 +977,10 @@
 <h2 id="先序遍历"><a href="#先序遍历" class="headerlink" title="先序遍历"></a>先序遍历</h2><p>先序遍历的思想是对节点的处理工作在他的子节点处理之前执行，显示结果为D-&gt;L-&gt;R<br>对示意图的先序遍历，结果为：ABDECFG</p>
 <h2 id="中序遍历"><a href="#中序遍历" class="headerlink" title="中序遍历"></a>中序遍历</h2><p>中序遍历的思想是先对左节点优先处理，之后在处理自己，最后处理右节点，显示结果为 L-&gt;D-&gt;R<br>对示意图的中序遍历，结果为：DBEAFCG</p>
 <h2 id="后序遍历"><a href="#后序遍历" class="headerlink" title="后序遍历"></a>后序遍历</h2><p>后序遍历的思想是优先处理子节点，最后处理自己，子节点的处理优先是左节点，显示结果为L-&gt;R-&gt;D<br>对示意图的后序遍历，结果为：DEBFGCA</p>
+<h1 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h1><h2 id="构造-1"><a href="#构造-1" class="headerlink" title="构造"></a>构造</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">class BinaryNode&#123;</span><br><span class="line">	Object element;</span><br><span class="line">	BinaryNode left;</span><br><span class="line">	BinaryNode right;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>二叉树是一棵树，每个节点都不能有多于两个的儿子，平均深度为O(根号N)</p>
+<h1 id="二叉查找树"><a href="#二叉查找树" class="headerlink" title="二叉查找树"></a>二叉查找树</h1><p>二叉查找树对于树中的每个节点X，它的左子树中所有的项的值小于X中的项，右子树种所有项的值大于X的值</p>
+<h2 id="构造-2"><a href="#构造-2" class="headerlink" title="构造"></a>构造</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br></pre></td><td class="code"><pre><span class="line">public class BinarySearchTree&lt;T extends Comparable&lt;? super T&gt;&gt;&#123;</span><br><span class="line">	/*</span><br><span class="line">	* 构造函数</span><br><span class="line">	*/</span><br><span class="line">	private static class BinaryNode&lt;T&gt;&#123;</span><br><span class="line">		BinaryNode(T element)&#123;</span><br><span class="line">			this(element, null, null);</span><br><span class="line">		&#125;</span><br><span class="line">		BinaryNode(T element, Binary&lt;T&gt; left, BinaryNode&lt;T&gt; right)&#123;</span><br><span class="line">			this.element = element;</span><br><span class="line">			this.left = left;</span><br><span class="line">			this.right = right;</span><br><span class="line">		&#125;</span><br><span class="line">		T element;</span><br><span class="line">		Binary&lt;T&gt; left;</span><br><span class="line">		Binary&lt;T&gt; right;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	* 初始节点</span><br><span class="line">	*/</span><br><span class="line">	private BinaryNode&lt;T&gt; root;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	* 初始化</span><br><span class="line">	*/</span><br><span class="line">	public BinarySearchTree()&#123;</span><br><span class="line">		root = null;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	* 置空操作</span><br><span class="line">	*/</span><br><span class="line">	public void makeEmpty()&#123;</span><br><span class="line">		root = null;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	* 判空操作</span><br><span class="line">	*/</span><br><span class="line">	public void isEmpty()&#123;</span><br><span class="line">		return root == null;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	* 判断是否包含</span><br><span class="line">	*/</span><br><span class="line">	public boolean contains(T x)&#123;</span><br><span class="line">		return contains(x, root);</span><br><span class="line">	&#125;</span><br><span class="line">	/*</span><br><span class="line">	* 判断思想：先和root对比，小就和左节点比较，大就和右节点比较，相同就true，核心思想是递归，递归到最后空的时候就会判false</span><br><span class="line">	*/</span><br><span class="line">	private boolean contains(T x, BinaryNode&lt;T&gt; t)&#123;</span><br><span class="line">		if(t == null)&#123;</span><br><span class="line">			return false;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		int compareResult = x.compareTo(t.element);</span><br><span class="line"></span><br><span class="line">		if( compareResult &lt; 0)&#123;</span><br><span class="line">			return contains(x, left);</span><br><span class="line">		&#125;else if( compareResult &gt; 0)&#123;</span><br><span class="line">			return contains(x, right);</span><br><span class="line">		&#125;else&#123;</span><br><span class="line">			return true;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	* 寻找最小子节点</span><br><span class="line">	*/</span><br><span class="line">	public T findMin()&#123;</span><br><span class="line">		if (isEmpty())&#123;</span><br><span class="line">			throw new UnderflowException();</span><br><span class="line">		&#125;</span><br><span class="line">		return findMin(root).element;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	* 寻找思想：查找是否有左节点，如果有就继续遍历左节点，直到某个节点的左节点为null，此时该节点就是最小节点</span><br><span class="line">	*/</span><br><span class="line">	private BinaryNode&lt;T&gt; findMin(BinaryNode&lt;T&gt; t)&#123;</span><br><span class="line">		if (t == null)&#123;</span><br><span class="line">			return null;</span><br><span class="line">		&#125;else if(t.left == null)&#123;</span><br><span class="line">			return t;</span><br><span class="line">		&#125;else&#123;</span><br><span class="line">			return findMin(t.left);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	* 寻找最大子节点</span><br><span class="line">	*/</span><br><span class="line">	public T findMax()&#123;</span><br><span class="line">		if(isEmpty())&#123;</span><br><span class="line">			throw new UnderflowException();</span><br><span class="line">		&#125;</span><br><span class="line">		return findMax(root).element;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	* 思想和寻找最小子节点一样</span><br><span class="line">	*/</span><br><span class="line">	private BinaryNode&lt;T&gt; findMax(BinaryNode&lt;T&gt; t)&#123;</span><br><span class="line">		if (t == null)&#123;</span><br><span class="line">			return null;</span><br><span class="line">		&#125;else if(t.right == null)&#123;</span><br><span class="line">			return t;</span><br><span class="line">		&#125;else &#123;</span><br><span class="line">			return findMax(t.right);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	* 插入</span><br><span class="line">	*/</span><br><span class="line">	public void insert(T x)&#123;</span><br><span class="line">		root = insert(x, root);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	* 插入数值思想:仍然是和当前节点做比较，如果小就递归左节点，大就递归右节点，直到某个节点的左节点或者右节点不存在，此时就新建一个节点，插入。</span><br><span class="line">	*/</span><br><span class="line">	private BinaryNode&lt;T&gt; insert(T x, BinaryNode&lt;T&gt; t)&#123;</span><br><span class="line">		if (t == null)&#123;</span><br><span class="line">			return new BinaryNode&lt;&gt;(x, null, null);</span><br><span class="line">		&#125;</span><br><span class="line">		int compareResult = x.compareTo(t.element);</span><br><span class="line">		if (compareResult &lt; 0)&#123;</span><br><span class="line">			t.left = insert(x, t.left);</span><br><span class="line">		&#125;else if (compareResult &gt; 0)&#123;</span><br><span class="line">			t.right = insert(x, t.right);</span><br><span class="line">		&#125;else&#123;</span><br><span class="line">			;</span><br><span class="line">		&#125;</span><br><span class="line">		return t;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	* 删除</span><br><span class="line">	*/</span><br><span class="line">	public void remove(T x)&#123;</span><br><span class="line">		root = remove(x, root);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	* 删除的机制：当删除某个节点的时候，如果两个子节点都在，就需要将右侧的最小子节点放到该位置上面来，并且遍历删除右侧的最小子节点</span><br><span class="line">	*/</span><br><span class="line">	private BinaryNode&lt;T&gt; remove(T x, BinaryNode&lt;T&gt; t)&#123;</span><br><span class="line">		if(t == null)&#123;</span><br><span class="line">			return t;</span><br><span class="line">		&#125;</span><br><span class="line">		int compareResult = x.compareTo(t.element);</span><br><span class="line">		if (compareResult &lt; 0)&#123;</span><br><span class="line">			t.left = remove(x, t.left);</span><br><span class="line">		&#125;else if(compareResult &gt; 0)&#123;</span><br><span class="line">			t.right = remove(x, t.right);</span><br><span class="line">		&#125;else if(t.left != null &amp;&amp; t.right != null)&#123;</span><br><span class="line">			t.element = findMin(t.right).element;</span><br><span class="line">			t.right = remove(t.element, t.right);</span><br><span class="line">		&#125;else&#123;</span><br><span class="line">			t = (t.left != null)? t.left : t.right;</span><br><span class="line">		&#125;</span><br><span class="line">		return t;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void printTree()&#123;</span><br><span class="line">		if (isEmpty())&#123;</span><br><span class="line">			System.out.println(&quot;Empty tree&quot;);</span><br><span class="line">		&#125;else&#123;</span><br><span class="line">			printTree(root);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	private void printTree(BinaryNode&lt;T&gt; t)&#123;</span><br><span class="line">		if(t != null)&#123;</span><br><span class="line">			printTree(t.left);</span><br><span class="line">			System.out.println(t.element);</span><br><span class="line">			printTree(t.right);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
           
         
@@ -1517,143 +1682,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/18/binder机制学习/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/18/binder机制学习/" itemprop="url">binder机制学习</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-18T22:42:23+08:00">
-                2018-10-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>binder平时总听过，但是原理只知道是ipc，也就是进程间通信。但是真正的原理其实还是不理解。</p>
-<h1 id="binder位置"><a href="#binder位置" class="headerlink" title="binder位置"></a>binder位置</h1><p>binder介于framework和systemservice之间，属于让开发者来调用系统层接口的方法。</p>
-<h1 id="ipc"><a href="#ipc" class="headerlink" title="ipc"></a>ipc</h1><p>ipc全称是inter-process communication,进程间通讯</p>
-<p>ipc的方式有很多种，socket，共享内存，管道，消息队列</p>
-<h2 id="socket"><a href="#socket" class="headerlink" title="socket"></a>socket</h2><p>socket实现进程间通讯，是基于tcpip协议来实现的，一般实现tcp，如果是udp也是可以的，udp是两个socket但是无连接。<br>通过tcp实现ipc的原理<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">客户端程序通过socket发送一系列信息到传输层的tcp，然后往下传，通过网络层，网络接口层，然后在往上传到网络层，然后传到服务端的传输层tcp，然后由服务器的socket接收到，之后回传也是相同的</span><br></pre></td></tr></table></figure></p>
-<p>缺点是需传输效率较低，一般只用在不同机器，或者跨网络的通行</p>
-<h2 id="共享内存"><a href="#共享内存" class="headerlink" title="共享内存"></a>共享内存</h2><p>共享内存的ipc，传输的对象一般都是可描述的，所以都用序列化，创建共享内存就使用memoryfile即可</p>
-<p>这样构建的内存可以让其他进程共享</p>
-<p>共享内存的优点在于无需复制，速度快，共享缓冲区直接附加到进程虚拟地址空间。缺点在于同步问题不好解决</p>
-<h2 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h2><p>消息队列就是messagequeue<br>实现的思路<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">在进程a中创建一个message，讲这个message对象通过imessenger.send(message)方法传递到进程b中</span><br><span class="line">send(message)会使用一个parcel对象对message对象编集，再将parcel对象传递到进程b中，然后解编集，得到一个和进程a中message对象内容一样的对象，在将message对象加入到b的消息队列里面，handler会处理它</span><br></pre></td></tr></table></figure></p>
-<p>消息队列的好处是比较方便，缺点是信息复制2次，有额外的cpu消耗，不是很适合频繁或者信息量大的通信</p>
-<h2 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h2><p>管道是比较古老的通信方式，包括无名管道和有名管道，前者是父子进程间的通信，后者用于运行同一机器上的任意两个进程间的通信。实现方式是pipe，利用管道的有handler（此处需要研究一下handler的实现原理）</p>
-<p>管道创建时分配了一个page大小的内存（page？）缓存区大小比较有限</p>
-<h1 id="Binder"><a href="#Binder" class="headerlink" title="Binder"></a>Binder</h1><p>binder ipc属于c/s结构，client部分是用户代码，最终会调用binder driver的transact接口，binder driver会调用server</p>
-<p>client:用户需要实现的代码，如aidl自动生成的接口类<br>binder driver：在内核层实现的driver<br>server：这个server就是service中onbind返回的ibinder对象</p>
-<p>binder driver这块并不需要用户知道，server中会开启一个线程池（防止任务积压，也需要做好同步措施）去处理客户端调用</p>
-<p>对于调用binder driver中的transact接口，客户端可以手动调用，也可以通过aidl的方式生成的代理类来调用，服务端可以继承binder对象，也可以继承aidl生成的接口类的stub对象</p>
-<h1 id="实现环节"><a href="#实现环节" class="headerlink" title="实现环节"></a>实现环节</h1><p>//todo</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1704,7 +1732,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-count">105</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

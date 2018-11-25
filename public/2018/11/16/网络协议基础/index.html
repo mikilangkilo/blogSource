@@ -88,7 +88,7 @@
 <meta property="og:description" content="OSI网络分层网络分层就是OSI七层结构，另外还有个TCPIP五层结构，我从最底层开始总结 物理层职责：建立、维护、断开物理连接 物理层是一个点对点的数据直链，并不一定可靠，物理层是通过拓扑结构进行连接，但始终保障能够连通。 物理层传输原理物理层主要功能是传输比特流。其传输原理是将需要传输的信息按照ASCII编码转化为二进制代码，然后将二进制代码通过数据信号编码器转换为一种电信号，最后信号由发送端">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/images/网络协议/TCP头部图.png">
-<meta property="og:updated_time" content="2018-11-20T17:34:53.474Z">
+<meta property="og:updated_time" content="2018-11-22T18:49:59.415Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网络协议基础">
 <meta name="twitter:description" content="OSI网络分层网络分层就是OSI七层结构，另外还有个TCPIP五层结构，我从最底层开始总结 物理层职责：建立、维护、断开物理连接 物理层是一个点对点的数据直链，并不一定可靠，物理层是通过拓扑结构进行连接，但始终保障能够连通。 物理层传输原理物理层主要功能是传输比特流。其传输原理是将需要传输的信息按照ASCII编码转化为二进制代码，然后将二进制代码通过数据信号编码器转换为一种电信号，最后信号由发送端">
@@ -341,7 +341,7 @@
 <h3 id="ICMP-internet-control-message-protocol"><a href="#ICMP-internet-control-message-protocol" class="headerlink" title="ICMP (internet control message protocol)"></a>ICMP (internet control message protocol)</h3><p>通信环境中可能存在各种问题，这些问题的反馈需要让开发者知道并且应对，因此就有了ICMP协议，该协议与传输协议不同，他一般并不用于两点间传输数据，而常常用于返回错误的信息或分析路由。</p>
 <p>ICMP主要功能：1、确认ip包是否成功到达目标地址 2、通知在发送过程中ip包被丢弃的原因 3、ICMP是基于ip协议制作的，但是并不是传输层的功能，因此仍然是网络层协议 4、ICMP只能用于IPV4, 能用于IPV6的icmp叫做ICMPV6</p>
 <p>常用的ICMP技术，像是 ping， traceroute命令</p>
-<h2 id="IGMP-internet-group-management-protocol"><a href="#IGMP-internet-group-management-protocol" class="headerlink" title="IGMP (internet group management protocol)"></a>IGMP (internet group management protocol)</h2><p>跨越多个网络的组播转发必须要依赖于路由器，路由器为建立转发路由必须要了解每个组员在internet中的分布，这要求主机将自己所在的组播组通知给本地路由器，这也是建立组播转发路由的基础。主机与本地路由器之间使用igmp来进行组播组成员信息的交互。</p>
+<h3 id="IGMP-internet-group-management-protocol"><a href="#IGMP-internet-group-management-protocol" class="headerlink" title="IGMP (internet group management protocol)"></a>IGMP (internet group management protocol)</h3><p>跨越多个网络的组播转发必须要依赖于路由器，路由器为建立转发路由必须要了解每个组员在internet中的分布，这要求主机将自己所在的组播组通知给本地路由器，这也是建立组播转发路由的基础。主机与本地路由器之间使用igmp来进行组播组成员信息的交互。</p>
 <p>IGMP提供了再转发组播数据包到达目的地的最后阶段所需要的信息，实现双向的功能：<br>1.主机通过igmp通知路由器希望接受或离开某个特定组播组的信息<br>2.路由器通过IGMP周期性的查询局域网内的组播组成员是否处于活动状态，实现所连网段组成员关系的手机与维护。</p>
 <h2 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h2><p>职责：在网络的各个节点之间可靠的分发数据包，实现应用进程间的端到端通信，同时向应用层提供通信服务</p>
 <p>原理：通过多路复用和解复用技术，发送方的不同的应用进程都可以使用同一个传输层协议传送数据，接收方的传输层剥去报文首部之后能把这些数据正确的传输的正确的应用进程之间。</p>
@@ -408,6 +408,41 @@
 <li>为什么建立连接需要三次，而释放连接需要四次？</li>
 </ul>
 <p>因为释放的时候不确定是否有数据没有发送完毕，因此需要确保数据全部发送完毕，这样多了一次，而如果释放的时候没有数据的话，其实可以看做三次，即第二次和第三次合并</p>
+<h4 id="窗口滑动"><a href="#窗口滑动" class="headerlink" title="窗口滑动"></a>窗口滑动</h4><p>TCP的滑动窗口以字节为单位，用三个指针进行表示，当窗口内连续报文段被确认收到后，可以将窗口向前滑动，窗口大小应等于缓存区大小</p>
+<h4 id="窗口滑动协议"><a href="#窗口滑动协议" class="headerlink" title="窗口滑动协议"></a>窗口滑动协议</h4><p>只有在接受窗口向前滑动时（与此同时也发送了确认），发送窗口才可能向前滑动，收发两端的窗口按照以上规律不断的向前滑动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">当发送窗口和接受窗口的大小都等于1时，就是停止等待协议。</span><br><span class="line">当发送窗口大于1，而接收窗口小于1时，就是回退N步协议。</span><br><span class="line">当发送窗口和接受窗口的大小均大于1时，就是选择重发协议。</span><br></pre></td></tr></table></figure>
+<p>重发是对回退的补充，由于回退会导致从漏掉的帧到已接受的所有帧全部丢弃，浪费了带宽，而重发则是直接对漏掉的帧进行补充</p>
+<h3 id="传输层其他协议"><a href="#传输层其他协议" class="headerlink" title="传输层其他协议"></a>传输层其他协议</h3><p>传输层还有SPX, NetBIOS,NetBEUI等协议</p>
+<h2 id="会话层"><a href="#会话层" class="headerlink" title="会话层"></a>会话层</h2><p>职责：主机间通讯，管理应用程序之间的会话。建立在传输层之上，利用传输层提供的服务，使应用建立和维持会话，并能使会话得到同步。会话层使用校验点可使通信会话在通信失效时从校验点继续恢复通信。</p>
+<h3 id="主要功能"><a href="#主要功能" class="headerlink" title="主要功能"></a>主要功能</h3><p>1、为会话实体间建立连接</p>
+<p>2、进行数据传输</p>
+<p>3、连接释放</p>
+<h3 id="具体理解"><a href="#具体理解" class="headerlink" title="具体理解"></a>具体理解</h3><p>会话层主要是通过调用传输层来建立会话</p>
+<h2 id="表示层"><a href="#表示层" class="headerlink" title="表示层"></a>表示层</h2><p>职责：表示层向上对应用层服务，向下接受来自会话层的服务，表示层为在引用过程之间传送的信息提供表示方法的服务，只关心信息发出的语法和语义。</p>
+<h3 id="主要功能-1"><a href="#主要功能-1" class="headerlink" title="主要功能"></a>主要功能</h3><p>表示层早期是用来转换字符数据的编码，提供格式化的表示和转换数据服务，数据的压缩和解压缩，加密和解密等工作，但是现在应用层可以做表示层可以做的事情，所以一般根据TCPIP五层协议，表示层会话层和应用层都可以合为应用层</p>
+<h2 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h2><p>职责：应用层直接和应用程序接口并且提供常见的网络应用服务，应用层也会向表示层发出请求，应用层是开放系统的最高层，是直接为应用进程提供服务的。</p>
+<p>应用层协议较多，有FTP、SMTP、HTTP等</p>
+<p>着重学习一下HTTPS</p>
+<h3 id="https"><a href="#https" class="headerlink" title="https"></a>https</h3><p>https协议主要针对解决http协议以下不足：<br>1.通信使用明文（不加密），内容可能会被窃听<br>2.不验证通信方身份，应此可能遭遇伪装<br>3.无法证明报文的完整性（即准确性），所以可能已遭篡改<br>http+加密+认证+完整性保护=https</p>
+<h4 id="https-和http主要的区别"><a href="#https-和http主要的区别" class="headerlink" title="https 和http主要的区别"></a>https 和http主要的区别</h4><ol>
+<li>https需要ca证书</li>
+<li>https是具有安全性的ssl加密传输协议，http是明文传输</li>
+<li>http和https使用完全不同的连接方式，用的端口也不一样，http是80端口，https是443端口</li>
+<li>http是无状态的，而https是有ssl+http协议构建的可进行加密传输、身份认证的网络协议，比http协议安全</li>
+</ol>
+<h4 id="握手过程"><a href="#握手过程" class="headerlink" title="握手过程"></a>握手过程</h4><ol>
+<li>客户端向服务器传送客户端ssl协议的版本号，加密算法的种类，产生的随机数、以及其他服务器和客户端之间通讯需要的各种信息</li>
+<li>服务器向客户端传送ssl协议的版本号、加密算法的种类、随机数以及其他相关信息，同时服务器还向客户端传送自己的证书</li>
+<li>客户端利用服务器传过来的信息验证服务器的合法性，服务器的合法性包括：证书是否过期，ca证书是否可靠，证书的公钥能否解开服务器证书的发行者数字签名，证书上面的域名是否和服务器的实际域名相匹配。如果不合法，通讯将断开，否则将继续进行下面的步骤</li>
+<li>客户端随机产生一个用于后面通讯的“对称密码”，然后服务器的公钥对其加密，然后将加密后的“预主密码“传给服务器</li>
+<li>如果服务器要求客户的身份认证，用户可以建立一个随机数然后对其数据签名，然后将这个含有签名的随机数和客户自己的证书以及加密过的”预主密码“一起传给服务器</li>
+<li>如果服务器要求客户的身份认证，服务器必须检验客户证书和签名随机数的合法性，具体的合法性检验过程包括：客户的证书使用日期是否有效，提供的ca是否可靠，ca的公钥能否正确解开客户端证书的发行ca签名，检查客户的证书是否在证书废止列表中。如果不合法，通讯立即终端，否则服务器将用自己的私钥解药加密的预主密码，然后执行一系列步骤产生主通讯密码。客户端也同样的步骤产生主通讯密码</li>
+<li>服务器和客户端用相同的主密码。一个对称秘钥用于ssl协议的安全数据通讯的加解密通讯，同时在ssl通讯过程中还要完成数据通讯的完整性，防止数据通讯中的任何变化</li>
+<li>客户端向服务器发出信息，指明后续通讯将使用主密码为堆成密码，同时通知服务器本次握手过程结束</li>
+<li>服务器向客户端发出信息，指明后续通讯将使用主密码为对称密码，同时通知客户端本次握手过程结束</li>
+<li>ssl的握手部分结束，安全通道的通讯开始，客户端和服务端开始使用相同的对称秘钥进行数据通讯，同时检查通讯完整性</li>
+</ol>
+<p>概括，https在客户端生成秘钥并传递给服务端的时候，采取的是非对称加密，而秘钥在服务端手里的时候，之后采取的就是对称加密。单向验证是指客户端对服务端进行身份验证，验证是否可靠，而双向验证则是服务端也同时验证客户端，双向验证常见于企业应用</p>
 
       
     </div>
@@ -447,6 +482,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/25/2018年第四十六周工作小结/" rel="prev" title="2018年第四十六周工作小结">
+                2018年第四十六周工作小结 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -523,7 +562,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-count">105</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -569,7 +608,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#OSI网络分层"><span class="nav-number">1.</span> <span class="nav-text">OSI网络分层</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#物理层"><span class="nav-number">1.1.</span> <span class="nav-text">物理层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#物理层传输原理"><span class="nav-number">1.1.1.</span> <span class="nav-text">物理层传输原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#物理层总结"><span class="nav-number">1.1.2.</span> <span class="nav-text">物理层总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据链路层"><span class="nav-number">1.2.</span> <span class="nav-text">数据链路层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据链路层设备"><span class="nav-number">1.2.1.</span> <span class="nav-text">数据链路层设备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据链路层基础知识"><span class="nav-number">1.2.2.</span> <span class="nav-text">数据链路层基础知识</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络层"><span class="nav-number">1.3.</span> <span class="nav-text">网络层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ARP-address-resolution-protocol"><span class="nav-number">1.3.1.</span> <span class="nav-text">ARP (address resolution protocol)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ICMP-internet-control-message-protocol"><span class="nav-number">1.3.2.</span> <span class="nav-text">ICMP (internet control message protocol)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IGMP-internet-group-management-protocol"><span class="nav-number">1.4.</span> <span class="nav-text">IGMP (internet group management protocol)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#传输层"><span class="nav-number">1.5.</span> <span class="nav-text">传输层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#UDP-user-datagram-protocol-用户数据协议"><span class="nav-number">1.5.1.</span> <span class="nav-text">UDP(user datagram protocol) 用户数据协议</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#UDP的优点"><span class="nav-number">1.5.1.1.</span> <span class="nav-text">UDP的优点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#UDP的主要问题"><span class="nav-number">1.5.1.2.</span> <span class="nav-text">UDP的主要问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#UDP如何解决传输的问题"><span class="nav-number">1.5.1.3.</span> <span class="nav-text">UDP如何解决传输的问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP-transmission-control-protocol-传输控制协议"><span class="nav-number">1.5.2.</span> <span class="nav-text">TCP(transmission control protocol) 传输控制协议</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP头部图"><span class="nav-number">1.5.2.1.</span> <span class="nav-text">TCP头部图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP连接管理机制"><span class="nav-number">1.5.2.2.</span> <span class="nav-text">TCP连接管理机制</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#三次握手"><span class="nav-number">1.5.2.2.1.</span> <span class="nav-text">三次握手</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#四次挥手"><span class="nav-number">1.5.2.2.2.</span> <span class="nav-text">四次挥手</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#OSI网络分层"><span class="nav-number">1.</span> <span class="nav-text">OSI网络分层</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#物理层"><span class="nav-number">1.1.</span> <span class="nav-text">物理层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#物理层传输原理"><span class="nav-number">1.1.1.</span> <span class="nav-text">物理层传输原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#物理层总结"><span class="nav-number">1.1.2.</span> <span class="nav-text">物理层总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据链路层"><span class="nav-number">1.2.</span> <span class="nav-text">数据链路层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据链路层设备"><span class="nav-number">1.2.1.</span> <span class="nav-text">数据链路层设备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据链路层基础知识"><span class="nav-number">1.2.2.</span> <span class="nav-text">数据链路层基础知识</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络层"><span class="nav-number">1.3.</span> <span class="nav-text">网络层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ARP-address-resolution-protocol"><span class="nav-number">1.3.1.</span> <span class="nav-text">ARP (address resolution protocol)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ICMP-internet-control-message-protocol"><span class="nav-number">1.3.2.</span> <span class="nav-text">ICMP (internet control message protocol)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IGMP-internet-group-management-protocol"><span class="nav-number">1.3.3.</span> <span class="nav-text">IGMP (internet group management protocol)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#传输层"><span class="nav-number">1.4.</span> <span class="nav-text">传输层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#UDP-user-datagram-protocol-用户数据协议"><span class="nav-number">1.4.1.</span> <span class="nav-text">UDP(user datagram protocol) 用户数据协议</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#UDP的优点"><span class="nav-number">1.4.1.1.</span> <span class="nav-text">UDP的优点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#UDP的主要问题"><span class="nav-number">1.4.1.2.</span> <span class="nav-text">UDP的主要问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#UDP如何解决传输的问题"><span class="nav-number">1.4.1.3.</span> <span class="nav-text">UDP如何解决传输的问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP-transmission-control-protocol-传输控制协议"><span class="nav-number">1.4.2.</span> <span class="nav-text">TCP(transmission control protocol) 传输控制协议</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP头部图"><span class="nav-number">1.4.2.1.</span> <span class="nav-text">TCP头部图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP连接管理机制"><span class="nav-number">1.4.2.2.</span> <span class="nav-text">TCP连接管理机制</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#三次握手"><span class="nav-number">1.4.2.2.1.</span> <span class="nav-text">三次握手</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#四次挥手"><span class="nav-number">1.4.2.2.2.</span> <span class="nav-text">四次挥手</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#窗口滑动"><span class="nav-number">1.4.2.3.</span> <span class="nav-text">窗口滑动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#窗口滑动协议"><span class="nav-number">1.4.2.4.</span> <span class="nav-text">窗口滑动协议</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#传输层其他协议"><span class="nav-number">1.4.3.</span> <span class="nav-text">传输层其他协议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#会话层"><span class="nav-number">1.5.</span> <span class="nav-text">会话层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#主要功能"><span class="nav-number">1.5.1.</span> <span class="nav-text">主要功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体理解"><span class="nav-number">1.5.2.</span> <span class="nav-text">具体理解</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#表示层"><span class="nav-number">1.6.</span> <span class="nav-text">表示层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#主要功能-1"><span class="nav-number">1.6.1.</span> <span class="nav-text">主要功能</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用层"><span class="nav-number">1.7.</span> <span class="nav-text">应用层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#https"><span class="nav-number">1.7.1.</span> <span class="nav-text">https</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#https-和http主要的区别"><span class="nav-number">1.7.1.1.</span> <span class="nav-text">https 和http主要的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#握手过程"><span class="nav-number">1.7.1.2.</span> <span class="nav-text">握手过程</span></a></li></ol></li></ol></li></ol></li></ol></div>
             
 
           </div>
