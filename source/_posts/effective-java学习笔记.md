@@ -1019,4 +1019,27 @@ try{
 
 ### 同步访问共享的可变数据
 
-使用synchronized来进行线程同步，并且阻止
+使用synchronized来进行线程同步，并且阻止另一个线程观察到对象内部不一致的状态。
+
+### 避免过度同步
+
+过度同步会导致死锁
+
+### executor和task优先于线程
+
+创建一个工作队列
+```
+ExecutorService executor = Executors.newSingleThreadExecutor();
+```
+
+执行提交一个runnable的方法
+
+```
+executor.execute(runnable)
+```
+
+终止executor
+```
+executor.shutdown()
+```
+
