@@ -82,3 +82,6 @@ private static Unbinder createBinding(@NonNull Object target, @NonNull View sour
 ```
 findBindingConstructorForClass这个方法通过一个map存储下来由cls作为key的Constructor。构建过程主要是通过classloader来创建一个带有_ViewBinding后缀的java文件，同时通过class的getConstructor方法，返回的是指定的，或者是cls的参数类型构造器，或者是View.class的参数类型构造器。然后在createBinding中会通过这个构造器来构造这个类。传入的参数就是我们在调用Butterknife.bind（）中传入的两个参数，当然也可能是一个。
 
+# 总结一下
+
+当一个程序走到Butterknife.bind(this, rootview)的时候，此时正是编译时，annotation processing 会读取写出来的注解，生成新的代码，这时候就需要使用apt插件，apt插件会读取butterknife设置的一些注解
