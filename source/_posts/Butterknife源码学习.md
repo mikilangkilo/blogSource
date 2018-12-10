@@ -84,4 +84,37 @@ findBindingConstructorForClass这个方法通过一个map存储下来由cls作�
 
 # 总结一下
 
-当一个程序走到Butterknife.bind(this, rootview)的时候，此时正是编译时，annotation processing 会读取写出来的注解，生成新的代码，这时候就需要使用apt插件，apt插件会读取butterknife设置的一些注解
+当一个程序走到Butterknife.bind(this, rootview)的时候，此时正是编译时，annotation processing 会读取写出来的注解，通过butterknife processor 生成一个对应于这个类名的viewbinder内部类，这个viewbinder类包含了所有的findviewbyid和onclicklistener等方法。然后在调用Bind方法的时候，butterknife会去加载对应的viewbinder类，并调用他们的bind方法。
+
+# 疑惑
+
+通过阅读butterknife的代码，发现一个问题，什么是butterknife processor，他是如何工作的，他在哪儿？
+
+## annotation processor - 注解处理器
+
+注解处理器(Annotation Processor)是javac内置的一个用于编译时扫描和处理注解(Annotation)的工具
+
+由于注解处理器可以在程序编译阶段工作，所以我们可以在编译期间通过注解处理器进行我们需要的操作。比较常用的用法就是在编译期间获取相关注解数据，然后动态生成.java源文件
+
+## 为什么butterknife processor 在项目中不存在
+
+```
+annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-rc2'
+```
+
+这段话的意义是调用butterknife-compiler作为一个编译处理器。在编译的时候，会自动调用butterknife-compiler的代码，来协助进行编译。
+
+由于调用的代码没有直接使用的意义，且没有提供开放的api，因此在studio中使用annotationprocessor，并不会看到相应的代码。
+
+## butterknife processor 是在扫描完注解之后执行，还是在扫描注解之前执行
+
+很明显，扫描完注解之后是生成viewbinder，这一步就已经用到了butterknife processor，而之后的bind，仅仅是调用了生成的代码类
+
+# 通过annotation-processor来实现一个butterknife框架
+
+自己实现原理也差不多，会加几层包装
+
+[实现方式](https://blog.csdn.net/android_jianbo/article/details/79180907)
+
+
+
