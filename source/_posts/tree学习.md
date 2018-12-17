@@ -246,9 +246,51 @@ public class BinarySearchTree<T extends Comparable<? super T>>{
 }
 ```
 
+# AVL树
 
+平衡二叉树，即左右节点高度差不超过1的二叉树
 
+## 构造函数
 
+```
+private static class AvlNode<AnyType>{
+	AnyType element;
+	AvlNode<AnyType> left;
+	AvlNode<AnyType> right;
+	int height;
+	AvlNode(AnyType theElement){
+		this(theElement, null, null);
+	}
+	AvlNode(AnyType theElement, AvlNode<AnyType> lt, AvlNode<AnyType> rt){
+		element = theElement;
+		left = lt;
+		right = rt;
+		height = 0;
+	}
+}
+```
+
+## 单旋过程
+
+```
+private AvlNode<AnyType> rotateWithLeftChild(AvlNode<AnyType> k2){
+	AvlNode<AnyType> k1 = k2.left;
+	k2.left = k1.right;
+	k1.right = k2;
+	k2.height = Math.max(height(k2.left), height(k2.right)) + 1;
+	k1.height = Math.max(height(k1.left), k2.height) +1;
+	return k1;
+}
+```
+
+## 双旋过程
+
+```
+private AvlNode<AnyType> doubleWithLeftChild(AvlNode<AnyType> k3){
+	k3.left = rotateWithRightChild(k3.left);
+	return rotateWthLeftChild(k3);
+}
+```
 
 
 
