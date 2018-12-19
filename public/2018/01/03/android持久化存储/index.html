@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="android," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="内部存储（internalStorage）data文件夹就是我们常说的内部存储，其中有两个文件夹需要关注，一个是app文件夹，一个是data文件夹。 app文件夹app文件夹里存放着我们所有安装的app的apk文件。 data文件夹这个文件夹里面都是一些包名，打开这些包名会看到：  data/data/包名/shared_prefs data/data/包名/databases data/data">
+<meta name="keywords" content="android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android持久化存储">
+<meta property="og:url" content="http://yoursite.com/2018/01/03/android持久化存储/index.html">
+<meta property="og:site_name" content="记录者">
+<meta property="og:description" content="内部存储（internalStorage）data文件夹就是我们常说的内部存储，其中有两个文件夹需要关注，一个是app文件夹，一个是data文件夹。 app文件夹app文件夹里存放着我们所有安装的app的apk文件。 data文件夹这个文件夹里面都是一些包名，打开这些包名会看到：  data/data/包名/shared_prefs data/data/包名/databases data/data">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-03-08T10:15:30.063Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="android持久化存储">
+<meta name="twitter:description" content="内部存储（internalStorage）data文件夹就是我们常说的内部存储，其中有两个文件夹需要关注，一个是app文件夹，一个是data文件夹。 app文件夹app文件夹里存放着我们所有安装的app的apk文件。 data文件夹这个文件夹里面都是一些包名，打开这些包名会看到：  data/data/包名/shared_prefs data/data/包名/databases data/data">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/03/android持久化存储/"/>
+
+
+
+
+
+  <title>android持久化存储 | 记录者</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">记录者</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我们坚持一件事情，并不是因为这样做了会有效果，而是坚信，这样做是对的。</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/03/android持久化存储/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">android持久化存储</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-03T14:57:26+08:00">
+                2018-01-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="内部存储（internalStorage）"><a href="#内部存储（internalStorage）" class="headerlink" title="内部存储（internalStorage）"></a>内部存储（internalStorage）</h1><p>data文件夹就是我们常说的内部存储，其中有两个文件夹需要关注，一个是app文件夹，一个是data文件夹。</p>
+<h2 id="app文件夹"><a href="#app文件夹" class="headerlink" title="app文件夹"></a>app文件夹</h2><p>app文件夹里存放着我们所有安装的app的apk文件。</p>
+<h2 id="data文件夹"><a href="#data文件夹" class="headerlink" title="data文件夹"></a>data文件夹</h2><p>这个文件夹里面都是一些包名，打开这些包名会看到：</p>
+<ol>
+<li>data/data/包名/shared_prefs</li>
+<li>data/data/包名/databases</li>
+<li>data/data/包名/files</li>
+<li>data/data/包名/cache</li>
+</ol>
+<p>sharedPreferenced的时候，数据持久化存储于本地，其实就是存在这个文件中的xml文件里面。<br>数据库文件就是存储于databases文件夹中。<br>普通数据存储在files中。<br>缓存文件存储在cache文件夹中。</p>
+<h1 id="外部存储（externalStorage）"><a href="#外部存储（externalStorage）" class="headerlink" title="外部存储（externalStorage）"></a>外部存储（externalStorage）</h1><p>外部存储是我们平时操作最多的，外部存储一般就是我们看到的storage文件夹，当然也有mnt文件夹，不同厂家有可能不一样。<br>一般来讲storage文件夹中有一个sdcard文件夹，这个文件夹中的文件又分为两类，一类是公有目录，一类是私有目录。公有目录又分为九大类，比如说DCIM、DOWNLOAD等这种系统为我们创建的文件夹。私有目录就是android这种文件夹，这个文件夹打开之后里面有一个data文件夹，打开这个data文件夹，里面有许多包名组成的文件夹。</p>
+<h1 id="存储操作"><a href="#存储操作" class="headerlink" title="存储操作"></a>存储操作</h1><h2 id="文件存储"><a href="#文件存储" class="headerlink" title="文件存储"></a>文件存储</h2><p>文件存储的所有文件默认放在/data/data/<packagename>/file/目录下</packagename></p>
+<h3 id="文件写入"><a href="#文件写入" class="headerlink" title="文件写入"></a>文件写入</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public void save(String inputText)&#123;</span><br><span class="line">	FIleOutputStream out = null;</span><br><span class="line">	BufferedWriter writer = null;</span><br><span class="line">	try&#123;</span><br><span class="line">		out = openFileOutput(&quot;data&quot;, Context.MODE_PRIVATE);</span><br><span class="line">		writer = new BufferedWriter(new OutputStreamWriter(out));</span><br><span class="line">		writer.write(inputText);</span><br><span class="line">	&#125;catch(FileNotFoundException e)&#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125;catch(IOException e)&#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125;finally&#123;</span><br><span class="line">		if(writer != null)&#123;</span><br><span class="line">			try&#123;</span><br><span class="line">				writer.close();</span><br><span class="line">			&#125;catch(IOException e)&#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="文件读取"><a href="#文件读取" class="headerlink" title="文件读取"></a>文件读取</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">public String load()&#123;</span><br><span class="line">	FileInputStream in = null;</span><br><span class="line">	BufferedReader reader = null;</span><br><span class="line">	StringBuilder content = new StringBuilder();</span><br><span class="line">	try&#123;</span><br><span class="line">		in = openFileInput(&quot;data&quot;);</span><br><span class="line">		reader = new BufferedReader(new InputStreamReader(in));</span><br><span class="line">		String line = &quot;&quot;;</span><br><span class="line">		while((line = reader.readLine()) != null)&#123;</span><br><span class="line">			content.append(line);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;catch(FileNotFoundException e)&#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125;catch(IOException e)&#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125;finally&#123;</span><br><span class="line">		if(reader != null)&#123;</span><br><span class="line">			try&#123;</span><br><span class="line">				reader.close();</span><br><span class="line">			&#125;catch(IOException e)&#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return content.toString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="SharePreferences"><a href="#SharePreferences" class="headerlink" title="SharePreferences"></a>SharePreferences</h2><p>Sharepreference默认放在/data/data/<packagename>/file/目录下</packagename></p>
+<h3 id="SharedPreferences写入"><a href="#SharedPreferences写入" class="headerlink" title="SharedPreferences写入"></a>SharedPreferences写入</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SharedPreferences.Editor editor = getSharedPreferences(&quot;data&quot;, MODE_PRIVATE).edit();</span><br><span class="line">editor.putString(&quot;et_inputText&quot;, &quot;sharePreferences test&quot;);</span><br><span class="line">editor.commit();</span><br></pre></td></tr></table></figure>
+<h3 id="SharedPreferences读取"><a href="#SharedPreferences读取" class="headerlink" title="SharedPreferences读取"></a>SharedPreferences读取</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SharedPreferences sp = getSharedPreferences(&quot;data&quot;, MODE_PRIVATE);</span><br><span class="line">String input = sp.getString(&quot;et_inputText&quot;, &quot;请输入用户名&quot;);//第二个参数是为空的默认信息</span><br></pre></td></tr></table></figure>
+<h2 id="SQLite数据库存储"><a href="#SQLite数据库存储" class="headerlink" title="SQLite数据库存储"></a>SQLite数据库存储</h2><p>sqlite文件默认放在/data/data/<packagename>/datanases/目录下</packagename></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public class MyDataBaseHelper extends SQLiteOpenHelper&#123;</span><br><span class="line">	private static final String CREATE_BOOK = &quot;create table Book(id integer primary key autoincrement, author text, price real, pages integer, name text)&quot;;</span><br><span class="line">	private static final String CREATE_CATEGORY = &quot;create table Category(id integer primary key autoincrement, category_name text, category_code integer)&quot;;</span><br><span class="line">	private Context mContext;</span><br><span class="line">	public MyDataBaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version)&#123;</span><br><span class="line">		super(context, name, factory, version);</span><br><span class="line">		mContext = context;</span><br><span class="line">	&#125;</span><br><span class="line">	@Override</span><br><span class="line">	public void onCreate(SQLiteDatabase db)&#123;</span><br><span class="line">		db.execSQL(CREATE_BOOK);</span><br><span class="line">		db.execSQL(CREATE_CATEGORY);</span><br><span class="line">		Toast.makeText(mContext, &quot;create succeed&quot;, Toast.LENGTH_SHORT).show();</span><br><span class="line">	&#125;</span><br><span class="line">	@Override</span><br><span class="line">	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)&#123;</span><br><span class="line">		db.execSQL(&quot;drop table if exists Book&quot;);</span><br><span class="line">		db.execSQL(&quot;drop table if exists Category&quot;);</span><br><span class="line">		onCreate(db);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="创建数据库"><a href="#创建数据库" class="headerlink" title="创建数据库"></a>创建数据库</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dbHelper = new MyDataBaseHelper(this, &quot;BookStore.db&quot;, null, 2);</span><br></pre></td></tr></table></figure>
+<h3 id="插入数据"><a href="#插入数据" class="headerlink" title="插入数据"></a>插入数据</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">SQLiteDatabase db = dbHelper.getWritableDatabase();</span><br><span class="line">ContentValues values = new ContentValues();</span><br><span class="line">values.put(&quot;name&quot;, &quot;Effective Java&quot;);</span><br><span class="line">values.put(&quot;author&quot;, &quot;Joshua Bloch&quot;);</span><br><span class="line">values.put(&quot;pages&quot;, 454);</span><br><span class="line">values.put(&quot;price&quot;, 16.96);</span><br><span class="line">db.insert(&quot;Book&quot;, null, values);</span><br></pre></td></tr></table></figure>
+<h3 id="更新数据"><a href="#更新数据" class="headerlink" title="更新数据"></a>更新数据</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ContentValues values = new ContentValues();</span><br><span class="line">values.put(&quot;price&quot;, 198.00);</span><br><span class="line">SQLiteDatabase db = dbHelper.getReadableDatabase();</span><br><span class="line">db.updata(&quot;Book&quot;, values, &quot;name=?&quot;,new String[]&#123;&apos;Android Programme&apos;&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="删除行"><a href="#删除行" class="headerlink" title="删除行"></a>删除行</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SQLiteDatabase db = dbHelper.getWritableDatabase();</span><br><span class="line">db.delete(&quot;Book&quot;, &quot;pages &gt; ?&quot;, new String[]&#123;&quot;500&quot;&#125;);</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/android/" rel="tag"># android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/02/viewgroup测量/" rel="next" title="viewgroup测量">
+                <i class="fa fa-chevron-left"></i> viewgroup测量
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/03/android事件拦截机制分析/" rel="prev" title="android事件拦截机制分析">
+                android事件拦截机制分析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Sample</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">110</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#内部存储（internalStorage）"><span class="nav-number">1.</span> <span class="nav-text">内部存储（internalStorage）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#app文件夹"><span class="nav-number">1.1.</span> <span class="nav-text">app文件夹</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#data文件夹"><span class="nav-number">1.2.</span> <span class="nav-text">data文件夹</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#外部存储（externalStorage）"><span class="nav-number">2.</span> <span class="nav-text">外部存储（externalStorage）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#存储操作"><span class="nav-number">3.</span> <span class="nav-text">存储操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#文件存储"><span class="nav-number">3.1.</span> <span class="nav-text">文件存储</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#文件写入"><span class="nav-number">3.1.1.</span> <span class="nav-text">文件写入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件读取"><span class="nav-number">3.1.2.</span> <span class="nav-text">文件读取</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SharePreferences"><span class="nav-number">3.2.</span> <span class="nav-text">SharePreferences</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SharedPreferences写入"><span class="nav-number">3.2.1.</span> <span class="nav-text">SharedPreferences写入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SharedPreferences读取"><span class="nav-number">3.2.2.</span> <span class="nav-text">SharedPreferences读取</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SQLite数据库存储"><span class="nav-number">3.3.</span> <span class="nav-text">SQLite数据库存储</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建数据库"><span class="nav-number">3.3.1.</span> <span class="nav-text">创建数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#插入数据"><span class="nav-number">3.3.2.</span> <span class="nav-text">插入数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更新数据"><span class="nav-number">3.3.3.</span> <span class="nav-text">更新数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除行"><span class="nav-number">3.3.4.</span> <span class="nav-text">删除行</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sample</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

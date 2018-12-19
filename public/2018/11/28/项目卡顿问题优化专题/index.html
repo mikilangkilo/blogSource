@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="公司做了一波推广，卡顿问题比较明显的显示了出来。华为荣耀系列的卡顿问题尤其明显，很多用户反映在看上新的时候卡顿比较严重，还有用户说在使用时间较长之后，就比较卡顿。 刚好这周把需求做完并且全部提测通过了，因此有三天的时间来做轻度优化。不过这个专题需要常驻，因为app需要优化的地方实在是太多了。 商品详情商品详情页面是所有spu最终展示的地方，这个地方是所有用户必然经过的地方，商品详情页不是所有页面的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="项目卡顿问题优化专题">
+<meta property="og:url" content="http://yoursite.com/2018/11/28/项目卡顿问题优化专题/index.html">
+<meta property="og:site_name" content="记录者">
+<meta property="og:description" content="公司做了一波推广，卡顿问题比较明显的显示了出来。华为荣耀系列的卡顿问题尤其明显，很多用户反映在看上新的时候卡顿比较严重，还有用户说在使用时间较长之后，就比较卡顿。 刚好这周把需求做完并且全部提测通过了，因此有三天的时间来做轻度优化。不过这个专题需要常驻，因为app需要优化的地方实在是太多了。 商品详情商品详情页面是所有spu最终展示的地方，这个地方是所有用户必然经过的地方，商品详情页不是所有页面的">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-12-19T08:36:25.659Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="项目卡顿问题优化专题">
+<meta name="twitter:description" content="公司做了一波推广，卡顿问题比较明显的显示了出来。华为荣耀系列的卡顿问题尤其明显，很多用户反映在看上新的时候卡顿比较严重，还有用户说在使用时间较长之后，就比较卡顿。 刚好这周把需求做完并且全部提测通过了，因此有三天的时间来做轻度优化。不过这个专题需要常驻，因为app需要优化的地方实在是太多了。 商品详情商品详情页面是所有spu最终展示的地方，这个地方是所有用户必然经过的地方，商品详情页不是所有页面的">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/11/28/项目卡顿问题优化专题/"/>
+
+
+
+
+
+  <title>项目卡顿问题优化专题 | 记录者</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">记录者</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我们坚持一件事情，并不是因为这样做了会有效果，而是坚信，这样做是对的。</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/28/项目卡顿问题优化专题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">项目卡顿问题优化专题</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-28T11:07:03+08:00">
+                2018-11-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>公司做了一波推广，卡顿问题比较明显的显示了出来。华为荣耀系列的卡顿问题尤其明显，很多用户反映在看上新的时候卡顿比较严重，还有用户说在使用时间较长之后，就比较卡顿。</p>
+<p>刚好这周把需求做完并且全部提测通过了，因此有三天的时间来做轻度优化。不过这个专题需要常驻，因为app需要优化的地方实在是太多了。</p>
+<h1 id="商品详情"><a href="#商品详情" class="headerlink" title="商品详情"></a>商品详情</h1><p>商品详情页面是所有spu最终展示的地方，这个地方是所有用户必然经过的地方，商品详情页不是所有页面的终点，不是唯一的，所以商品详情页面有很多可以优化的地方。</p>
+<h2 id="无限跳转优化"><a href="#无限跳转优化" class="headerlink" title="无限跳转优化"></a>无限跳转优化</h2><p>商品详情页面作为展示spu的地方，其中却又展示了很多不同的spu，另外相同spu之间也是支持跳转的。</p>
+<p>我对比了淘宝和微博，淘宝只支持保留三个spu，但是相同spu是可以跳转的，而微博支持无限跳转，我试了超过10个都可以返回，但是微博不支持在一个人主页里面仍然跳进这个人主页，也就是不支持相同spu的跳转。</p>
+<p>和产品讨论了一下，这个地方相同spu仍然支持跳转，但是最多保留5个。</p>
+<p>我设计这地方的方案是在application里面持有activity的引用，在activity启动的时候，进行判断，如果是详情页面，就放入数组里面，否则就不管。放进数组里面之后会判断是否数组长度是否超过4个，超过的话就会进行移除的操作，手动执行finish。</p>
+<p>另外在destroy的时候，也这样判断，决定是否直接移除。</p>
+<p>操作的入口比较好找，直接套用application的registerActivityLifecycleCallbacks即可。</p>
+<p>在这个地方有一个问题，关于对activity的持有是否需要使用weakreference。</p>
+<p>registerActivityLifecycleCallbacks的源码在application里面，主要的操作通过collectActivityLifecycleCallbacks来反馈</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">private Object[] collectActivityLifecycleCallbacks() &#123;</span><br><span class="line">        Object[] callbacks = null;</span><br><span class="line">        synchronized (mActivityLifecycleCallbacks) &#123;</span><br><span class="line">            if (mActivityLifecycleCallbacks.size() &gt; 0) &#123;</span><br><span class="line">                callbacks = mActivityLifecycleCallbacks.toArray();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return callbacks;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法主要是在各activity生命周期开始的时候进行执行</p>
+<p>启动的时候如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/* package */ void dispatchActivityCreated(Activity activity, Bundle savedInstanceState) &#123;</span><br><span class="line">       Object[] callbacks = collectActivityLifecycleCallbacks();</span><br><span class="line">       if (callbacks != null) &#123;</span><br><span class="line">           for (int i=0; i&lt;callbacks.length; i++) &#123;</span><br><span class="line">               ((ActivityLifecycleCallbacks)callbacks[i]).onActivityCreated(activity,</span><br><span class="line">                       savedInstanceState);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>关闭的时候如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/* package */ void dispatchActivityDestroyed(Activity activity) &#123;</span><br><span class="line">        Object[] callbacks = collectActivityLifecycleCallbacks();</span><br><span class="line">        if (callbacks != null) &#123;</span><br><span class="line">            for (int i=0; i&lt;callbacks.length; i++) &#123;</span><br><span class="line">                ((ActivityLifecycleCallbacks)callbacks[i]).onActivityDestroyed(activity);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>问题就在actvity是在走destroy之前执行该方法，还是走完之后执行的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">protected void onDestroy() &#123;</span><br><span class="line">       if (DEBUG_LIFECYCLE) Slog.v(TAG, &quot;onDestroy &quot; + this);</span><br><span class="line">       mCalled = true;</span><br><span class="line"></span><br><span class="line">       // dismiss any dialogs we are managing.</span><br><span class="line">       if (mManagedDialogs != null) &#123;</span><br><span class="line">           final int numDialogs = mManagedDialogs.size();</span><br><span class="line">           for (int i = 0; i &lt; numDialogs; i++) &#123;</span><br><span class="line">               final ManagedDialog md = mManagedDialogs.valueAt(i);</span><br><span class="line">               if (md.mDialog.isShowing()) &#123;</span><br><span class="line">                   md.mDialog.dismiss();</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">           mManagedDialogs = null;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       // close any cursors we are managing.</span><br><span class="line">       synchronized (mManagedCursors) &#123;</span><br><span class="line">           int numCursors = mManagedCursors.size();</span><br><span class="line">           for (int i = 0; i &lt; numCursors; i++) &#123;</span><br><span class="line">               ManagedCursor c = mManagedCursors.get(i);</span><br><span class="line">               if (c != null) &#123;</span><br><span class="line">                   c.mCursor.close();</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">           mManagedCursors.clear();</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       // Close any open search dialog</span><br><span class="line">       if (mSearchManager != null) &#123;</span><br><span class="line">           mSearchManager.stopSearch();</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       if (mActionBar != null) &#123;</span><br><span class="line">           mActionBar.onDestroy();</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       getApplication().dispatchActivityDestroyed(this);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>因此就证明了，destroy是在分发之前执行的，此时使用弱引用其实并不碍事，即使destroy的时候发生了gc，也没有太大的问题，只要之后的过程中将被回收的值对应的key清除即可。</p>
+<p>weakreference在这边如果使用的话，需要考虑到contain的写法，需要判断的比较多，经过尝试，其实效率和直接强引用差不多。</p>
+<h2 id="详情页面泄露问题"><a href="#详情页面泄露问题" class="headerlink" title="详情页面泄露问题"></a>详情页面泄露问题</h2><h1 id="订单发起页面"><a href="#订单发起页面" class="headerlink" title="订单发起页面"></a>订单发起页面</h1><p>订单发起页面和普通页面不同，主要差别在于订单发起页面在很多地方都可以发起，但是其作用是唯一的，就是发起这个订单，并且继续后续的流程。但是由于在很多地方都可以发起订单，且订单页面又可以发起去很多地方。所以订单发起页面事实上也是无限的页面。</p>
+<p>但是订单发起页面不需要保留用户的返回路径，仅仅只需要一个活着的页面反复调用即可。</p>
+<p>因此我的做法是，在订单发起页面的start函数中，添加flag为FLAG_ACTIVITY_REORDER_TO_FRONT</p>
+<p>因为试了一下发现FLAG_ACTIVITY_BROUGHT_TO_FRONT并无效，所以只可以尝试FLAG_ACTIVITY_REORDER_TO_FRONT</p>
+<p>详细代码为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public static void start(Activity activity)&#123;</span><br><span class="line">        Intent intent = new Intent(activity, OrderConfirmActivity.class);</span><br><span class="line">        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);</span><br><span class="line">        activity.startActivity(intent);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="splash页优化"><a href="#splash页优化" class="headerlink" title="splash页优化"></a>splash页优化</h1><p>splash页面是app的进入时必走的页面，从leaks上面看，也有泄露的问题，检查发现泄露在lambda表达式中，而所有的lambda都是rxjava写的回调表达式，因此所做的是将这个页面所有的observable与该splashactivity的lifecycle绑定，另外eventbus也加了一些强判断（其实没啥必要），为了保险。</p>
+<h2 id="引导页面"><a href="#引导页面" class="headerlink" title="引导页面"></a>引导页面</h2><p>2.8.0版本增加了引导页面，引导用户去设置medel，最近出现oom的现象，排查发现整个设置流程都没有进入destroy。因此在登录成功之后，启动了新的task来load，这样可以强制删除这些无用的流程。</p>
+<h1 id="vipZoon页面"><a href="#vipZoon页面" class="headerlink" title="vipZoon页面"></a>vipZoon页面</h1><p>vipzone是会员专区，这个页面是滑动式，每个请求发现都没有捆绑住lifecycle，进行了捆绑处理</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/25/2018年第四十六周工作小结/" rel="next" title="2018年第四十六周工作小结">
+                <i class="fa fa-chevron-left"></i> 2018年第四十六周工作小结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/06/2018年第四十七周工作小结/" rel="prev" title="2018年第四十七周工作小结">
+                2018年第四十七周工作小结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Sample</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">110</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#商品详情"><span class="nav-number">1.</span> <span class="nav-text">商品详情</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#无限跳转优化"><span class="nav-number">1.1.</span> <span class="nav-text">无限跳转优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#详情页面泄露问题"><span class="nav-number">1.2.</span> <span class="nav-text">详情页面泄露问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#订单发起页面"><span class="nav-number">2.</span> <span class="nav-text">订单发起页面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#splash页优化"><span class="nav-number">3.</span> <span class="nav-text">splash页优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#引导页面"><span class="nav-number">3.1.</span> <span class="nav-text">引导页面</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#vipZoon页面"><span class="nav-number">4.</span> <span class="nav-text">vipZoon页面</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sample</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

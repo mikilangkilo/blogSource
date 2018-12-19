@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="数据结构," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="面试的时候问到了Collection和Collections的差别。当时有个浅薄的印象是Collection好像是个接口类，而Collections是个实体类。回来翻书发现自己真是无知，回答的驴头不对马嘴。 Collectionjava.util.Collection是一个集合接口（集合类的一个顶级接口）。它提供了对集合对象进行基本操作的通用接口方法。Collection接口在java库中有很多基">
+<meta name="keywords" content="数据结构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Collection">
+<meta property="og:url" content="http://yoursite.com/2018/02/28/Collection/index.html">
+<meta property="og:site_name" content="记录者">
+<meta property="og:description" content="面试的时候问到了Collection和Collections的差别。当时有个浅薄的印象是Collection好像是个接口类，而Collections是个实体类。回来翻书发现自己真是无知，回答的驴头不对马嘴。 Collectionjava.util.Collection是一个集合接口（集合类的一个顶级接口）。它提供了对集合对象进行基本操作的通用接口方法。Collection接口在java库中有很多基">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/数据结构/Java集合框架.jpg">
+<meta property="og:updated_time" content="2018-03-08T10:15:30.062Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Collection">
+<meta name="twitter:description" content="面试的时候问到了Collection和Collections的差别。当时有个浅薄的印象是Collection好像是个接口类，而Collections是个实体类。回来翻书发现自己真是无知，回答的驴头不对马嘴。 Collectionjava.util.Collection是一个集合接口（集合类的一个顶级接口）。它提供了对集合对象进行基本操作的通用接口方法。Collection接口在java库中有很多基">
+<meta name="twitter:image" content="http://yoursite.com/images/数据结构/Java集合框架.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/02/28/Collection/"/>
+
+
+
+
+
+  <title>Collection | 记录者</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">记录者</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我们坚持一件事情，并不是因为这样做了会有效果，而是坚信，这样做是对的。</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/28/Collection/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Collection</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-28T23:14:41+08:00">
+                2018-02-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>面试的时候问到了Collection和Collections的差别。当时有个浅薄的印象是Collection好像是个接口类，而Collections是个实体类。<br>回来翻书发现自己真是无知，回答的驴头不对马嘴。</p>
+<h1 id="Collection"><a href="#Collection" class="headerlink" title="Collection"></a>Collection</h1><p>java.util.Collection是一个集合接口（集合类的一个顶级接口）。它提供了对集合对象进行基本操作的通用接口方法。Collection接口在java库中有很多基本的实现。</p>
+<p>Collection接口最大的意义是为了各种具体的集合提供最大化的统一操作方式，其直接继承接口有List和set等等。</p>
+<p><img src="/images/数据结构/Java集合框架.jpg" alt="Collection子类"></p>
+<h2 id="Collection源码解析"><a href="#Collection源码解析" class="headerlink" title="Collection源码解析"></a>Collection源码解析</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">*首先，继承了Iterable类，同时指定了范型</span><br><span class="line">*/</span><br><span class="line">public interface Collection&lt;E&gt; extends Iterable&lt;E&gt; &#123;</span><br><span class="line">	/*</span><br><span class="line">	*返回集合中数组的元素数量</span><br><span class="line">	*/</span><br><span class="line">	int size();</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	*集合中没有元素就返回true</span><br><span class="line">	*/</span><br><span class="line">	boolean isEmpty();</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	*集合中有这个元素就返回true</span><br><span class="line">	*/</span><br><span class="line">	boolean contains(Object o);</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	*返回集合元素的迭代器</span><br><span class="line">	*/</span><br><span class="line">	Iterator&lt;E&gt; iterator();</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	*返回一个包含集合中所有元素的数组，数组类型是object</span><br><span class="line">	*这个方法是数组和集合中的桥梁</span><br><span class="line">	*/</span><br><span class="line">	Object[] toArray();</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	*上个api的多态方法，将集合转为一个指定的数组，类型必须是运行中指定的类型</span><br><span class="line">	*倘若集合的元素数量小于数组，那么数组没有元素的空间会被设为null</span><br><span class="line">	*假如集合需要保证元素的顺序，则转换为数组时也需要保证相应的顺序</span><br><span class="line">	*例：String[] y = x.toArray(new String[0]);</span><br><span class="line">	*toArray(new Object[0])就等于toArray()</span><br><span class="line">	*/</span><br><span class="line">	&lt;T&gt; T[] toArray(T[] a);</span><br><span class="line"></span><br><span class="line">	&lt;-- 以下是修改操作 --&gt;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	*首先要确保集合中没有该需要添加的元素</span><br><span class="line">	*返回true，当集合对这次请求进行了自己的改变</span><br><span class="line">	*返回false，当集合没有允许重复添加已有的元素</span><br><span class="line">	*假如一个集合拒绝添加一个元素，需要抛出异常而不是返回false</span><br><span class="line">	*/</span><br><span class="line">	boolean add(E e);</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	*从集合中移除一个存在的单一对象</span><br><span class="line">	*集合中如果拥有一个或多个该元素，将会移除一个或者其中的一个元素</span><br><span class="line">	*对该请求进行操作之后，的确拥有该元素（或者说有个元素和它equal），会移除该元素并且返回true</span><br><span class="line">	*/</span><br><span class="line">	boolean remove(Object o);</span><br><span class="line"></span><br><span class="line">	&lt;-- 以下是批量操作 --&gt;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	*假如集合中包含该指定集合的所有的元素，就返回true</span><br><span class="line">	*/</span><br><span class="line">	boolean containsAll(Collection&lt;?&gt; c);</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	*将指定集合中的所有元素添加到集合中</span><br><span class="line">	*该操作在操作进行中时是不明确的。因此表明了该操作在添加的集合就是自身时，其实是不明确的。</span><br><span class="line">	*/</span><br><span class="line">	boolean addAll(Collection&lt;? extends E&gt; c);</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	*移除指定集合和原有集合中同时拥有的元素，操作结束之后原有集合和指定集合将在无相同的元素</span><br><span class="line">	*/</span><br><span class="line">	boolean removeAll(Collection&lt;?&gt; c);</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	*只保存和指定集合共同拥有的元素，即是移除所有指定集合中不包含的元素。</span><br><span class="line">	*/</span><br><span class="line">	boolean retainAll(Collection&lt;?&gt; c);</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	*移除集合中所有的元素，集合在操作之后将为空</span><br><span class="line">	*/</span><br><span class="line">	void clear();</span><br><span class="line"></span><br><span class="line">	&lt;-- 以下是比较和哈希 --&gt;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	*将制定的对象与集合进行平等性的比较</span><br><span class="line">	*</span><br><span class="line">	*当集合的接口没有添加类似equal的操作，程序员需要小心的复写Object.equal的操作。</span><br><span class="line">	*最简单的是直接依赖Object的接口</span><br><span class="line">	*/</span><br><span class="line">	boolean equals(Object o);</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	*返回集合的hash码，当集合的接口没有添hashcode的操作的时候，程序员需要注意任何类一旦复写了equal，也将复写hashcode，这是为了保证基础的对比。</span><br><span class="line">	*</span><br><span class="line">	*/</span><br><span class="line">	int hashCode();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="Collections"><a href="#Collections" class="headerlink" title="Collections"></a>Collections</h1><p>java.util.Collections则是一个包装类（工具类/帮助类），包含各种有关集合操作的静态多态方法。不能被实例化，就像一个工具类，用于对集合中元素进行排序、搜索和线程安全等各种操作。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br></pre></td><td class="code"><pre><span class="line">public class Collections &#123;</span><br><span class="line"></span><br><span class="line">	//构造函数私有化，目的是为了保证无法被构造</span><br><span class="line">	private Collections() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">    *sort排序</span><br><span class="line">    */</span><br><span class="line">    @SuppressWarnings(&quot;unchecked&quot;)//使用了范型，让编译器别做反应</span><br><span class="line">    public static &lt;T extends Comparable&lt;? super T&gt;&gt; void sort(List&lt;T&gt; list) &#123;</span><br><span class="line">        if (list.getClass() == ArrayList.class) &#123;</span><br><span class="line">            Arrays.sort(((ArrayList) list).elementData, 0, list.size());//arraylist直接使用Arrays的排序</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Object[] a = list.toArray();//不是arraylist，则将其转换为array，然后使用Arrays的排序</span><br><span class="line">        Arrays.sort(a);</span><br><span class="line">        /*</span><br><span class="line">        *之后获取迭代器，通过迭代器进行参数的传递</span><br><span class="line">        */</span><br><span class="line">        ListIterator&lt;T&gt; i = list.listIterator();</span><br><span class="line">        for (int j=0; j&lt;a.length; j++) &#123;</span><br><span class="line">            i.next();</span><br><span class="line">            i.set((T)a[j]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">    *sort排序的多态方法，加上一个比较器进行排序</span><br><span class="line">    */</span><br><span class="line">    @SuppressWarnings(&#123;&quot;unchecked&quot;, &quot;rawtypes&quot;&#125;)//压制警告，即去除警告，rawtypes是说传参时也要传递带泛型的参数</span><br><span class="line">    public static &lt;T&gt; void sort(List&lt;T&gt; list, Comparator&lt;? super T&gt; c) &#123;</span><br><span class="line">        if (list.getClass() == ArrayList.class) &#123;</span><br><span class="line">            Arrays.sort(((ArrayList) list).elementData, 0, list.size(), (Comparator) c);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Object[] a = list.toArray();</span><br><span class="line">        Arrays.sort(a, (Comparator)c);</span><br><span class="line">        ListIterator&lt;T&gt; i = list.listIterator();</span><br><span class="line">        for (int j=0; j&lt;a.length; j++) &#123;</span><br><span class="line">            i.next();</span><br><span class="line">            i.set((T)a[j]);</span><br><span class="line">        &#125;</span><br><span class="line">        /*</span><br><span class="line">        *仅仅是多加了一个比较器而已</span><br><span class="line">        */</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">    *二分查找，在list实现randomaccess接口，或者大小小于5000时，使用索引二分查找，否则使用迭代器二分查找</span><br><span class="line">    */</span><br><span class="line">    public static &lt;T&gt; int binarySearch(List&lt;? extends Comparable&lt;? super T&gt;&gt; list, T key) &#123;</span><br><span class="line">        if (list instanceof RandomAccess || list.size()&lt;BINARYSEARCH_THRESHOLD)</span><br><span class="line">            return Collections.indexedBinarySearch(list, key);</span><br><span class="line">        else</span><br><span class="line">            return Collections.iteratorBinarySearch(list, key);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">    *二分查找的多态方法，支持比较器</span><br><span class="line">    */</span><br><span class="line">    @SuppressWarnings(&quot;unchecked&quot;)</span><br><span class="line">    public static &lt;T&gt; int binarySearch(List&lt;? extends T&gt; list, T key, Comparator&lt;? super T&gt; c) &#123;</span><br><span class="line">        if (c==null)</span><br><span class="line">            return binarySearch((List&lt;? extends Comparable&lt;? super T&gt;&gt;) list, key);</span><br><span class="line"></span><br><span class="line">        if (list instanceof RandomAccess || list.size()&lt;BINARYSEARCH_THRESHOLD)</span><br><span class="line">            return Collections.indexedBinarySearch(list, key, c);</span><br><span class="line">        else</span><br><span class="line">            return Collections.iteratorBinarySearch(list, key, c);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">    *反转操作，数量小于18，或者实现randomaccess接口时，使用swap操作，否则使用迭代器进行反转替换</span><br><span class="line">    */</span><br><span class="line">    @SuppressWarnings(&#123;&quot;rawtypes&quot;, &quot;unchecked&quot;&#125;)</span><br><span class="line">    public static void reverse(List&lt;?&gt; list) &#123;</span><br><span class="line">        int size = list.size();</span><br><span class="line">        if (size &lt; REVERSE_THRESHOLD || list instanceof RandomAccess) &#123;</span><br><span class="line">            for (int i=0, mid=size&gt;&gt;1, j=size-1; i&lt;mid; i++, j--)</span><br><span class="line">                swap(list, i, j);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            // instead of using a raw type here, it&apos;s possible to capture</span><br><span class="line">            // the wildcard but it will require a call to a supplementary</span><br><span class="line">            // private method</span><br><span class="line">            ListIterator fwd = list.listIterator();</span><br><span class="line">            ListIterator rev = list.listIterator(size);</span><br><span class="line">            for (int i=0, mid=list.size()&gt;&gt;1; i&lt;mid; i++) &#123;</span><br><span class="line">                Object tmp = fwd.next();</span><br><span class="line">                fwd.set(rev.previous());</span><br><span class="line">                rev.set(tmp);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">    *洗牌操作</span><br><span class="line">    */</span><br><span class="line">    public static void shuffle(List&lt;?&gt; list) &#123;</span><br><span class="line">        Random rnd = r;</span><br><span class="line">        if (rnd == null)</span><br><span class="line">            r = rnd = new Random(); // harmless race.</span><br><span class="line">        shuffle(list, rnd);</span><br><span class="line">    &#125;</span><br><span class="line">    @SuppressWarnings(&#123;&quot;rawtypes&quot;, &quot;unchecked&quot;&#125;)</span><br><span class="line">    public static void shuffle(List&lt;?&gt; list, Random rnd) &#123;</span><br><span class="line">        int size = list.size();</span><br><span class="line">        if (size &lt; SHUFFLE_THRESHOLD || list instanceof RandomAccess) &#123;</span><br><span class="line">            for (int i=size; i&gt;1; i--)</span><br><span class="line">                swap(list, i-1, rnd.nextInt(i));</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            Object arr[] = list.toArray();</span><br><span class="line"></span><br><span class="line">            // Shuffle array</span><br><span class="line">            for (int i=size; i&gt;1; i--)</span><br><span class="line">                swap(arr, i-1, rnd.nextInt(i));</span><br><span class="line"></span><br><span class="line">            // Dump array back into list</span><br><span class="line">            // instead of using a raw type here, it&apos;s possible to capture</span><br><span class="line">            // the wildcard but it will require a call to a supplementary</span><br><span class="line">            // private method</span><br><span class="line">            ListIterator it = list.listIterator();</span><br><span class="line">            for (int i=0; i&lt;arr.length; i++) &#123;</span><br><span class="line">                it.next();</span><br><span class="line">                it.set(arr[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">    *交换操作</span><br><span class="line">    */</span><br><span class="line">    @SuppressWarnings(&#123;&quot;rawtypes&quot;, &quot;unchecked&quot;&#125;)</span><br><span class="line">    public static void swap(List&lt;?&gt; list, int i, int j) &#123;</span><br><span class="line">        // instead of using a raw type here, it&apos;s possible to capture</span><br><span class="line">        // the wildcard but it will require a call to a supplementary</span><br><span class="line">        // private method</span><br><span class="line">        final List l = list;</span><br><span class="line">        l.set(i, l.set(j, l.get(i)));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">    *填满操作，将list填充成全是obj的list</span><br><span class="line">    */</span><br><span class="line">    public static &lt;T&gt; void fill(List&lt;? super T&gt; list, T obj) &#123;</span><br><span class="line">        int size = list.size();</span><br><span class="line"></span><br><span class="line">        if (size &lt; FILL_THRESHOLD || list instanceof RandomAccess) &#123;</span><br><span class="line">            for (int i=0; i&lt;size; i++)</span><br><span class="line">                list.set(i, obj);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            ListIterator&lt;? super T&gt; itr = list.listIterator();</span><br><span class="line">            for (int i=0; i&lt;size; i++) &#123;</span><br><span class="line">                itr.next();</span><br><span class="line">                itr.set(obj);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">    *复制操作，结束后dest的内容将和src的内容完全一样，不过有两点，一个是dest的长度要不小于src的长度，另一个是dest的长度大于src时，dest中多余的元素将不受影响</span><br><span class="line">    */</span><br><span class="line">    public static &lt;T&gt; void copy(List&lt;? super T&gt; dest, List&lt;? extends T&gt; src) &#123;</span><br><span class="line">        int srcSize = src.size();</span><br><span class="line">        if (srcSize &gt; dest.size())</span><br><span class="line">            throw new IndexOutOfBoundsException(&quot;Source does not fit in dest&quot;);</span><br><span class="line"></span><br><span class="line">        if (srcSize &lt; COPY_THRESHOLD ||</span><br><span class="line">            (src instanceof RandomAccess &amp;&amp; dest instanceof RandomAccess)) &#123;</span><br><span class="line">            for (int i=0; i&lt;srcSize; i++)</span><br><span class="line">                dest.set(i, src.get(i));</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            ListIterator&lt;? super T&gt; di=dest.listIterator();</span><br><span class="line">            ListIterator&lt;? extends T&gt; si=src.listIterator();</span><br><span class="line">            for (int i=0; i&lt;srcSize; i++) &#123;</span><br><span class="line">                di.next();</span><br><span class="line">                di.set(si.next());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">    *计算最小值，方法仍然是使用迭代器</span><br><span class="line">    */</span><br><span class="line">    public static &lt;T extends Object &amp; Comparable&lt;? super T&gt;&gt; T min(Collection&lt;? extends T&gt; coll) &#123;</span><br><span class="line">        Iterator&lt;? extends T&gt; i = coll.iterator();</span><br><span class="line">        T candidate = i.next();</span><br><span class="line"></span><br><span class="line">        while (i.hasNext()) &#123;</span><br><span class="line">            T next = i.next();</span><br><span class="line">            if (next.compareTo(candidate) &lt; 0)</span><br><span class="line">                candidate = next;</span><br><span class="line">        &#125;</span><br><span class="line">        return candidate;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">    *计算最小值的多态方法，添加了一个比较器</span><br><span class="line">    */</span><br><span class="line">    @SuppressWarnings(&#123;&quot;unchecked&quot;, &quot;rawtypes&quot;&#125;)</span><br><span class="line">    public static &lt;T&gt; T min(Collection&lt;? extends T&gt; coll, Comparator&lt;? super T&gt; comp) &#123;</span><br><span class="line">        if (comp==null)</span><br><span class="line">            return (T)min((Collection) coll);</span><br><span class="line"></span><br><span class="line">        Iterator&lt;? extends T&gt; i = coll.iterator();</span><br><span class="line">        T candidate = i.next();</span><br><span class="line"></span><br><span class="line">        while (i.hasNext()) &#123;</span><br><span class="line">            T next = i.next();</span><br><span class="line">            if (comp.compare(next, candidate) &lt; 0)</span><br><span class="line">                candidate = next;</span><br><span class="line">        &#125;</span><br><span class="line">        return candidate;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">    *计算最大值</span><br><span class="line">    */</span><br><span class="line">    public static &lt;T extends Object &amp; Comparable&lt;? super T&gt;&gt; T max(Collection&lt;? extends T&gt; coll) &#123;</span><br><span class="line">        Iterator&lt;? extends T&gt; i = coll.iterator();</span><br><span class="line">        T candidate = i.next();</span><br><span class="line"></span><br><span class="line">        while (i.hasNext()) &#123;</span><br><span class="line">            T next = i.next();</span><br><span class="line">            if (next.compareTo(candidate) &gt; 0)</span><br><span class="line">                candidate = next;</span><br><span class="line">        &#125;</span><br><span class="line">        return candidate;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">    *通过比较器计算最大值</span><br><span class="line">    */</span><br><span class="line">    @SuppressWarnings(&#123;&quot;unchecked&quot;, &quot;rawtypes&quot;&#125;)</span><br><span class="line">    public static &lt;T&gt; T max(Collection&lt;? extends T&gt; coll, Comparator&lt;? super T&gt; comp) &#123;</span><br><span class="line">        if (comp==null)</span><br><span class="line">            return (T)max((Collection) coll);</span><br><span class="line"></span><br><span class="line">        Iterator&lt;? extends T&gt; i = coll.iterator();</span><br><span class="line">        T candidate = i.next();</span><br><span class="line"></span><br><span class="line">        while (i.hasNext()) &#123;</span><br><span class="line">            T next = i.next();</span><br><span class="line">            if (comp.compare(next, candidate) &gt; 0)</span><br><span class="line">                candidate = next;</span><br><span class="line">        &#125;</span><br><span class="line">        return candidate;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">    *旋转操作，通过distance来计算</span><br><span class="line">    */</span><br><span class="line">    public static void rotate(List&lt;?&gt; list, int distance) &#123;</span><br><span class="line">        if (list instanceof RandomAccess || list.size() &lt; ROTATE_THRESHOLD)</span><br><span class="line">            rotate1(list, distance);</span><br><span class="line">        else</span><br><span class="line">            rotate2(list, distance);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">    *使用新值，替换list中原有的旧值</span><br><span class="line">    */</span><br><span class="line">    public static &lt;T&gt; boolean replaceAll(List&lt;T&gt; list, T oldVal, T newVal) &#123;</span><br><span class="line">        boolean result = false;</span><br><span class="line">        int size = list.size();</span><br><span class="line">        if (size &lt; REPLACEALL_THRESHOLD || list instanceof RandomAccess) &#123;</span><br><span class="line">            if (oldVal==null) &#123;</span><br><span class="line">                for (int i=0; i&lt;size; i++) &#123;</span><br><span class="line">                    if (list.get(i)==null) &#123;</span><br><span class="line">                        list.set(i, newVal);</span><br><span class="line">                        result = true;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                for (int i=0; i&lt;size; i++) &#123;</span><br><span class="line">                    if (oldVal.equals(list.get(i))) &#123;</span><br><span class="line">                        list.set(i, newVal);</span><br><span class="line">                        result = true;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            ListIterator&lt;T&gt; itr=list.listIterator();</span><br><span class="line">            if (oldVal==null) &#123;</span><br><span class="line">                for (int i=0; i&lt;size; i++) &#123;</span><br><span class="line">                    if (itr.next()==null) &#123;</span><br><span class="line">                        itr.set(newVal);</span><br><span class="line">                        result = true;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                for (int i=0; i&lt;size; i++) &#123;</span><br><span class="line">                    if (oldVal.equals(itr.next())) &#123;</span><br><span class="line">                        itr.set(newVal);</span><br><span class="line">                        result = true;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据结构/" rel="tag"># 数据结构</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/27/近期问题回顾/" rel="next" title="近期问题回顾 18-02-27">
+                <i class="fa fa-chevron-left"></i> 近期问题回顾 18-02-27
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/02/2018第九周工作小结/" rel="prev" title="2018第九周工作小结">
+                2018第九周工作小结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Sample</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">110</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Collection"><span class="nav-number">1.</span> <span class="nav-text">Collection</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Collection源码解析"><span class="nav-number">1.1.</span> <span class="nav-text">Collection源码解析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Collections"><span class="nav-number">2.</span> <span class="nav-text">Collections</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sample</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

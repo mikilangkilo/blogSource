@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="android," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="retrofit的post方法简单的双参数上传，结果是ResponseBody12345@FormUrlEncoded@POST(&amp;quot;xxx.com&amp;quot;)Observable&amp;lt;ResponseBody&amp;gt; login(	@Field(&amp;quot;no&amp;quot;) String no,	@Field(&amp;quot;pass&amp;quot;) String pass); 文件上传">
+<meta name="keywords" content="android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="retrofit2 post">
+<meta property="og:url" content="http://yoursite.com/2017/12/21/retrofit2-post/index.html">
+<meta property="og:site_name" content="记录者">
+<meta property="og:description" content="retrofit的post方法简单的双参数上传，结果是ResponseBody12345@FormUrlEncoded@POST(&amp;quot;xxx.com&amp;quot;)Observable&amp;lt;ResponseBody&amp;gt; login(	@Field(&amp;quot;no&amp;quot;) String no,	@Field(&amp;quot;pass&amp;quot;) String pass); 文件上传">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-03-08T10:15:30.067Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="retrofit2 post">
+<meta name="twitter:description" content="retrofit的post方法简单的双参数上传，结果是ResponseBody12345@FormUrlEncoded@POST(&amp;quot;xxx.com&amp;quot;)Observable&amp;lt;ResponseBody&amp;gt; login(	@Field(&amp;quot;no&amp;quot;) String no,	@Field(&amp;quot;pass&amp;quot;) String pass); 文件上传">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/12/21/retrofit2-post/"/>
+
+
+
+
+
+  <title>retrofit2 post | 记录者</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">记录者</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我们坚持一件事情，并不是因为这样做了会有效果，而是坚信，这样做是对的。</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/21/retrofit2-post/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">retrofit2 post</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-21T15:53:25+08:00">
+                2017-12-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="retrofit的post方法"><a href="#retrofit的post方法" class="headerlink" title="retrofit的post方法"></a>retrofit的post方法</h1><h2 id="简单的双参数上传，结果是ResponseBody"><a href="#简单的双参数上传，结果是ResponseBody" class="headerlink" title="简单的双参数上传，结果是ResponseBody"></a>简单的双参数上传，结果是ResponseBody</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@FormUrlEncoded</span><br><span class="line">@POST(&quot;xxx.com&quot;)</span><br><span class="line">Observable&lt;ResponseBody&gt; login(</span><br><span class="line">	@Field(&quot;no&quot;) String no,</span><br><span class="line">	@Field(&quot;pass&quot;) String pass);</span><br></pre></td></tr></table></figure>
+<h2 id="文件上传-（-多文件上传-使用-PartMap-Map-lt-String-RequestBody-gt-params-要注意在设置每一个RequestBody文件的时候，数组名不能一致，否则会覆-盖。）"><a href="#文件上传-（-多文件上传-使用-PartMap-Map-lt-String-RequestBody-gt-params-要注意在设置每一个RequestBody文件的时候，数组名不能一致，否则会覆-盖。）" class="headerlink" title="文件上传 （ 多文件上传,使用 @PartMap Map&lt;String, RequestBody&gt; params 要注意在设置每一个RequestBody文件的时候，数组名不能一致，否则会覆 盖。）"></a>文件上传 （ 多文件上传,使用 @PartMap Map&lt;String, RequestBody&gt; params 要注意在设置每一个RequestBody文件的时候，数组名不能一致，否则会覆 盖。）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Multipart</span><br><span class="line">   @POST(&quot;xxx.com&quot;)</span><br><span class="line">   Observable&lt;ResponseBody&gt; uploadFile(</span><br><span class="line">       @Part(&quot;file\&quot;; filename=\&quot;test.png&quot;) RequestBody file</span><br><span class="line">    );</span><br></pre></td></tr></table></figure>
+<h2 id="单文件上传"><a href="#单文件上传" class="headerlink" title="单文件上传"></a>单文件上传</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Multipart</span><br><span class="line">   @POST(&quot;xxx.com&quot;)</span><br><span class="line">   Observable&lt;ResponseBody&gt; uploadFile(</span><br><span class="line">           @Part MultipartBody.Part file );</span><br></pre></td></tr></table></figure>
+<h2 id="多文件上传"><a href="#多文件上传" class="headerlink" title="多文件上传"></a>多文件上传</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Multipart</span><br><span class="line">   @POST(&quot;xxx.com&quot;)</span><br><span class="line">   Observable&lt;ResponseBody&gt; uploadFile(</span><br><span class="line">           @Part() List&lt;MultipartBody.Part&gt; files );</span><br></pre></td></tr></table></figure>
+<h2 id="文件和参数共同上传-参数也需要封装成MultipartBody-Part这样的类型，不然传递会出错，这个类型其实就是将这些数据封装成表单的类型，因为在这里不能使用FormUrlEncoded进行处理"><a href="#文件和参数共同上传-参数也需要封装成MultipartBody-Part这样的类型，不然传递会出错，这个类型其实就是将这些数据封装成表单的类型，因为在这里不能使用FormUrlEncoded进行处理" class="headerlink" title="文件和参数共同上传  (参数也需要封装成MultipartBody.Part这样的类型，不然传递会出错，这个类型其实就是将这些数据封装成表单的类型，因为在这里不能使用FormUrlEncoded进行处理)"></a>文件和参数共同上传  (参数也需要封装成MultipartBody.Part这样的类型，不然传递会出错，这个类型其实就是将这些数据封装成表单的类型，因为在这里不能使用FormUrlEncoded进行处理)</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Multipart</span><br><span class="line">   @POST(&quot;xxx.com&quot;)</span><br><span class="line">   Observable&lt;ResponseBody&gt; uploadFile(</span><br><span class="line">        @Part() List&lt;MultipartBody.Part &gt; files );</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/android/" rel="tag"># android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/21/test-appveyor/" rel="next" title="test appveyor">
+                <i class="fa fa-chevron-left"></i> test appveyor
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/21/“rxjava2-0”/" rel="prev" title="“rxjava2.0”">
+                “rxjava2.0” <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Sample</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">110</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#retrofit的post方法"><span class="nav-number">1.</span> <span class="nav-text">retrofit的post方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#简单的双参数上传，结果是ResponseBody"><span class="nav-number">1.1.</span> <span class="nav-text">简单的双参数上传，结果是ResponseBody</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件上传-（-多文件上传-使用-PartMap-Map-lt-String-RequestBody-gt-params-要注意在设置每一个RequestBody文件的时候，数组名不能一致，否则会覆-盖。）"><span class="nav-number">1.2.</span> <span class="nav-text">文件上传 （ 多文件上传,使用 @PartMap Map&lt;String, RequestBody&gt; params 要注意在设置每一个RequestBody文件的时候，数组名不能一致，否则会覆 盖。）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单文件上传"><span class="nav-number">1.3.</span> <span class="nav-text">单文件上传</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多文件上传"><span class="nav-number">1.4.</span> <span class="nav-text">多文件上传</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件和参数共同上传-参数也需要封装成MultipartBody-Part这样的类型，不然传递会出错，这个类型其实就是将这些数据封装成表单的类型，因为在这里不能使用FormUrlEncoded进行处理"><span class="nav-number">1.5.</span> <span class="nav-text">文件和参数共同上传  (参数也需要封装成MultipartBody.Part这样的类型，不然传递会出错，这个类型其实就是将这些数据封装成表单的类型，因为在这里不能使用FormUrlEncoded进行处理)</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sample</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

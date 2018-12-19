@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="基于内部类的泄露是android泄露的一个很常见的问题。 这方面自从使用了rxjava之后有很多好转，凡是内部类的我都会转换成为observable然后bindtolifecycle，这样通过生命周期的强制绑定，能够一定程度上面减少泄露发生的问题。 在lifecycle中，一般如果不指明的话，在start时订阅的事件将会在stop的时候dispose，在resume时订阅的事件将会在pause的时">
+<meta property="og:type" content="article">
+<meta property="og:title" content="为什么在activity触发ondestroy的时候内部类可能产生泄露">
+<meta property="og:url" content="http://yoursite.com/2018/10/21/为什么在activity触发ondestroy的时候内部类可能产生泄露/index.html">
+<meta property="og:site_name" content="记录者">
+<meta property="og:description" content="基于内部类的泄露是android泄露的一个很常见的问题。 这方面自从使用了rxjava之后有很多好转，凡是内部类的我都会转换成为observable然后bindtolifecycle，这样通过生命周期的强制绑定，能够一定程度上面减少泄露发生的问题。 在lifecycle中，一般如果不指明的话，在start时订阅的事件将会在stop的时候dispose，在resume时订阅的事件将会在pause的时">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-10-21T16:40:55.905Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="为什么在activity触发ondestroy的时候内部类可能产生泄露">
+<meta name="twitter:description" content="基于内部类的泄露是android泄露的一个很常见的问题。 这方面自从使用了rxjava之后有很多好转，凡是内部类的我都会转换成为observable然后bindtolifecycle，这样通过生命周期的强制绑定，能够一定程度上面减少泄露发生的问题。 在lifecycle中，一般如果不指明的话，在start时订阅的事件将会在stop的时候dispose，在resume时订阅的事件将会在pause的时">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/10/21/为什么在activity触发ondestroy的时候内部类可能产生泄露/"/>
+
+
+
+
+
+  <title>为什么在activity触发ondestroy的时候内部类可能产生泄露 | 记录者</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">记录者</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我们坚持一件事情，并不是因为这样做了会有效果，而是坚信，这样做是对的。</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/21/为什么在activity触发ondestroy的时候内部类可能产生泄露/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">为什么在activity触发ondestroy的时候内部类可能产生泄露</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-21T18:41:36+08:00">
+                2018-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>基于内部类的泄露是android泄露的一个很常见的问题。</p>
+<p>这方面自从使用了rxjava之后有很多好转，凡是内部类的我都会转换成为observable然后bindtolifecycle，这样通过生命周期的强制绑定，能够一定程度上面减少泄露发生的问题。</p>
+<p>在lifecycle中，一般如果不指明的话，在start时订阅的事件将会在stop的时候dispose，在resume时订阅的事件将会在pause的时候dispose。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">switch (lastEvent) &#123;</span><br><span class="line">                case CREATE:</span><br><span class="line">                    return ActivityEvent.DESTROY;</span><br><span class="line">                case START:</span><br><span class="line">                    return ActivityEvent.STOP;</span><br><span class="line">                case RESUME:</span><br><span class="line">                    return ActivityEvent.PAUSE;</span><br><span class="line">                case PAUSE:</span><br><span class="line">                    return ActivityEvent.STOP;</span><br><span class="line">                case STOP:</span><br><span class="line">                    return ActivityEvent.DESTROY;</span><br><span class="line">                case DESTROY:</span><br><span class="line">                    throw new OutsideLifecycleException(&quot;Cannot bind to Activity lifecycle when outside of it.&quot;);</span><br><span class="line">                default:</span><br><span class="line">                    throw new UnsupportedOperationException(&quot;Binding to &quot; + lastEvent + &quot; not yet implemented&quot;);</span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure>
+<p>生命周期就是上面这种，lifecycle在必要的地方做了很详细的处理，通过lifecyclesubject来根据绑定的生命周期来不断的发送接下来的activityevent（生命周期事件）。直到当发送下来一个取消的通知，之后就会取消订阅。</p>
+<p>lifecycle的确很好用，但是没有办法所有的地方都使用到rxjava。因此关于内部类的泄露还是要明确讨论一下。</p>
+<h1 id="内部类泄露"><a href="#内部类泄露" class="headerlink" title="内部类泄露"></a>内部类泄露</h1><p>回到内部类泄露的地方。android的内部类分为静态内部类和非静态内部类，内部类又分一些匿名的，成员的等等。非静态内部类会潜在的持有外部类的引用，因此当有耗时操作的时候，就会导致外部类的泄露。</p>
+<p>activity在ondestroy的时候，凡是引用到他的内部类，假如没有结束的话，就会导致activity被泄露，因为activity是被强引用。</p>
+<p>解决的方法其实看来很简单，1.在activity结束的时候强制释放掉2.将对activity的引用改为弱引用。</p>
+<h1 id="引用细分"><a href="#引用细分" class="headerlink" title="引用细分"></a>引用细分</h1><p>引用只有四种：强引用（内存泄露罪魁祸首），软引用，弱引用，虚引用。</p>
+<p>一般将强引用转化为弱引用即可避免强制引用带来的锅。</p>
+<h1 id="loginChecker优化"><a href="#loginChecker优化" class="headerlink" title="loginChecker优化"></a>loginChecker优化</h1><p>代码中为了方便做登录的检查，同时为了防止包过大，没有使用切片，而是写了一个loginchecker辅助类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br></pre></td><td class="code"><pre><span class="line">package com.haomaiyi.base.util;</span><br><span class="line"></span><br><span class="line">import android.annotation.SuppressLint;</span><br><span class="line">import android.app.Activity;</span><br><span class="line">import android.text.TextUtils;</span><br><span class="line"></span><br><span class="line">import com.haomaiyi.base.updatemanager.Logger;</span><br><span class="line">import com.haomaiyi.fittingroom.AppApplication;</span><br><span class="line">import com.haomaiyi.fittingroom.domain.interactor.account.GetCurrentAccount;</span><br><span class="line">import com.haomaiyi.fittingroom.domain.model.account.Account;</span><br><span class="line">import com.haomaiyi.fittingroom.domain.model.account.AnonymousAccount;</span><br><span class="line">import com.haomaiyi.fittingroom.ui.LoginActivity;</span><br><span class="line">import com.orhanobut.hawk.Hawk;</span><br><span class="line">import com.trello.rxlifecycle2.LifecycleProvider;</span><br><span class="line"></span><br><span class="line">import javax.inject.Inject;</span><br><span class="line"></span><br><span class="line">import io.reactivex.Observable;</span><br><span class="line">import io.reactivex.android.schedulers.AndroidSchedulers;</span><br><span class="line">import io.reactivex.schedulers.Schedulers;</span><br><span class="line"></span><br><span class="line">@SuppressLint(&quot;CheckResult&quot;)</span><br><span class="line">public class LoginChecker &#123;</span><br><span class="line"></span><br><span class="line">    private static LoginChecker instance;</span><br><span class="line">    public LoginProceed proceed;</span><br><span class="line">    @Inject</span><br><span class="line">    GetCurrentAccount getCurrentAccount;</span><br><span class="line">    //    private boolean loginStat = false;</span><br><span class="line">    private int uid = -1;</span><br><span class="line">    private boolean logSuccess = false;</span><br><span class="line"></span><br><span class="line">    public LoginChecker() &#123;</span><br><span class="line">        AppApplication.getInstance().getUserComponent().inject(this);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static LoginChecker getInstance() &#123;</span><br><span class="line">        if (instance == null) &#123;</span><br><span class="line">            synchronized (LoginChecker.class) &#123;</span><br><span class="line">                if (instance == null) &#123;</span><br><span class="line">                    instance = new LoginChecker();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return instance;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void onLoginStart() &#123;</span><br><span class="line">        logSuccess = false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void onLoginFinish() &#123;</span><br><span class="line">        // TODO: 2018/9/30</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public LgnStat getLoginStat() &#123;</span><br><span class="line">        Account ac = getCurrentAccount.executeSync();</span><br><span class="line">        LgnStat stat;</span><br><span class="line">        if (ac instanceof AnonymousAccount) &#123;</span><br><span class="line">            stat = LgnStat.ANONYMOUS;</span><br><span class="line">        &#125; else if (TextUtils.isEmpty(ac.getPhonenumber())) &#123;</span><br><span class="line">            stat = LgnStat.NEED_NUMBER;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            stat = LgnStat.COMPLETE;</span><br><span class="line">        &#125;</span><br><span class="line">        return stat;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getUid() &#123;</span><br><span class="line">        uid = getCurrentAccount.executeSync().getId();</span><br><span class="line">        return uid;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setUid(int uid) &#123;</span><br><span class="line">        this.uid = uid;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void check(LifecycleProvider lifecycle, LoginCallback callback) &#123;</span><br><span class="line"></span><br><span class="line">        final Observable&lt;Account&gt; ob = getCurrentAccount.getObservable()</span><br><span class="line">                .subscribeOn(Schedulers.io())</span><br><span class="line">                .observeOn(AndroidSchedulers.mainThread());</span><br><span class="line"></span><br><span class="line">        if (lifecycle != null)</span><br><span class="line">            ob.compose(lifecycle.bindToLifecycle());</span><br><span class="line"></span><br><span class="line">        ob.subscribe(ac -&gt; &#123;</span><br><span class="line">            uid = ac.getId();</span><br><span class="line">            LgnStat stat;</span><br><span class="line">            if (ac instanceof AnonymousAccount) &#123;</span><br><span class="line">                stat = LgnStat.ANONYMOUS;</span><br><span class="line">            &#125; else if (TextUtils.isEmpty(ac.getPhonenumber())) &#123;</span><br><span class="line">                stat = LgnStat.NEED_NUMBER;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                stat = LgnStat.COMPLETE;</span><br><span class="line">            &#125;</span><br><span class="line">            callback.onLogin(stat);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void loginAndproceed(Activity src, LifecycleProvider lifecycleProvider, LoginProceed proceed) &#123;</span><br><span class="line">        Logger.i(&quot;check=&quot; + this);</span><br><span class="line">        check(lifecycleProvider, new LoginCallback() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onLogin(LgnStat stat) &#123;</span><br><span class="line">                switch (stat) &#123;</span><br><span class="line">                    case ANONYMOUS:</span><br><span class="line">                        LoginChecker.this.proceed = proceed;</span><br><span class="line">                        LoginActivity.start(src);</span><br><span class="line">                        break;</span><br><span class="line">                    case NEED_NUMBER:</span><br><span class="line">                        LoginChecker.this.proceed = proceed;</span><br><span class="line">                        LoginActivity.start(src, LgnStat.NEED_NUMBER);</span><br><span class="line">                        break;</span><br><span class="line">                    case COMPLETE:</span><br><span class="line">                        proceed.onProceed();</span><br><span class="line">                        break;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Must be called after cancel login behavior.</span><br><span class="line">     */</span><br><span class="line">    public void clear() &#123;</span><br><span class="line">        proceed = null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Must be called after login success.</span><br><span class="line">     */</span><br><span class="line">    public boolean consume(int id, LoginActivity act) &#123;</span><br><span class="line">        uid = id;</span><br><span class="line">        Hawk.put(&quot;SHOW_GIFT&quot;, true);</span><br><span class="line">        if (proceed == null)</span><br><span class="line">            return false;</span><br><span class="line">        proceed.onLoginAndProceed(id, act);</span><br><span class="line">        proceed = null;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public enum LgnStat &#123;</span><br><span class="line">        // 匿名用户</span><br><span class="line">        ANONYMOUS,</span><br><span class="line">        // 有手机号</span><br><span class="line">        COMPLETE,</span><br><span class="line">        // 无手机号</span><br><span class="line">        NEED_NUMBER</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public interface LoginProceed &#123;</span><br><span class="line">        void onProceed();</span><br><span class="line"></span><br><span class="line">        void onLoginAndProceed(int id, LoginActivity act);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public interface LoginCallback &#123;</span><br><span class="line">        void onLogin(LgnStat loginStat);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个类虽然不是内部类，但是其携带的内部类以接口形式获取了activity，以activity作为实例，做了一些别的事情。而且有个最重要的问题，就是启动loginactivity的时候使用的是获取的实例。同时整个类又绑定了lifecycle。这就导致了一个很有趣的问题，就是当使用实例来启动的时候触发了onpause和onstop，此时刚好gc，导致无法回收。</p>
+<p>因此此时需要更改几个地方，一是不在使用原来传过来的activity，改用application的context，这样就不会再出现强制捆绑的地方。其次是将该类中使用到的任何引用的地方改成weakreference。atu</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/20/android渠道包打包取舍以及打包流程分析/" rel="next" title="android渠道包打包取舍以及打包流程分析">
+                <i class="fa fa-chevron-left"></i> android渠道包打包取舍以及打包流程分析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/22/merge标签的作用/" rel="prev" title="merge标签的作用">
+                merge标签的作用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Sample</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">110</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#内部类泄露"><span class="nav-number">1.</span> <span class="nav-text">内部类泄露</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#引用细分"><span class="nav-number">2.</span> <span class="nav-text">引用细分</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#loginChecker优化"><span class="nav-number">3.</span> <span class="nav-text">loginChecker优化</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sample</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
