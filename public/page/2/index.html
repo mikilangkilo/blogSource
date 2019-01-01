@@ -239,6 +239,424 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/16/2018年第44周工作小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/16/2018年第44周工作小结/" itemprop="url">2018年第44周工作小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-16T11:21:57+08:00">
+                2018-11-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>好几周没有写工作小结了。上个月母亲生病，请假回去，加上十月份国庆节，前前后后只持续工作了一周左右，工作上面的事情大都委托给同组的同事帮忙了。</p>
+<p>所以这个月才开始继续写工作小结。</p>
+<p>十一月的工作主要是针对商品缺货现象进行优化。产品部门给了两个个需求点，一是增加会员专区，二是进行缺货订阅推送。这两个需求点演化为很多独立或者不独立的需求。</p>
+<h2 id="增加会员专区"><a href="#增加会员专区" class="headerlink" title="增加会员专区"></a>增加会员专区</h2><p>增加会员专区的目的是将部分商品从所有商品中拉出来，保证这些商品能够给VIP选择，这样至少能保证在货源不足的情况下付费用户能够选择。针对该问题我们开发需要做的是加入VIP专区，针对商品是否是vip设置专门的标识，另外在打包的流程中需要额外将成为会员的路径加上。</p>
+<p>增加会员标识有些问题，比如说对非会员用户，需要显示成为会员的区域，但是对于已是会员的用户，就需要遮蔽这个区域，这个地方以前的做法是在activity的onresume的时候做检查，检查一遍会员的状态，但是其实商品详情页面如果总这样做的话，onresume里面做的事情过于多了。</p>
+<p>我看了一下别的app，像京东这种支持无限订单模式的，返回的状态刷新不是在onresume里面的，而是返回时直接显示出来改变的结果。因此我判断此处使用的应该是广播的方式。因此我觉得在设计app的activity的时候需要将视图同时与广播绑定，在广播发送来的时候，直接针对广播的内容进行相关行为的实施。因此在封装activity的时候，其实需要额外开辟一个针对广播的ui修改区。当然这个广播只需要是应用内广播即可，我使用eventbus来实现了一款。不过鉴于发送广播会造成ui修改，而在activity内的相关行为，一般造成相同ui修改，也会同时发个广播，此时就需要鉴别一下，不要重复刷新。</p>
+<p>说道eventbus，在支付宝和微信的回调处理的时候，我也使用的是eventbus，假以时日需要总结一下eventbus原理。</p>
+<h2 id="sku订阅推送"><a href="#sku订阅推送" class="headerlink" title="sku订阅推送"></a>sku订阅推送</h2><p>订阅推送是上周提出的需求，但是这周才开始实施，期初的想法是一个spu可以订阅一个缺货的sku，这样在sku到货的时候通过推送来唤醒用户。</p>
+<p>因此需要在商品详情页面进行订阅功能的添加。但是后来说需要在确认订单页面也同样进行订阅功能的添加，这就将原本的一个spu订阅一个sku的需求变更了，变成了一个spu可以订阅多个sku，相关的逻辑也需要进行改变。</p>
+<p>订单流程页面，一直是独立发起，但是并未有比较好的处理措施。由于订单流程本来自身支持很多跳转，而跳转到的页面又支持相应的订单发起，因此其实应该将订单发起页面做成singletask模式，这样可以保证订单发起页面的独立性。但是回来的时候，需要做本地的刷新措施。</p>
+<p>回到这个问题，单sku订阅spu涉及到订阅和取消订阅的关系，订阅的时候代表这个spu中的这个sku被订阅，取消订阅也只能说是这个sku被取消订阅。而单品详情页面则拥有取消全部的关系。另外由于订单流程页面并未做单栈模式，所以也有在别的订单流程进行了操作，回到这个未关闭的流程时需要处理订阅的相关消息。</p>
+<p>因此此处也使用的广播模式，两种广播，一种是携带了单独sku的广播，这类广播获取之后只需要判断sku的id是否是自己的id，然后做相应的处理即可。另外一种广播是携带了spu信息的广播，这类广播获取之后只需要判断spuid和自己携带的spuid是否相同，如果相同并且为取消订阅的时候，就可以直接取消自己的订阅关系。</p>
+<h2 id="bug修复类"><a href="#bug修复类" class="headerlink" title="bug修复类"></a>bug修复类</h2><p>ui那边提出了一个修改建议，需要将所有的button通用为一个style，这个比较好做，在别的页面都处理的很好，但是在物流页面发现button点击失效</p>
+<p>原来的布局</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;android.support.constraint.ConstraintLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</span><br><span class="line">    android:layout_width=&quot;match_parent&quot;</span><br><span class="line">    android:layout_height=&quot;match_parent&quot;</span><br><span class="line">    xmlns:tools=&quot;http://schemas.android.com/tools&quot;</span><br><span class="line">    android:background=&quot;@color/color_half_alpha_black&quot;</span><br><span class="line">    xmlns:app=&quot;http://schemas.android.com/apk/res-auto&quot;&gt;</span><br><span class="line">    &lt;View</span><br><span class="line">        android:id=&quot;@+id/view_background&quot;</span><br><span class="line">        app:layout_constraintTop_toTopOf=&quot;parent&quot;</span><br><span class="line">        app:layout_constraintStart_toStartOf=&quot;parent&quot;</span><br><span class="line">        app:layout_constraintEnd_toEndOf=&quot;parent&quot;</span><br><span class="line">        app:layout_constraintBottom_toBottomOf=&quot;@id/text_confirm&quot;</span><br><span class="line">        android:background=&quot;@color/white&quot;</span><br><span class="line">        android:layout_marginTop=&quot;135dp&quot;</span><br><span class="line">        android:layout_width=&quot;match_parent&quot;</span><br><span class="line">        android:layout_height=&quot;0dp&quot;/&gt;</span><br><span class="line"></span><br><span class="line">    &lt;TextView</span><br><span class="line">        android:id=&quot;@+id/text_confirm&quot;</span><br><span class="line">        android:layout_width=&quot;match_parent&quot;</span><br><span class="line">        android:layout_height=&quot;49dp&quot;</span><br><span class="line">        android:text=&quot;我知道了&quot;</span><br><span class="line">        style=&quot;@style/BlackButtonStyle&quot;</span><br><span class="line">        app:layout_constraintBottom_toBottomOf=&quot;parent&quot;</span><br><span class="line">        /&gt;</span><br><span class="line"></span><br><span class="line">    &lt;TextView</span><br><span class="line">        android:id=&quot;@+id/text_express_name&quot;</span><br><span class="line">        tools:text=&quot;顺丰快递&quot;</span><br><span class="line">        app:layout_constraintTop_toTopOf=&quot;@id/view_background&quot;</span><br><span class="line">        app:layout_constraintStart_toStartOf=&quot;@id/view_background&quot;</span><br><span class="line">        app:layout_constraintEnd_toEndOf=&quot;@id/view_background&quot;</span><br><span class="line">        android:layout_marginTop=&quot;20dp&quot;</span><br><span class="line">        android:textSize=&quot;15dp&quot;</span><br><span class="line">        android:textColor=&quot;@color/black&quot;</span><br><span class="line">        android:layout_width=&quot;wrap_content&quot;</span><br><span class="line">        android:layout_height=&quot;wrap_content&quot; /&gt;</span><br><span class="line">    &lt;TextView</span><br><span class="line">        android:id=&quot;@+id/text_express_number&quot;</span><br><span class="line">        tools:text=&quot;（运单编号：3832333043290）&quot;</span><br><span class="line">        app:layout_constraintTop_toBottomOf=&quot;@id/text_express_name&quot;</span><br><span class="line">        app:layout_constraintStart_toStartOf=&quot;@id/view_background&quot;</span><br><span class="line">        app:layout_constraintEnd_toEndOf=&quot;@id/view_background&quot;</span><br><span class="line">        android:layout_marginTop=&quot;10dp&quot;</span><br><span class="line">        android:textColor=&quot;@color/color_666666&quot;</span><br><span class="line">        android:layout_width=&quot;wrap_content&quot;</span><br><span class="line">        android:layout_height=&quot;wrap_content&quot; /&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;View</span><br><span class="line">        android:id=&quot;@+id/divider_express_number&quot;</span><br><span class="line">        android:layout_width=&quot;0dp&quot;</span><br><span class="line">        app:layout_constraintTop_toBottomOf=&quot;@id/text_express_number&quot;</span><br><span class="line">        app:layout_constraintStart_toStartOf=&quot;@id/view_background&quot;</span><br><span class="line">        app:layout_constraintEnd_toEndOf=&quot;@id/view_background&quot;</span><br><span class="line">        android:layout_marginTop=&quot;20dp&quot;</span><br><span class="line">        android:background=&quot;@color/color_ececec&quot;</span><br><span class="line">        android:layout_marginStart=&quot;20dp&quot;</span><br><span class="line">        android:layout_marginEnd=&quot;20dp&quot;</span><br><span class="line">        android:layout_height=&quot;0.5dp&quot;/&gt;</span><br><span class="line">    &lt;ScrollView</span><br><span class="line">        android:id=&quot;@+id/scroll_view&quot;</span><br><span class="line">        app:layout_constraintTop_toBottomOf=&quot;@id/divider_express_number&quot;</span><br><span class="line">        app:layout_constraintStart_toStartOf=&quot;@id/view_background&quot;</span><br><span class="line">        app:layout_constraintEnd_toEndOf=&quot;@id/view_background&quot;</span><br><span class="line">        app:layout_constraintBottom_toBottomOf=&quot;@id/view_background&quot;</span><br><span class="line">        android:layout_width=&quot;match_parent&quot;</span><br><span class="line">        android:layout_height=&quot;0dp&quot;&gt;</span><br><span class="line">        &lt;LinearLayout</span><br><span class="line">            android:id=&quot;@+id/container_logistic&quot;</span><br><span class="line">            android:orientation=&quot;vertical&quot;</span><br><span class="line">            android:paddingTop=&quot;5dp&quot;</span><br><span class="line">            android:layout_width=&quot;match_parent&quot;</span><br><span class="line">            android:layout_height=&quot;wrap_content&quot;&gt;</span><br><span class="line">            &lt;include</span><br><span class="line">                android:visibility=&quot;gone&quot;</span><br><span class="line">                tools:visibility=&quot;visible&quot;</span><br><span class="line">                layout=&quot;@layout/item_popupwindow_logistic&quot;/&gt;</span><br><span class="line">        &lt;/LinearLayout&gt;</span><br><span class="line">    &lt;/ScrollView&gt;</span><br><span class="line">&lt;/android.support.constraint.ConstraintLayout&gt;</span><br></pre></td></tr></table></figure>
+<p>当时只知道从layoutinspecter中发现布局存在，并且点击事件没有更改。当时做的措施是将id为text_confirm的控件挪到底部，挪到底部保证这个view最后被绘制并且不会被覆盖。但是今天检查了一下发现其实是scrollview的布局的底部写错了，应该以text_confirm的头部为底。当时分析的时候没有注重到这个，而且从布局分析器上面来看其实很难看出这个问题。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/14/项目架构总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/14/项目架构总结/" itemprop="url">项目架构总结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-14T11:29:32+08:00">
+                2018-11-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>该篇文章主要是分析一下目前项目的架构。</p>
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>好搭作为一个较为成熟的软件，从2016年我刚毕业的那年开始进行设计架构，到现在过了整整2年了。经手该项目的有大约20人了，我算是第四代接手这个项目的人。</p>
+<h1 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h1><h2 id="clean结构"><a href="#clean结构" class="headerlink" title="clean结构"></a>clean结构</h2><p><img src="/images/架构/clean架构图.png" alt="clean结构示意图"></p>
+<p>一开始看到这个架构是挺懵逼的，以前听说的时候知道这个架构是谷歌的，主要是用于项目架构，目的是为了解耦。</p>
+<p>项目中依托clean架构搭建了一套完整的解耦系统。</p>
+<h3 id="domain层"><a href="#domain层" class="headerlink" title="domain层"></a>domain层</h3><p>domian层是最内层，提供了项目的基础架构，包括了接口，util方法类（可以被视为实体类），model（完整的实体对象），event（消息通知的实体对象），exception（所有的自定义异常实体对象）</p>
+<p>另外提供了精华处，针对网络的封装实体对象，interactor</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface InteractorExecutor extends Executor &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这是一个内部写的interactorexcutor，其实就是继承了executor，作为处理runnable的方式。</p>
+<p>另外还写了一个PostInteractionThread，作为获取线程的方式。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface PostInteractionThread &#123;</span><br><span class="line">    Scheduler getScheduler();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>仅提供了很简单的方法</p>
+<p>interactor类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br></pre></td><td class="code"><pre><span class="line">public abstract class Interactor&lt;T&gt; &#123;</span><br><span class="line"></span><br><span class="line">    private static final boolean isDelay3Second = false;</span><br><span class="line">    protected PostInteractionThread postInteractionThread;</span><br><span class="line">    protected InteractorExecutor interactorExecutor;</span><br><span class="line">    private EventBus mEventBus;</span><br><span class="line">    private Disposable subscription = Disposables.empty();</span><br><span class="line"></span><br><span class="line">    public Interactor(InteractorExecutor interactorExecutor, PostInteractionThread postInteractionThread) &#123;</span><br><span class="line">        this.postInteractionThread = postInteractionThread;</span><br><span class="line">        this.interactorExecutor = interactorExecutor;</span><br><span class="line"></span><br><span class="line">        mEventBus = EventBus.getDefault();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected abstract Observable&lt;T&gt; buildObservable();</span><br><span class="line"></span><br><span class="line">    protected void checkConditions() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public T executeSync() &#123;</span><br><span class="line">        return buildObservable().blockingFirst();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void execute(Consumer&lt;? super T&gt; onNext) &#123;</span><br><span class="line">        execute(onNext, null, null);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void execute(Consumer&lt;? super T&gt; onNext, Consumer&lt;Throwable&gt; onError) &#123;</span><br><span class="line">        execute(onNext, onError, null);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void execute(Consumer&lt;? super T&gt; onNext, Consumer&lt;Throwable&gt; onError, Action onComplete) &#123;</span><br><span class="line"></span><br><span class="line">        execute(</span><br><span class="line">                new Observer&lt;T&gt;() &#123;</span><br><span class="line">                    @Override</span><br><span class="line">                    public void onError(Throwable e) &#123;</span><br><span class="line">                        Throwable t = new Exception();</span><br><span class="line">                        if (e instanceof HttpException) &#123;</span><br><span class="line">                            if (((HttpException) e).code() == 401) &#123;</span><br><span class="line">                                HttpException s = (HttpException) e;</span><br><span class="line">                                if (s != null &amp;&amp; s.response() != null &amp;&amp; s.response().errorBody() != null) &#123;</span><br><span class="line">                                    try &#123;</span><br><span class="line">                                        HttpErrorBody body = new Gson().fromJson(s.response().errorBody().string(), HttpErrorBody.class);</span><br><span class="line">                                        if (body != null &amp;&amp; body.getError_reason() != null &amp;&amp; body.getError_reason().startsWith(&quot;AuthenticationFailed&quot;)) &#123;</span><br><span class="line">                                            //todo</span><br><span class="line">                                        &#125; else &#123;</span><br><span class="line">                                            mEventBus.post(new OnAuthExpiredEvent());</span><br><span class="line">                                        &#125;</span><br><span class="line">                                    &#125; catch (IOException e1) &#123;</span><br><span class="line">                                        e1.printStackTrace();</span><br><span class="line">                                        mEventBus.post(new OnAuthExpiredEvent());</span><br><span class="line">                                    &#125;</span><br><span class="line">                                &#125; else &#123;</span><br><span class="line">                                    mEventBus.post(new OnAuthExpiredEvent());</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125; else if (((HttpException) e).code() == 400 || ((HttpException) e).code() == 403 || ((HttpException) e).code() == 500) &#123;</span><br><span class="line">                                try &#123;</span><br><span class="line">                                    if (((HttpException) e).response() != null &amp;&amp; ((HttpException) e).response().errorBody() != null) &#123;</span><br><span class="line">                                        String json = ((HttpException) e).response().errorBody().string();</span><br><span class="line">                                        HttpErrorBody body = new Gson().fromJson(json, HttpErrorBody.class);</span><br><span class="line">                                        HttpErrorMessageBody messageBody = new Gson().fromJson(json, HttpErrorMessageBody.class);</span><br><span class="line">                                        if (body != null &amp;&amp; body.getError_reason() != null) &#123;</span><br><span class="line">//                                            mEventBus.post(new OnHttpErrorEvent(body.getError_reason()));</span><br><span class="line">                                        &#125; else if (messageBody != null &amp;&amp; messageBody.getMessage() != null) &#123;</span><br><span class="line">                                            mEventBus.post(new OnHttpErrorEvent(messageBody.getCode(), messageBody.getMessage()));</span><br><span class="line">                                        &#125; else &#123;</span><br><span class="line">                                            mEventBus.post(new OnHttpErrorEvent(&quot;网络异常，请稍后再试&quot;));</span><br><span class="line">                                        &#125;</span><br><span class="line">                                        t = new Exception(messageBody.getMessage());</span><br><span class="line">                                    &#125;</span><br><span class="line"></span><br><span class="line">                                &#125; catch (Exception e1) &#123;</span><br><span class="line">                                    e1.printStackTrace();</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                        if (onError == null || subscription.isDisposed()) &#123;</span><br><span class="line">                            e.printStackTrace();</span><br><span class="line">                        &#125; else &#123;</span><br><span class="line">                            try &#123;</span><br><span class="line">                                onError.accept(t);</span><br><span class="line">                            &#125; catch (Exception e1) &#123;</span><br><span class="line">                                e1.printStackTrace();</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                        handleHttpError(e);</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    @Override</span><br><span class="line">                    public void onComplete() &#123;</span><br><span class="line">                        if (onComplete != null &amp;&amp; !subscription.isDisposed()) &#123;</span><br><span class="line">                            try &#123;</span><br><span class="line">                                onComplete.run();</span><br><span class="line">                            &#125; catch (Exception e) &#123;</span><br><span class="line">                                onError(e);</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    @Override</span><br><span class="line">                    public void onSubscribe(Disposable d) &#123;</span><br><span class="line">                        subscription = d;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    @Override</span><br><span class="line">                    public void onNext(T t) &#123;</span><br><span class="line">                        if (onNext != null &amp;&amp; !subscription.isDisposed()) &#123;</span><br><span class="line">                            try &#123;</span><br><span class="line">                                onNext.accept(t);</span><br><span class="line">                            &#125; catch (Exception e) &#123;</span><br><span class="line">                                onError(e);</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void execute(Observer&lt;T&gt; observer) &#123;</span><br><span class="line">        Observable&lt;T&gt; observable;</span><br><span class="line">        try &#123;</span><br><span class="line">            checkConditions();</span><br><span class="line">            observable = buildObservable();</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            observable = Observable.create(observableEmitter -&gt; observableEmitter.onError(e));</span><br><span class="line">        &#125;</span><br><span class="line">        // cancel latest execution</span><br><span class="line">        cancel();</span><br><span class="line">        if (isDelay3Second) &#123;</span><br><span class="line">            observable.subscribeOn(Schedulers.io())</span><br><span class="line">                    .delay(3, TimeUnit.SECONDS)</span><br><span class="line">                    .observeOn(postInteractionThread.getScheduler())</span><br><span class="line">                    .subscribe(observer);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            observable.subscribeOn(Schedulers.io())</span><br><span class="line">                    .observeOn(AndroidSchedulers.mainThread())</span><br><span class="line">                    .subscribe(observer);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void cancel() &#123;</span><br><span class="line">        if (!subscription.isDisposed()) &#123;</span><br><span class="line">            subscription.dispose();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public boolean isCancel() &#123;</span><br><span class="line">        return subscription == null || subscription.isDisposed();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Observable&lt;T&gt; getObservable() &#123;</span><br><span class="line">        return buildObservable();</span><br><span class="line">    &#125;</span><br><span class="line">    private void handleHttpError(Throwable e) &#123;</span><br><span class="line">        if (e instanceof RuntimeException) &#123;</span><br><span class="line">            if (e.getCause() instanceof ConnectException) &#123;</span><br><span class="line">                mEventBus.post(new OnHttpErrorEvent(&quot;连接失败，请检查网络后再试&quot;));</span><br><span class="line">            &#125;</span><br><span class="line">            if (e.getCause() instanceof SocketTimeoutException) &#123;</span><br><span class="line">                mEventBus.post(new OnHttpErrorEvent(&quot;请求超时，请检查网络后再试&quot;));</span><br><span class="line">            &#125;</span><br><span class="line">            if (e.getCause() instanceof UnknownHostException) &#123;</span><br><span class="line">                mEventBus.post(new OnHttpErrorEvent(&quot;域名连接失败，请检查网络后再试&quot;));</span><br><span class="line">            &#125;</span><br><span class="line">            if (e.getCause() instanceof NetworkErrorException) &#123;</span><br><span class="line">                mEventBus.post(new OnHttpErrorEvent(&quot;网络异常，请检查网络后再试&quot;));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if (e instanceof ConnectException) &#123;</span><br><span class="line">            mEventBus.post(new OnHttpErrorEvent(&quot;连接失败，请检查网络后再试&quot;));</span><br><span class="line">        &#125;</span><br><span class="line">        if (e instanceof SocketTimeoutException) &#123;</span><br><span class="line">            mEventBus.post(new OnHttpErrorEvent(&quot;请求超时，请检查网络后再试&quot;));</span><br><span class="line">        &#125;</span><br><span class="line">        if (e instanceof UnknownHostException) &#123;</span><br><span class="line">            mEventBus.post(new OnHttpErrorEvent(&quot;域名连接失败，请检查网络后再试&quot;));</span><br><span class="line">        &#125;</span><br><span class="line">        if (e instanceof NetworkErrorException) &#123;</span><br><span class="line">            mEventBus.post(new OnHttpErrorEvent(&quot;网络异常，请检查网络后再试&quot;));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>interactor可以说是整个domain的精华，首先包装了observable，然后在执行部分统一处理了异常等。并且切换线程也提供了统一的处理方式，这样完善的避免了OKhttp无法统一的问题。从上层提供了处理的机制。而且此处需要的是observable，刚好可以通过retrofit2进行提供。这样就形成了一个闭环，只需要对接interactor，然后接上retrofit提供的接口即可完整的处理网络请求。</p>
+<p>domain中除了基类interactor，另外还提供了一系列基于基类interactor衍生的网络请求实体类，虽然此处这些实体类的存在仅仅使用到了接口来实现。接口的具体实现还需要更上一层来完成。但是巧妙的是此处通过dagger的注入，将上层提供的实现方法注入到了下层，这样实现的底层可以直接拿来用。</p>
+<h3 id="data层"><a href="#data层" class="headerlink" title="data层"></a>data层</h3><p>domain层是独立的，无任何模块依赖，而data层就是domain层更上一层的，仅仅只依赖于domain模块。</p>
+<p>data层是数据层，此处主要是处理或者说提供数据。domain层需要的接口实现就是在data层实现好了通过dagger注入到底层。</p>
+<p>data层除了数据提供者这一个身份外，还有一个数据缓存者这个身份。整个data在关键的地方，比如说userbody，usercache等地方设置了三级缓存。这样完整的实现了一个数据层的功能。</p>
+<p>data层对于数据的处理方面集中在获取，提供，以及保存。将数据隔离的效果很明显能够大幅度解耦。</p>
+<p>如果data层不隔离，那么获取的数据，存储的数据，提供者，三者会混乱，在A区域获取的数据可能和B区域获取的数据不同。当处于不同模块的代码进行相同的缓存，又会导致缓存不同步，而相同的代码进行不同的缓存，更是乱七八糟。因此这一层做隔离，哪怕是仅仅只有数据区域做隔离，总好过数据区域掺杂在不同的区域而导致相同的数据采用了过多缓存步骤。</p>
+<p>另外项目中提供的缓存方法，主要是ACache和Lrucache这两个老牌的库,</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">public interface CacheStore &#123;</span><br><span class="line">    int NONE_TIME = 0;</span><br><span class="line">    int DURATION_ONE_MINUTE = 60;</span><br><span class="line">    int DURATION_ONE_HOUR = DURATION_ONE_MINUTE * 60;</span><br><span class="line">    int DURATION_THREE_HOUR = DURATION_ONE_HOUR * 3;</span><br><span class="line">    int DURATION_ONE_DAY = DURATION_ONE_HOUR * 24;</span><br><span class="line">    int DURATION_FIVE_MINUTE = DURATION_ONE_MINUTE * 5;</span><br><span class="line"></span><br><span class="line">    void put(String key, byte[] data);</span><br><span class="line">    void put(String key, byte[] data, int duration);</span><br><span class="line">    byte[] get(String key);</span><br><span class="line">    void put(String key, Serializable obj);</span><br><span class="line">    void put(String key, Serializable obj, int duration);</span><br><span class="line">    Object getAsObject(String key);</span><br><span class="line">    void put(String key, boolean value);</span><br><span class="line">    boolean getAsBoolean(String key);</span><br><span class="line">    void clear();</span><br><span class="line">    void remove(String key);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>实现缓存使用的就是这个模板，这个模板演化为两个，一个memstore，一个DiskcatchStore。memstore就是内存缓存，仿照的是Lrucache，主要是规避gc的清除，实现的原理看一下就懂了。diskcatchstore就是文件缓存，使用的是Acache来实现的，甚至可以说是一个封装而已。</p>
+<p>实现缓存有个方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void put(String key, Serializable obj, int duration);</span><br></pre></td></tr></table></figure></p>
+<p>其中有保存时长，这个保留的时长会转化为当前时间+时长的时间戳，将和data一起包装起来存储，在取出保存的data时会进行判断，如果携带了时间信息，就对时间进行判断，如果时间过期，那么在memcache里面就是移除这个key，在Acache里面也是相同的原理</p>
+<h3 id="baselibrary层"><a href="#baselibrary层" class="headerlink" title="baselibrary层"></a>baselibrary层</h3><p>baselibrary是data层之上的一层。如果说domain是心脏，data是血液的话，那么baselibrary就是骨架。</p>
+<p>baselibrary将所有用到的库进行综合，自我封装，以及改写，然后通过暴露api的方式让上层可以直接使用暴露出来的api</p>
+<p>到baselibrary这一层截止，整个项目的脚手架就已经都搭建ok，也就是到这一层为止，整个项目的核心基本上就已经完成。如果需要热插拔，使用我们的项目另外新建一个新的项目的话，那么只需要将baselibrary这一层以下的进行迁移，然后复写逻辑即可。</p>
+<p>baselibrary在后期逐渐演化为和app混合了。</p>
+<h3 id="app层"><a href="#app层" class="headerlink" title="app层"></a>app层</h3><p>app是整个项目的逻辑层，当然也做了很多初始化的工作，最重要的比如说dagger的初始化工作，app层就像是肌肉，在肌肉填充满了之后，才会成为一个正常的人。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/12/tree学习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/12/tree学习/" itemprop="url">tree学习</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-12T13:36:55+08:00">
+                2018-11-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="tree"><a href="#tree" class="headerlink" title="tree"></a>tree</h1><h2 id="构造"><a href="#构造" class="headerlink" title="构造"></a>构造</h2><p>树的构造很简单，节点的思想。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">class TreeNode&#123;</span><br><span class="line">	Object element;</span><br><span class="line">	TreeNode firstChild;</span><br><span class="line">	TreeNode nextSibling;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="示意图"><a href="#示意图" class="headerlink" title="示意图"></a>示意图</h2><p><img src="/images/数据结构/tree图1.png" alt="树示意图"></p>
+<h2 id="先序遍历"><a href="#先序遍历" class="headerlink" title="先序遍历"></a>先序遍历</h2><p>先序遍历的思想是对节点的处理工作在他的子节点处理之前执行，显示结果为D-&gt;L-&gt;R<br>对示意图的先序遍历，结果为：ABDECFG</p>
+<h2 id="中序遍历"><a href="#中序遍历" class="headerlink" title="中序遍历"></a>中序遍历</h2><p>中序遍历的思想是先对左节点优先处理，之后在处理自己，最后处理右节点，显示结果为 L-&gt;D-&gt;R<br>对示意图的中序遍历，结果为：DBEAFCG</p>
+<h2 id="后序遍历"><a href="#后序遍历" class="headerlink" title="后序遍历"></a>后序遍历</h2><p>后序遍历的思想是优先处理子节点，最后处理自己，子节点的处理优先是左节点，显示结果为L-&gt;R-&gt;D<br>对示意图的后序遍历，结果为：DEBFGCA</p>
+<h1 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h1><h2 id="构造-1"><a href="#构造-1" class="headerlink" title="构造"></a>构造</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">class BinaryNode&#123;</span><br><span class="line">	Object element;</span><br><span class="line">	BinaryNode left;</span><br><span class="line">	BinaryNode right;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>二叉树是一棵树，每个节点都不能有多于两个的儿子，平均深度为O(根号N)</p>
+<h1 id="二叉查找树"><a href="#二叉查找树" class="headerlink" title="二叉查找树"></a>二叉查找树</h1><p>二叉查找树对于树中的每个节点X，它的左子树中所有的项的值小于X中的项，右子树种所有项的值大于X的值</p>
+<h2 id="构造-2"><a href="#构造-2" class="headerlink" title="构造"></a>构造</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br></pre></td><td class="code"><pre><span class="line">public class BinarySearchTree&lt;T extends Comparable&lt;? super T&gt;&gt;&#123;</span><br><span class="line">	/*</span><br><span class="line">	* 构造函数</span><br><span class="line">	*/</span><br><span class="line">	private static class BinaryNode&lt;T&gt;&#123;</span><br><span class="line">		BinaryNode(T element)&#123;</span><br><span class="line">			this(element, null, null);</span><br><span class="line">		&#125;</span><br><span class="line">		BinaryNode(T element, Binary&lt;T&gt; left, BinaryNode&lt;T&gt; right)&#123;</span><br><span class="line">			this.element = element;</span><br><span class="line">			this.left = left;</span><br><span class="line">			this.right = right;</span><br><span class="line">		&#125;</span><br><span class="line">		T element;</span><br><span class="line">		Binary&lt;T&gt; left;</span><br><span class="line">		Binary&lt;T&gt; right;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	* 初始节点</span><br><span class="line">	*/</span><br><span class="line">	private BinaryNode&lt;T&gt; root;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	* 初始化</span><br><span class="line">	*/</span><br><span class="line">	public BinarySearchTree()&#123;</span><br><span class="line">		root = null;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	* 置空操作</span><br><span class="line">	*/</span><br><span class="line">	public void makeEmpty()&#123;</span><br><span class="line">		root = null;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	* 判空操作</span><br><span class="line">	*/</span><br><span class="line">	public void isEmpty()&#123;</span><br><span class="line">		return root == null;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	* 判断是否包含</span><br><span class="line">	*/</span><br><span class="line">	public boolean contains(T x)&#123;</span><br><span class="line">		return contains(x, root);</span><br><span class="line">	&#125;</span><br><span class="line">	/*</span><br><span class="line">	* 判断思想：先和root对比，小就和左节点比较，大就和右节点比较，相同就true，核心思想是递归，递归到最后空的时候就会判false</span><br><span class="line">	*/</span><br><span class="line">	private boolean contains(T x, BinaryNode&lt;T&gt; t)&#123;</span><br><span class="line">		if(t == null)&#123;</span><br><span class="line">			return false;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		int compareResult = x.compareTo(t.element);</span><br><span class="line"></span><br><span class="line">		if( compareResult &lt; 0)&#123;</span><br><span class="line">			return contains(x, left);</span><br><span class="line">		&#125;else if( compareResult &gt; 0)&#123;</span><br><span class="line">			return contains(x, right);</span><br><span class="line">		&#125;else&#123;</span><br><span class="line">			return true;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	* 寻找最小子节点</span><br><span class="line">	*/</span><br><span class="line">	public T findMin()&#123;</span><br><span class="line">		if (isEmpty())&#123;</span><br><span class="line">			throw new UnderflowException();</span><br><span class="line">		&#125;</span><br><span class="line">		return findMin(root).element;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	* 寻找思想：查找是否有左节点，如果有就继续遍历左节点，直到某个节点的左节点为null，此时该节点就是最小节点</span><br><span class="line">	*/</span><br><span class="line">	private BinaryNode&lt;T&gt; findMin(BinaryNode&lt;T&gt; t)&#123;</span><br><span class="line">		if (t == null)&#123;</span><br><span class="line">			return null;</span><br><span class="line">		&#125;else if(t.left == null)&#123;</span><br><span class="line">			return t;</span><br><span class="line">		&#125;else&#123;</span><br><span class="line">			return findMin(t.left);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	* 寻找最大子节点</span><br><span class="line">	*/</span><br><span class="line">	public T findMax()&#123;</span><br><span class="line">		if(isEmpty())&#123;</span><br><span class="line">			throw new UnderflowException();</span><br><span class="line">		&#125;</span><br><span class="line">		return findMax(root).element;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	* 思想和寻找最小子节点一样</span><br><span class="line">	*/</span><br><span class="line">	private BinaryNode&lt;T&gt; findMax(BinaryNode&lt;T&gt; t)&#123;</span><br><span class="line">		if (t == null)&#123;</span><br><span class="line">			return null;</span><br><span class="line">		&#125;else if(t.right == null)&#123;</span><br><span class="line">			return t;</span><br><span class="line">		&#125;else &#123;</span><br><span class="line">			return findMax(t.right);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	* 插入</span><br><span class="line">	*/</span><br><span class="line">	public void insert(T x)&#123;</span><br><span class="line">		root = insert(x, root);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	* 插入数值思想:仍然是和当前节点做比较，如果小就递归左节点，大就递归右节点，直到某个节点的左节点或者右节点不存在，此时就新建一个节点，插入。</span><br><span class="line">	*/</span><br><span class="line">	private BinaryNode&lt;T&gt; insert(T x, BinaryNode&lt;T&gt; t)&#123;</span><br><span class="line">		if (t == null)&#123;</span><br><span class="line">			return new BinaryNode&lt;&gt;(x, null, null);</span><br><span class="line">		&#125;</span><br><span class="line">		int compareResult = x.compareTo(t.element);</span><br><span class="line">		if (compareResult &lt; 0)&#123;</span><br><span class="line">			t.left = insert(x, t.left);</span><br><span class="line">		&#125;else if (compareResult &gt; 0)&#123;</span><br><span class="line">			t.right = insert(x, t.right);</span><br><span class="line">		&#125;else&#123;</span><br><span class="line">			;</span><br><span class="line">		&#125;</span><br><span class="line">		return t;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	* 删除</span><br><span class="line">	*/</span><br><span class="line">	public void remove(T x)&#123;</span><br><span class="line">		root = remove(x, root);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/*</span><br><span class="line">	* 删除的机制：当删除某个节点的时候，如果两个子节点都在，就需要将右侧的最小子节点放到该位置上面来，并且遍历删除右侧的最小子节点</span><br><span class="line">	*/</span><br><span class="line">	private BinaryNode&lt;T&gt; remove(T x, BinaryNode&lt;T&gt; t)&#123;</span><br><span class="line">		if(t == null)&#123;</span><br><span class="line">			return t;</span><br><span class="line">		&#125;</span><br><span class="line">		int compareResult = x.compareTo(t.element);</span><br><span class="line">		if (compareResult &lt; 0)&#123;</span><br><span class="line">			t.left = remove(x, t.left);</span><br><span class="line">		&#125;else if(compareResult &gt; 0)&#123;</span><br><span class="line">			t.right = remove(x, t.right);</span><br><span class="line">		&#125;else if(t.left != null &amp;&amp; t.right != null)&#123;</span><br><span class="line">			t.element = findMin(t.right).element;</span><br><span class="line">			t.right = remove(t.element, t.right);</span><br><span class="line">		&#125;else&#123;</span><br><span class="line">			t = (t.left != null)? t.left : t.right;</span><br><span class="line">		&#125;</span><br><span class="line">		return t;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void printTree()&#123;</span><br><span class="line">		if (isEmpty())&#123;</span><br><span class="line">			System.out.println(&quot;Empty tree&quot;);</span><br><span class="line">		&#125;else&#123;</span><br><span class="line">			printTree(root);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	private void printTree(BinaryNode&lt;T&gt; t)&#123;</span><br><span class="line">		if(t != null)&#123;</span><br><span class="line">			printTree(t.left);</span><br><span class="line">			System.out.println(t.element);</span><br><span class="line">			printTree(t.right);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="AVL树"><a href="#AVL树" class="headerlink" title="AVL树"></a>AVL树</h1><p>平衡二叉树，即左右节点高度差不超过1的二叉树</p>
+<h2 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">private static class AvlNode&lt;AnyType&gt;&#123;</span><br><span class="line">	AnyType element;</span><br><span class="line">	AvlNode&lt;AnyType&gt; left;</span><br><span class="line">	AvlNode&lt;AnyType&gt; right;</span><br><span class="line">	int height;</span><br><span class="line">	AvlNode(AnyType theElement)&#123;</span><br><span class="line">		this(theElement, null, null);</span><br><span class="line">	&#125;</span><br><span class="line">	AvlNode(AnyType theElement, AvlNode&lt;AnyType&gt; lt, AvlNode&lt;AnyType&gt; rt)&#123;</span><br><span class="line">		element = theElement;</span><br><span class="line">		left = lt;</span><br><span class="line">		right = rt;</span><br><span class="line">		height = 0;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="单旋过程"><a href="#单旋过程" class="headerlink" title="单旋过程"></a>单旋过程</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">private AvlNode&lt;AnyType&gt; rotateWithLeftChild(AvlNode&lt;AnyType&gt; k2)&#123;</span><br><span class="line">	AvlNode&lt;AnyType&gt; k1 = k2.left;</span><br><span class="line">	k2.left = k1.right;</span><br><span class="line">	k1.right = k2;</span><br><span class="line">	k2.height = Math.max(height(k2.left), height(k2.right)) + 1;</span><br><span class="line">	k1.height = Math.max(height(k1.left), k2.height) +1;</span><br><span class="line">	return k1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="双旋过程"><a href="#双旋过程" class="headerlink" title="双旋过程"></a>双旋过程</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">private AvlNode&lt;AnyType&gt; doubleWithLeftChild(AvlNode&lt;AnyType&gt; k3)&#123;</span><br><span class="line">	k3.left = rotateWithRightChild(k3.left);</span><br><span class="line">	return rotateWthLeftChild(k3);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/06/android自动化打包脚本搭建/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1200,428 +1618,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/25/2018第三十七周工作小结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/25/2018第三十七周工作小结/" itemprop="url">2018第三十七周工作小结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-25T09:49:14+08:00">
-                2018-09-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>上周大概做了几件小事，一是完善了app的相关细节，二是修了很多medel的bug，三是发了个版。很惭愧。</p>
-<p>现在想来上周有两件事做的不好，一是读书，effective-java大概看了三次，但是一章都没看完。二是娱乐，赶上了中秋，却躺了三天。</p>
-<p>上周从网上打印了本csapp，这周开读吧。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/16/2018第三十六周工作小结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/16/2018第三十六周工作小结/" itemprop="url">2018第三十六周工作小结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-16T22:51:04+08:00">
-                2018-09-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本周主要任务是2.2.1的迭代计划，自从2.2.0发版以后，小程序端，ios端的进度都大大落后于android。我们也进入了喜闻乐见的等进度阶段。</p>
-<p>本周个人主要负责商品详情页面的优化。这次主要是借鉴淘宝的布局，做了较大量的优化。</p>
-<p>优化方面一是接口部分的抽离，将逻辑部分放在p层，视图放在v层，隔离开来，逻辑因此较为清晰，对比前人的过程式编程，感觉光编译器编译都快了很多。</p>
-<p>优化第二方面是布局的优化，还是老样子，一层constaintlayout解决问题。从爆红的过度绘制一下子变成了淡绿，打开页面的速度也快了很多。</p>
-<p>优化第三方面是父类的精简，经过仔细排查，最终抽丝剥茧下来了一个比较简单的activitybase，上层是rxactivity，在上层就是appcompatactivity。对比之前的fragmeng-&gt;appbasefragment-&gt;basefragment-&gt;rxbasefragment,以及对应的activity，光这一方面就精简了8层。打开速度快也不是没有原因的。</p>
-<p>优化第四方面是接口的生命周期绑定，之前只是在ondestroy中集中处理了接口，但是大部分的跳转，切换，接口并未做处理，这样在接口请求时切换了，就造成了泄漏。这次直接统一compose到了rxlifecycle中，连destroy中都不需要处理。</p>
-<p>不过这次让做一个属性动画，加入购物车的时候进行弹跳的一个动画布局，我搞了2天，原本准备搞个抛物线结束，结果三点计算抛物线公式忘了，自己推了2个小时，还推了个错的，debug了半天才发现。之后和ios商量，他们说应该用贝塞尔曲线，我又去翻以前的贝塞尔曲线的笔记，结果公式是以前就总结好的，但是好像是错的，怎么画都不对头。网上找了一圈还是没找到相关的对的例子。明天上班的时候去和ios的讨论讨论。</p>
-<p>以上为本周的工作内容。</p>
-<p>最近沉迷dnf无法自拔，结果今天给封号了一天，日。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/29/2018八月-第三十一周到三十五周-工作小结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/29/2018八月-第三十一周到三十五周-工作小结/" itemprop="url">2018八月-第三十一周到三十五周-工作小结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-29T18:37:05+08:00">
-                2018-08-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>这个月都没有写小结，发生了很多事情，都没有来的及记录。</p>
-<p>首先是公司进入了a轮的加速期，为了提高转化率使投资人满意，所有人都进入了8月的倒计时奋战期。其实和之前差不多，唯一变的是每周一开需求大会，之前都会假意征求一下开发的意见，现在这个流程也省略了。</p>
-<p>其次是由于好几个前端跑路，导致之前做的很多动态页面需要本地化，也相当于增加了业务量。</p>
-<p>这个月基本上是围绕着优化，订单来工作的。</p>
-<p>首先讲讲优化。</p>
-<ul>
-<li>ui优化</li>
-</ul>
-<p>app在oppor9m上面贼卡，一方面是过度绘制比较严重，二方面是内存泄漏比较严重。之前写布局很多地方都用的relativylayout或者framelayout，嵌套比较严重，红色过度绘制的区域十分多，查看gpu绘制，发现滑动的时候绘制较多，在专题详情页面尤其明显。</p>
-<p>– 过度绘制</p>
-<p>因此对主要流程，主要流程的卡顿页面做了调整，完全按照constraintlayout的设计规则，无论多复杂的布局，统一使用一层或者2层（带scrollview）的布局结构。写的十分顺畅，使用的过程中完善了我对于constraintlayout的理解，包括guideline，group，基准点等。constraintlayou有一个问题，就是背景问题，以往的情况下，习惯性的使用linearlayout，或者部分布局包装，然后针对包装布局进行背景设置，但是在constraintlayout下面，其实单层布局不是很好设置背景，只可以使用单独的一层view来在之前设置，但是view的下方padding就有一些问题，尤其是在提前布局的情况下。针对这个情况，我通过guideline和viewtip来解决，不过这样多了很多奇怪的点，这些点也只可以通过group来进行布局的绑定。</p>
-<p>整个constraintlayout给我的感觉，是牺牲了逻辑效率，带来布局效率，很多的逻辑牵扯在的xml中，而代码中我们一般指判断view是否显示，但是这样就会导致xml中的部分逻辑在不显示的情况下，产生了偏差。因此我觉得在大多数遇到逻辑复杂的布局排列中，还是不要轻易强行单层布局，逻辑偏差带来的时间损失，绝对比使用嵌套布局之后在进行代码优化的多。</p>
-<p>– bitmap大图</p>
-<p>由于我们的项目就是围绕着人脸，身材，妆容这些来进行的，这些无一例外都是bitmap的使用者。</p>
-<p>整合人脸，整合身材，整合妆容之后形成的完整的人模型，原本需要占用大约5m的内存。在优化之前，很多地方使用的是fragmentpageradapter，每个fragment持有很多的bitmap，当时算了一下，一个framgent如果在不上滑加载更多的时候，会持有8个bitmap对象，就是约40m内存。</p>
-<p>在2.1.3版本上面，anr的发生率提高到了14%，绝大多数都是在首页滑动的时候产生的卡死。</p>
-<p>针对这个问题，也做了针对性的优化。首先是使用fragmentstatepageradapter，这样可以在fragment进入销毁流程的时候，释放引用而让他自然销毁。这样首先是切换的时候内存占用问题解决了。</p>
-<p>其次是单fragment下滑导致的内存占用问题。刚开始使用的recyclerview，为了让用户有比较好的体验（雾），而将最大item设为了20（大雾）。这下子用户上滑超过20个，光bitmap 的占用率就飙升到了100m，还不谈item的其他内存占用问题。在一般的华为和oppo手机上面，光这项就吃掉了分给app的50%以上的内存。基本上这个时候如果系统在吃点内存，app就anr了。</p>
-<p>因此针对这个问题，想到的是动态持有，根据可用内存堆分配来实时更新缓存堆的内容。使用的是比较常见的lrucache，但是这个lrucache只缓存了bitmap的信息，item其余的信息就直接释放了，这样动态缓存1/4最大内存堆的内存，同时也保证了bitmap加载不会有太多的问题。</p>
-<p>使用缓存有个小问题，就是强制刷新的时候不注意的话其实是无法清除的，强制刷新的时候得clearcache。</p>
-<p>– bimap色深</p>
-<p>在解决了缓存占用问题之后，基于bitmap的内存问题其实得到了很大的解决。但是仍然有一个巨大的问题，就是bitmap的加载速度。</p>
-<p>即使缓存到lrucache里面，也得首先下载下来，在普通4g网大约200K下载速度的时候，一张基准图下载需要大约0.5-1秒，但是经过渲染和加载，总共大约需要1.5秒的样子才可以呈现，这个速度实在是很慢。</p>
-<p>处理这个的问题一般就是从图片质量上面入手，图片存储方式一般是写死的，虽然我们使用的是oss，可以通过传递参数到服务器，来获取不同的图片大小，但是在做到这个地步之后，就是图像的渲染，也就是从网上下载的数据映射到bitmap上面的这个过程。</p>
-<p>一般的bitmap是rgb888，一个像素占3Byte，我用的手机5.5英寸，1080x1920像素，一般图片设置大约140dp宽高，也就是约420x420像素，占用内存就是420x420x3 = 516K,jpg的压缩率我不是很清楚，大约在10%-90%之间，也就是这么一个呈现为516k的图片，大约需要下载5-50k之间的样子，专题详情页面的大图，宽度是130dp，高度是400dp，就一下子扩了将近3倍，下载如果在200k就要全速一秒了。</p>
-<p>流量并不是很关心的事情，下载其实也不是很关心的事情，因为我无法决定用户的网速，那是framework的事情，我只可以确保下载的内容到本机能够快速加载出来。因此采取的措施是压缩色深，从rgb888，压缩到rgb565，然后压缩到了rgb444。图片质量压缩到如此之低，基本上是能接受的极限了。改完之后速度大约快了一点，加载的时候下载完的条结束就可以出来了。</p>
-<p>– 主线程任务过多引起的卡顿</p>
-<p>在sku详情页面，逻辑是这样的，2线并行，1线先请求人体数据，人体数据的返回值会引起整个页面结构的初始化，2线后行，直接请求sku的数据，进行数据的web填充。问题出现在这两条线都涉及到了ui的修改，所以都跑在主线程，还有个问题是双线有依赖，会导致加载的时候互相调用，而在安卓中很少对于view进行上锁措施，因此此时的操作极为繁琐，而且卡顿及其严重。</p>
-<p>针对此问题主要是优化主线程任务措施，rxjava中其实还是比较好做的，一来使用concat操作符，二来在数据初始化的步骤可以放到子线程，之后实现的操作可以放到主线程，逻辑复杂的部分可以放在子线程，结果传到主线程。（此处mark一下，需要对rxjava的原理做个完整的学习）</p>
-<p>双线我通过整合成为单线，然后线程切换的方式，加载速度，滑动速度响应都足够了。</p>
-<ul>
-<li>性能优化</li>
-</ul>
-<p>– 内存泄漏</p>
-<p>之前项目中整合了lecancary，每次gc和泄漏的时候会弹出提示，但是在项目中的表现并不好，一来是fragment和activity的多层引用，基类中有很多资源持有引用，而这些引用是后来自己手动释放的，但是在lecancary中就会爆这些引用泄漏了，其二是我们所有的网络代码通过clean的结构，在最顶层使用dagger来解耦，因此造成了在ondestroy过程中会销毁，但是切换过程中并不会销毁。切换的过程需要等待，但是这个过程已经造成了泄漏。</p>
-<p>采取的措施比较粗暴，就是直接在切换的时候触发presenter的destroy方法，这样切换的时候，会先关闭引用，之后在切换，切换之后销毁自己，这就是比较正常的过程了。</p>
-<p>– oom</p>
-<p>oom的问题就如同bitmap大图的问题，掠过不讲</p>
-<ul>
-<li>订单流程</li>
-</ul>
-<p>整个订单流程进行了完整的更新，大部分计算价格的部分给予后台来处理，不在由前端显示相关内容，对于我们来讲逻辑更新容易很多。出问题的地方是由于都给予后台显示了，前端势必要判断是否成功，失败的处理逻辑等等。因此针对网络失败的地方做了处理</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">private void handleHttpError(Throwable e)&#123;</span><br><span class="line">        if (e instanceof RuntimeException)&#123;</span><br><span class="line">            if (e.getCause() instanceof ConnectException)&#123;</span><br><span class="line">                mEventBus.post(new OnHttpErrorEvent(&quot;连接失败，请检查网络后再试&quot;));</span><br><span class="line">            &#125;</span><br><span class="line">            if (e.getCause() instanceof SocketTimeoutException)&#123;</span><br><span class="line">                mEventBus.post(new OnHttpErrorEvent(&quot;请求超时，请检查网络后再试&quot;));</span><br><span class="line">            &#125;</span><br><span class="line">            if (e.getCause() instanceof UnknownHostException)&#123;</span><br><span class="line">                mEventBus.post(new OnHttpErrorEvent(&quot;域名连接失败，请检查网络后再试&quot;));</span><br><span class="line">            &#125;</span><br><span class="line">            if (e.getCause() instanceof NetworkErrorException)&#123;</span><br><span class="line">                mEventBus.post(new OnHttpErrorEvent(&quot;网络异常，请检查网络后再试&quot;));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if (e instanceof ConnectException)&#123;</span><br><span class="line">            mEventBus.post(new OnHttpErrorEvent(&quot;连接失败，请检查网络后再试&quot;));</span><br><span class="line">        &#125;</span><br><span class="line">        if (e instanceof SocketTimeoutException)&#123;</span><br><span class="line">            mEventBus.post(new OnHttpErrorEvent(&quot;请求超时，请检查网络后再试&quot;));</span><br><span class="line">        &#125;</span><br><span class="line">        if (e instanceof UnknownHostException)&#123;</span><br><span class="line">            mEventBus.post(new OnHttpErrorEvent(&quot;域名连接失败，请检查网络后再试&quot;));</span><br><span class="line">        &#125;</span><br><span class="line">        if (e instanceof NetworkErrorException)&#123;</span><br><span class="line">            mEventBus.post(new OnHttpErrorEvent(&quot;网络异常，请检查网络后再试&quot;));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>处理方式如上，主要是针对rxjava网络异常的各个问题进行鉴别性操作，然后根据不同的类型显示不同的页面。</p>
-<p>大致分了2种页面，一种是正常的失败，没有数据的那种，叫emptyview，还有一种就是网络失败的，叫errorview，都是可以抽出来单独做的。</p>
-<p>除此之外由于大多都是业务方面的内容，可总结的比较少。</p>
-<p>能够抽出来说的有一点，是优惠卷的ui处理方面，一般是使用recyclerview，但是由于用户的优惠卷比较少，我使用的是普通的linearlayout，通过addview来进行加载视图，问题是无法通过recyclerview那种通过一张表来更改数据和view。我需要维护2个表，一个是选中的view表，一个是所有的view表，每次点击的时候需要从选中表中进行遍历，然后处理一些关于选中优惠卷的县骨干内容，本次版本主要是互斥卷和叠加卷的逻辑问题。处理完之后会重新刷新选中表。这样一定程度上是牺牲了代码简洁，而照顾了加载速度。其实recyclerview也有很多bug，比如说每次notifydatasetchanged，数据源变更会强制触发重新刷新的功能，这就不适合数据源并不多的情况。而且recycerview本身作为一个较为重型的控件，处理单纯的几个view，有些大材小用。</p>
-<p>大致如上，四周都没什么时间好好整理一下，做项目的时候总是想着要总结总结，但是到了要总结的时候，仿佛踩过的坑，处理过的问题，都一下子不见了。脑袋里就剩下了最近处理的一些问题。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1667,7 +1668,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">110</span>
+                  <span class="site-state-item-count">112</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1717,7 +1718,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

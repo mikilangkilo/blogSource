@@ -239,6 +239,274 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/10/2018第六周工作小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/02/10/2018第六周工作小结/" itemprop="url">2018第六周工作小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-10T23:28:18+08:00">
+                2018-02-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>这周大量的时间用于进行安卓知识的学习，项目上的进展为0。不过由于最近也没有什么项目需要进展，肺科医院订单后台的项目好像被停掉了，只有那个肺科医院的数据显示项目还在用。</p>
+<p>不过还是要安排一下下一周的任务，下一周连着周日只有3天班，因为周三我就请假回家过年了。</p>
+<ol>
+<li><p>肺科医院数据显示任务的ui精简，一个是logo，一个是五星好评的那个功能</p>
+</li>
+<li><p>将肺科医院数据显示的那个改成mvp结构，并且写单元测试。</p>
+</li>
+</ol>
+<p>就这两个任务，另外过年回去仍然要继续学习安卓方面的知识点。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/10/android自定义注解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/02/10/android自定义注解/" itemprop="url">android自定义注解</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-10T19:55:54+08:00">
+                2018-02-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>注解是一种元数据，可以添加到java代码中，类、方法、变量、参数、包都可以被注解，注解对注解的代码没有直接的影响。</p>
+<p>注解是在解析的过程中做出了相应的处理，注解仅仅是一个标记。</p>
+<p>定义一个注解的关键字是@interface</p>
+<h3 id="元注解"><a href="#元注解" class="headerlink" title="元注解"></a>元注解</h3><p>元注解共有四种 @Retention, @Target, @Inherited, @Documented</p>
+<ul>
+<li>@Retention 保留的范围，默认值为class，可选值有三种</li>
+</ul>
+<p>SOURCE:只在源码中可用<br>CLASS:在源码和字节码中可用<br>RUNTIME:在源码、字节码、运行时均可用</p>
+<ul>
+<li><p>@Target: 表示可以用来修饰哪些元素，如TYPE/METHOD/CONSTRUCTOR/FIELD/PARAMETER等，未标识及代表可以修饰所有</p>
+</li>
+<li><p>@Inherited:是否可以被继承，默认为false</p>
+</li>
+<li><p>@Documented: 是否会被保存到javadoc文档中</p>
+</li>
+</ul>
+<h3 id="自定义注解–实现findViewById"><a href="#自定义注解–实现findViewById" class="headerlink" title="自定义注解–实现findViewById()"></a>自定义注解–实现findViewById()</h3><p>第一步定义注解：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@Target(ElementType.FIELD)</span><br><span class="line">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="line">public @interface ViewInject &#123;</span><br><span class="line"></span><br><span class="line">    int value();</span><br><span class="line"></span><br><span class="line">    /* parent view id */</span><br><span class="line">    int parentId() default 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>第二步处理注解：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">public class ViewUtils &#123;</span><br><span class="line"></span><br><span class="line">    private ViewUtils() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void inject(Activity activity) &#123;</span><br><span class="line">        injectObject(activity, new ViewFinder(activity));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @SuppressWarnings(&quot;ConstantConditions&quot;)</span><br><span class="line">    private static void injectObject(Object handler, ViewFinder finder) &#123;</span><br><span class="line"></span><br><span class="line">        Class&lt;?&gt; handlerType = handler.getClass();</span><br><span class="line"></span><br><span class="line">        // inject view</span><br><span class="line">        Field[] fields = handlerType.getDeclaredFields();</span><br><span class="line">        if (fields != null &amp;&amp; fields.length &gt; 0) &#123;</span><br><span class="line">            for (Field field : fields) &#123;</span><br><span class="line">                ViewInject viewInject = field.getAnnotation(ViewInject.class);</span><br><span class="line">                if (viewInject != null) &#123;</span><br><span class="line">                    try &#123;</span><br><span class="line">                        View view = finder.findViewById(viewInject.value(), viewInject.parentId());</span><br><span class="line">                        if (view != null) &#123;</span><br><span class="line">                            field.setAccessible(true);</span><br><span class="line">                            field.set(handler, view);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; catch (Throwable e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">public class ViewFinder &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    private Activity activity;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    public ViewFinder(Activity activity) &#123;</span><br><span class="line">        this.activity = activity;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public View findViewById(int id) &#123;</span><br><span class="line">        return  activity.findViewById(id);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public View findViewById(int id, int pid) &#123;</span><br><span class="line">        View pView = null;</span><br><span class="line">        if (pid &gt; 0) &#123;</span><br><span class="line">            pView = this.findViewById(pid);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        View view = null;</span><br><span class="line">        if (pView != null) &#123;</span><br><span class="line">            view = pView.findViewById(id);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            view = this.findViewById(id);</span><br><span class="line">        &#125;</span><br><span class="line">        return view;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第三步 activity调用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">public class DIYAnnotationActivity extends AppCompatActivity &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    @ViewInject(R.id.textView)</span><br><span class="line">    private TextView textView;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_annotation);</span><br><span class="line"></span><br><span class="line">        ViewUtils.inject(this);</span><br><span class="line"></span><br><span class="line">        textView.setOnClickListener(new View.OnClickListener() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onClick(View view) &#123;</span><br><span class="line">                textView.setText(&quot;成功了！&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>基本上是通过获取activity实例，然后通过反射遍历field找到用到这个注解的地方，然后进行findviewbyid的进行，之后返回view的实例</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/10/androidMVP架构学习/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1687,264 +1955,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/28/2018第四周工作小结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/28/2018第四周工作小结/" itemprop="url">2018第四周工作小结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-28T17:45:07+08:00">
-                2018-01-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>这周把图表的那个做完，之后就继续做微信接口登陆的问题。<br>图表的任务主要是收尾，将缓存什么的做了一下，持久层也做好了，将一些额外的feature结束，也就没任务了。没什么需要总结的。</p>
-<p>微信接口的问题，目前是商量好了使用v2的接口，获取到了一次性code，然后回传，这样在得到一次性token。<br>需要继续做的事就是将返回的token想办法做一个有效期判定的措施，然后每次都根据这个进行判断。</p>
-<p>下周的任务，目前来看就这一个</p>
-<p>将微信token做一个持久化处理，然后针对返回的是否是404做一个注册操作。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/26/使用python抓取网页内容/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/26/使用python抓取网页内容/" itemprop="url">使用python抓取网页内容</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-26T22:54:51+08:00">
-                2018-01-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>进行爬虫抓取，有一个大致的思路。<br>首先是抓取当前页的关键内容，也就是我们需要的内容。<br>其次是抓取下一页的网址信息，也就是用于下一轮进行抓取的对象。</p>
-<p>因此使用一个queue去存储抓取的网址信息，当queue不为空的时候执行轮次抓取关键信息的操作。<br>同时还有一个set去存储以抓取的网址的信息，确保不会重复查询某个网址。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">queue Q</span><br><span class="line">set S</span><br><span class="line">StartPoint = &quot;http://jecvay.com&quot;</span><br><span class="line">Q.push(StartPoint)  # 经典的BFS开头</span><br><span class="line">S.insert(StartPoint)  # 访问一个页面之前先标记他为已访问</span><br><span class="line">while (Q.empty() == false)  # BFS循环体</span><br><span class="line">  T = Q.top()  # 并且pop</span><br><span class="line">  for point in PageUrl(T)  # PageUrl(T)是指页面T中所有url的集合, point是这个集合中的一个元素.</span><br><span class="line">    if (point not in S)</span><br><span class="line">      Q.push(point)</span><br><span class="line">      S.insert(point)</span><br></pre></td></tr></table></figure>
-<p>大致如这个伪代码。</p>
-<p>queue初始化：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">queue = deque()</span><br></pre></td></tr></table></figure></p>
-<p>queue添加：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">queue.append(url)</span><br></pre></td></tr></table></figure></p>
-<p>queue出栈：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">queue.popleft()</span><br></pre></td></tr></table></figure></p>
-<p>set初始化：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">visited = set()</span><br></pre></td></tr></table></figure></p>
-<p>set添加：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">visited |= &#123;url&#125;</span><br></pre></td></tr></table></figure></p>
-<p>url抓取：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">urlop = urllib.requests.urlopen(url)</span><br></pre></td></tr></table></figure></p>
-<p>数据解析:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data = urlop.read().decode(&apos;utf-8&apos;)</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1990,7 +2005,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">110</span>
+                  <span class="site-state-item-count">112</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2040,7 +2055,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
