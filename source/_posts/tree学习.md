@@ -234,7 +234,7 @@ public class BinarySearchTree<T extends Comparable<? super T>>{
 			printTree(root);
 		}
 	}
-
+	//中序遍历
 	private void printTree(BinaryNode<T> t){
 		if(t != null){
 			printTree(t.left);
@@ -242,7 +242,137 @@ public class BinarySearchTree<T extends Comparable<? super T>>{
 			printTree(t.right);
 		}
 	}
+	
+	//先序遍历
+	private void printBeforeTree(BinaryNode<T> t){
+		if(t != null){
+			System.out.println(t.element);
+			printBeforeTree(t.left);
+			printBeforeTree(t.right);
+		}
+	}
 
+	//后序遍历
+	private void printAfterTree(BinaryNode<T> t){
+		if(t != null){
+			printAfterTree(t.left);
+			printAfterTree(t.right);
+			System.out.println(t.element);
+		}
+	}
+	
+	//层级遍历
+	public void levelTravel(TreeNode<T> root){
+		Queue<TreeNode<T>> q = new LinkedList<TreeNode<T>>();
+		q.offer(root);
+		while(!q.isEmpty()){
+			TreeNode<T> temp = q.poll();
+			System.out.println(temp);
+			if(temp.leftChild != null){
+				q.offer(temp.leftChild);
+			}
+			if(temp.rightChild != null){
+				q.offer(temp.rightChild);
+			}
+		}
+	}
+
+	//求K层节点总数
+	public int getNumForKLevel(TreeNode<T> root, int k){
+		if(root == null || k < 1){
+			return 0;
+		}
+		if(k == 1){
+			return 1;
+		}
+		int leftNum = getNumForKLevel(root.left, k-1);
+		int rightNum = getNumForKLevel(root.right, k-1);
+		return leftNum + rightNum;
+	}
+
+	//求二叉树中叶子节点的个数
+	public int getLeafNum(TreeNode<T> root){
+		if(root == null){
+			return 0;
+		}
+		if(root.leftChild == null && root.rightChild == null){
+			return 1;
+		}
+		int leftNum = getLeafNum(root.leftChild);
+		int rightNum = getLeafNum(root.rightChild);
+		return leftNum + rightNum;
+	}
+
+	//交换根节点的左右子树
+	public TreeNode<T> exchange(TreeNode<T> root){
+		if(root == null){
+			return null;
+		}
+		TreeNode<T> left = exchange(root.left);
+		TreeNode<T> right = exchange(root.right);
+		root.leftChild = right;
+		root.rightChild = left;
+		return root;
+	}
+
+	//查看node是否是root的子节点
+	public boolean nodeIsChild(TreeNode<T> root, TreeNode<T> node){
+		if(root == null || node == null){
+			return false;
+		}
+		if(root == node){
+			return true;
+		}
+		boolean isFind = nodeIsChild(root.leftChild, node);
+		if(!isFind){
+			isFind = nodeIsChild(root.rightChild, node);
+		}
+		return isFind;
+	}
+
+	//根据前序和中序构建二叉树
+	public TreeNode<T> getTreeFromPreAndMid(List<T> pre, List<T> mid){
+		if(pre == null || mid == null || pre.size() == 0 || mid.size == 0){
+			return null;
+		}
+		if(pre.size() == 1){
+			return new TreeNode<T>(pre.get(0));
+		}
+		TreeNode<T> root = new TreeNode<T>(pre.get(0));
+		int index = 0;
+		while(!mid.get(index ++).equals(pre.get(0)));//挪动到root的位置
+		List<T> preLeft = new ArrayList<T>(index);
+		List<T> midLeft = new ArrayList<T>(index);
+		for(int i = 1; i < index; i ++){
+			preLeft.add(pre.get(i));
+		}
+		for(int i = 0; i < index -1; i ++){
+			midLeft.add(mid.get())
+		}
+		root.leftChild = getTreeFromPreAndMid(preLeft, midLeft);
+		List<T> preRight = new ArrayList<T>(pre.size() - index - 1);
+		List<T> midRight = new ArrayList<T>(pre.size() - index - 1);
+		for(int i = 0; i <= pre.size() - index - 1; i ++){
+			preRight.add(pre.get(index + i));
+		}
+		for(int i = 0; i <= pre.size() - index - 1; i ++){
+			midRight.add(mid.get(index + i));
+		}
+		root.rightChild = getTreeFromPreAndMid(preRight, midRight);
+		return root;
+	}
+
+	public boolean equals(TreeNode<T> node1, TreeNode<T> node2){
+		if(node1 == null && node2 == null){
+			return true;
+		} else if(node1 == null || node2 == null){
+			return false;
+		}
+		boolean isEqual = node1.value.equals(node2.value);
+		boolean isLeftEqual = equals(node1.leftChild, node2.leftChild);
+		boolean isRightEqual = equals(node1.rightChild, node2.rightChild);
+		return isEqual && isLeftEqual && isRightEqual;
+	}
 }
 ```
 
