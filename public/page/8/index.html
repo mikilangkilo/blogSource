@@ -239,6 +239,405 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/15/rxjava操作符笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/02/15/rxjava操作符笔记/" itemprop="url">rxjava操作符笔记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-15T19:43:10+08:00">
+                2018-02-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>对rxjava的操作符进行一些笔记。</p>
+<h1 id="creating-observables-创建observable"><a href="#creating-observables-创建observable" class="headerlink" title="creating observables(创建observable)"></a>creating observables(创建observable)</h1><ul>
+<li>create</li>
+</ul>
+<p>最基本的创建操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">OObservable.create(new ObservableOnSubscribe&lt;String&gt;() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void subscribe(ObservableEmitter&lt;String&gt; emitter) throws Exception &#123;</span><br><span class="line">                //上游操作发射</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).subscribe(new Subject&lt;String&gt;() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public boolean hasObservers() &#123;</span><br><span class="line">                return false;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public boolean hasThrowable() &#123;</span><br><span class="line">                return false;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public boolean hasComplete() &#123;</span><br><span class="line">                return false;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public Throwable getThrowable() &#123;</span><br><span class="line">                return null;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            protected void subscribeActual(Observer&lt;? super String&gt; observer) &#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void onSubscribe(Disposable d) &#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void onNext(String s) &#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void onError(Throwable e) &#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void onComplete() &#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>just</li>
+</ul>
+<p>just就是对create的简写</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(&apos;1&apos;,&apos;2&apos;).subscribe(new Consumer&lt;Character&gt;() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void accept(Character character) throws Exception &#123;</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>from</li>
+</ul>
+<p>from可以接受一个创建了的列表作为输入,可以接受不少的类型，列表，迭代器,future,publisher等等</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; source = new ArrayList();</span><br><span class="line">        source.add(&quot;1&quot;);</span><br><span class="line">        source.add(&quot;2&quot;);</span><br><span class="line">        Observable.fromArray(source).subscribe(new Consumer&lt;List&lt;String&gt;&gt;() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void accept(List&lt;String&gt; strings) throws Exception &#123;</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>defer</li>
+</ul>
+<p>defer是当观察者订阅被观察者的时候，才会开始创建一个observable，其余操作和from，just差不多。</p>
+<ul>
+<li>empty/never/throw</li>
+</ul>
+<p>empty是生成一个空的观察对象，never是生成一个不会向下游发送执行命令的对象，throw会生成一个不会向下游发送执行命令，但是会以一个error终止的对象。</p>
+<ul>
+<li>interval</li>
+</ul>
+<p>interval是起到了定时器功能，根据给定的时间间隔上游来发送数据。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Observable.interval(10, TimeUnit.SECONDS).just(&quot;1&quot;,&quot;2&quot;).subscribe(new Consumer&lt;String&gt;() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void accept(String s) throws Exception &#123;</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>range</li>
+</ul>
+<p>创建在一个范围之类的数据类型，上游依次发送这个范围内的数据。</p>
+<ul>
+<li>repeat</li>
+</ul>
+<p>多次重复的发送一个数据。</p>
+<ul>
+<li>start</li>
+</ul>
+<p>创建发射一个函数的返回值的observable</p>
+<ul>
+<li>timer</li>
+</ul>
+<p>创建在一个指定的延时之后发射单个数据的observable</p>
+<h1 id="transforming-observables-转换observable"><a href="#transforming-observables-转换observable" class="headerlink" title="transforming observables(转换observable)"></a>transforming observables(转换observable)</h1><ul>
+<li>map</li>
+</ul>
+<p>将一个对象转换为另一个对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(1,2,3).map(new Function&lt;Integer, String&gt;() &#123;</span><br><span class="line">           @Override</span><br><span class="line">           public String apply(Integer integer) throws Exception &#123;</span><br><span class="line">               return integer.toString();</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;).subscribe(new Consumer&lt;String&gt;() &#123;</span><br><span class="line">           @Override</span><br><span class="line">           public void accept(String s) throws Exception &#123;</span><br><span class="line">               </span><br><span class="line">           &#125;</span><br><span class="line">       &#125;);</span><br><span class="line">   //简单的例子，将发射为int的字节转换成为string类型的observable</span><br></pre></td></tr></table></figure>
+<ul>
+<li>flatmap</li>
+</ul>
+<p>flatmap是一个一对多的转换对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Observable.just(1,2,3,4).flatMap(new Function&lt;Integer, ObservableSource&lt;? extends String&gt;&gt;() &#123;</span><br><span class="line">           @Override</span><br><span class="line">           public ObservableSource&lt;? extends String&gt; apply(Integer integer) throws Exception &#123;</span><br><span class="line">               return Observable.just(integer+&quot;&quot;);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;).subscribe(new Consumer&lt;String&gt;() &#123;</span><br><span class="line">           @Override</span><br><span class="line">           public void accept(String s) throws Exception &#123;</span><br><span class="line"></span><br><span class="line">           &#125;</span><br><span class="line">       &#125;);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>groupby</li>
+</ul>
+<p>group是一个分组行为，根据指定的规则将上游进行分组归类，然后发送至下游时会夹带分组信息</p>
+<ul>
+<li>buffer</li>
+</ul>
+<p>缓存，定期的从observable收集数据到一个集合，然后打包发送，而不是一次发送一个</p>
+<ul>
+<li>scan</li>
+</ul>
+<p>扫描，对observable发射的每一项数据应用一个函数，然后按照顺序发射这些值</p>
+<ul>
+<li>window</li>
+</ul>
+<p>定期将来自observable的数据拆分成一个个的observable窗口，然后发射这些窗口，而不是每次发射一项，类似于buffer， 不过window发射的是observable</p>
+<h1 id="filtering-observables-过滤observable"><a href="#filtering-observables-过滤observable" class="headerlink" title="filtering observables(过滤observable)"></a>filtering observables(过滤observable)</h1><ul>
+<li>Debounce</li>
+</ul>
+<p>过滤掉了由Observable发射的速率过快的数据；如果在一个指定的时间间隔过去了仍旧没有发射一个，那么它将发射最后的那个。通常我们用来结合RxBinding(Jake Wharton大神使用RxJava封装的Android UI组件)使用，防止button重复点击。</p>
+<ul>
+<li>Distinct</li>
+</ul>
+<p>distinct()的过滤规则是只允许还没有发射过的数据通过，所有重复的数据项都只会发射一次。 </p>
+<ul>
+<li>ElementAt</li>
+</ul>
+<p>获取原始序列第n个元素，并作为唯一发射源进行发射</p>
+<ul>
+<li>Filter</li>
+</ul>
+<p>用来过滤观察序列中我们不想要的值，只返回满足条件的值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Observable.from(communities)</span><br><span class="line">        .filter(new Func1&lt;Community, Boolean&gt;() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public Boolean call(Community community) &#123;</span><br><span class="line">                return community.houses.size()&gt;10;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).subscribe(new Action1&lt;Community&gt;() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void call(Community community) &#123;</span><br><span class="line">        System.out.println(community.name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>First</li>
+</ul>
+<p>它是的Observable只发送观测序列中的第一个数据项。</p>
+<ul>
+<li>last</li>
+</ul>
+<p>last()只发射观测序列中的最后一个数据项。 </p>
+<ul>
+<li>skip</li>
+</ul>
+<p>忽略掉原始序列前n个元素</p>
+<ul>
+<li>skiplast</li>
+</ul>
+<p>忽略掉原始序列最后n个元素</p>
+<ul>
+<li>take</li>
+</ul>
+<p>发送原始序列中的前n个元素<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Observable.from(communities)</span><br><span class="line">        .take(10)</span><br><span class="line">        .subscribe(new Action1&lt;Community&gt;() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void call(Community community) &#123;</span><br><span class="line">                System.out.println(community.name);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>takelast</li>
+</ul>
+<p>发送原始序列中的最后n个元素</p>
+<h1 id="combing-observables-组合observable"><a href="#combing-observables-组合observable" class="headerlink" title="combing observables(组合observable"></a>combing observables(组合observable</h1><ul>
+<li>zip</li>
+</ul>
+<p>zip(Observable, Observable, Func2)用来合并两个Observable发射的数据项，根据Func2函数生成一个新的值并发射出去。当其中一个Observable发送数据结束或者出现异常后，另一个Observable也将停在发射数据。</p>
+<ul>
+<li>merge</li>
+</ul>
+<p>merge(Observable, Observable)将两个Observable发射的事件序列组合并成一个事件序列，就像是一个Observable发射的一样。你可以简单的将它理解为两个Obsrvable合并成了一个Observable，合并后的数据是无序的。</p>
+<ul>
+<li>startwith</li>
+</ul>
+<p>startWith(T)用于在源Observable发射的数据前插入数据。使用startWith(Iterable<t>)我们还可以在源Observable发射的数据前插入Iterable。</t></p>
+<ul>
+<li>combinelatest</li>
+</ul>
+<p>combineLatest(Observable, Observable, Func2)用于将两个Observale最近发射的数据已经Func2函数的规则进展组合</p>
+<ul>
+<li>join</li>
+</ul>
+<p>join(Observable, Func1, Func1, Func2)我们先介绍下join操作符的4个参数：<br>Observable：源Observable需要组合的Observable,这里我们姑且称之为目标Observable；<br>Func1：接收从源Observable发射来的数据，并返回一个Observable，这个Observable的声明周期决定了源Obsrvable发射出来的数据的有效期；<br>Func1：接收目标Observable发射来的数据，并返回一个Observable，这个Observable的声明周期决定了目标Obsrvable发射出来的数据的有效期；<br>Func2：接收从源Observable和目标Observable发射出来的数据，并将这两个数据组合后返回。所以Join操作符的语法结构大致是这样的：onservableA.join(observableB, 控制observableA发射数据有效期的函数， 控制observableB发射数据有效期的函数，两个observable发射数据的合并规则)join操作符的效果类似于排列组合，把第一个数据源A作为基座窗口，他根据自己的节奏不断发射数据元素，第二个数据源B，每发射一个数据，我们都把它和第一个数据源A中已经发射的数据进行一对一匹配；举例来说，如果某一时刻B发射了一个数据“B”,此时A已经发射了0，1，2，3共四个数据，那么我们的合并操作就会把“B”依次与0,1,2,3配对，得到四组数据： [0, B][1, B] [2, B] [3, B]</p>
+<ul>
+<li>switchonnext</li>
+</ul>
+<p>switchOnNext(Observable&lt;? extends Observable&lt;? extends T&gt;&gt;用来将一个发射多个小Observable的源Observable转化为一个Observable，然后发射这多个小Observable所发射的数据。如果一个小的Observable正在发射数据的时候，源Observable又发射出一个新的小Observable，则前一个Observable发射的数据会被抛弃，直接发射新 的小Observable所发射的数据。</p>
+<h1 id="error-handling-operators-处理错误"><a href="#error-handling-operators-处理错误" class="headerlink" title="error handling operators(处理错误)"></a>error handling operators(处理错误)</h1><ul>
+<li><p>catch</p>
+</li>
+<li><p>retry</p>
+</li>
+</ul>
+<h1 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h1><ul>
+<li>takeUtil</li>
+</ul>
+<p>observable.takeUtil(condition),当condition == true时终止，且包含临界条件的item</p>
+<ul>
+<li>takeWhile</li>
+</ul>
+<p>observable.takeWhile(condition),当condition == false时终止，不包含临界条件的item</p>
+<ul>
+<li>concat</li>
+</ul>
+<p>Concat操作符将多个Observable结合成一个Observable并发射数据，并且严格按照先后顺序发射数据，前一个Observable的数据没有发射完，是不能发射后面Observable的数据的。<br>Concat配合first()可以实现按顺序进行发射数据，有就立即停下，例如从内存缓存，本地缓存，网络请求三者中进行读取数据的操作。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/13/2018第七周工作小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/02/13/2018第七周工作小结/" itemprop="url">2018第七周工作小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-13T23:16:05+08:00">
+                2018-02-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>这周除了学习还是学习，学习了测试规范和测试用例，美中不足的是用了很久但是没有什么效果。</p>
+<p>明天就放假了，需要安排一下新年的计划安排。<br>简要地说就是为了开年做的准备。</p>
+<ol>
+<li>完善简历知识点，对薄弱的地方进行强化。</li>
+<li>写一个视频监控出来。</li>
+</ol>
+<p>大致就这两个，其实难度还蛮大的。时间安排明天车上的时候想。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/10/2018第六周工作小结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1637,324 +2036,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/29/java动态编程/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/29/java动态编程/" itemprop="url">java动态编程</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-29T22:21:09+08:00">
-                2018-01-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>动态编程，常用到的是反射，但是反射开销性能大，上线的项目上面用反射不好。有另一种和反射功能相当的，但是比反射开销低的，就是javaassit</p>
-<h1 id="什么是javaassit"><a href="#什么是javaassit" class="headerlink" title="什么是javaassit"></a>什么是javaassit</h1><p>javaassit就是一个二方包，提供了运行时操作java字节码的方法。</p>
-<h1 id="使用javaassit"><a href="#使用javaassit" class="headerlink" title="使用javaassit"></a>使用javaassit</h1><ul>
-<li>更改某个类的父类</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ClassPool pool = ClassPool.getDefault();</span><br><span class="line">CtClass cc = pool.get(&quot;test.Rectangle&quot;);</span><br><span class="line">cc.setSuperclass(pool.get(&quot;test.Point&quot;));</span><br><span class="line">cc.writeFile();</span><br></pre></td></tr></table></figure>
-<ul>
-<li>获取字节码和加载字节码</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">byte[] b = cc.toBytecode();</span><br><span class="line">Class clazz = cc.toClass();</span><br></pre></td></tr></table></figure>
-<ul>
-<li>定义一个新类</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ClassPool pool = ClassPool.getDefault();</span><br><span class="line">CtClass cc = pool.makeClass(&quot;Point&quot;);</span><br></pre></td></tr></table></figure>
-<ul>
-<li>通过CtMethod和CtField构造方法和成员甚至Annotation。</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ClassPool pool = ClassPool.getDefault();</span><br><span class="line">CtClass cc = pool.makeClass(&quot;foo&quot;);</span><br><span class="line">CtMethod mthd = CtNewMethod.make(&quot;public Integer getInteger() &#123; return null; &#125;&quot;, cc);</span><br><span class="line">cc.addMethod(mthd);</span><br><span class="line">CtField f = new CtField(CtClass.intType, &quot;i&quot;, cc);</span><br><span class="line">point.addField(f);</span><br><span class="line">clazz = cc.toClass(); Object instance = class.newInstance();</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Javassist不仅可以生成类、变量和方法，还可以操作现有的方法，这在AOP上非常有用，比如做方法调用的埋点</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// Point.java</span><br><span class="line">class Point &#123;</span><br><span class="line">   	int x, y;</span><br><span class="line">   	void move(int dx, int dy) &#123; x += dx; y += dy; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 对已有代码每次move执行时做埋点</span><br><span class="line">ClassPool pool = ClassPool.getDefault();</span><br><span class="line">CtClass cc = pool.get(&quot;Point&quot;);</span><br><span class="line">CtMethod m = cc.getDeclaredMethod(&quot;move&quot;);</span><br><span class="line">m.insertBefore(&quot;&#123; System.out.println($1); System.out.println($2); &#125;&quot;);</span><br><span class="line">cc.writeFile();</span><br></pre></td></tr></table></figure>
-<p>其中$1和$2表示调用栈中的第一和第二个参数，写到磁盘后的class定义类似：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">class Point &#123;</span><br><span class="line">   	int x, y;</span><br><span class="line">   	void move(int dx, int dy) &#123;</span><br><span class="line">       	&#123; System.out.println(dx); System.out.println(dy); &#125;</span><br><span class="line">       	x += dx; y += dy;</span><br><span class="line">   	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/28/java反射/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/28/java反射/" itemprop="url">java反射</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-28T19:44:53+08:00">
-                2018-01-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="什么是反射"><a href="#什么是反射" class="headerlink" title="什么是反射"></a>什么是反射</h1><p>反射是一种在程序运行时动态访问，修改某个类中任意属性(状态)和方法(行为)的机制</p>
-<ul>
-<li><p>在运行时判断任意一个对象所属的类</p>
-</li>
-<li><p>在运行时构造任意一个类的对象</p>
-</li>
-<li><p>在运行时判断任意一个类所具有的成员变量和方法</p>
-</li>
-<li><p>在运行时调用任意一个对象的方法</p>
-</li>
-</ul>
-<p>设计到的四个核心类</p>
-<ul>
-<li><p>java.lang.Class.java:类对象</p>
-</li>
-<li><p>java.lang.reflect.Constructor.java:类的构造器对象</p>
-</li>
-<li><p>java.lang.reflect.Method.java:类的方法对象</p>
-</li>
-<li><p>java.lang.reflect.Field.java:类的属性对象</p>
-</li>
-</ul>
-<h1 id="反射有什么用？"><a href="#反射有什么用？" class="headerlink" title="反射有什么用？"></a>反射有什么用？</h1><ul>
-<li><p>操作因访问权限限制的属性和方法</p>
-</li>
-<li><p>实现自定义注解</p>
-</li>
-<li><p>动态加载第三方jar包，解决android中方法数不能超过65536个的问题</p>
-</li>
-<li><p>按需加载类，节省编译和初始化apk的时间</p>
-</li>
-</ul>
-<h1 id="反射工作原理"><a href="#反射工作原理" class="headerlink" title="反射工作原理"></a>反射工作原理</h1><p>当编完一个java项目之后，每个java文件都会被编译成一个.class文件，这些class对象继承了这个类的所有信息，包括父类、接口、构造函数、方法、属性等，这些class文件在程序运行时会被classloader加载到虚拟机中。当一类被加载以后，java虚拟机就会在内存中自动产生一个class对象。</p>
-<p>反射的原理就是借助class.java， constructor.java, method.java, field.java四个类在程序运行时动态访问和修改任何类的行为和状态。</p>
-<h1 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h1><ul>
-<li>获取父类</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">private void getSuperClass()&#123;</span><br><span class="line">       ProgramMonkey programMonkey = new ProgramMonkey(&quot;小明&quot;, &quot;男&quot;, 12);</span><br><span class="line">       Class&lt;?&gt; superClass = programMonkey.getClass().getSuperclass();</span><br><span class="line">       while (superClass != null) &#123;</span><br><span class="line">           LogE(&quot;programMonkey&apos;s super class is : &quot; + superClass.getName());</span><br><span class="line">           // 再获取父类的上一层父类，直到最后的 Object 类，Object 的父类为 null</span><br><span class="line">           superClass = superClass.getSuperclass();</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>获取接口</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">private void getInterfaces() &#123;</span><br><span class="line">       ProgramMonkey programMonkey = new ProgramMonkey(&quot;小明&quot;, &quot;男&quot;, 12);</span><br><span class="line">       Class&lt;?&gt;[] interfaceses = programMonkey.getClass().getInterfaces();</span><br><span class="line">       for (Class&lt;?&gt; class1 : interfaceses) &#123;</span><br><span class="line">           LogE(&quot;programMonkey&apos;s interface is : &quot; + class1.getName());</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>获取当前类的所有的方法</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">private void getCurrentClassMethods() &#123;</span><br><span class="line">       ProgramMonkey programMonkey = new ProgramMonkey(&quot;小明&quot;, &quot;男&quot;, 12);</span><br><span class="line">       Method[] methods = programMonkey.getClass().getDeclaredMethods();</span><br><span class="line">       for (Method method : methods) &#123;</span><br><span class="line">           LogE(&quot;declared method name : &quot; + method.getName());</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       try &#123;</span><br><span class="line">           Method getSalaryPerMonthMethod = programMonkey.getClass().getDeclaredMethod(&quot;getSalaryPerMonth&quot;);</span><br><span class="line">           getSalaryPerMonthMethod.setAccessible(true);</span><br><span class="line">           // 获取返回类型</span><br><span class="line">           Class&lt;?&gt; returnType = getSalaryPerMonthMethod.getReturnType();</span><br><span class="line">           LogE(&quot;getSalaryPerMonth 方法的返回类型 : &quot; + returnType.getName());</span><br><span class="line"></span><br><span class="line">           // 获取方法的参数类型列表</span><br><span class="line">           Class&lt;?&gt;[] paramClasses = getSalaryPerMonthMethod.getParameterTypes() ;</span><br><span class="line">           for (Class&lt;?&gt; class1 : paramClasses) &#123;</span><br><span class="line">               LogE(&quot;getSalaryPerMonth 方法的参数类型 : &quot; + class1.getName());</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           // 是否是 private 函数，属性是否是 private 也可以使用这种方式判断</span><br><span class="line">           LogE(getSalaryPerMonthMethod.getName() + &quot; is private &quot; + Modifier.isPrivate(getSalaryPerMonthMethod.getModifiers()));</span><br><span class="line"></span><br><span class="line">           // 执行方法</span><br><span class="line">           Object result = getSalaryPerMonthMethod.invoke(programMonkey);</span><br><span class="line">           LogE(&quot;getSalaryPerMonth 方法的返回结果: &quot; + result);</span><br><span class="line">       &#125; catch (Exception e) &#123;</span><br><span class="line">           e.printStackTrace();</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>获取当前类和父类的所有公有方法</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">private void getAllMethods() &#123;</span><br><span class="line">       ProgramMonkey programMonkey = new ProgramMonkey(&quot;小明&quot;, &quot;男&quot;, 12);</span><br><span class="line">       // 获取当前类和父类的所有公有方法</span><br><span class="line">       Method[] methods = programMonkey.getClass().getMethods();</span><br><span class="line">       for (Method method : methods) &#123;</span><br><span class="line">           LogE(&quot;method name : &quot; + method.getName());</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       try &#123;</span><br><span class="line">           Method setmLanguageMethod = programMonkey.getClass().getMethod(&quot;setmLanguage&quot;, String.class);</span><br><span class="line">           setmLanguageMethod.setAccessible(true);</span><br><span class="line"></span><br><span class="line">           // 获取返回类型</span><br><span class="line">           Class&lt;?&gt; returnType = setmLanguageMethod.getReturnType();</span><br><span class="line">           LogE(&quot;setmLanguage 方法的返回类型 : &quot; + returnType.getName());</span><br><span class="line"></span><br><span class="line">           // 获取方法的参数类型列表</span><br><span class="line">                       Class&lt;?&gt;[] paramClasses = setmLanguageMethod.getParameterTypes() ;</span><br><span class="line">           for (Class&lt;?&gt; class1 : paramClasses) &#123;</span><br><span class="line">               LogE(&quot;setmLanguage 方法的参数类型 : &quot; + class1.getName());</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           // 是否是 private 函数，属性是否是 private 也可以使用这种方式判断</span><br><span class="line">           LogE(setmLanguageMethod.getName() + &quot; is private &quot; + Modifier.isPrivate(setmLanguageMethod.getModifiers()));</span><br><span class="line"></span><br><span class="line">           // 执行方法</span><br><span class="line">           Object result = setmLanguageMethod.invoke(programMonkey, &quot;Java&quot;);</span><br><span class="line">           LogE(&quot;setmLanguage 方法的返回结果: &quot; + result);</span><br><span class="line">       &#125; catch (Exception e) &#123;</span><br><span class="line">           e.printStackTrace();</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>获取当前类的所有实例</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">private void getCurrentClassFields() &#123;</span><br><span class="line">       ProgramMonkey programMonkey = new ProgramMonkey(&quot;小明&quot;, &quot;男&quot;, 12);</span><br><span class="line">       // 获取当前类的所有属性</span><br><span class="line">       Field[] publicFields = programMonkey.getClass().getDeclaredFields();</span><br><span class="line">       for (Field field : publicFields) &#123;</span><br><span class="line">           LogE(&quot;declared field name : &quot; + field.getName());</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       try &#123;</span><br><span class="line">           // 获取当前类的某个属性</span><br><span class="line">           Field ageField = programMonkey.getClass().getDeclaredField(&quot;mAge&quot;);</span><br><span class="line">           // 获取属性值</span><br><span class="line">           LogE(&quot; my age is : &quot; + ageField.getInt(programMonkey));</span><br><span class="line">           // 设置属性值</span><br><span class="line">           ageField.set(programMonkey, 10);</span><br><span class="line">           LogE(&quot; my age is : &quot; + ageField.getInt(programMonkey));</span><br><span class="line">       &#125; catch (Exception e) &#123;</span><br><span class="line">           e.printStackTrace();</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>获取当前类和父类的所有公有属性</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">private void getAllFields() &#123;</span><br><span class="line">       ProgramMonkey programMonkey = new ProgramMonkey(&quot;小明&quot;, &quot;男&quot;, 12);</span><br><span class="line">       // 得到当前类和父类的所有公有属性</span><br><span class="line">       Field[] publicFields = programMonkey.getClass().getFields();</span><br><span class="line">       for (Field field : publicFields) &#123;</span><br><span class="line">           LogE(&quot;field name : &quot; + field.getName());</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       try &#123;</span><br><span class="line">           // 获取当前类和父类的某个公有属性</span><br><span class="line">           Field ageField = programMonkey.getClass().getField(&quot;mAge&quot;);</span><br><span class="line">           LogE(&quot; age is : &quot; + ageField.getInt(programMonkey));</span><br><span class="line">           ageField.set(programMonkey, 8);</span><br><span class="line">           LogE(&quot; my age is : &quot; + ageField.getInt(programMonkey));</span><br><span class="line">       &#125; catch (Exception e) &#123;</span><br><span class="line">           e.printStackTrace();</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2005,7 +2086,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">112</span>
+                  <span class="site-state-item-count">114</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
