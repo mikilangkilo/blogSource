@@ -87,12 +87,12 @@
 <meta property="og:site_name" content="记录者">
 <meta property="og:description" content="内存计数器由于在JVM中，多线程是通过线程轮流切换来获得CPU执行时间的，因此，在任一具体时刻，一个CPU的内核只会执行一条线程中的指令， 因此，为了能够使得每个线程都在线程切换后能够恢复在切　换　之前的程序执行位置，每个线程都需要有自己独立的程序计数器，并且不能互相被干扰， 否则就会影响到程序的正常执行次序。因此，可以这么说，程序计数器是每个线程所私有的。由于程序计数器中存储的数据所占空间的大">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://yoursite.com/images/android/jvm内存模型.png">
-<meta property="og:updated_time" content="2019-01-03T02:18:02.302Z">
+<meta property="og:image" content="http://yoursite.com/images/android/jvm内存模型.jpg">
+<meta property="og:updated_time" content="2019-01-03T02:24:21.462Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="jvm内存模型">
 <meta name="twitter:description" content="内存计数器由于在JVM中，多线程是通过线程轮流切换来获得CPU执行时间的，因此，在任一具体时刻，一个CPU的内核只会执行一条线程中的指令， 因此，为了能够使得每个线程都在线程切换后能够恢复在切　换　之前的程序执行位置，每个线程都需要有自己独立的程序计数器，并且不能互相被干扰， 否则就会影响到程序的正常执行次序。因此，可以这么说，程序计数器是每个线程所私有的。由于程序计数器中存储的数据所占空间的大">
-<meta name="twitter:image" content="http://yoursite.com/images/android/jvm内存模型.png">
+<meta name="twitter:image" content="http://yoursite.com/images/android/jvm内存模型.jpg">
 
 
 
@@ -312,7 +312,7 @@
       
 
       
-        <p><img src="/images/android/jvm内存模型.png" alt="JVM内存模型示意图"></p>
+        <p><img src="/images/android/jvm内存模型.jpg" alt="JVM内存模型示意图"></p>
 <h2 id="内存计数器"><a href="#内存计数器" class="headerlink" title="内存计数器"></a>内存计数器</h2><p>由于在JVM中，多线程是通过线程轮流切换来获得CPU执行时间的，因此，在任一具体时刻，一个CPU的内核只会执行一条线程中的指令，</p>
 <p>因此，为了能够使得每个线程都在线程切换后能够恢复在切　换　之前的程序执行位置，每个线程都需要有自己独立的程序计数器，并且不能互相被干扰，</p>
 <p>否则就会影响到程序的正常执行次序。因此，可以这么说，程序计数器是每个线程所私有的。由于程序计数器中存储的数据所占空间的大小不会随程序的执行而发生改变，</p>

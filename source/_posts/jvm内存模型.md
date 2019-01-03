@@ -4,7 +4,7 @@ date: 2019-01-02 23:48:21
 tags: java
 ---
 
-![JVM内存模型示意图](/images/android/jvm内存模型.png)
+![JVM内存模型示意图](/images/android/jvm内存模型.jpg)
 
 ## 内存计数器
 
