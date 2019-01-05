@@ -80,7 +80,18 @@ public Retrofit build() {
     }
 ```
 build的过程是将传入的参数进行赋值，如果没有传入okhttp的client会重新new一个。
-其中的calldapter就是我们使用的rxjava2calladapter，convertfactories就是gsonconvertfactory。
+其中的calldapter就是我们使用的rxjava2calladapter，convertfactories就是gsonconvertfactory。除此之外，calldapterfactories又增加了一个platform.defaultCallAdapterFactory(callbackExecutor)
+
+```
+CallAdapter.Factory defaultCallAdapterFactory(@Nullable Executor callbackExecutor) {
+    if (callbackExecutor != null) {
+      return new ExecutorCallAdapterFactory(callbackExecutor);
+    }
+    return DefaultCallAdapterFactory.INSTANCE;
+  }
+```
+
+返回的是Executorcalladapter
 
 ```
 public <T> T create(final Class<T> service) {
@@ -326,12 +337,214 @@ return new ServiceMethod<>(this);
 
 **切记，这里并没有缓存response，缓存的是result，result是对method的一个处理结果，调用的其实是rxjava2factory和gsonconvertfactory来配合处理的**
 
+## 请求过程
 
+由于之前传入了ExecutorCallAdapterFactory，此时一个retrofit的实例在app中也已经获取了。之后就看如何使用的
 
+```
+Response<String> resp = webService.logoutRaw().execute();
+```
 
+执行execute就可以获取到了response。
 
+```
+/**
+   * Synchronously send the request and return its response.
+   *
+   * @throws IOException if a problem occurred talking to the server.
+   * @throws RuntimeException (and subclasses) if an unexpected error occurs creating the request
+   * or decoding the response.
+   */
+  Response<T> execute() throws IOException;
+```
+这个方法是在retrofit的call.java类中，实现是在ExecutorCallbackCall中，具体是操作了一个okhttpcall
 
+```
+static final class ExecutorCallbackCall<T> implements Call<T> {
+    final Executor callbackExecutor;
+    final Call<T> delegate;
 
+    ExecutorCallbackCall(Executor callbackExecutor, Call<T> delegate) {
+      this.callbackExecutor = callbackExecutor;
+      this.delegate = delegate;
+    }
+
+    @Override public void enqueue(final Callback<T> callback) {
+      checkNotNull(callback, "callback == null");
+
+      delegate.enqueue(new Callback<T>() {
+        @Override public void onResponse(Call<T> call, final Response<T> response) {
+          callbackExecutor.execute(new Runnable() {
+            @Override public void run() {
+              if (delegate.isCanceled()) {
+                // Emulate OkHttp's behavior of throwing/delivering an IOException on cancellation.
+                callback.onFailure(ExecutorCallbackCall.this, new IOException("Canceled"));
+              } else {
+                callback.onResponse(ExecutorCallbackCall.this, response);
+              }
+            }
+          });
+        }
+
+        @Override public void onFailure(Call<T> call, final Throwable t) {
+          callbackExecutor.execute(new Runnable() {
+            @Override public void run() {
+              callback.onFailure(ExecutorCallbackCall.this, t);
+            }
+          });
+        }
+      });
+    }
+
+    @Override public boolean isExecuted() {
+      return delegate.isExecuted();
+    }
+
+    @Override public Response<T> execute() throws IOException {
+      return delegate.execute();
+    }
+
+    @Override public void cancel() {
+      delegate.cancel();
+    }
+
+    @Override public boolean isCanceled() {
+      return delegate.isCanceled();
+    }
+
+    @SuppressWarnings("CloneDoesntCallSuperClone") // Performing deep clone.
+    @Override public Call<T> clone() {
+      return new ExecutorCallbackCall<>(callbackExecutor, delegate.clone());
+    }
+
+    @Override public Request request() {
+      return delegate.request();
+    }
+  }
+```
+
+从这里看就知道是执行了callback的方法，这个callback是取自retrofit的rxadapter里面和okhttpcall的realcall中
+
+反馈的细节在
+
+```
+final class CallEnqueueObservable<T> extends Observable<Response<T>> {
+  private final Call<T> originalCall;
+
+  CallEnqueueObservable(Call<T> originalCall) {
+    this.originalCall = originalCall;
+  }
+
+  @Override protected void subscribeActual(Observer<? super Response<T>> observer) {
+    // Since Call is a one-shot type, clone it for each new observer.
+    Call<T> call = originalCall.clone();
+    CallCallback<T> callback = new CallCallback<>(call, observer);
+    observer.onSubscribe(callback);
+    call.enqueue(callback);
+  }
+
+  private static final class CallCallback<T> implements Disposable, Callback<T> {
+    private final Call<?> call;
+    private final Observer<? super Response<T>> observer;
+    boolean terminated = false;
+
+    CallCallback(Call<?> call, Observer<? super Response<T>> observer) {
+      this.call = call;
+      this.observer = observer;
+    }
+
+    @Override public void onResponse(Call<T> call, Response<T> response) {
+      if (call.isCanceled()) return;
+
+      try {
+        observer.onNext(response);
+
+        if (!call.isCanceled()) {
+          terminated = true;
+          observer.onComplete();
+        }
+      } catch (Throwable t) {
+        if (terminated) {
+          RxJavaPlugins.onError(t);
+        } else if (!call.isCanceled()) {
+          try {
+            observer.onError(t);
+          } catch (Throwable inner) {
+            Exceptions.throwIfFatal(inner);
+            RxJavaPlugins.onError(new CompositeException(t, inner));
+          }
+        }
+      }
+    }
+
+    @Override public void onFailure(Call<T> call, Throwable t) {
+      if (call.isCanceled()) return;
+
+      try {
+        observer.onError(t);
+      } catch (Throwable inner) {
+        Exceptions.throwIfFatal(inner);
+        RxJavaPlugins.onError(new CompositeException(t, inner));
+      }
+    }
+
+    @Override public void dispose() {
+      call.cancel();
+    }
+
+    @Override public boolean isDisposed() {
+      return call.isCanceled();
+    }
+  }
+}
+```
+
+到这一步就能看懂了，后续的部分都是我们经常使用的地方
+
+## 处理response的部分
+
+```
+@Override public Response<T> execute() throws IOException {
+    okhttp3.Call call;
+
+    synchronized (this) {
+      if (executed) throw new IllegalStateException("Already executed.");
+      executed = true;
+
+      if (creationFailure != null) {
+        if (creationFailure instanceof IOException) {
+          throw (IOException) creationFailure;
+        } else {
+          throw (RuntimeException) creationFailure;
+        }
+      }
+
+      call = rawCall;
+      if (call == null) {
+        try {
+          call = rawCall = createRawCall();
+        } catch (IOException | RuntimeException e) {
+          creationFailure = e;
+          throw e;
+        }
+      }
+    }
+
+    if (canceled) {
+      call.cancel();
+    }
+
+    return parseResponse(call.execute());
+  }
+```
+
+可以看到在执行的过程中返回结果的时候直接调用了gson来解析
+
+到这里我看到了解析的过程，看到了执行rxjava的过程，也看到了执行okhttp的过程，理应串起来
+
+## 总结
+
+![retrofit个人理解图](/images/android/retrofit个人理解图.png)
 
 
 
