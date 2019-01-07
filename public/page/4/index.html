@@ -239,6 +239,134 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/06/python操作mongodb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/06/python操作mongodb/" itemprop="url">python操作mongodb</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-06T11:35:26+08:00">
+                2018-06-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="连接mongodb"><a href="#连接mongodb" class="headerlink" title="连接mongodb"></a>连接mongodb</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python</span><br><span class="line"># -*- coding:utf-8 -*-</span><br><span class="line"></span><br><span class="line">from pymongo import MongoClient</span><br><span class="line"></span><br><span class="line">conn = MongoClient(&apos;192.168.0.113&apos;, 27017)</span><br><span class="line">db = conn.mydb  ##连接mydb数据库，没有则自动创建</span><br><span class="line">my_set = db.test_set  # 使用test_set集合，没有则自动创建</span><br></pre></td></tr></table></figure>
+<h1 id="插入数据"><a href="#插入数据" class="headerlink" title="插入数据"></a>插入数据</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">my_set.insert(&#123;&quot;name&quot;:&quot;zhangsan&quot;,&quot;age&quot;:18&#125;)</span><br><span class="line"></span><br><span class="line"># 或</span><br><span class="line"></span><br><span class="line">my_set.save(&#123;&quot;name&quot;:&quot;zhangsan&quot;,&quot;age&quot;,18&#125;)</span><br></pre></td></tr></table></figure>
+<p>#插入多条</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">users=[&#123;&quot;name&quot;:&quot;zhangsan&quot;,&quot;age&quot;:18&#125;,&#123;&quot;name&quot;:&quot;lisi&quot;,&quot;age&quot;:18&#125;]</span><br><span class="line">my_set.insert(users)</span><br><span class="line"></span><br><span class="line"># 或</span><br><span class="line"></span><br><span class="line">my_set.save(users)</span><br></pre></td></tr></table></figure>
+<h1 id="查询数据"><a href="#查询数据" class="headerlink" title="查询数据"></a>查询数据</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 查询全部</span><br><span class="line">for i in my_set.find():</span><br><span class="line">	print(i)</span><br><span class="line"></span><br><span class="line"># 查询name = zhangsan 的</span><br><span class="line"></span><br><span class="line">for i in my_set.find(&#123;&quot;name&quot;:&quot;zhangsan&quot;&#125;):</span><br><span class="line">	print(i)</span><br><span class="line">print(my_set.find_one(&#123;&quot;name&quot;:&quot;zhangsan&quot;&#125;))</span><br></pre></td></tr></table></figure>
+<h1 id="更新数据"><a href="#更新数据" class="headerlink" title="更新数据"></a>更新数据</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">my_set.update(</span><br><span class="line">	&lt;query&gt;,  #查询条件</span><br><span class="line">	&lt;update&gt;,  #update的对象和一些更新操作符</span><br><span class="line">	&#123;</span><br><span class="line">		upsert: &lt;boolean&gt; # 如果不存在update的记录，是否插入</span><br><span class="line">		multi: &lt;boolean&gt; # 可选，mongodb默认是false，只更新找到的第一条记录</span><br><span class="line">		writeConcern: &lt;document&gt; # 可选，抛出异常的级别</span><br><span class="line">	&#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">my_set.update(&#123;&quot;name&quot;:&quot;zhangsan&quot;&#125;,&#123;&apos;$set&apos;:&#123;&quot;age&quot;:20&#125;&#125;)</span><br></pre></td></tr></table></figure>
+<h1 id="删除数据"><a href="#删除数据" class="headerlink" title="删除数据"></a>删除数据</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">my_set.remove(</span><br><span class="line">	&lt;query&gt;,  # 可选：删除的文档的条件</span><br><span class="line">	&#123;</span><br><span class="line">		justOne: &lt;boolean&gt;</span><br><span class="line">		writeConcern: &lt;document&gt;</span><br><span class="line">	&#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 删除name = lisi的全部记录</span><br><span class="line">my_set.remove(&#123;&apos;name&apos;:&apos;zhangsan&apos;&#125;)</span><br><span class="line"></span><br><span class="line"># 删除name=lisi的某个id的记录</span><br><span class="line">id = my_set.find_one(&#123;&quot;name&quot;:&quot;zhangsan&quot;&#125;)[&quot;_id&quot;]</span><br><span class="line">my_set.remove(id)</span><br><span class="line"></span><br><span class="line"># 删除集合里的所有记录</span><br><span class="line">db.users.remove()</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/04/2018第二十二周工作小结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1829,131 +1957,6 @@ vii. 如果该域是一个数组，需要针对每一个元素计算一下，然
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/01/2018第十七周工作小结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/01/2018第十七周工作小结/" itemprop="url">2018第十七周工作小结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-01T23:45:39+08:00">
-                2018-05-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>最近实在是太忙了，忙到github都忘了更新博客了。每天都在忙着需求，改bug，然后项目追着上线。累的半死不活的。</p>
-<p>好消息是项目终于给整上线了，坏消息是项目上线之后可能会更忙。</p>
-<p>来公司2个月还没到，一下子回到了刚毕业的时候在传音那种加班加点很累的生活方式。不过好的是，起码现在自己是在做自己的事情。</p>
-<p>上周来了个大牛，技术比我厉害，也跟着他学习到了不少东西。需要整理一下。主要是http/https，okhttp工作原理，还有序列化原理等等。这些是学到的东西。</p>
-<p>工作上面的总结感觉没啥好说的，有两个要写一下，一个是activity栈的工作原理，一个是fragment栈的工作原理。目前了解一些，但是不够深入。</p>
-<p>明天开始仍然是进入学习的阶段。就先这样吧。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2004,7 +2007,7 @@ vii. 如果该域是一个数组，需要针对每一个元素计算一下，然
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">114</span>
+                  <span class="site-state-item-count">115</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

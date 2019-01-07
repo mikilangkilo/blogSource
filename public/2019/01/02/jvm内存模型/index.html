@@ -79,19 +79,19 @@
 
 
 
-<meta name="description" content="内存计数器由于在JVM中，多线程是通过线程轮流切换来获得CPU执行时间的，因此，在任一具体时刻，一个CPU的内核只会执行一条线程中的指令， 因此，为了能够使得每个线程都在线程切换后能够恢复在切　换　之前的程序执行位置，每个线程都需要有自己独立的程序计数器，并且不能互相被干扰， 否则就会影响到程序的正常执行次序。因此，可以这么说，程序计数器是每个线程所私有的。由于程序计数器中存储的数据所占空间的大">
+<meta name="description" content="内存计数器（PC寄存器）由于在JVM中，多线程是通过线程轮流切换来获得CPU执行时间的，因此，在任一具体时刻，一个CPU的内核只会执行一条线程中的指令， 因此，为了能够使得每个线程都在线程切换后能够恢复在切　换　之前的程序执行位置，每个线程都需要有自己独立的程序计数器，并且不能互相被干扰， 否则就会影响到程序的正常执行次序。因此，可以这么说，程序计数器是每个线程所私有的。由于程序计数器中存储的数">
 <meta name="keywords" content="java">
 <meta property="og:type" content="article">
 <meta property="og:title" content="jvm内存模型">
 <meta property="og:url" content="http://yoursite.com/2019/01/02/jvm内存模型/index.html">
 <meta property="og:site_name" content="记录者">
-<meta property="og:description" content="内存计数器由于在JVM中，多线程是通过线程轮流切换来获得CPU执行时间的，因此，在任一具体时刻，一个CPU的内核只会执行一条线程中的指令， 因此，为了能够使得每个线程都在线程切换后能够恢复在切　换　之前的程序执行位置，每个线程都需要有自己独立的程序计数器，并且不能互相被干扰， 否则就会影响到程序的正常执行次序。因此，可以这么说，程序计数器是每个线程所私有的。由于程序计数器中存储的数据所占空间的大">
+<meta property="og:description" content="内存计数器（PC寄存器）由于在JVM中，多线程是通过线程轮流切换来获得CPU执行时间的，因此，在任一具体时刻，一个CPU的内核只会执行一条线程中的指令， 因此，为了能够使得每个线程都在线程切换后能够恢复在切　换　之前的程序执行位置，每个线程都需要有自己独立的程序计数器，并且不能互相被干扰， 否则就会影响到程序的正常执行次序。因此，可以这么说，程序计数器是每个线程所私有的。由于程序计数器中存储的数">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/images/android/jvm内存模型.jpg">
-<meta property="og:updated_time" content="2019-01-03T02:24:21.462Z">
+<meta property="og:updated_time" content="2019-01-03T14:03:42.016Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="jvm内存模型">
-<meta name="twitter:description" content="内存计数器由于在JVM中，多线程是通过线程轮流切换来获得CPU执行时间的，因此，在任一具体时刻，一个CPU的内核只会执行一条线程中的指令， 因此，为了能够使得每个线程都在线程切换后能够恢复在切　换　之前的程序执行位置，每个线程都需要有自己独立的程序计数器，并且不能互相被干扰， 否则就会影响到程序的正常执行次序。因此，可以这么说，程序计数器是每个线程所私有的。由于程序计数器中存储的数据所占空间的大">
+<meta name="twitter:description" content="内存计数器（PC寄存器）由于在JVM中，多线程是通过线程轮流切换来获得CPU执行时间的，因此，在任一具体时刻，一个CPU的内核只会执行一条线程中的指令， 因此，为了能够使得每个线程都在线程切换后能够恢复在切　换　之前的程序执行位置，每个线程都需要有自己独立的程序计数器，并且不能互相被干扰， 否则就会影响到程序的正常执行次序。因此，可以这么说，程序计数器是每个线程所私有的。由于程序计数器中存储的数">
 <meta name="twitter:image" content="http://yoursite.com/images/android/jvm内存模型.jpg">
 
 
@@ -313,10 +313,11 @@
 
       
         <p><img src="/images/android/jvm内存模型.jpg" alt="JVM内存模型示意图"></p>
-<h2 id="内存计数器"><a href="#内存计数器" class="headerlink" title="内存计数器"></a>内存计数器</h2><p>由于在JVM中，多线程是通过线程轮流切换来获得CPU执行时间的，因此，在任一具体时刻，一个CPU的内核只会执行一条线程中的指令，</p>
+<h2 id="内存计数器（PC寄存器）"><a href="#内存计数器（PC寄存器）" class="headerlink" title="内存计数器（PC寄存器）"></a>内存计数器（PC寄存器）</h2><p>由于在JVM中，多线程是通过线程轮流切换来获得CPU执行时间的，因此，在任一具体时刻，一个CPU的内核只会执行一条线程中的指令，</p>
 <p>因此，为了能够使得每个线程都在线程切换后能够恢复在切　换　之前的程序执行位置，每个线程都需要有自己独立的程序计数器，并且不能互相被干扰，</p>
 <p>否则就会影响到程序的正常执行次序。因此，可以这么说，程序计数器是每个线程所私有的。由于程序计数器中存储的数据所占空间的大小不会随程序的执行而发生改变，</p>
 <p>因此，对于程序计数器是不会发生内存溢出现象(OutOfMemory)的。</p>
+<p>内存计数器是context的一部分</p>
 <h2 id="java-栈"><a href="#java-栈" class="headerlink" title="java 栈"></a>java 栈</h2><p>Java栈中存放的是一个个的栈帧，每个栈帧对应一个被调用的方法，在栈帧中包括局部变量表(Local Variables)、操作数栈(Operand Stack)、</p>
 <p>指向当前方法所属的类的运行时常量池（运行时常量池的概念在方法区部分会谈到）的引用(Reference to runtime constant pool)、</p>
 <p>方法返回地址(Return Address)和一些额外的附加信息。当线程执行一个方法时，就会随之创建一个对应的栈帧，并将建立的栈帧压栈。当方法执行完毕之后，便会将栈帧出栈。　</p>
@@ -330,6 +331,7 @@
 <p>在方法区中有一个非常重要的部分就是运行时常量池，它是每一个类或接口的常量池的运行时表示形式，在类和接口被加载到JVM后，</p>
 <p>对应的运行时常量池就被创建出来。当然并非Class文件常量池中的内容才能进入运行时常量池，在运行期间也可将新的常量放入运行时常量池中，比如String的intern方法。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">方法区（Method Area）与Java 堆一样，是各个线程共享的内存区域，它用于存</span><br><span class="line"></span><br><span class="line">储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。虽</span><br><span class="line"></span><br><span class="line">然Java 虚拟机规范把方法区描述为堆的一个逻辑部分，但是它却有一个别名叫做Non-</span><br><span class="line"></span><br><span class="line">Heap（非堆），目的应该是与Java 堆区分开来。</span><br><span class="line"></span><br><span class="line">对于习惯在HotSpot 虚拟机上开发和部署程序的开发者来说，很多人愿意把方法区</span><br><span class="line"></span><br><span class="line">称为“永久代”（Permanent Generation），本质上两者并不等价，仅仅是因为HotSpot 虚</span><br><span class="line"></span><br><span class="line">拟机的设计团队选择把GC 分代收集扩展至方法区，或者说使用永久代来实现方法区而</span><br><span class="line"></span><br><span class="line">已。对于其他虚拟机（如BEA JRockit、IBM J9 等）来说是不存在永久代的概念的。即</span><br><span class="line"></span><br><span class="line">使是HotSpot 虚拟机本身，根据官方发布的路线图信息，现在也有放弃永久代并“搬家”</span><br><span class="line"></span><br><span class="line">至Native Memory 来实现方法区的规划了。</span><br><span class="line"></span><br><span class="line">Java 虚拟机规范对这个区域的限制非常宽松，除了和Java 堆一样不需要连续的内</span><br><span class="line"></span><br><span class="line">存和可以选择固定大小或者可扩展外，还可以选择不实现垃圾收集。相对而言，垃圾</span><br><span class="line"></span><br><span class="line">收集行为在这个区域是比较少出现的，但并非数据进入了方法区就如永久代的名字一</span><br><span class="line"></span><br><span class="line">样“永久”存在了。这个区域的内存回收目标主要是针对常量池的回收和对类型的卸</span><br><span class="line"></span><br><span class="line">载，一般来说这个区域的回收“成绩”比较难以令人满意，尤其是类型的卸载，条件</span><br><span class="line"></span><br><span class="line">相当苛刻，但是这部分区域的回收确实是有必要的。在Sun 公司的BUG 列表中，曾出</span><br><span class="line"></span><br><span class="line">现过的若干个严重的BUG 就是由于低版本的HotSpot 虚拟机对此区域未完全回收而导</span><br><span class="line"></span><br><span class="line">致内存泄漏。</span><br><span class="line"></span><br><span class="line">根据Java 虚拟机规范的规定，当方法区无法满足内存分配需求时，将抛出</span><br><span class="line"></span><br><span class="line">OutOfMemoryError 异常。</span><br></pre></td></tr></table></figure>
+<h2 id="静态区"><a href="#静态区" class="headerlink" title="静态区"></a>静态区</h2><p>静态区也称为运行常量池，static出来的对象都是静态的。该区域存放类和接口的常量，</p>
 
       
     </div>
@@ -360,8 +362,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/01/02/okhttp/" rel="next" title="okhttp">
-                <i class="fa fa-chevron-left"></i> okhttp
+              <a href="/2019/01/02/okhttp+retrofit/" rel="next" title="okhttp+retrofit分析">
+                <i class="fa fa-chevron-left"></i> okhttp+retrofit分析
               </a>
             
           </div>
@@ -369,6 +371,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/01/05/动态代理的好处/" rel="prev" title="动态代理的好处">
+                动态代理的好处 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -445,7 +451,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">114</span>
+                  <span class="site-state-item-count">115</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -491,7 +497,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#内存计数器"><span class="nav-number">1.</span> <span class="nav-text">内存计数器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#java-栈"><span class="nav-number">2.</span> <span class="nav-text">java 栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#本地方法栈"><span class="nav-number">3.</span> <span class="nav-text">本地方法栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#java-堆"><span class="nav-number">4.</span> <span class="nav-text">java 堆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法区"><span class="nav-number">5.</span> <span class="nav-text">方法区</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#内存计数器（PC寄存器）"><span class="nav-number">1.</span> <span class="nav-text">内存计数器（PC寄存器）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#java-栈"><span class="nav-number">2.</span> <span class="nav-text">java 栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#本地方法栈"><span class="nav-number">3.</span> <span class="nav-text">本地方法栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#java-堆"><span class="nav-number">4.</span> <span class="nav-text">java 堆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法区"><span class="nav-number">5.</span> <span class="nav-text">方法区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#静态区"><span class="nav-number">6.</span> <span class="nav-text">静态区</span></a></li></ol></div>
             
 
           </div>
