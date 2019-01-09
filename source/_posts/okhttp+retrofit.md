@@ -544,7 +544,9 @@ final class CallEnqueueObservable<T> extends Observable<Response<T>> {
 
 ## 总结
 
-![retrofit个人理解图](/images/android/retrofit个人理解图.png)
+![retrofit个人理解图](/images/android/Retrofit个人理解图.png)
+
+# okHTTP的设计思路
 
 
 
