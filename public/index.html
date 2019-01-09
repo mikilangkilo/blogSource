@@ -239,6 +239,333 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/09/volatile的作用及其原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/09/volatile的作用及其原理/" itemprop="url">volatile的作用及其原理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-09T19:03:23+08:00">
+                2019-01-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h1><h2 id="缓存一致性"><a href="#缓存一致性" class="headerlink" title="缓存一致性"></a>缓存一致性</h2><p>背景：计算机执行程序时，每条指令都是在cpu中执行的，执行过程中会涉及到数据的读取和写入，由于程序运行过程中的临时数据时存放在主存中（物理内存），这就产生了一个问题，cpu执行速度很快，而从内存读取数据和向内写入数据的过程比cpu执行的速度慢，因此计算机在cpu里面增加了高速缓存</p>
+<p>cpu运行过程中，会讲运算需要的数据从主存中复制一份到cpu的高速缓存当中，那么当cpu进行计算时就可以直接从它的高速缓存读取数据和向其中写入数据，运算结束之后，再将高速缓存中的数据刷行到主存当中。</p>
+<p>譬如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">i = i + 1;</span><br></pre></td></tr></table></figure></p>
+<p>当线程执行这个语句时，会先从主存当中读取i的值，然后复制一份到高速缓存当中，然后cpu执行指令对i进行+1操作，然后将数据写入高速缓存，最后将高速缓存中i最新的值刷新到主存中。</p>
+<p>这个代码在多线程中会出现问题，由于多核cpu环境下，每条线程可能运行于不同的cpu中，因此每个线程运行时有自己的高速缓存。当a和b同时执行这条语句的时候，a将i拷贝到了高速缓存中，执行+1操作，此时如果b线程也拷贝到高速缓存中，此时读取的值还是a未+1的值</p>
+<p>此时就出现了缓存不一致的问题，这也是著名的缓存一致性问题，通常这种被多个线程访问的变量称为共享变量。</p>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>解决方法有两种，一种是在总线加lock锁的方式，二是通过缓存一致性协议</p>
+<h3 id="总线加lock"><a href="#总线加lock" class="headerlink" title="总线加lock"></a>总线加lock</h3><p>总线加lock的方式可以阻塞主所有其他cpu对其他部件的访问（如内存），从而使得只有一个cpu能使用这个变量的内存。</p>
+<p>上述的例子，a在执行i = i + 1的时候，在总线上面发出lock的信号，那么只有等这段代码执行完毕之后，其他cpu才能在i所在的内存读取变量</p>
+<p>也就是sychronize在代码块上面加个锁</p>
+<h3 id="通过缓存一致性协议"><a href="#通过缓存一致性协议" class="headerlink" title="通过缓存一致性协议"></a>通过缓存一致性协议</h3><p>当cpu写数据时，如果发现操作的变量是共享变量，即在其他cpu中也存在该变量的副本，会发出信号通知其他cpu将该变量的缓存行为设置为无效状态，因此当其他cpu需要读取这个变量时，发现自己缓存中缓存该变量的缓存时无效的，那么它就会从内存中重新读取</p>
+<h1 id="并发编程三大特性"><a href="#并发编程三大特性" class="headerlink" title="并发编程三大特性"></a>并发编程三大特性</h1><h2 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h2><p>java中对基本数据类型的读取和赋值操作是原子性操作，要么执行要么不执行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">x = 10;//原子性操作</span><br><span class="line"></span><br><span class="line">y = x;//非原子性，先读取x的值，再将x的值写入工作内存，这两个过程都是原子性，但是合起来不是</span><br><span class="line"></span><br><span class="line">x ++;//读取x的值，加1，写入新的值，也是合起来就不是原子性了</span><br><span class="line"></span><br><span class="line">x = x + 1;//同x++</span><br></pre></td></tr></table></figure>
+<h2 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h2><p>可见性就是使用volatile关键字来保证</p>
+<p>当一个共享变量被volatile修饰时，它会保证修改的值会立即被更新到主存中，当有其他线程需要读取时，他会去内存中读取新值。</p>
+<p>对于一个没有被volatile修饰的普通共享变量，因为普通共享变量被修改之后，什么时候被写入主存时不确定的，当其他线程去读取时，此时内存可能还是原来的旧值，因此无法保证可见性。</p>
+<p>另外，通过sychronized和lock也可以保证可见性，sychronized和lock能保证同一时刻只有一个线程获取锁，然后执行同步代码，并且释放锁之前会将对变量的修改刷行到主存当中，因此可以保证可见性</p>
+<h2 id="有序性"><a href="#有序性" class="headerlink" title="有序性"></a>有序性</h2><p>在java内存模型中，允许编译器和处理器对指令进行重排序，但是排序过程不会影响到单线程程序的执行，却会影响到多线程并发执行的正确性</p>
+<p>在java里面可以通过volatile关键字来保证一定的“有序性”，另外可以通过sychronized和lock来保证有序性，sychronized和lock保证每个时刻是有一个线程执行同步代码，相当于是让线程顺序执行同步代码，自然就保证了有序性</p>
+<p>另外，java内存模型具备一些先天的“有序性”，即不需要任何手段就能保证的有序性</p>
+<h3 id="happens-before原则"><a href="#happens-before原则" class="headerlink" title="happens - before原则"></a>happens - before原则</h3><h4 id="程序次序规则"><a href="#程序次序规则" class="headerlink" title="程序次序规则"></a>程序次序规则</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">一个线程内，按照代码顺序，书写在前面的操作先行发生于书写在后面的操作</span><br></pre></td></tr></table></figure>
+<h4 id="锁定规则"><a href="#锁定规则" class="headerlink" title="锁定规则"></a>锁定规则</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">一个unlock操作先行发生于后面对同一个锁unlock操作</span><br></pre></td></tr></table></figure>
+<h4 id="volatile变量规则"><a href="#volatile变量规则" class="headerlink" title="volatile变量规则"></a>volatile变量规则</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">对一个变量的写操作先行发生于后面对这个变量的读操作</span><br></pre></td></tr></table></figure>
+<h4 id="传递规则"><a href="#传递规则" class="headerlink" title="传递规则"></a>传递规则</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">如果操作a先行发生于操作b，而操作b又先行发生于操作c，则可以得出操作a先行发生于操作c</span><br></pre></td></tr></table></figure>
+<h4 id="线程启动规则"><a href="#线程启动规则" class="headerlink" title="线程启动规则"></a>线程启动规则</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">thread对象的start()方法先行发生于此线程的每一个动作</span><br></pre></td></tr></table></figure>
+<h4 id="线程终结规则"><a href="#线程终结规则" class="headerlink" title="线程终结规则"></a>线程终结规则</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">线程中的所有操作都先行发生于线程的终止检测，我们可以通过Thread.join()方法结束、Thread.isAlive()的返回值手段检测到线程已经终止执行</span><br></pre></td></tr></table></figure>
+<h4 id="对象终结规则"><a href="#对象终结规则" class="headerlink" title="对象终结规则"></a>对象终结规则</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">一个对象的初始化完成先行发生于它的finalize()方法的开始</span><br></pre></td></tr></table></figure>
+<h1 id="volatile"><a href="#volatile" class="headerlink" title="volatile"></a>volatile</h1><p>一个共享变量被volatile修饰之后，就具备了两层语义</p>
+<ol>
+<li><p>保证了不同线程对这个变量进行操作时的<strong>可见性</strong>，即一个线程修改了某个变量的值，这新值对其他线程来说时立即可见的</p>
+</li>
+<li><p>禁止进行指令重排序</p>
+</li>
+</ol>
+<p>一个例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//A</span><br><span class="line">boolean stop = false;</span><br><span class="line">while(!stop)&#123;</span><br><span class="line">	doSomething();</span><br><span class="line">&#125;</span><br><span class="line">//B</span><br><span class="line">stop = true;</span><br></pre></td></tr></table></figure>
+<p>假如stop没有被volatile修饰的话，当a线程在执行A段语句的时候，b线程执行了B语句，此时可能由于没有来得及写入主存，导致a线程不知道b线程做了修改，就会造成死循环</p>
+<h2 id="原理和实现机制"><a href="#原理和实现机制" class="headerlink" title="原理和实现机制"></a>原理和实现机制</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">观察加入volatile关键字和没有加入volatile关键字时所生成的会变代码发现，加入volatile关键字时，会多出一个lock前缀指令</span><br><span class="line"> 										----《深入理解java虚拟机》</span><br></pre></td></tr></table></figure>
+<p>lock前缀指令实际上相当于一个内存屏障(也称内存栅栏)</p>
+<p>其提供了三个功能</p>
+<ol>
+<li><p>确保指令重排序时不会吧后面的指令排到内存屏障之前的位置，也不会把前面的指令排到内存屏障的后面；即在执行到内存屏障这句指令时，在他前面的操作已经全部完成</p>
+</li>
+<li><p>他会强制对缓存的操作修改立即写入主存</p>
+</li>
+<li><p>如果是写操作，他会导致其他cpu中对应的缓存行无效</p>
+</li>
+</ol>
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><p>sychronized关键字是防止多个线程同时执行一段代码，那么就会很影响程序执行效率，而volatile关键字在某些情况下性能要优于sychronized，但是要注意volatile关键字是<strong>无法替代</strong>sychronized关键字的，因为<strong>volatile关键字无法保证操作的原子性</strong></p>
+<p>一般使用时需要具备2个条件：</p>
+<ol>
+<li><p>对变量的写操作不依赖于当前值</p>
+</li>
+<li><p>该变量没有包含在具有其他变量的不变式中</p>
+</li>
+</ol>
+<h3 id="场景一：状态标记量"><a href="#场景一：状态标记量" class="headerlink" title="场景一：状态标记量"></a>场景一：状态标记量</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">volatile boolean flag = false;</span><br><span class="line"></span><br><span class="line">while(!flag)&#123;</span><br><span class="line">	doSomething();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public void setFlag()&#123;</span><br><span class="line">	flag = true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">volatile boolean inited = false;</span><br><span class="line">//线程1:</span><br><span class="line">context = loadContext();</span><br><span class="line">inited = true;</span><br><span class="line"></span><br><span class="line">//线程2:</span><br><span class="line">while(!inited)&#123;</span><br><span class="line">	sleep();</span><br><span class="line">&#125;</span><br><span class="line">doSomethingWithConfig(context);</span><br></pre></td></tr></table></figure>
+<h3 id="场景二：double-check"><a href="#场景二：double-check" class="headerlink" title="场景二：double check"></a>场景二：double check</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">class Singleton&#123;</span><br><span class="line">	private volatile static Singleton instance = null;</span><br><span class="line">	private Singleton()&#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public static Singleton getInstance()&#123;</span><br><span class="line">		if(instance == null)&#123;</span><br><span class="line">			sychronized(Singleton.class)&#123;</span><br><span class="line">				if(instance == null)&#123;</span><br><span class="line">					instance = new Singleton();</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		return instance;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h1><h2 id="volatile如何保证有序性？"><a href="#volatile如何保证有序性？" class="headerlink" title="volatile如何保证有序性？"></a>volatile如何保证有序性？</h2><p>首先，volatile禁止指令重排序，这代表两层意思</p>
+<p>1.当程序执行到volatile变量的读操作或者写操作时，在其前面的操作的更改肯定全部已经进行，且结果已经对后面的操作可见，而在其后面的操作还没有执行</p>
+<p>2.在进行指令优化时，不能将在对volatile变量访问的语句放在其后面执行，也不能把volatile变量后面的语句放到其前面执行，这也就是上面说的内存栅栏</p>
+<p>譬如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">//x、y为非volatile变量</span><br><span class="line">//flag为volatile变量</span><br><span class="line"> </span><br><span class="line">x = 2;        //语句1</span><br><span class="line">y = 0;        //语句2</span><br><span class="line">flag = true;  //语句3</span><br><span class="line">x = 4;         //语句4</span><br><span class="line">y = -1;       //语句5</span><br></pre></td></tr></table></figure>
+<p>由于flag变量为volatile变量，那么在进行指令重排序的过程的时候，不会将语句3放到语句1、语句2前面，也不会将语句3放到语句4、语句5后面，但是语句1和语句2的顺序、语句4和语句5的顺序是不做任何保证的。</p>
+<p>再譬如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">//线程1:</span><br><span class="line">context = loadContext();   //语句1</span><br><span class="line">inited = true;             //语句2</span><br><span class="line"> </span><br><span class="line">//线程2:</span><br><span class="line">while(!inited )&#123;</span><br><span class="line">  sleep()</span><br><span class="line">&#125;</span><br><span class="line">doSomethingwithconfig(context);</span><br></pre></td></tr></table></figure>
+<p>加入inited没有被volatile修饰的话，那么就有可能语句2再语句1之前执行，就会导致线程2崩溃。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/07/threadlocal学习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/07/threadlocal学习/" itemprop="url">threadlocal学习</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-07T13:36:26+08:00">
+                2019-01-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h1><p>threadlocal是java.lang包下面的，其作用通过类注释可以看出来</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * This class provides thread-local variables.  These variables differ from</span><br><span class="line"> * their normal counterparts in that each thread that accesses one (via its</span><br><span class="line"> * &#123;@code get&#125; or &#123;@code set&#125; method) has its own, independently initialized</span><br><span class="line"> * copy of the variable.  &#123;@code ThreadLocal&#125; instances are typically private</span><br><span class="line"> * static fields in classes that wish to associate state with a thread (e.g.,</span><br><span class="line"> * a user ID or Transaction ID).</span><br><span class="line"> *</span><br><span class="line"> * &lt;p&gt;For example, the class below generates unique identifiers local to each</span><br><span class="line"> * thread.</span><br><span class="line"> * A thread&apos;s id is assigned the first time it invokes &#123;@code ThreadId.get()&#125;</span><br><span class="line"> * and remains unchanged on subsequent calls.</span><br><span class="line"> * &lt;pre&gt;</span><br><span class="line"> * import java.util.concurrent.atomic.AtomicInteger;</span><br><span class="line"> *</span><br><span class="line"> * public class ThreadId &#123;</span><br><span class="line"> *     // Atomic integer containing the next thread ID to be assigned</span><br><span class="line"> *     private static final AtomicInteger nextId = new AtomicInteger(0);</span><br><span class="line"> *</span><br><span class="line"> *     // Thread local variable containing each thread&apos;s ID</span><br><span class="line"> *     private static final ThreadLocal&amp;lt;Integer&amp;gt; threadId =</span><br><span class="line"> *         new ThreadLocal&amp;lt;Integer&amp;gt;() &#123;</span><br><span class="line"> *             &amp;#64;Override protected Integer initialValue() &#123;</span><br><span class="line"> *                 return nextId.getAndIncrement();</span><br><span class="line"> *         &#125;</span><br><span class="line"> *     &#125;;</span><br><span class="line"> *</span><br><span class="line"> *     // Returns the current thread&apos;s unique ID, assigning it if necessary</span><br><span class="line"> *     public static int get() &#123;</span><br><span class="line"> *         return threadId.get();</span><br><span class="line"> *     &#125;</span><br><span class="line"> * &#125;</span><br><span class="line"> * &lt;/pre&gt;</span><br><span class="line"> * &lt;p&gt;Each thread holds an implicit reference to its copy of a thread-local</span><br><span class="line"> * variable as long as the thread is alive and the &#123;@code ThreadLocal&#125;</span><br><span class="line"> * instance is accessible; after a thread goes away, all of its copies of</span><br><span class="line"> * thread-local instances are subject to garbage collection (unless other</span><br><span class="line"> * references to these copies exist).</span><br><span class="line"> *</span><br><span class="line"> * @author  Josh Bloch and Doug Lea</span><br><span class="line"> * @since   1.2</span><br><span class="line"> */</span><br></pre></td></tr></table></figure>
+<p>翻译一下：<br>这个类提供了一个本地线程变量，这些变量在不同线程中有不同的副本，都是独立的原始变量的拷贝。其实例是希望与线程连接状态的独立的field。</p>
+<p>因此就是在不同的thread中保留不同的值的类型。</p>
+<h1 id="api"><a href="#api" class="headerlink" title="api"></a>api</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">    * Creates a thread local variable.</span><br><span class="line">    * @see #withInitial(java.util.function.Supplier)</span><br><span class="line">    */</span><br><span class="line">   public ThreadLocal() &#123;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   /**</span><br><span class="line">    * Returns the value in the current thread&apos;s copy of this</span><br><span class="line">    * thread-local variable.  If the variable has no value for the</span><br><span class="line">    * current thread, it is first initialized to the value returned</span><br><span class="line">    * by an invocation of the &#123;@link #initialValue&#125; method.</span><br><span class="line">    *</span><br><span class="line">    * @return the current thread&apos;s value of this thread-local</span><br><span class="line">    */</span><br><span class="line">   public T get() &#123;</span><br><span class="line">   	...</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   /**</span><br><span class="line">    * Sets the current thread&apos;s copy of this thread-local variable</span><br><span class="line">    * to the specified value.  Most subclasses will have no need to</span><br><span class="line">    * override this method, relying solely on the &#123;@link #initialValue&#125;</span><br><span class="line">    * method to set the values of thread-locals.</span><br><span class="line">    *</span><br><span class="line">    * @param value the value to be stored in the current thread&apos;s copy of</span><br><span class="line">    *        this thread-local.</span><br><span class="line">    */</span><br><span class="line">   public void set(T value) &#123;</span><br><span class="line">   	...</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   /**</span><br><span class="line">    * Removes the current thread&apos;s value for this thread-local</span><br><span class="line">    * variable.  If this thread-local variable is subsequently</span><br><span class="line">    * &#123;@linkplain #get read&#125; by the current thread, its value will be</span><br><span class="line">    * reinitialized by invoking its &#123;@link #initialValue&#125; method,</span><br><span class="line">    * unless its value is &#123;@linkplain #set set&#125; by the current thread</span><br><span class="line">    * in the interim.  This may result in multiple invocations of the</span><br><span class="line">    * &#123;@code initialValue&#125; method in the current thread.</span><br><span class="line">    *</span><br><span class="line">    * @since 1.5</span><br><span class="line">    */</span><br><span class="line">    public void remove() &#123;</span><br><span class="line">    	...</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>public 的接口就这几个。</p>
+<h1 id="set"><a href="#set" class="headerlink" title="set"></a>set</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">public void set(T value) &#123;</span><br><span class="line">        Thread t = Thread.currentThread();</span><br><span class="line">        ThreadLocalMap map = getMap(t);</span><br><span class="line">        if (map != null)</span><br><span class="line">            map.set(this, value);</span><br><span class="line">        else</span><br><span class="line">            createMap(t, value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Get the map associated with a ThreadLocal. Overridden in</span><br><span class="line">     * InheritableThreadLocal.</span><br><span class="line">     *</span><br><span class="line">     * @param  t the current thread</span><br><span class="line">     * @return the map</span><br><span class="line">     */</span><br><span class="line">    ThreadLocalMap getMap(Thread t) &#123;</span><br><span class="line">        return t.threadLocals;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Create the map associated with a ThreadLocal. Overridden in</span><br><span class="line">     * InheritableThreadLocal.</span><br><span class="line">     *</span><br><span class="line">     * @param t the current thread</span><br><span class="line">     * @param firstValue value for the initial entry of the map</span><br><span class="line">     */</span><br><span class="line">    void createMap(Thread t, T firstValue) &#123;</span><br><span class="line">        t.threadLocals = new ThreadLocalMap(this, firstValue);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>set的时候会获取当前的map，如果没有就会创建，有的话就会调用map的set</p>
+<p>其中有个概念，是threadlocalmap，既然是map，看看键值对是什么</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">private void set(ThreadLocal&lt;?&gt; key, Object value)</span><br></pre></td></tr></table></figure>
+<p>也就是用threadlocal作为key，其余的作为value进行存储的。</p>
+<h2 id="总结一下set"><a href="#总结一下set" class="headerlink" title="总结一下set"></a>总结一下set</h2><p>1.每个thread中有一个threadlocalmap<br>2.threadlocalmap是以threadlocal为key，目标值为value的map结构<br>3.当希望存储这个threadlocal的时候，会先从线程中取出这个threadlocalmap，然后以这个threadlocal为key，将目标值传入进去。<br>4.如果当前线程没有threadlocalmap的话，会主动创建一个塞进去。</p>
+<h1 id="get"><a href="#get" class="headerlink" title="get"></a>get</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">     * Returns the value in the current thread&apos;s copy of this</span><br><span class="line">     * thread-local variable.  If the variable has no value for the</span><br><span class="line">     * current thread, it is first initialized to the value returned</span><br><span class="line">     * by an invocation of the &#123;@link #initialValue&#125; method.</span><br><span class="line">     *</span><br><span class="line">     * @return the current thread&apos;s value of this thread-local</span><br><span class="line">     */</span><br><span class="line">    public T get() &#123;</span><br><span class="line">        Thread t = Thread.currentThread();</span><br><span class="line">        ThreadLocalMap map = getMap(t);</span><br><span class="line">        if (map != null) &#123;</span><br><span class="line">            ThreadLocalMap.Entry e = map.getEntry(this);</span><br><span class="line">            if (e != null) &#123;</span><br><span class="line">                @SuppressWarnings(&quot;unchecked&quot;)</span><br><span class="line">                T result = (T)e.value;</span><br><span class="line">                return result;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return setInitialValue();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	private Entry getEntry(ThreadLocal&lt;?&gt; key) &#123;</span><br><span class="line">            int i = key.threadLocalHashCode &amp; (table.length - 1);</span><br><span class="line">            Entry e = table[i];</span><br><span class="line">            if (e != null &amp;&amp; e.get() == key)</span><br><span class="line">                return e;</span><br><span class="line">            else</span><br><span class="line">                return getEntryAfterMiss(key, i, e);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private Entry getEntryAfterMiss(ThreadLocal&lt;?&gt; key, int i, Entry e) &#123;</span><br><span class="line">            Entry[] tab = table;</span><br><span class="line">            int len = tab.length;</span><br><span class="line"></span><br><span class="line">            while (e != null) &#123;</span><br><span class="line">                ThreadLocal&lt;?&gt; k = e.get();</span><br><span class="line">                if (k == key)</span><br><span class="line">                    return e;</span><br><span class="line">                if (k == null)</span><br><span class="line">                    expungeStaleEntry(i);</span><br><span class="line">                else</span><br><span class="line">                    i = nextIndex(i, len);</span><br><span class="line">                e = tab[i];</span><br><span class="line">            &#125;</span><br><span class="line">            return null;</span><br><span class="line">        &#125;    </span><br><span class="line"></span><br><span class="line">    private int expungeStaleEntry(int staleSlot) &#123;</span><br><span class="line">            Entry[] tab = table;</span><br><span class="line">            int len = tab.length;</span><br><span class="line"></span><br><span class="line">            // expunge entry at staleSlot</span><br><span class="line">            tab[staleSlot].value = null;</span><br><span class="line">            tab[staleSlot] = null;</span><br><span class="line">            size--;</span><br><span class="line"></span><br><span class="line">            // Rehash until we encounter null</span><br><span class="line">            Entry e;</span><br><span class="line">            int i;</span><br><span class="line">            for (i = nextIndex(staleSlot, len);</span><br><span class="line">                 (e = tab[i]) != null;</span><br><span class="line">                 i = nextIndex(i, len)) &#123;</span><br><span class="line">                ThreadLocal&lt;?&gt; k = e.get();</span><br><span class="line">                if (k == null) &#123;</span><br><span class="line">                    e.value = null;</span><br><span class="line">                    tab[i] = null;</span><br><span class="line">                    size--;</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    int h = k.threadLocalHashCode &amp; (len - 1);</span><br><span class="line">                    if (h != i) &#123;</span><br><span class="line">                        tab[i] = null;</span><br><span class="line"></span><br><span class="line">                        // Unlike Knuth 6.4 Algorithm R, we must scan until</span><br><span class="line">                        // null because multiple entries could have been stale.</span><br><span class="line">                        while (tab[h] != null)</span><br><span class="line">                            h = nextIndex(h, len);</span><br><span class="line">                        tab[h] = e;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            return i;</span><br><span class="line">        &#125;  </span><br><span class="line">        </span><br><span class="line">    private static int nextIndex(int i, int len) &#123;</span><br><span class="line">            return ((i + 1 &lt; len) ? i + 1 : 0);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p>从流程上面其实就是一个map寻址操作，有个注意点，由于threadlocalmap的entry，是一个weakreference，所以有可能会出现获取的时候发现为null，此时需要擦除这个值。不过源码中擦除不单单这个值，把别的空的也同时擦除了。</p>
+<h1 id="remove"><a href="#remove" class="headerlink" title="remove"></a>remove</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public void remove() &#123;</span><br><span class="line">         ThreadLocalMap m = getMap(Thread.currentThread());</span><br><span class="line">         if (m != null)</span><br><span class="line">             m.remove(this);</span><br><span class="line">     &#125;</span><br></pre></td></tr></table></figure>
+<p>擦除了这个key</p>
+<h1 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h1><h2 id="ThreadLocalMap里Entry为何声明为WeakReference？"><a href="#ThreadLocalMap里Entry为何声明为WeakReference？" class="headerlink" title="ThreadLocalMap里Entry为何声明为WeakReference？"></a>ThreadLocalMap里Entry为何声明为WeakReference？</h2><p>引用关系是这样的</p>
+<p>ThreadLocalRef持有对ThreadLocal的引用，同时map的entry也持有对threadlocal的引用，而map的引用是在Current Thread手里，这样就会造成当清除ThreadLocalRef的时候出现泄漏的情况。</p>
+<p>将entry声明为weakreference，这样在上述这种情况时，就不会产生泄漏现象，但是value仍然存在，只是索引不到，map仍然持有这个对象。</p>
+<p>threadlocalmap针对这个问题，特意在get和set、remove的时候，执行了擦除所有key为null的值。</p>
+<h2 id="threadlocalmap避免出现内存泄漏的情况"><a href="#threadlocalmap避免出现内存泄漏的情况" class="headerlink" title="threadlocalmap避免出现内存泄漏的情况"></a>threadlocalmap避免出现内存泄漏的情况</h2><p>1.尽量避免使用static修饰，会拉伸threadlocal声明周期<br>2.分配使用了threadlocal后，如果不需要了，记得要使用remove操作擦除这块数据。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/05/动态代理的好处/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1373,270 +1700,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/06/Butterknife源码学习/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/12/06/Butterknife源码学习/" itemprop="url">Butterknife源码学习</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-06T18:56:37+08:00">
-                2018-12-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>项目中用的butterknife是8.8.1版本，引入了两个包，一个是Butterknife,一个是ButterKnife-Annotations。</p>
-<h1 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h1><p>butterknife的基本原理其实很好理解，就是注入，通过代码中的注解，编译时进行解析，生成大量的代码，这些代码在运行时帮助提供对象</p>
-<h1 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@NonNull @UiThread</span><br><span class="line">public static Unbinder bind(@NonNull Activity target) &#123;</span><br><span class="line">  View sourceView = target.getWindow().getDecorView();</span><br><span class="line">  return createBinding(target, sourceView);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这段代码是默认的绑定代码，其调用了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">private static Unbinder createBinding(@NonNull Object target, @NonNull View source) &#123;</span><br><span class="line">    Class&lt;?&gt; targetClass = target.getClass();</span><br><span class="line">    if (debug) Log.d(TAG, &quot;Looking up binding for &quot; + targetClass.getName());</span><br><span class="line">    Constructor&lt;? extends Unbinder&gt; constructor = findBindingConstructorForClass(targetClass);</span><br><span class="line"></span><br><span class="line">    if (constructor == null) &#123;</span><br><span class="line">      return Unbinder.EMPTY;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //noinspection TryWithIdenticalCatches Resolves to API 19+ only type.</span><br><span class="line">    try &#123;</span><br><span class="line">      return constructor.newInstance(target, source);</span><br><span class="line">    &#125; catch (IllegalAccessException e) &#123;</span><br><span class="line">      throw new RuntimeException(&quot;Unable to invoke &quot; + constructor, e);</span><br><span class="line">    &#125; catch (InstantiationException e) &#123;</span><br><span class="line">      throw new RuntimeException(&quot;Unable to invoke &quot; + constructor, e);</span><br><span class="line">    &#125; catch (InvocationTargetException e) &#123;</span><br><span class="line">      Throwable cause = e.getCause();</span><br><span class="line">      if (cause instanceof RuntimeException) &#123;</span><br><span class="line">        throw (RuntimeException) cause;</span><br><span class="line">      &#125;</span><br><span class="line">      if (cause instanceof Error) &#123;</span><br><span class="line">        throw (Error) cause;</span><br><span class="line">      &#125;</span><br><span class="line">      throw new RuntimeException(&quot;Unable to create binding instance.&quot;, cause);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
-<p>这段话只是执行了findBindingConstructorForClass这个方法，返回了一个unbind</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">@Nullable @CheckResult @UiThread</span><br><span class="line">private static Constructor&lt;? extends Unbinder&gt; findBindingConstructorForClass(Class&lt;?&gt; cls) &#123;</span><br><span class="line">  Constructor&lt;? extends Unbinder&gt; bindingCtor = BINDINGS.get(cls);</span><br><span class="line">  if (bindingCtor != null) &#123;</span><br><span class="line">    if (debug) Log.d(TAG, &quot;HIT: Cached in binding map.&quot;);</span><br><span class="line">    return bindingCtor;</span><br><span class="line">  &#125;</span><br><span class="line">  String clsName = cls.getName();</span><br><span class="line">  if (clsName.startsWith(&quot;android.&quot;) || clsName.startsWith(&quot;java.&quot;)) &#123;</span><br><span class="line">    if (debug) Log.d(TAG, &quot;MISS: Reached framework class. Abandoning search.&quot;);</span><br><span class="line">    return null;</span><br><span class="line">  &#125;</span><br><span class="line">  try &#123;</span><br><span class="line">    Class&lt;?&gt; bindingClass = cls.getClassLoader().loadClass(clsName + &quot;_ViewBinding&quot;);</span><br><span class="line">    //noinspection unchecked</span><br><span class="line">    bindingCtor = (Constructor&lt;? extends Unbinder&gt;) bindingClass.getConstructor(cls, View.class);</span><br><span class="line">    if (debug) Log.d(TAG, &quot;HIT: Loaded binding class and constructor.&quot;);</span><br><span class="line">  &#125; catch (ClassNotFoundException e) &#123;</span><br><span class="line">    if (debug) Log.d(TAG, &quot;Not found. Trying superclass &quot; + cls.getSuperclass().getName());</span><br><span class="line">    bindingCtor = findBindingConstructorForClass(cls.getSuperclass());</span><br><span class="line">  &#125; catch (NoSuchMethodException e) &#123;</span><br><span class="line">    throw new RuntimeException(&quot;Unable to find binding constructor for &quot; + clsName, e);</span><br><span class="line">  &#125;</span><br><span class="line">  BINDINGS.put(cls, bindingCtor);</span><br><span class="line">  return bindingCtor;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>findBindingConstructorForClass这个方法通过一个map存储下来由cls作为key的Constructor。构建过程主要是通过classloader来创建一个带有_ViewBinding后缀的java文件，同时通过class的getConstructor方法，返回的是指定的，或者是cls的参数类型构造器，或者是View.class的参数类型构造器。然后在createBinding中会通过这个构造器来构造这个类。传入的参数就是我们在调用Butterknife.bind（）中传入的两个参数，当然也可能是一个。</p>
-<h1 id="总结一下"><a href="#总结一下" class="headerlink" title="总结一下"></a>总结一下</h1><p>当一个程序走到Butterknife.bind(this, rootview)的时候，此时正是编译时，annotation processing 会读取写出来的注解，通过butterknife processor 生成一个对应于这个类名的viewbinder内部类，这个viewbinder类包含了所有的findviewbyid和onclicklistener等方法。然后在调用Bind方法的时候，butterknife会去加载对应的viewbinder类，并调用他们的bind方法。</p>
-<h1 id="疑惑"><a href="#疑惑" class="headerlink" title="疑惑"></a>疑惑</h1><p>通过阅读butterknife的代码，发现一个问题，什么是butterknife processor，他是如何工作的，他在哪儿？</p>
-<h2 id="annotation-processor-注解处理器"><a href="#annotation-processor-注解处理器" class="headerlink" title="annotation processor - 注解处理器"></a>annotation processor - 注解处理器</h2><p>注解处理器(Annotation Processor)是javac内置的一个用于编译时扫描和处理注解(Annotation)的工具</p>
-<p>由于注解处理器可以在程序编译阶段工作，所以我们可以在编译期间通过注解处理器进行我们需要的操作。比较常用的用法就是在编译期间获取相关注解数据，然后动态生成.java源文件</p>
-<h2 id="为什么butterknife-processor-在项目中不存在"><a href="#为什么butterknife-processor-在项目中不存在" class="headerlink" title="为什么butterknife processor 在项目中不存在"></a>为什么butterknife processor 在项目中不存在</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">annotationProcessor &apos;com.jakewharton:butterknife-compiler:9.0.0-rc2&apos;</span><br></pre></td></tr></table></figure>
-<p>这段话的意义是调用butterknife-compiler作为一个编译处理器。在编译的时候，会自动调用butterknife-compiler的代码，来协助进行编译。</p>
-<p>由于调用的代码没有直接使用的意义，且没有提供开放的api，因此在studio中使用annotationprocessor，并不会看到相应的代码。</p>
-<h2 id="butterknife-processor-是在扫描完注解之后执行，还是在扫描注解之前执行"><a href="#butterknife-processor-是在扫描完注解之后执行，还是在扫描注解之前执行" class="headerlink" title="butterknife processor 是在扫描完注解之后执行，还是在扫描注解之前执行"></a>butterknife processor 是在扫描完注解之后执行，还是在扫描注解之前执行</h2><p>很明显，扫描完注解之后是生成viewbinder，这一步就已经用到了butterknife processor，而之后的bind，仅仅是调用了生成的代码类</p>
-<h1 id="通过annotation-processor来实现一个butterknife框架"><a href="#通过annotation-processor来实现一个butterknife框架" class="headerlink" title="通过annotation-processor来实现一个butterknife框架"></a>通过annotation-processor来实现一个butterknife框架</h1><p>自己实现原理也差不多，会加几层包装</p>
-<p><a href="https://blog.csdn.net/android_jianbo/article/details/79180907" target="_blank" rel="noopener">实现方式</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/06/2018年第四十七周工作小结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/12/06/2018年第四十七周工作小结/" itemprop="url">2018年第四十七周工作小结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-06T18:56:13+08:00">
-                2018-12-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>上周比较累，一个版本发了两周，而且上周结束还没有完成发版的任务。</p>
-<p>多人开发本来就有很多问题，但是最关键的问题还是大锅饭的问题。</p>
-<p>三个人每个人都有两个任务，从上上周开始做，由于任务比较重，所以要了两周的工时，我从上上周三接口对接了开始做，直到上周二全部完成正式提测。而他们是怎么做的呢？一个上上周全部宕机，直到上周一才开始做，做到周四结束提测。另一个是每天下午做一点，到点跑路。也是周四提测。</p>
-<p>也就是一个组，我周三测试完毕全部通过后，等到周四他们才提测。</p>
-<p>结果呢？如果能力足够，确保bug不多的话，多晚提测都没问题，但是出了30多个bug是个什么鬼。</p>
-<p>我心里简直日了狗，本来准备周五发版，结果周四晚上出了30多个bug，而且在一个人身上就有25个。没办法，因为我手上没活，被迫帮人收拾摊子。搞到了周六凌晨三点多。各种奇奇怪怪的bug，有逻辑错误的，有移植过程参数丢失的，而且还有接口错误的，神奇，接口对接的时候在玩猴子啊。真是想吐槽一车的。</p>
-<p>说回大锅饭，多人开发，多人协助是没错的，但是前期各种拖，各种没事找事，到后期deadline了，开始抢工期，表现的很勤奋，真不知道是给谁看。最后需要做的快的人来帮忙收拾摊子。做的东西难吗？搞了两周，逻辑错误还是外人一眼就能看出来的，这是认真搞了？</p>
-<p>神烦是周五晚上，两个人都像是宕机了，看着我在debug，一个在看博客，另一个在盯着我改bug。我心里简直是日了狗，非我的模块，非我的职责，最后变成了我来维护。这也罢了，我帮忙做事，能不能给点面子表现的好点，看着我改是什么鬼？</p>
-<p>大锅饭真是让人疲惫的事情，没有必要的激励，出问题大家抗，没问题就当无事发生。这种不健全的制度，怎么可能留得住想好好发展的人。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1687,7 +1750,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">115</span>
+                  <span class="site-state-item-count">117</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1700,7 +1763,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

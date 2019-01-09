@@ -239,6 +239,270 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/06/Butterknife源码学习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/12/06/Butterknife源码学习/" itemprop="url">Butterknife源码学习</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-06T18:56:37+08:00">
+                2018-12-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>项目中用的butterknife是8.8.1版本，引入了两个包，一个是Butterknife,一个是ButterKnife-Annotations。</p>
+<h1 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h1><p>butterknife的基本原理其实很好理解，就是注入，通过代码中的注解，编译时进行解析，生成大量的代码，这些代码在运行时帮助提供对象</p>
+<h1 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@NonNull @UiThread</span><br><span class="line">public static Unbinder bind(@NonNull Activity target) &#123;</span><br><span class="line">  View sourceView = target.getWindow().getDecorView();</span><br><span class="line">  return createBinding(target, sourceView);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码是默认的绑定代码，其调用了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">private static Unbinder createBinding(@NonNull Object target, @NonNull View source) &#123;</span><br><span class="line">    Class&lt;?&gt; targetClass = target.getClass();</span><br><span class="line">    if (debug) Log.d(TAG, &quot;Looking up binding for &quot; + targetClass.getName());</span><br><span class="line">    Constructor&lt;? extends Unbinder&gt; constructor = findBindingConstructorForClass(targetClass);</span><br><span class="line"></span><br><span class="line">    if (constructor == null) &#123;</span><br><span class="line">      return Unbinder.EMPTY;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //noinspection TryWithIdenticalCatches Resolves to API 19+ only type.</span><br><span class="line">    try &#123;</span><br><span class="line">      return constructor.newInstance(target, source);</span><br><span class="line">    &#125; catch (IllegalAccessException e) &#123;</span><br><span class="line">      throw new RuntimeException(&quot;Unable to invoke &quot; + constructor, e);</span><br><span class="line">    &#125; catch (InstantiationException e) &#123;</span><br><span class="line">      throw new RuntimeException(&quot;Unable to invoke &quot; + constructor, e);</span><br><span class="line">    &#125; catch (InvocationTargetException e) &#123;</span><br><span class="line">      Throwable cause = e.getCause();</span><br><span class="line">      if (cause instanceof RuntimeException) &#123;</span><br><span class="line">        throw (RuntimeException) cause;</span><br><span class="line">      &#125;</span><br><span class="line">      if (cause instanceof Error) &#123;</span><br><span class="line">        throw (Error) cause;</span><br><span class="line">      &#125;</span><br><span class="line">      throw new RuntimeException(&quot;Unable to create binding instance.&quot;, cause);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这段话只是执行了findBindingConstructorForClass这个方法，返回了一个unbind</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">@Nullable @CheckResult @UiThread</span><br><span class="line">private static Constructor&lt;? extends Unbinder&gt; findBindingConstructorForClass(Class&lt;?&gt; cls) &#123;</span><br><span class="line">  Constructor&lt;? extends Unbinder&gt; bindingCtor = BINDINGS.get(cls);</span><br><span class="line">  if (bindingCtor != null) &#123;</span><br><span class="line">    if (debug) Log.d(TAG, &quot;HIT: Cached in binding map.&quot;);</span><br><span class="line">    return bindingCtor;</span><br><span class="line">  &#125;</span><br><span class="line">  String clsName = cls.getName();</span><br><span class="line">  if (clsName.startsWith(&quot;android.&quot;) || clsName.startsWith(&quot;java.&quot;)) &#123;</span><br><span class="line">    if (debug) Log.d(TAG, &quot;MISS: Reached framework class. Abandoning search.&quot;);</span><br><span class="line">    return null;</span><br><span class="line">  &#125;</span><br><span class="line">  try &#123;</span><br><span class="line">    Class&lt;?&gt; bindingClass = cls.getClassLoader().loadClass(clsName + &quot;_ViewBinding&quot;);</span><br><span class="line">    //noinspection unchecked</span><br><span class="line">    bindingCtor = (Constructor&lt;? extends Unbinder&gt;) bindingClass.getConstructor(cls, View.class);</span><br><span class="line">    if (debug) Log.d(TAG, &quot;HIT: Loaded binding class and constructor.&quot;);</span><br><span class="line">  &#125; catch (ClassNotFoundException e) &#123;</span><br><span class="line">    if (debug) Log.d(TAG, &quot;Not found. Trying superclass &quot; + cls.getSuperclass().getName());</span><br><span class="line">    bindingCtor = findBindingConstructorForClass(cls.getSuperclass());</span><br><span class="line">  &#125; catch (NoSuchMethodException e) &#123;</span><br><span class="line">    throw new RuntimeException(&quot;Unable to find binding constructor for &quot; + clsName, e);</span><br><span class="line">  &#125;</span><br><span class="line">  BINDINGS.put(cls, bindingCtor);</span><br><span class="line">  return bindingCtor;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>findBindingConstructorForClass这个方法通过一个map存储下来由cls作为key的Constructor。构建过程主要是通过classloader来创建一个带有_ViewBinding后缀的java文件，同时通过class的getConstructor方法，返回的是指定的，或者是cls的参数类型构造器，或者是View.class的参数类型构造器。然后在createBinding中会通过这个构造器来构造这个类。传入的参数就是我们在调用Butterknife.bind（）中传入的两个参数，当然也可能是一个。</p>
+<h1 id="总结一下"><a href="#总结一下" class="headerlink" title="总结一下"></a>总结一下</h1><p>当一个程序走到Butterknife.bind(this, rootview)的时候，此时正是编译时，annotation processing 会读取写出来的注解，通过butterknife processor 生成一个对应于这个类名的viewbinder内部类，这个viewbinder类包含了所有的findviewbyid和onclicklistener等方法。然后在调用Bind方法的时候，butterknife会去加载对应的viewbinder类，并调用他们的bind方法。</p>
+<h1 id="疑惑"><a href="#疑惑" class="headerlink" title="疑惑"></a>疑惑</h1><p>通过阅读butterknife的代码，发现一个问题，什么是butterknife processor，他是如何工作的，他在哪儿？</p>
+<h2 id="annotation-processor-注解处理器"><a href="#annotation-processor-注解处理器" class="headerlink" title="annotation processor - 注解处理器"></a>annotation processor - 注解处理器</h2><p>注解处理器(Annotation Processor)是javac内置的一个用于编译时扫描和处理注解(Annotation)的工具</p>
+<p>由于注解处理器可以在程序编译阶段工作，所以我们可以在编译期间通过注解处理器进行我们需要的操作。比较常用的用法就是在编译期间获取相关注解数据，然后动态生成.java源文件</p>
+<h2 id="为什么butterknife-processor-在项目中不存在"><a href="#为什么butterknife-processor-在项目中不存在" class="headerlink" title="为什么butterknife processor 在项目中不存在"></a>为什么butterknife processor 在项目中不存在</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">annotationProcessor &apos;com.jakewharton:butterknife-compiler:9.0.0-rc2&apos;</span><br></pre></td></tr></table></figure>
+<p>这段话的意义是调用butterknife-compiler作为一个编译处理器。在编译的时候，会自动调用butterknife-compiler的代码，来协助进行编译。</p>
+<p>由于调用的代码没有直接使用的意义，且没有提供开放的api，因此在studio中使用annotationprocessor，并不会看到相应的代码。</p>
+<h2 id="butterknife-processor-是在扫描完注解之后执行，还是在扫描注解之前执行"><a href="#butterknife-processor-是在扫描完注解之后执行，还是在扫描注解之前执行" class="headerlink" title="butterknife processor 是在扫描完注解之后执行，还是在扫描注解之前执行"></a>butterknife processor 是在扫描完注解之后执行，还是在扫描注解之前执行</h2><p>很明显，扫描完注解之后是生成viewbinder，这一步就已经用到了butterknife processor，而之后的bind，仅仅是调用了生成的代码类</p>
+<h1 id="通过annotation-processor来实现一个butterknife框架"><a href="#通过annotation-processor来实现一个butterknife框架" class="headerlink" title="通过annotation-processor来实现一个butterknife框架"></a>通过annotation-processor来实现一个butterknife框架</h1><p>自己实现原理也差不多，会加几层包装</p>
+<p><a href="https://blog.csdn.net/android_jianbo/article/details/79180907" target="_blank" rel="noopener">实现方式</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/06/2018年第四十七周工作小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/12/06/2018年第四十七周工作小结/" itemprop="url">2018年第四十七周工作小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-06T18:56:13+08:00">
+                2018-12-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>上周比较累，一个版本发了两周，而且上周结束还没有完成发版的任务。</p>
+<p>多人开发本来就有很多问题，但是最关键的问题还是大锅饭的问题。</p>
+<p>三个人每个人都有两个任务，从上上周开始做，由于任务比较重，所以要了两周的工时，我从上上周三接口对接了开始做，直到上周二全部完成正式提测。而他们是怎么做的呢？一个上上周全部宕机，直到上周一才开始做，做到周四结束提测。另一个是每天下午做一点，到点跑路。也是周四提测。</p>
+<p>也就是一个组，我周三测试完毕全部通过后，等到周四他们才提测。</p>
+<p>结果呢？如果能力足够，确保bug不多的话，多晚提测都没问题，但是出了30多个bug是个什么鬼。</p>
+<p>我心里简直日了狗，本来准备周五发版，结果周四晚上出了30多个bug，而且在一个人身上就有25个。没办法，因为我手上没活，被迫帮人收拾摊子。搞到了周六凌晨三点多。各种奇奇怪怪的bug，有逻辑错误的，有移植过程参数丢失的，而且还有接口错误的，神奇，接口对接的时候在玩猴子啊。真是想吐槽一车的。</p>
+<p>说回大锅饭，多人开发，多人协助是没错的，但是前期各种拖，各种没事找事，到后期deadline了，开始抢工期，表现的很勤奋，真不知道是给谁看。最后需要做的快的人来帮忙收拾摊子。做的东西难吗？搞了两周，逻辑错误还是外人一眼就能看出来的，这是认真搞了？</p>
+<p>神烦是周五晚上，两个人都像是宕机了，看着我在debug，一个在看博客，另一个在盯着我改bug。我心里简直是日了狗，非我的模块，非我的职责，最后变成了我来维护。这也罢了，我帮忙做事，能不能给点面子表现的好点，看着我改是什么鬼？</p>
+<p>大锅饭真是让人疲惫的事情，没有必要的激励，出问题大家抗，没问题就当无事发生。这种不健全的制度，怎么可能留得住想好好发展的人。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/28/项目卡顿问题优化专题/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1448,264 +1712,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/22/merge标签的作用/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/22/merge标签的作用/" itemprop="url">merge标签的作用</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-22T21:09:18+08:00">
-                2018-10-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>merge标签的作用是用于减少一层布局的。</p>
-<p>事实上很多时候如果单控件的话，可以直接使用控件来当root使用。</p>
-<p>但是一旦控件比较多的话，那就没办法了，此时就需要使用merge标签来减少一层布局了。</p>
-<p>merge标签一般的作用就是替代framelayout，当绘制绘制到他的时候，会主动跳过布局而直接绘制其包含的内容。但是缺点或者说局限就是只能使用framelayout的布局来布局。</p>
-<p>另外merge只能用作根布局，且如果想使用inflater来inflate的话，attachtoroot一定要写成true</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/21/为什么在activity触发ondestroy的时候内部类可能产生泄露/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/21/为什么在activity触发ondestroy的时候内部类可能产生泄露/" itemprop="url">为什么在activity触发ondestroy的时候内部类可能产生泄露</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-21T18:41:36+08:00">
-                2018-10-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>基于内部类的泄露是android泄露的一个很常见的问题。</p>
-<p>这方面自从使用了rxjava之后有很多好转，凡是内部类的我都会转换成为observable然后bindtolifecycle，这样通过生命周期的强制绑定，能够一定程度上面减少泄露发生的问题。</p>
-<p>在lifecycle中，一般如果不指明的话，在start时订阅的事件将会在stop的时候dispose，在resume时订阅的事件将会在pause的时候dispose。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">switch (lastEvent) &#123;</span><br><span class="line">                case CREATE:</span><br><span class="line">                    return ActivityEvent.DESTROY;</span><br><span class="line">                case START:</span><br><span class="line">                    return ActivityEvent.STOP;</span><br><span class="line">                case RESUME:</span><br><span class="line">                    return ActivityEvent.PAUSE;</span><br><span class="line">                case PAUSE:</span><br><span class="line">                    return ActivityEvent.STOP;</span><br><span class="line">                case STOP:</span><br><span class="line">                    return ActivityEvent.DESTROY;</span><br><span class="line">                case DESTROY:</span><br><span class="line">                    throw new OutsideLifecycleException(&quot;Cannot bind to Activity lifecycle when outside of it.&quot;);</span><br><span class="line">                default:</span><br><span class="line">                    throw new UnsupportedOperationException(&quot;Binding to &quot; + lastEvent + &quot; not yet implemented&quot;);</span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure>
-<p>生命周期就是上面这种，lifecycle在必要的地方做了很详细的处理，通过lifecyclesubject来根据绑定的生命周期来不断的发送接下来的activityevent（生命周期事件）。直到当发送下来一个取消的通知，之后就会取消订阅。</p>
-<p>lifecycle的确很好用，但是没有办法所有的地方都使用到rxjava。因此关于内部类的泄露还是要明确讨论一下。</p>
-<h1 id="内部类泄露"><a href="#内部类泄露" class="headerlink" title="内部类泄露"></a>内部类泄露</h1><p>回到内部类泄露的地方。android的内部类分为静态内部类和非静态内部类，内部类又分一些匿名的，成员的等等。非静态内部类会潜在的持有外部类的引用，因此当有耗时操作的时候，就会导致外部类的泄露。</p>
-<p>activity在ondestroy的时候，凡是引用到他的内部类，假如没有结束的话，就会导致activity被泄露，因为activity是被强引用。</p>
-<p>解决的方法其实看来很简单，1.在activity结束的时候强制释放掉2.将对activity的引用改为弱引用。</p>
-<h1 id="引用细分"><a href="#引用细分" class="headerlink" title="引用细分"></a>引用细分</h1><p>引用只有四种：强引用（内存泄露罪魁祸首），软引用，弱引用，虚引用。</p>
-<p>一般将强引用转化为弱引用即可避免强制引用带来的锅。</p>
-<h1 id="loginChecker优化"><a href="#loginChecker优化" class="headerlink" title="loginChecker优化"></a>loginChecker优化</h1><p>代码中为了方便做登录的检查，同时为了防止包过大，没有使用切片，而是写了一个loginchecker辅助类</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br></pre></td><td class="code"><pre><span class="line">package com.haomaiyi.base.util;</span><br><span class="line"></span><br><span class="line">import android.annotation.SuppressLint;</span><br><span class="line">import android.app.Activity;</span><br><span class="line">import android.text.TextUtils;</span><br><span class="line"></span><br><span class="line">import com.haomaiyi.base.updatemanager.Logger;</span><br><span class="line">import com.haomaiyi.fittingroom.AppApplication;</span><br><span class="line">import com.haomaiyi.fittingroom.domain.interactor.account.GetCurrentAccount;</span><br><span class="line">import com.haomaiyi.fittingroom.domain.model.account.Account;</span><br><span class="line">import com.haomaiyi.fittingroom.domain.model.account.AnonymousAccount;</span><br><span class="line">import com.haomaiyi.fittingroom.ui.LoginActivity;</span><br><span class="line">import com.orhanobut.hawk.Hawk;</span><br><span class="line">import com.trello.rxlifecycle2.LifecycleProvider;</span><br><span class="line"></span><br><span class="line">import javax.inject.Inject;</span><br><span class="line"></span><br><span class="line">import io.reactivex.Observable;</span><br><span class="line">import io.reactivex.android.schedulers.AndroidSchedulers;</span><br><span class="line">import io.reactivex.schedulers.Schedulers;</span><br><span class="line"></span><br><span class="line">@SuppressLint(&quot;CheckResult&quot;)</span><br><span class="line">public class LoginChecker &#123;</span><br><span class="line"></span><br><span class="line">    private static LoginChecker instance;</span><br><span class="line">    public LoginProceed proceed;</span><br><span class="line">    @Inject</span><br><span class="line">    GetCurrentAccount getCurrentAccount;</span><br><span class="line">    //    private boolean loginStat = false;</span><br><span class="line">    private int uid = -1;</span><br><span class="line">    private boolean logSuccess = false;</span><br><span class="line"></span><br><span class="line">    public LoginChecker() &#123;</span><br><span class="line">        AppApplication.getInstance().getUserComponent().inject(this);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static LoginChecker getInstance() &#123;</span><br><span class="line">        if (instance == null) &#123;</span><br><span class="line">            synchronized (LoginChecker.class) &#123;</span><br><span class="line">                if (instance == null) &#123;</span><br><span class="line">                    instance = new LoginChecker();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return instance;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void onLoginStart() &#123;</span><br><span class="line">        logSuccess = false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void onLoginFinish() &#123;</span><br><span class="line">        // TODO: 2018/9/30</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public LgnStat getLoginStat() &#123;</span><br><span class="line">        Account ac = getCurrentAccount.executeSync();</span><br><span class="line">        LgnStat stat;</span><br><span class="line">        if (ac instanceof AnonymousAccount) &#123;</span><br><span class="line">            stat = LgnStat.ANONYMOUS;</span><br><span class="line">        &#125; else if (TextUtils.isEmpty(ac.getPhonenumber())) &#123;</span><br><span class="line">            stat = LgnStat.NEED_NUMBER;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            stat = LgnStat.COMPLETE;</span><br><span class="line">        &#125;</span><br><span class="line">        return stat;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getUid() &#123;</span><br><span class="line">        uid = getCurrentAccount.executeSync().getId();</span><br><span class="line">        return uid;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setUid(int uid) &#123;</span><br><span class="line">        this.uid = uid;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void check(LifecycleProvider lifecycle, LoginCallback callback) &#123;</span><br><span class="line"></span><br><span class="line">        final Observable&lt;Account&gt; ob = getCurrentAccount.getObservable()</span><br><span class="line">                .subscribeOn(Schedulers.io())</span><br><span class="line">                .observeOn(AndroidSchedulers.mainThread());</span><br><span class="line"></span><br><span class="line">        if (lifecycle != null)</span><br><span class="line">            ob.compose(lifecycle.bindToLifecycle());</span><br><span class="line"></span><br><span class="line">        ob.subscribe(ac -&gt; &#123;</span><br><span class="line">            uid = ac.getId();</span><br><span class="line">            LgnStat stat;</span><br><span class="line">            if (ac instanceof AnonymousAccount) &#123;</span><br><span class="line">                stat = LgnStat.ANONYMOUS;</span><br><span class="line">            &#125; else if (TextUtils.isEmpty(ac.getPhonenumber())) &#123;</span><br><span class="line">                stat = LgnStat.NEED_NUMBER;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                stat = LgnStat.COMPLETE;</span><br><span class="line">            &#125;</span><br><span class="line">            callback.onLogin(stat);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void loginAndproceed(Activity src, LifecycleProvider lifecycleProvider, LoginProceed proceed) &#123;</span><br><span class="line">        Logger.i(&quot;check=&quot; + this);</span><br><span class="line">        check(lifecycleProvider, new LoginCallback() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onLogin(LgnStat stat) &#123;</span><br><span class="line">                switch (stat) &#123;</span><br><span class="line">                    case ANONYMOUS:</span><br><span class="line">                        LoginChecker.this.proceed = proceed;</span><br><span class="line">                        LoginActivity.start(src);</span><br><span class="line">                        break;</span><br><span class="line">                    case NEED_NUMBER:</span><br><span class="line">                        LoginChecker.this.proceed = proceed;</span><br><span class="line">                        LoginActivity.start(src, LgnStat.NEED_NUMBER);</span><br><span class="line">                        break;</span><br><span class="line">                    case COMPLETE:</span><br><span class="line">                        proceed.onProceed();</span><br><span class="line">                        break;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Must be called after cancel login behavior.</span><br><span class="line">     */</span><br><span class="line">    public void clear() &#123;</span><br><span class="line">        proceed = null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Must be called after login success.</span><br><span class="line">     */</span><br><span class="line">    public boolean consume(int id, LoginActivity act) &#123;</span><br><span class="line">        uid = id;</span><br><span class="line">        Hawk.put(&quot;SHOW_GIFT&quot;, true);</span><br><span class="line">        if (proceed == null)</span><br><span class="line">            return false;</span><br><span class="line">        proceed.onLoginAndProceed(id, act);</span><br><span class="line">        proceed = null;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public enum LgnStat &#123;</span><br><span class="line">        // 匿名用户</span><br><span class="line">        ANONYMOUS,</span><br><span class="line">        // 有手机号</span><br><span class="line">        COMPLETE,</span><br><span class="line">        // 无手机号</span><br><span class="line">        NEED_NUMBER</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public interface LoginProceed &#123;</span><br><span class="line">        void onProceed();</span><br><span class="line"></span><br><span class="line">        void onLoginAndProceed(int id, LoginActivity act);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public interface LoginCallback &#123;</span><br><span class="line">        void onLogin(LgnStat loginStat);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这个类虽然不是内部类，但是其携带的内部类以接口形式获取了activity，以activity作为实例，做了一些别的事情。而且有个最重要的问题，就是启动loginactivity的时候使用的是获取的实例。同时整个类又绑定了lifecycle。这就导致了一个很有趣的问题，就是当使用实例来启动的时候触发了onpause和onstop，此时刚好gc，导致无法回收。</p>
-<p>因此此时需要更改几个地方，一是不在使用原来传过来的activity，改用application的context，这样就不会再出现强制捆绑的地方。其次是将该类中使用到的任何引用的地方改成weakreference。atu</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1756,7 +1762,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">115</span>
+                  <span class="site-state-item-count">117</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1769,7 +1775,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
