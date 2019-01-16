@@ -548,6 +548,188 @@ final class CallEnqueueObservable<T> extends Observable<Response<T>> {
 
 # okHTTP的设计思路
 
+## 使用
+
+首先从使用看起
+
+```
+OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .addInterceptor(chain -> {
+                    Request request = chain.request().newBuilder()
+                            //.addHeader("App", headerEncoded(ac.getName()))
+                            .addHeader("api_version", headerEncoded(Const.API_VERSION))
+                            .addHeader("App-Version", headerEncoded(ac.getVersion() + "." + ac.getVersionCode()))
+                            .addHeader("PUSH-ENV", headerEncoded(ac.isBuildVersion() ? "DEV" : "PRODUCT"))
+                            .addHeader("Device-Id", headerEncoded(deviceInfo.getDeviceId()))
+                            .addHeader("cookie", headerEncoded(cookie))
+                            .addHeader("x-platform", "android")
+                            .build();
+                    Response response = chain.proceed(request);
+                    context.getSharedPreferences("global", Context.MODE_PRIVATE).edit().putString("cookie", response.header("Set-Cookie")).apply();
+                    cookie = response.header("Set-Cookie");
+                    return response;
+                })
+                .addInterceptor(embedAccessTokenInterceptor);
+```
+
+项目中的okhttp使用，首先需要build一个client，这个里面加了各种参数，读写和连接超时的参数，另外加了一些response处理链。这样一个builder就好了
+
+```
+webService = new Retrofit.Builder().baseUrl(config.getHost())
+                .addConverterFactory(MyGsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(builder.build())
+                .build().create(WebService.class);
+```
+这之后就塞到retrofit里面去了。
+
+因此我们先来看一下builder的过程是怎么样的，以此为一个入口
+
+## builder
+
+```
+public Builder() {
+      dispatcher = new Dispatcher();
+      protocols = DEFAULT_PROTOCOLS;
+      connectionSpecs = DEFAULT_CONNECTION_SPECS;
+      eventListenerFactory = EventListener.factory(EventListener.NONE);
+      proxySelector = ProxySelector.getDefault();
+      cookieJar = CookieJar.NO_COOKIES;
+      socketFactory = SocketFactory.getDefault();
+      hostnameVerifier = OkHostnameVerifier.INSTANCE;
+      certificatePinner = CertificatePinner.DEFAULT;
+      proxyAuthenticator = Authenticator.NONE;
+      authenticator = Authenticator.NONE;
+      connectionPool = new ConnectionPool();
+      dns = Dns.SYSTEM;
+      followSslRedirects = true;
+      followRedirects = true;
+      retryOnConnectionFailure = true;
+      connectTimeout = 10_000;
+      readTimeout = 10_000;
+      writeTimeout = 10_000;
+      pingInterval = 0;
+    }
+```
+
+builder构造中加了很多很多参数，而整个builder事实上就是一个参数记录类，记录了所有的类型。
+
+```
+    Dispatcher dispatcher;
+    @Nullable Proxy proxy;
+    List<Protocol> protocols;
+    List<ConnectionSpec> connectionSpecs;
+    final List<Interceptor> interceptors = new ArrayList<>();
+    final List<Interceptor> networkInterceptors = new ArrayList<>();
+    EventListener.Factory eventListenerFactory;
+    ProxySelector proxySelector;
+    CookieJar cookieJar;
+    @Nullable Cache cache;
+    @Nullable InternalCache internalCache;
+    SocketFactory socketFactory;
+    @Nullable SSLSocketFactory sslSocketFactory;
+    @Nullable CertificateChainCleaner certificateChainCleaner;
+    HostnameVerifier hostnameVerifier;
+    CertificatePinner certificatePinner;
+    Authenticator proxyAuthenticator;
+    Authenticator authenticator;
+    ConnectionPool connectionPool;
+    Dns dns;
+    boolean followSslRedirects;
+    boolean followRedirects;
+    boolean retryOnConnectionFailure;
+    int connectTimeout;
+    int readTimeout;
+    int writeTimeout;
+    int pingInterval;
+```
+
+这是其局部变量，基本上每个参数都是可以设置的。暂且掠过不表，因为这个都是可变的，默认的对我们来讲其实没有什么大作用。
+
+## newCall:构建请求
+
+```
+Response response = client.newCall(request).execute();
+```
+
+response封装起来之后，是这样调用的。
+
+按流程捋下去。
+
+```
+@Override public Call newCall(Request request) {
+    return RealCall.newRealCall(this, request, false /* for web socket */);
+  }
+```
+```
+static RealCall newRealCall(OkHttpClient client, Request originalRequest, boolean forWebSocket) {
+    // Safely publish the Call instance to the EventListener.
+    RealCall call = new RealCall(client, originalRequest, forWebSocket);
+    call.eventListener = client.eventListenerFactory().create(call);
+    return call;
+  }
+```
+
+从这里可以看到事实上构建了一个RealCall的端口，然后将其穿进去了一个叫client.eventListenerFactory()的接口里面，这个接口在builder初始化的时候添加的
+
+```
+ eventListenerFactory = EventListener.factory(EventListener.NONE);
+```
+
+其内在并未做任何事情，仅仅算是将realcall的eventlistener做一层赋值。
+
+## newCall.execute()：执行请求
+
+```
+@Override public Response execute() throws IOException {
+    synchronized (this) {
+      if (executed) throw new IllegalStateException("Already Executed");
+      executed = true;
+    }
+    captureCallStackTrace();
+    eventListener.callStart(this);
+    try {
+      client.dispatcher().executed(this);
+      Response result = getResponseWithInterceptorChain();
+      if (result == null) throw new IOException("Canceled");
+      return result;
+    } catch (IOException e) {
+      eventListener.callFailed(this, e);
+      throw e;
+    } finally {
+      client.dispatcher().finished(this);
+    }
+  }
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

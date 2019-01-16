@@ -239,6 +239,250 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/16/神策埋点reftype踩坑记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/16/神策埋点reftype踩坑记/" itemprop="url">神策埋点reftype踩坑记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-16T15:30:27+08:00">
+                2019-01-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/13/java对象的三种状态/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/13/java对象的三种状态/" itemprop="url">java对象的三种状态</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-13T22:13:03+08:00">
+                2019-01-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最近被问到一个问题，java对象有几种状态？<br>没有接触过这个，说实话被问到的时候连一点可说的都没有。</p>
+<p>因此总结一下网上对java对象的几种状态：可触及态、可复活态、不可触及态</p>
+<h1 id="可触及态（可达状态）"><a href="#可触及态（可达状态）" class="headerlink" title="可触及态（可达状态）"></a>可触及态（可达状态）</h1><p>从根节点开始，可以搜索到这个状态，也就是可以访问到这个状态</p>
+<h1 id="可复活态（可恢复态）"><a href="#可复活态（可恢复态）" class="headerlink" title="可复活态（可恢复态）"></a>可复活态（可恢复态）</h1><p>从根节点开始，无论如何都不能访问到这个对象，也就是说这个对象的所有引用都被释放，没有任何变量引用该对象了，<br>但是该对象有可能在finalize()方法中再次被引用，从而复活。</p>
+<p>垃圾回收器在准备回收垃圾时，调用finalize方法，在finalize方法中，系统有可能重新让一个或多个引用指向该对象，那么这个对象就由可恢复状态变为可达状态。 </p>
+<h1 id="不可触及态（不可恢复态）"><a href="#不可触及态（不可恢复态）" class="headerlink" title="不可触及态（不可恢复态）"></a>不可触及态（不可恢复态）</h1><p>在finalize()方法中没有复活，这样这个对象就消失在了内存堆中</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/09/volatile的作用及其原理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1000,7 +1244,26 @@
 <p>可以看到在执行的过程中返回结果的时候直接调用了gson来解析</p>
 <p>到这里我看到了解析的过程，看到了执行rxjava的过程，也看到了执行okhttp的过程，理应串起来</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><img src="/images/android/Retrofit个人理解图.png" alt="retrofit个人理解图"></p>
-<h1 id="okHTTP的设计思路"><a href="#okHTTP的设计思路" class="headerlink" title="okHTTP的设计思路"></a>okHTTP的设计思路</h1>
+<h1 id="okHTTP的设计思路"><a href="#okHTTP的设计思路" class="headerlink" title="okHTTP的设计思路"></a>okHTTP的设计思路</h1><h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>首先从使用看起</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">OkHttpClient.Builder builder = new OkHttpClient.Builder()</span><br><span class="line">                .connectTimeout(30, TimeUnit.SECONDS)</span><br><span class="line">                .writeTimeout(30, TimeUnit.SECONDS)</span><br><span class="line">                .readTimeout(30, TimeUnit.SECONDS)</span><br><span class="line">                .addInterceptor(chain -&gt; &#123;</span><br><span class="line">                    Request request = chain.request().newBuilder()</span><br><span class="line">                            //.addHeader(&quot;App&quot;, headerEncoded(ac.getName()))</span><br><span class="line">                            .addHeader(&quot;api_version&quot;, headerEncoded(Const.API_VERSION))</span><br><span class="line">                            .addHeader(&quot;App-Version&quot;, headerEncoded(ac.getVersion() + &quot;.&quot; + ac.getVersionCode()))</span><br><span class="line">                            .addHeader(&quot;PUSH-ENV&quot;, headerEncoded(ac.isBuildVersion() ? &quot;DEV&quot; : &quot;PRODUCT&quot;))</span><br><span class="line">                            .addHeader(&quot;Device-Id&quot;, headerEncoded(deviceInfo.getDeviceId()))</span><br><span class="line">                            .addHeader(&quot;cookie&quot;, headerEncoded(cookie))</span><br><span class="line">                            .addHeader(&quot;x-platform&quot;, &quot;android&quot;)</span><br><span class="line">                            .build();</span><br><span class="line">                    Response response = chain.proceed(request);</span><br><span class="line">                    context.getSharedPreferences(&quot;global&quot;, Context.MODE_PRIVATE).edit().putString(&quot;cookie&quot;, response.header(&quot;Set-Cookie&quot;)).apply();</span><br><span class="line">                    cookie = response.header(&quot;Set-Cookie&quot;);</span><br><span class="line">                    return response;</span><br><span class="line">                &#125;)</span><br><span class="line">                .addInterceptor(embedAccessTokenInterceptor);</span><br></pre></td></tr></table></figure>
+<p>项目中的okhttp使用，首先需要build一个client，这个里面加了各种参数，读写和连接超时的参数，另外加了一些response处理链。这样一个builder就好了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">webService = new Retrofit.Builder().baseUrl(config.getHost())</span><br><span class="line">                .addConverterFactory(MyGsonConverterFactory.create(gson))</span><br><span class="line">                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())</span><br><span class="line">                .client(builder.build())</span><br><span class="line">                .build().create(WebService.class);</span><br></pre></td></tr></table></figure>
+<p>这之后就塞到retrofit里面去了。</p>
+<p>因此我们先来看一下builder的过程是怎么样的，以此为一个入口</p>
+<h2 id="builder"><a href="#builder" class="headerlink" title="builder"></a>builder</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">public Builder() &#123;</span><br><span class="line">      dispatcher = new Dispatcher();</span><br><span class="line">      protocols = DEFAULT_PROTOCOLS;</span><br><span class="line">      connectionSpecs = DEFAULT_CONNECTION_SPECS;</span><br><span class="line">      eventListenerFactory = EventListener.factory(EventListener.NONE);</span><br><span class="line">      proxySelector = ProxySelector.getDefault();</span><br><span class="line">      cookieJar = CookieJar.NO_COOKIES;</span><br><span class="line">      socketFactory = SocketFactory.getDefault();</span><br><span class="line">      hostnameVerifier = OkHostnameVerifier.INSTANCE;</span><br><span class="line">      certificatePinner = CertificatePinner.DEFAULT;</span><br><span class="line">      proxyAuthenticator = Authenticator.NONE;</span><br><span class="line">      authenticator = Authenticator.NONE;</span><br><span class="line">      connectionPool = new ConnectionPool();</span><br><span class="line">      dns = Dns.SYSTEM;</span><br><span class="line">      followSslRedirects = true;</span><br><span class="line">      followRedirects = true;</span><br><span class="line">      retryOnConnectionFailure = true;</span><br><span class="line">      connectTimeout = 10_000;</span><br><span class="line">      readTimeout = 10_000;</span><br><span class="line">      writeTimeout = 10_000;</span><br><span class="line">      pingInterval = 0;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>builder构造中加了很多很多参数，而整个builder事实上就是一个参数记录类，记录了所有的类型。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">Dispatcher dispatcher;</span><br><span class="line">@Nullable Proxy proxy;</span><br><span class="line">List&lt;Protocol&gt; protocols;</span><br><span class="line">List&lt;ConnectionSpec&gt; connectionSpecs;</span><br><span class="line">final List&lt;Interceptor&gt; interceptors = new ArrayList&lt;&gt;();</span><br><span class="line">final List&lt;Interceptor&gt; networkInterceptors = new ArrayList&lt;&gt;();</span><br><span class="line">EventListener.Factory eventListenerFactory;</span><br><span class="line">ProxySelector proxySelector;</span><br><span class="line">CookieJar cookieJar;</span><br><span class="line">@Nullable Cache cache;</span><br><span class="line">@Nullable InternalCache internalCache;</span><br><span class="line">SocketFactory socketFactory;</span><br><span class="line">@Nullable SSLSocketFactory sslSocketFactory;</span><br><span class="line">@Nullable CertificateChainCleaner certificateChainCleaner;</span><br><span class="line">HostnameVerifier hostnameVerifier;</span><br><span class="line">CertificatePinner certificatePinner;</span><br><span class="line">Authenticator proxyAuthenticator;</span><br><span class="line">Authenticator authenticator;</span><br><span class="line">ConnectionPool connectionPool;</span><br><span class="line">Dns dns;</span><br><span class="line">boolean followSslRedirects;</span><br><span class="line">boolean followRedirects;</span><br><span class="line">boolean retryOnConnectionFailure;</span><br><span class="line">int connectTimeout;</span><br><span class="line">int readTimeout;</span><br><span class="line">int writeTimeout;</span><br><span class="line">int pingInterval;</span><br></pre></td></tr></table></figure>
+<p>这是其局部变量，基本上每个参数都是可以设置的。暂且掠过不表，因为这个都是可变的，默认的对我们来讲其实没有什么大作用。</p>
+<h2 id="newCall-构建请求"><a href="#newCall-构建请求" class="headerlink" title="newCall:构建请求"></a>newCall:构建请求</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Response response = client.newCall(request).execute();</span><br></pre></td></tr></table></figure>
+<p>response封装起来之后，是这样调用的。</p>
+<p>按流程捋下去。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@Override public Call newCall(Request request) &#123;</span><br><span class="line">    return RealCall.newRealCall(this, request, false /* for web socket */);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">static RealCall newRealCall(OkHttpClient client, Request originalRequest, boolean forWebSocket) &#123;</span><br><span class="line">    // Safely publish the Call instance to the EventListener.</span><br><span class="line">    RealCall call = new RealCall(client, originalRequest, forWebSocket);</span><br><span class="line">    call.eventListener = client.eventListenerFactory().create(call);</span><br><span class="line">    return call;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>从这里可以看到事实上构建了一个RealCall的端口，然后将其穿进去了一个叫client.eventListenerFactory()的接口里面，这个接口在builder初始化的时候添加的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eventListenerFactory = EventListener.factory(EventListener.NONE);</span><br></pre></td></tr></table></figure>
+<p>其内在并未做任何事情，仅仅算是将realcall的eventlistener做一层赋值。</p>
+<h2 id="newCall-execute-：执行请求"><a href="#newCall-execute-：执行请求" class="headerlink" title="newCall.execute()：执行请求"></a>newCall.execute()：执行请求</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">@Override public Response execute() throws IOException &#123;</span><br><span class="line">    synchronized (this) &#123;</span><br><span class="line">      if (executed) throw new IllegalStateException(&quot;Already Executed&quot;);</span><br><span class="line">      executed = true;</span><br><span class="line">    &#125;</span><br><span class="line">    captureCallStackTrace();</span><br><span class="line">    eventListener.callStart(this);</span><br><span class="line">    try &#123;</span><br><span class="line">      client.dispatcher().executed(this);</span><br><span class="line">      Response result = getResponseWithInterceptorChain();</span><br><span class="line">      if (result == null) throw new IOException(&quot;Canceled&quot;);</span><br><span class="line">      return result;</span><br><span class="line">    &#125; catch (IOException e) &#123;</span><br><span class="line">      eventListener.callFailed(this, e);</span><br><span class="line">      throw e;</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">      client.dispatcher().finished(this);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
           
         
       
@@ -1158,11 +1421,16 @@
 <p>很奇怪，融到了为什么要砍。结果吃饭的时候技术leader说其实并没有融到，ceo只是不想说而已。砍业务是因为吃不消损耗了，每个盒子都是亏的，用户热情还很高，这样钱吃不消使用。</p>
 <p>于是连我们12月在做的功能都连根拔掉了，砍掉了订单，盒子，支付，会员等等，最后要接上淘宝客，等于我们的版本绕了一圈，回到了1.9.3的版本了。</p>
 <p>哎。这样子，我们的好搭盒子就彻彻底底的死了。</p>
-<p>从开发者客观来讲，对这个产品是有感情的，当我来的时候，安卓组那个人准备离职，我在2个月的时间里面独自支撑着并不熟悉的项目。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>从开发者客观来讲，对这个产品是有感情的，当我来的时候，安卓组那个人准备离职，我在2个月的时间里面独自支撑着并不熟悉的项目。</p>
 <p>加班加点在好搭仿佛都是家常便饭，年中的时候统计了一下已经累计了10天的调休。</p>
 <p>可是有什么用呢？开发者仅仅是一把刀子，这个刀子或许锋利，或许迟钝，但是如果将锋利的刀子不断砍伐一些无用的东西，这有什么意义呢？</p>
 <p>刚开始的时候说我们暂时不需要考虑基础建设的问题，后端，前端，移动端，都是走一步看一步。后期发现基础建设出了问题的时候，却又浪费了大批量的时间来重构。创业公司感觉永远逃离不了这个魔咒。</p>
 <p>当听到一直维护的项目突然被砍掉，转成别的项目的时候。心里只有一声叹息。</p>
+<h1 id="问题出在哪里？"><a href="#问题出在哪里？" class="headerlink" title="问题出在哪里？"></a>问题出在哪里？</h1><p>最近一直在想，leader离职的时候说过一句话，“论盒子模式，我们绝对是数据跑的好的”，但是为什么落的如此下场？</p>
+<h2 id="信用模式"><a href="#信用模式" class="headerlink" title="信用模式"></a>信用模式</h2><p>盒子模式首先将衣服寄到了用户手里，然后让用户选择购买或者退回。这中间给了用户极大的自由，前期我们尚且能通过小规模投放来控制风险，后期接入了小红书推广，导致大量学生涌入，很多人仿佛占到了便宜似的拼命下盒子，下完了拿到货不退不购买，导致大量订单逾期坏单。造成了巨量的成本亏损。</p>
+<h2 id="商品量不足"><a href="#商品量不足" class="headerlink" title="商品量不足"></a>商品量不足</h2><p>由于是商城模式的app，对商品量的把控一定要比较高，但是从数据上来看，常年缺码SPU高达40%，造成了好衣服没货，坏衣服卖不出去的问题。加上前期并没有做好消息推送这个环节，对缺货商品的订阅上的过慢，也导致了大量用户的流失现象。</p>
+<h2 id="medel不够稳定"><a href="#medel不够稳定" class="headerlink" title="medel不够稳定"></a>medel不够稳定</h2><p>medel不够稳定是一直存在的问题，首先渲染消耗太多，最高每日光服务器就要跑掉2w块。其次是就算这样仍然不够稳定，不清楚是算法还是好买衣的问题，总是出现光头，绘制失败，没脸的问题。这个问题其实很严重，特别是我们这种主打虚拟试衣模式的app，基本上就是断腿了。</p>
+<p>这个问题其实是有解的，开始的时候就可以选择重构那边的代码。但是怎么讲呢，兵熊熊一个，将熊熊一窝，关于这个问题从我入职的时候每次会议必谈，直到leader来了之后禁止我们开会讨论这个。从开始leader就没有想重构，他或许想的是在半年内我们可以拿到a轮融资，之后可以选择完整的重构，或者是想着干脆就不重构了，等着别人来</p>
 
           
         
@@ -1460,293 +1728,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/26/焦虑感的排解方式/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/12/26/焦虑感的排解方式/" itemprop="url">焦虑感的排解方式</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-26T00:27:45+08:00">
-                2018-12-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="焦虑感的由来"><a href="#焦虑感的由来" class="headerlink" title="焦虑感的由来"></a>焦虑感的由来</h1><p>当一个人希望掌控自己的生活，他就会自主的创建一系列的计划和安排，希望依靠这些计划和安排来带来目标的靠近。</p>
-<p>但是计划和安排并不一定会和期望的一样，一来是不一定生活一下子迈上了正轨，计划执行的不一定完全，二来是变化大于计划，安排的不够仔细，没有考虑到的细节，决定了计划无法实施，三是计划的过程中产生了新的计划，堆积在老的计划上面，形成了过多的计划。三方面都很有可能导致计划的流产。流产就会造成目前情况并不会有任何好转，没有好转，就会带来挫折感，失败感，这些感觉在平时不会有任何反馈，但是到了deadline，新的周期开始或者老的周期结束时，会突然涌现，成堆的失败感形成了巨大的压迫力，衍生成为了焦虑。</p>
-<h1 id="焦虑感的坏处"><a href="#焦虑感的坏处" class="headerlink" title="焦虑感的坏处"></a>焦虑感的坏处</h1><p>焦虑一定程度上能促进人思想的转变，但是过多焦虑，会引发焦虑症，忧郁症，抑郁症，情节程度由低至高。</p>
-<h2 id="焦虑症"><a href="#焦虑症" class="headerlink" title="焦虑症"></a>焦虑症</h2><p>焦虑症是神经过多沉浸在焦虑中引起的一种神经疾病，分为急性焦虑症和广泛性焦虑症。</p>
-<h3 id="广泛性焦虑症"><a href="#广泛性焦虑症" class="headerlink" title="广泛性焦虑症"></a>广泛性焦虑症</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">没有明显诱因的情况下，会出现与现实情境不符的过分担心，并且这种担心没有任何明显的对象和来由。表现为头晕、心慌、呼吸急促、尿频等。</span><br></pre></td></tr></table></figure>
-<h3 id="急性焦虑症"><a href="#急性焦虑症" class="headerlink" title="急性焦虑症"></a>急性焦虑症</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">突然出现极度恐惧的心理，对自己产生严重的失控感和濒死感。</span><br></pre></td></tr></table></figure>
-<h2 id="忧郁症"><a href="#忧郁症" class="headerlink" title="忧郁症"></a>忧郁症</h2><p>忧郁症是轻度抑郁症，主要表现是持久的心情低落</p>
-<h2 id="抑郁症"><a href="#抑郁症" class="headerlink" title="抑郁症"></a>抑郁症</h2><p>对生活失去了希望，觉得很痛苦，觉得自己毫无用处。</p>
-<h1 id="焦虑感的排解方式"><a href="#焦虑感的排解方式" class="headerlink" title="焦虑感的排解方式"></a>焦虑感的排解方式</h1><h2 id="订踏实靠谱的目标"><a href="#订踏实靠谱的目标" class="headerlink" title="订踏实靠谱的目标"></a>订踏实靠谱的目标</h2><p>对目标进行量化操作，不能订泛泛而谈的目标，比如说我现在要想成为一个全栈大牛，我需要先把android弄好，然后在在别的地方慢慢开花。另外把android弄好也需要对”好”有个界定，比如说能完整的单挑一个项目等等。</p>
-<h2 id="良好的生活作息"><a href="#良好的生活作息" class="headerlink" title="良好的生活作息"></a>良好的生活作息</h2><p>每天晚上很晚睡，就会导致第二天很晚起，这样就会错过早上的时间。早上其实思想比较光明，不会像晚上一样接受了太多信息而聚不了神。反而是晚上很容易就想现在，一下子弄到了凌晨。以后要定个时间，超过一定时间就不搞了，准时洗洗睡了。</p>
-<p>先定11点半吧，大学熄灯时间。</p>
-<h2 id="良好的沟通"><a href="#良好的沟通" class="headerlink" title="良好的沟通"></a>良好的沟通</h2><p>产生焦虑感的人群，大多都是单身工作者，或者夫妻关系不和谐的成年人，还有就是学业重的青少年。目前对于我来讲，是第一种，将来可能是第二种，所以要增加切实有效的沟通对象。<br>其实这个很难，人生在世，太多事情是自己不得不做，每个人在不同的位置并不能理解对方。甚至自己的烦恼在别人眼里可能是炫耀。这一方面只能说是锦上添花的事情。<br>如果焦虑感发展成为焦虑症，需要增加心理医生为沟通对象。</p>
-<h2 id="删除-精简计划"><a href="#删除-精简计划" class="headerlink" title="删除/精简计划"></a>删除/精简计划</h2><p>这个地方需要做的比较多，以往订计划，往往是以季度，以月，甚至以周为时间单位来做计划，这样太散乱了，而且对职场规划没有任何作为，我需要做一个以人生10年为单位的大计划，不过这个计划的谋划很难，而且需要思考的事情太多，目前的水平很难说能思考仔细。这个需要仔细考虑。</p>
-<h2 id="不要接触负面事物-情绪-人"><a href="#不要接触负面事物-情绪-人" class="headerlink" title="不要接触负面事物/情绪/人"></a>不要接触负面事物/情绪/人</h2><p>屏蔽关键词。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/11/okio学习/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/12/11/okio学习/" itemprop="url">okio学习</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-11T14:36:35+08:00">
-                2018-12-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="io"><a href="#io" class="headerlink" title="io"></a>io</h1><p>io是java使用进行读取和写入的方式，i是input，o是output，走向是以内存为基准，内存中读数据是输入流，内存中往外写是输出流。</p>
-<p>io又分为字节流和字符流。字节流是直接对文件进行读写，是不中断的操作，不关闭字节流的话，操作仍然可以成功。而字符流是将文件的读写进行在缓冲区，当关闭的时候才会进行操作。</p>
-<p>字节流使用stream结尾，字符流使用reader和writer结尾。</p>
-<h2 id="缓冲区"><a href="#缓冲区" class="headerlink" title="缓冲区"></a>缓冲区</h2><p>缓冲区是一段内存区域，由于频繁的操作资源，会导致性能很低，而将数据存储到内存区域之后，之后的可以直接从区域中读取数据，读取内存数据的速度比较快，这样可以提升性能。</p>
-<p>字符流由于所有的数据都是暂存在内存中，如果想要清空缓存区，需要使用到flush操作，flush操作可以强制清空缓存区，因此会将缓存区的数据全部取出进行操作后清空。</p>
-<h2 id="字节流和字符流优缺点"><a href="#字节流和字符流优缺点" class="headerlink" title="字节流和字符流优缺点"></a>字节流和字符流优缺点</h2><ul>
-<li>字节流优点</li>
-</ul>
-<p>字节流的优点是使用到了缓存区，通过内存的使用加快了效率。字节流多用于处理图片，处理成为二进制字节。</p>
-<ul>
-<li>字符流优点</li>
-</ul>
-<p>字符流的优点是操作比较方便，提供了一些方便的例如readline这种功能。字符流多用于处理文字。</p>
-<h1 id="nio"><a href="#nio" class="headerlink" title="nio"></a>nio</h1><p>nio使用了缓存区、通道、管道来实现多线程io通信的问题</p>
-<h2 id="通道"><a href="#通道" class="headerlink" title="通道"></a>通道</h2><p>通道的存在大大提升了对buffer区域的操作空间，获取buffer的操作不再是由buffer提供，而是由channel进行代理提供，类似于stream对象，但是channel是由selector管理的。selector提供了可以监听多个通道的功能，因此单线程中使用selector可以监听多个channel，而stream则需要每个开一个线程才能达到不阻塞的行为。这样就解决了需要多线程io的问题</p>
-<h2 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h2><p>两个线程之间进行单项数据连接，会建立一个管道，数据被写到sink通道，读取的时候从source通道读取。</p>
-<h3 id="管道的原理"><a href="#管道的原理" class="headerlink" title="管道的原理"></a>管道的原理</h3><p>管道写函数时，通过将字节复制到VFS索引节点指向的物理内存而写入数据，管道读函数则通过复制物理内存中的字节而读出数据。缓冲区不需要很大，一般为4k大小，它被设计为环形的结构，以便能够循环利用，当管道没有信息的时候，从管道中读取的进程会等待，知道另一端的进程放入信息。当管道被放满信息的时候，放入信息的进程会等待，直到另一端的进程取出信息。</p>
-<h2 id="selector"><a href="#selector" class="headerlink" title="selector"></a>selector</h2><p>selector又被称为多路复用器，用于检查一个NIO channel的状态是否处于可读和可写。</p>
-<p>与selector一起使用的channel必须是非阻塞模式的，filechannel和selector就不能一起使用</p>
-<h3 id="selector原理"><a href="#selector原理" class="headerlink" title="selector原理"></a>selector原理</h3><p>channel通过注册，使得selector可以统一管理多个channel，这样一个线程只需要通过一个selector就可以管理多个channel。注册是使用注册表的方式来进行。</p>
-<h3 id="selector多路复用的机制"><a href="#selector多路复用的机制" class="headerlink" title="selector多路复用的机制"></a>selector多路复用的机制</h3><p>介于cpu目前多任务越来越快，因此selector效率也越来越高，多个任务同时触发，每个任务的阻塞设置超时时间，因此可以比较好的实现多路复用的机制</p>
-<h1 id="okio"><a href="#okio" class="headerlink" title="okio"></a>okio</h1><p>okio和nio的原理差不多，加上了buffer,信道，但是进行了优化，另外由于okio是设计用于网络请求的，所以加上了超时机制</p>
-<h2 id="sink构造"><a href="#sink构造" class="headerlink" title="sink构造"></a>sink构造</h2><p>sink是okio的信道,用于写入</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">private static Sink sink(final OutputStream out, final Timeout timeout) &#123;</span><br><span class="line">    if (out == null) throw new IllegalArgumentException(&quot;out == null&quot;);</span><br><span class="line">    if (timeout == null) throw new IllegalArgumentException(&quot;timeout == null&quot;);</span><br><span class="line"></span><br><span class="line">    return new Sink() &#123;</span><br><span class="line">      @Override public void write(Buffer source, long byteCount) throws IOException &#123;</span><br><span class="line">        checkOffsetAndCount(source.size, 0, byteCount);</span><br><span class="line">        while (byteCount &gt; 0) &#123;</span><br><span class="line">          timeout.throwIfReached();</span><br><span class="line">          Segment head = source.head;</span><br><span class="line">          int toCopy = (int) Math.min(byteCount, head.limit - head.pos);</span><br><span class="line">          out.write(head.data, head.pos, toCopy);</span><br><span class="line"></span><br><span class="line">          head.pos += toCopy;</span><br><span class="line">          byteCount -= toCopy;</span><br><span class="line">          source.size -= toCopy;</span><br><span class="line"></span><br><span class="line">          if (head.pos == head.limit) &#123;</span><br><span class="line">            source.head = head.pop();</span><br><span class="line">            SegmentPool.recycle(head);</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      @Override public void flush() throws IOException &#123;</span><br><span class="line">        out.flush();</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      @Override public void close() throws IOException &#123;</span><br><span class="line">        out.close();</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      @Override public Timeout timeout() &#123;</span><br><span class="line">        return timeout;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      @Override public String toString() &#123;</span><br><span class="line">        return &quot;sink(&quot; + out + &quot;)&quot;;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-<p>source是用于读取的信道</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">private static Source source(final InputStream in, final Timeout timeout) &#123;</span><br><span class="line">    if (in == null) throw new IllegalArgumentException(&quot;in == null&quot;);</span><br><span class="line">    if (timeout == null) throw new IllegalArgumentException(&quot;timeout == null&quot;);</span><br><span class="line"></span><br><span class="line">    return new Source() &#123;</span><br><span class="line">      @Override public long read(Buffer sink, long byteCount) throws IOException &#123;</span><br><span class="line">        if (byteCount &lt; 0) throw new IllegalArgumentException(&quot;byteCount &lt; 0: &quot; + byteCount);</span><br><span class="line">        if (byteCount == 0) return 0;</span><br><span class="line">        try &#123;</span><br><span class="line">          timeout.throwIfReached();</span><br><span class="line">          Segment tail = sink.writableSegment(1);</span><br><span class="line">          int maxToCopy = (int) Math.min(byteCount, Segment.SIZE - tail.limit);</span><br><span class="line">          int bytesRead = in.read(tail.data, tail.limit, maxToCopy);</span><br><span class="line">          if (bytesRead == -1) return -1;</span><br><span class="line">          tail.limit += bytesRead;</span><br><span class="line">          sink.size += bytesRead;</span><br><span class="line">          return bytesRead;</span><br><span class="line">        &#125; catch (AssertionError e) &#123;</span><br><span class="line">          if (isAndroidGetsocknameError(e)) throw new IOException(e);</span><br><span class="line">          throw e;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      @Override public void close() throws IOException &#123;</span><br><span class="line">        in.close();</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      @Override public Timeout timeout() &#123;</span><br><span class="line">        return timeout;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      @Override public String toString() &#123;</span><br><span class="line">        return &quot;source(&quot; + in + &quot;)&quot;;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-<p>这种信道机制都是队列模式，关于超时判定永远在最先，超时是不在乎io的速度，而只关注io开始时是否超时，而这种读取和写入的方法都基本是一层while搞定。</p>
-<p>从source和sink可以看出来，okio通过Segment来做数据的处理单元，这是一种双链表结构。写入的时候将依照节点顺序写入，读的时候也是从缓存池里面取出头节点进行读取。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">final class SegmentPool &#123;</span><br><span class="line">  /** The maximum number of bytes to pool. */</span><br><span class="line">  // TODO: Is 64 KiB a good maximum size? Do we ever have that many idle segments?</span><br><span class="line">  static final long MAX_SIZE = 64 * 1024; // 64 KiB.</span><br><span class="line"></span><br><span class="line">  /** Singly-linked list of segments. */</span><br><span class="line">  static @Nullable Segment next;</span><br><span class="line"></span><br><span class="line">  /** Total bytes in this pool. */</span><br><span class="line">  static long byteCount;</span><br><span class="line"></span><br><span class="line">  private SegmentPool() &#123;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  static Segment take() &#123;</span><br><span class="line">    synchronized (SegmentPool.class) &#123;</span><br><span class="line">      if (next != null) &#123;</span><br><span class="line">        Segment result = next;</span><br><span class="line">        next = result.next;</span><br><span class="line">        result.next = null;</span><br><span class="line">        byteCount -= Segment.SIZE;</span><br><span class="line">        return result;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return new Segment(); // Pool is empty. Don&apos;t zero-fill while holding a lock.</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  static void recycle(Segment segment) &#123;</span><br><span class="line">    if (segment.next != null || segment.prev != null) throw new IllegalArgumentException();</span><br><span class="line">    if (segment.shared) return; // This segment cannot be recycled.</span><br><span class="line">    synchronized (SegmentPool.class) &#123;</span><br><span class="line">      if (byteCount + Segment.SIZE &gt; MAX_SIZE) return; // Pool is full.</span><br><span class="line">      byteCount += Segment.SIZE;</span><br><span class="line">      segment.next = next;</span><br><span class="line">      segment.pos = segment.limit = 0;</span><br><span class="line">      next = segment;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>整个缓存池并不知道能不能说是一个池，说是一个管理类感觉更好点，读取的时候通过sink.writableSegment(1)来获取,这是通过操作sink的buffer来做的处理</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Segment writableSegment(int minimumCapacity) &#123;</span><br><span class="line">    if (minimumCapacity &lt; 1 || minimumCapacity &gt; Segment.SIZE) throw new IllegalArgumentException();</span><br><span class="line"></span><br><span class="line">    if (head == null) &#123;</span><br><span class="line">      head = SegmentPool.take(); // Acquire a first segment.</span><br><span class="line">      return head.next = head.prev = head;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Segment tail = head.prev;</span><br><span class="line">    if (tail.limit + minimumCapacity &gt; Segment.SIZE || !tail.owner) &#123;</span><br><span class="line">      tail = tail.push(SegmentPool.take()); // Append a new empty segment to fill up.</span><br><span class="line">    &#125;</span><br><span class="line">    return tail;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-<p>这里比较抽象，有部分的操作是进行链表的判空等，空链表做了一些处理，最终返回的是可处理的队列的尾部（其实是指向队列头的引用，不过由于是push方式，所以头在底下，因此叫做尾部）</p>
-<p>获取了尾部之后就开始通过io进行读取，这就是读取的过程。</p>
-<p>相对于io来讲，这部分由于使用了自己的缓存，缓存直接取出来使用，对比拷贝效率更高效一些。</p>
-<h2 id="总结一下"><a href="#总结一下" class="headerlink" title="总结一下"></a>总结一下</h2><p>okio在最终的写入和读出上面，都使用的原生io机制，但是okio维护了自己的buffer，这个buffer相对于原生来讲不需要在source时进行拷贝，也就是直接使用引用，效果更快。另外okio是针对网络相关的，所以okio增加了超时机制也是比原生更有优势的地方。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1797,7 +1778,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">117</span>
+                  <span class="site-state-item-count">119</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
