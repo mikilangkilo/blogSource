@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="android," />
 
 
 
@@ -79,14 +79,18 @@
 
 
 
+<meta name="description" content="前一阵遇到一个问题，就是looper在循环调用messageQueue中的message的时候，如何判断message的来源，并分发到对应的handler对象中的？ 当时认为是message中附带了对应的来源，或者说在发送message时使用了类似eventbus的方式进行了注册。 直到今天看了源码… loop()123456789101112131415161718192021222324252">
+<meta name="keywords" content="android">
 <meta property="og:type" content="article">
 <meta property="og:title" content="looper的message分发方式">
 <meta property="og:url" content="http://yoursite.com/2019/01/16/looper的message分发方式/index.html">
 <meta property="og:site_name" content="记录者">
+<meta property="og:description" content="前一阵遇到一个问题，就是looper在循环调用messageQueue中的message的时候，如何判断message的来源，并分发到对应的handler对象中的？ 当时认为是message中附带了对应的来源，或者说在发送message时使用了类似eventbus的方式进行了注册。 直到今天看了源码… loop()123456789101112131415161718192021222324252">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-01-16T10:47:19.747Z">
+<meta property="og:updated_time" content="2019-01-27T09:50:27.918Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="looper的message分发方式">
+<meta name="twitter:description" content="前一阵遇到一个问题，就是looper在循环调用messageQueue中的message的时候，如何判断message的来源，并分发到对应的handler对象中的？ 当时认为是message中附带了对应的来源，或者说在发送message时使用了类似eventbus的方式进行了注册。 直到今天看了源码… loop()123456789101112131415161718192021222324252">
 
 
 
@@ -306,7 +310,26 @@
       
 
       
-        
+        <p>前一阵遇到一个问题，就是looper在循环调用messageQueue中的message的时候，如何判断message的来源，并分发到对应的handler对象中的？</p>
+<p>当时认为是message中附带了对应的来源，或者说在发送message时使用了类似eventbus的方式进行了注册。</p>
+<p>直到今天看了源码…</p>
+<h1 id="loop"><a href="#loop" class="headerlink" title="loop()"></a>loop()</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">for (;;) &#123;</span><br><span class="line">            Message msg = queue.next(); // might block</span><br><span class="line">            if (msg == null) &#123;</span><br><span class="line">                // No message indicates that the message queue is quitting.</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            // This must be in a local variable, in case a UI event sets the logger</span><br><span class="line">            final Printer logging = me.mLogging;</span><br><span class="line">            if (logging != null) &#123;</span><br><span class="line">                logging.println(&quot;&gt;&gt;&gt;&gt;&gt; Dispatching to &quot; + msg.target + &quot; &quot; +</span><br><span class="line">                        msg.callback + &quot;: &quot; + msg.what);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            final long slowDispatchThresholdMs = me.mSlowDispatchThresholdMs;</span><br><span class="line"></span><br><span class="line">            final long traceTag = me.mTraceTag;</span><br><span class="line">            if (traceTag != 0 &amp;&amp; Trace.isTagEnabled(traceTag)) &#123;</span><br><span class="line">                Trace.traceBegin(traceTag, msg.target.getTraceName(msg));</span><br><span class="line">            &#125;</span><br><span class="line">            final long start = (slowDispatchThresholdMs == 0) ? 0 : SystemClock.uptimeMillis();</span><br><span class="line">            final long end;</span><br><span class="line">            try &#123;</span><br><span class="line">                msg.target.dispatchMessage(msg);</span><br><span class="line">                end = (slowDispatchThresholdMs == 0) ? 0 : SystemClock.uptimeMillis();</span><br><span class="line">            &#125; finally &#123;</span><br><span class="line">                if (traceTag != 0) &#123;</span><br><span class="line">                    Trace.traceEnd(traceTag);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            if (slowDispatchThresholdMs &gt; 0) &#123;</span><br><span class="line">                final long time = end - start;</span><br><span class="line">                if (time &gt; slowDispatchThresholdMs) &#123;</span><br><span class="line">                    Slog.w(TAG, &quot;Dispatch took &quot; + time + &quot;ms on &quot;</span><br><span class="line">                            + Thread.currentThread().getName() + &quot;, h=&quot; +</span><br><span class="line">                            msg.target + &quot; cb=&quot; + msg.callback + &quot; msg=&quot; + msg.what);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (logging != null) &#123;</span><br><span class="line">                logging.println(&quot;&lt;&lt;&lt;&lt;&lt; Finished to &quot; + msg.target + &quot; &quot; + msg.callback);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            // Make sure that during the course of dispatching the</span><br><span class="line">            // identity of the thread wasn&apos;t corrupted.</span><br><span class="line">            final long newIdent = Binder.clearCallingIdentity();</span><br><span class="line">            if (ident != newIdent) &#123;</span><br><span class="line">                Log.wtf(TAG, &quot;Thread identity changed from 0x&quot;</span><br><span class="line">                        + Long.toHexString(ident) + &quot; to 0x&quot;</span><br><span class="line">                        + Long.toHexString(newIdent) + &quot; while dispatching to &quot;</span><br><span class="line">                        + msg.target.getClass().getName() + &quot; &quot;</span><br><span class="line">                        + msg.callback + &quot; what=&quot; + msg.what);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            msg.recycleUnchecked();</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p>loop的过程看起来还是比较简单的，核心在于一个时延和分发。</p>
+<p>当检测到messagequeue中有消息的时候，会执行该消息的dispatchmessage()方法</p>
+<h1 id="msg-target"><a href="#msg-target" class="headerlink" title="msg.target"></a>msg.target</h1><p>该target对象是handler，也就是message中封了一个handler对像</p>
+<h1 id="dispatchmessage"><a href="#dispatchmessage" class="headerlink" title="dispatchmessage()"></a>dispatchmessage()</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public void dispatchMessage(Message msg) &#123;</span><br><span class="line">        if (msg.callback != null) &#123;</span><br><span class="line">            // 当 Message 存在回调方法，回调 msg.callback.run() 方法</span><br><span class="line">            handleCallback(msg);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            if (mCallback != null) &#123;</span><br><span class="line">                // 当 Handler 存在 Callback 成员变量时，回调方法 handleMessage()</span><br><span class="line">                if (mCallback.handleMessage(msg)) &#123;</span><br><span class="line">                    return;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            // Handler 自身的回调方法 handleMessage()</span><br><span class="line">            handleMessage(msg);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>从这里可以看出，针对msg有三种处理方式</p>
+<h2 id="单独处理callback"><a href="#单独处理callback" class="headerlink" title="单独处理callback"></a>单独处理callback</h2><p>当callback不为空的时候，会优先处理callback，这个callback的就是在post的时候的runnable对象</p>
+<h2 id="构造处理msg"><a href="#构造处理msg" class="headerlink" title="构造处理msg"></a>构造处理msg</h2><p>当不是调用post方法进行的操作，会处理msg。如果构造的时候传入了callback，就会调用传入的callback方法的handlemessage方法</p>
+<h2 id="自身处理msg"><a href="#自身处理msg" class="headerlink" title="自身处理msg"></a>自身处理msg</h2><p>如果没有传入callback，那么就会调用handler自身的hanldeMessage方法。</p>
+<p>该方法默认是一个空方法，需要重写handlemessage方法。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>如果是直接post一个runnable对象的话，当处理这个massage的时候，会直接调用该msg携带的runnable直接进行。</p>
+<p>如果是使用message方式来传递的话，需要处理该message，则需要两种方式</p>
+<p>1.向Hanlder的构造函数传入一个Handler.Callback对象，并实现Handler.Callback的handleMessage方法<br>2.无需向Hanlder的构造函数传入Handler.Callback对象，但是需要重写Handler本身的handleMessage方法</p>
+<h1 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h1><p>message分发判断是否传入到对应的handler中，其实是message自身携带的handler对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">private static Message getPostMessage(Runnable r) &#123;</span><br><span class="line">       Message m = Message.obtain();</span><br><span class="line">       m.callback = r;</span><br><span class="line">       return m;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>post的时候会通过这个方法对runnable对象进行封装，这样就顺利的将一个runnable与message联系起来，之后looper执行的时候仍然可以以message为对象进行处理。</p>
+
       
     </div>
     
@@ -320,6 +343,12 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/android/" rel="tag"># android</a>
+          
+        </div>
       
 
       
@@ -339,6 +368,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/01/27/recyclerview源码学习/" rel="prev" title="recyclerview源码学习">
+                recyclerview源码学习 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -390,8 +423,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -406,7 +448,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">120</span>
+                  <span class="site-state-item-count">122</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -442,6 +484,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#loop"><span class="nav-number">1.</span> <span class="nav-text">loop()</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#msg-target"><span class="nav-number">2.</span> <span class="nav-text">msg.target</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dispatchmessage"><span class="nav-number">3.</span> <span class="nav-text">dispatchmessage()</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#单独处理callback"><span class="nav-number">3.1.</span> <span class="nav-text">单独处理callback</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构造处理msg"><span class="nav-number">3.2.</span> <span class="nav-text">构造处理msg</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自身处理msg"><span class="nav-number">3.3.</span> <span class="nav-text">自身处理msg</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.4.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结-1"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
