@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="java," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="该片摘抄自慕课 一. synchronized在 JDK 1.6 之前，synchronized 是重量级锁，效率低下。从 JDK 1.6 开始，synchronized 做了很多优化，如偏向锁、轻量级锁、自旋锁、适应性自旋锁、锁消除、锁粗化等技术来减少锁操作的开销。synchronized 同步锁一共包含四种状态：无锁、偏向锁、轻量级锁、重量级锁，它会随着竞争情况逐渐升级。synchronize">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java各种锁学习">
+<meta property="og:url" content="http://yoursite.com/2018/12/13/java各种锁学习/index.html">
+<meta property="og:site_name" content="记录者">
+<meta property="og:description" content="该片摘抄自慕课 一. synchronized在 JDK 1.6 之前，synchronized 是重量级锁，效率低下。从 JDK 1.6 开始，synchronized 做了很多优化，如偏向锁、轻量级锁、自旋锁、适应性自旋锁、锁消除、锁粗化等技术来减少锁操作的开销。synchronized 同步锁一共包含四种状态：无锁、偏向锁、轻量级锁、重量级锁，它会随着竞争情况逐渐升级。synchronize">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/java/java锁图.png">
+<meta property="og:updated_time" content="2019-02-12T11:23:04.519Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java各种锁学习">
+<meta name="twitter:description" content="该片摘抄自慕课 一. synchronized在 JDK 1.6 之前，synchronized 是重量级锁，效率低下。从 JDK 1.6 开始，synchronized 做了很多优化，如偏向锁、轻量级锁、自旋锁、适应性自旋锁、锁消除、锁粗化等技术来减少锁操作的开销。synchronized 同步锁一共包含四种状态：无锁、偏向锁、轻量级锁、重量级锁，它会随着竞争情况逐渐升级。synchronize">
+<meta name="twitter:image" content="http://yoursite.com/images/java/java锁图.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/13/java各种锁学习/"/>
+
+
+
+
+
+  <title>java各种锁学习 | 记录者</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">记录者</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我们坚持一件事情，并不是因为这样做了会有效果，而是坚信，这样做是对的。</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/13/java各种锁学习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">java各种锁学习</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-13T12:13:59+08:00">
+                2018-12-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>该片摘抄自慕课</p>
+<h1 id="一-synchronized"><a href="#一-synchronized" class="headerlink" title="一. synchronized"></a>一. synchronized</h1><p>在 JDK 1.6 之前，synchronized 是重量级锁，效率低下。从 JDK 1.6 开始，synchronized 做了很多优化，如偏向锁、轻量级锁、自旋锁、适应性自旋锁、锁消除、锁粗化等技术来减少锁操作的开销。synchronized 同步锁一共包含四种状态：无锁、偏向锁、轻量级锁、重量级锁，它会随着竞争情况逐渐升级。synchronized 同步锁可以升级但是不可以降级，目的是为了提高获取锁和释放锁的效率。</p>
+<h2 id="synchronized-修饰的代码块"><a href="#synchronized-修饰的代码块" class="headerlink" title="synchronized 修饰的代码块"></a>synchronized 修饰的代码块</h2><p>通过反编译.class文件，通过查看字节码可以得到：在代码块中使用的是 monitorenter 和 monitorexit 指令，其中 monitorenter 指令指向同步代码块的开始位置，monitorexit 指令指明同步代码块的结束位置。</p>
+<h2 id="synchronized-修饰的方法"><a href="#synchronized-修饰的方法" class="headerlink" title="synchronized 修饰的方法"></a>synchronized 修饰的方法</h2><p>同样查看字节码可以得到：在同步方法中会包含 ACC_SYNCHRONIZED 标记符。该标记符指明了该方法是一个同步方法，从而执行相应的同步调用。</p>
+<h1 id="二-对象锁、类锁、私有锁"><a href="#二-对象锁、类锁、私有锁" class="headerlink" title="二. 对象锁、类锁、私有锁"></a>二. 对象锁、类锁、私有锁</h1><p>对象锁：使用 synchronized 修饰非静态的方法以及 synchronized(this) 同步代码块使用的锁是对象锁。</p>
+<p>类锁：使用 synchronized 修饰静态的方法以及 synchronized(class) 同步代码块使用的锁是类锁。</p>
+<p>私有锁：在类内部声明一个私有属性如private Object lock，在需要加锁的同步块使用 synchronized(lock）</p>
+<p>它们的特性：</p>
+<ul>
+<li>对象锁具有可重入性。</li>
+<li>当一个线程获得了某个对象的对象锁，则该线程仍然可以调用其他任何需要该对象锁的 synchronized 方法或 synchronized(this) 同步代码块。</li>
+<li>当一个线程访问某个对象的一个 synchronized(this) 同步代码块时，其他线程对该对象中所有其它 synchronized(this) 同步代码块的访问将被阻塞，因为访问的是同一个对象锁。</li>
+<li>每个类只有一个类锁，但是类可以实例化成对象，因此每一个对象对应一个对象锁。</li>
+<li>类锁和对象锁不会产生竞争。</li>
+<li>私有锁和对象锁也不会产生竞争。</li>
+<li>使用私有锁可以减小锁的细粒度，减少由锁产生的开销。</li>
+</ul>
+<p>由私有锁实现的等待/通知机制：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Object lock = new Object();// 由等待方线程实现</span><br><span class="line">synchronized (lock) &#123;</span><br><span class="line">    while (条件不满足) &#123;</span><br><span class="line">       lock.wait();</span><br><span class="line">    &#125;                         </span><br><span class="line">   &#125;// 由通知方线程实现</span><br><span class="line">   synchronized (lock) &#123;</span><br><span class="line">   条件发生改变</span><br><span class="line">   lock.notify();                    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="三-ReentrantLock"><a href="#三-ReentrantLock" class="headerlink" title="三. ReentrantLock"></a>三. ReentrantLock</h1><p>ReentrantLock 是一个独占/排他锁。相对于 synchronized，它更加灵活。但是需要自己写出加锁和解锁的过程。它的灵活性在于它拥有很多特性。</p>
+<blockquote>
+<blockquote>
+<p>ReentrantLock 需要显示地进行释放锁。特别是在程序异常时，synchronized 会自动释放锁，而 ReentrantLock 并不会自动释放锁，所以必须在 finally 中进行释放锁。</p>
+</blockquote>
+</blockquote>
+<p>它的特性：</p>
+<ul>
+<li>公平性：支持公平锁和非公平锁。默认使用了非公平锁。</li>
+<li>可重入</li>
+<li>可中断：相对于 synchronized，它是可中断的锁，能够对中断作出响应。</li>
+<li>超时机制：超时后不能获得锁，因此不会造成死锁。</li>
+</ul>
+<p>ReentrantLock 是很多类的基础，例如 ConcurrentHashMap 内部使用的 Segment 就是继承 ReentrantLock，CopyOnWriteArrayList 也使用了 ReentrantLock。</p>
+<h1 id="四-ReentrantReadWriteLock"><a href="#四-ReentrantReadWriteLock" class="headerlink" title="四. ReentrantReadWriteLock"></a>四. ReentrantReadWriteLock</h1><p>它拥有读锁(ReadLock)和写锁(WriteLock)，读锁是一个共享锁，写锁是一个排他锁。</p>
+<p>它的特性：</p>
+<ul>
+<li>公平性：支持公平锁和非公平锁。默认使用了非公平锁。</li>
+<li>可重入：读线程在获取读锁之后能够再次获取读锁。写线程在获取写锁之后能够再次获取写锁，同时也可以获取读锁（锁降级）。</li>
+<li>锁降级：先获取写锁，再获取读锁，然后再释放写锁的过程。锁降级是为了保证数据的可见性。</li>
+</ul>
+<h1 id="五-CAS"><a href="#五-CAS" class="headerlink" title="五. CAS"></a>五. CAS</h1><p>上面提到的 ReentrantLock、ReentrantReadWriteLock 都是基于 AbstractQueuedSynchronizer (AQS)，而 AQS 又是基于 CAS。CAS 的全称是 Compare And Swap（比较与交换），它是一种无锁算法。</p>
+<p>synchronized、Lock 都采用了悲观锁的机制，而 CAS 是一种乐观锁的实现。</p>
+<p>CAS 的特性：</p>
+<ul>
+<li>通过调用 JNI 的代码实现</li>
+<li>非阻塞算法</li>
+<li>非独占锁</li>
+</ul>
+<p>CAS 存在的问题：</p>
+<ul>
+<li>ABA</li>
+<li>循环时间长开销大</li>
+<li>只能保证一个共享变量的原子操作</li>
+</ul>
+<h1 id="六-Condition"><a href="#六-Condition" class="headerlink" title="六. Condition"></a>六. Condition</h1><p>Condition 用于替代传统的 Object 的 wait()、notify() 实现线程间的协作。</p>
+<blockquote>
+<blockquote>
+<p>在 Condition 对象中，与 wait、notify、notifyAll 方法对应的分别是 await、signal 和 signalAll。</p>
+</blockquote>
+</blockquote>
+<p>Condition 必须要配合 Lock 一起使用，一个 Condition 的实例必须与一个 Lock 绑定。</p>
+<p>它的特性：</p>
+<ul>
+<li>一个 Lock 对象可以创建多个 Condition 实例，所以可以支持多个等待队列。</li>
+<li>Condition 在使用 await、signal 或 signalAll 方法时，必须先获得 Lock 的 lock()</li>
+<li>支持响应中断</li>
+<li>支持的定时唤醒功能</li>
+</ul>
+<h1 id="七-Semaphore"><a href="#七-Semaphore" class="headerlink" title="七. Semaphore"></a>七. Semaphore</h1><p>Semaphore、CountDownLatch、CyclicBarrier 都是并发工具类。</p>
+<p>Semaphore 可以指定多个线程同时访问某个资源，而 synchronized 和 ReentrantLock 都是一次只允许一个线程访问某个资源。由于 Semaphore 适用于限制访问某些资源的线程数目，因此可以使用它来做限流。</p>
+<blockquote>
+<blockquote>
+<p>Semaphore 并不会实现数据的同步，数据的同步还是需要使用 synchronized、Lock 等实现。</p>
+</blockquote>
+</blockquote>
+<p>它的特性：</p>
+<ul>
+<li>基于 AQS 的共享模式</li>
+<li>公平性：支持公平模式和非公平模式。默认使用了非公平模式。</li>
+</ul>
+<h1 id="八-CountDownLatch"><a href="#八-CountDownLatch" class="headerlink" title="八. CountDownLatch"></a>八. CountDownLatch</h1><p>CountDownLatch 可以看成是一个倒计数器，它允许一个或多个线程等待其他线程完成操作。因此，CountDownLatch 是共享锁。CountDownLatch 的 countDown() 方法将计数器减1，await() 方法会阻塞当前线程直到计数器变为0。</p>
+<h1 id="九-锁的分类"><a href="#九-锁的分类" class="headerlink" title="九. 锁的分类"></a>九. 锁的分类</h1><p><img src="/images/java/java锁图.png" alt="java锁图"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/11/okio学习/" rel="next" title="okio学习">
+                <i class="fa fa-chevron-left"></i> okio学习
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/26/焦虑感的排解方式/" rel="prev" title="焦虑感的排解方式">
+                焦虑感的排解方式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Sample</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">123</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一-synchronized"><span class="nav-number">1.</span> <span class="nav-text">一. synchronized</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#synchronized-修饰的代码块"><span class="nav-number">1.1.</span> <span class="nav-text">synchronized 修饰的代码块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#synchronized-修饰的方法"><span class="nav-number">1.2.</span> <span class="nav-text">synchronized 修饰的方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二-对象锁、类锁、私有锁"><span class="nav-number">2.</span> <span class="nav-text">二. 对象锁、类锁、私有锁</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三-ReentrantLock"><span class="nav-number">3.</span> <span class="nav-text">三. ReentrantLock</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四-ReentrantReadWriteLock"><span class="nav-number">4.</span> <span class="nav-text">四. ReentrantReadWriteLock</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五-CAS"><span class="nav-number">5.</span> <span class="nav-text">五. CAS</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#六-Condition"><span class="nav-number">6.</span> <span class="nav-text">六. Condition</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#七-Semaphore"><span class="nav-number">7.</span> <span class="nav-text">七. Semaphore</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#八-CountDownLatch"><span class="nav-number">8.</span> <span class="nav-text">八. CountDownLatch</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#九-锁的分类"><span class="nav-number">9.</span> <span class="nav-text">九. 锁的分类</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sample</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
