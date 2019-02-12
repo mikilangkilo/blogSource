@@ -936,7 +936,7 @@ final View view = recycler.getViewForPosition(mCurrentPosition);
 
 //吐槽一下：明明是一个问题，为什么if还不嵌套...
 
-![缓存的顺序图，copy自bugly](/images/recyclerview缓存模型.jpg)
+![缓存的顺序图，copy自bugly](/images/android/recyclerview缓存模型.jpg)
 
 ## 总结一下：三层缓存
 
