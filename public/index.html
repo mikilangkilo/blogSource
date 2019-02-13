@@ -530,7 +530,7 @@
 </code></pre></li>
 </ol>
 <p>//吐槽一下：明明是一个问题，为什么if还不嵌套…</p>
-<p><img src="/images/recyclerview缓存模型.jpg" alt="缓存的顺序图，copy自bugly"></p>
+<p><img src="/images/android/recyclerview缓存模型.jpg" alt="缓存的顺序图，copy自bugly"></p>
 <h2 id="总结一下：三层缓存"><a href="#总结一下：三层缓存" class="headerlink" title="总结一下：三层缓存"></a>总结一下：三层缓存</h2><p>View的detach和remove: </p>
 <p><strong>detach</strong>: 在ViewGroup中的实现很简单，只是将ChildView<strong>从ParentView的ChildView数组中移除，ChildView的mParent设置为null, 可以理解为轻量级的临时remove, 因为View此时和View树还是藕断丝连, 这个函数被经常用来改变ChildView在ChildView数组中的次序。</strong>View被detach一般是临时的，在后面会被重新attach。</p>
 <p><strong>remove</strong>: 真正的移除，不光被从ChildView数组中除名，其他和View树各项联系也会被彻底斩断(不考虑Animation/LayoutTransition这种特殊情况)， 比如焦点被清除，从TouchTarget中被移除等。</p>
