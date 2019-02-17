@@ -239,6 +239,143 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/18/binder机制学习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/18/binder机制学习/" itemprop="url">binder机制学习</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-18T22:42:23+08:00">
+                2018-10-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>binder平时总听过，但是原理只知道是ipc，也就是进程间通信。但是真正的原理其实还是不理解。</p>
+<h1 id="binder位置"><a href="#binder位置" class="headerlink" title="binder位置"></a>binder位置</h1><p>binder介于framework和systemservice之间，属于让开发者来调用系统层接口的方法。</p>
+<h1 id="ipc"><a href="#ipc" class="headerlink" title="ipc"></a>ipc</h1><p>ipc全称是inter-process communication,进程间通讯</p>
+<p>ipc的方式有很多种，socket，共享内存，管道，消息队列</p>
+<h2 id="socket"><a href="#socket" class="headerlink" title="socket"></a>socket</h2><p>socket实现进程间通讯，是基于tcpip协议来实现的，一般实现tcp，如果是udp也是可以的，udp是两个socket但是无连接。<br>通过tcp实现ipc的原理<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">客户端程序通过socket发送一系列信息到传输层的tcp，然后往下传，通过网络层，网络接口层，然后在往上传到网络层，然后传到服务端的传输层tcp，然后由服务器的socket接收到，之后回传也是相同的</span><br></pre></td></tr></table></figure></p>
+<p>缺点是需传输效率较低，一般只用在不同机器，或者跨网络的通行</p>
+<h2 id="共享内存"><a href="#共享内存" class="headerlink" title="共享内存"></a>共享内存</h2><p>共享内存的ipc，传输的对象一般都是可描述的，所以都用序列化，创建共享内存就使用memoryfile即可</p>
+<p>这样构建的内存可以让其他进程共享</p>
+<p>共享内存的优点在于无需复制，速度快，共享缓冲区直接附加到进程虚拟地址空间。缺点在于同步问题不好解决</p>
+<h2 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h2><p>消息队列就是messagequeue<br>实现的思路<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">在进程a中创建一个message，讲这个message对象通过imessenger.send(message)方法传递到进程b中</span><br><span class="line">send(message)会使用一个parcel对象对message对象编集，再将parcel对象传递到进程b中，然后解编集，得到一个和进程a中message对象内容一样的对象，在将message对象加入到b的消息队列里面，handler会处理它</span><br></pre></td></tr></table></figure></p>
+<p>消息队列的好处是比较方便，缺点是信息复制2次，有额外的cpu消耗，不是很适合频繁或者信息量大的通信</p>
+<h2 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h2><p>管道是比较古老的通信方式，包括无名管道和有名管道，前者是父子进程间的通信，后者用于运行同一机器上的任意两个进程间的通信。实现方式是pipe，利用管道的有handler（此处需要研究一下handler的实现原理）</p>
+<p>管道创建时分配了一个page大小的内存（page？）缓存区大小比较有限</p>
+<h1 id="Binder"><a href="#Binder" class="headerlink" title="Binder"></a>Binder</h1><p>binder ipc属于c/s结构，client部分是用户代码，最终会调用binder driver的transact接口，binder driver会调用server</p>
+<p>client:用户需要实现的代码，如aidl自动生成的接口类<br>binder driver：在内核层实现的driver<br>server：这个server就是service中onbind返回的ibinder对象</p>
+<p>binder driver这块并不需要用户知道，server中会开启一个线程池（防止任务积压，也需要做好同步措施）去处理客户端调用</p>
+<p>对于调用binder driver中的transact接口，客户端可以手动调用，也可以通过aidl的方式生成的代理类来调用，服务端可以继承binder对象，也可以继承aidl生成的接口类的stub对象</p>
+<h1 id="实现环节"><a href="#实现环节" class="headerlink" title="实现环节"></a>实现环节</h1><p>//todo</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/10/2018第三季度复盘（第40周）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1468,129 +1605,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/04/2018第二十二周工作小结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/04/2018第二十二周工作小结/" itemprop="url">2018第二十二周工作小结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-04T14:28:49+08:00">
-                2018-06-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>上周的任务是完成了盒子2.0.5的上线。这次主要是做了一些小的修改和修复。</p>
-<p>工作并没有学到多少，清闲反而有些不习惯。</p>
-<p>除此之外学习了mongodb，和后台搭建的一些知识，做了记录。</p>
-<p>本周转正，祝顺利。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1641,7 +1655,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">123</span>
+                  <span class="site-state-item-count">124</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1654,7 +1668,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

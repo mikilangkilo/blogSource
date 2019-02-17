@@ -239,6 +239,132 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/25/2018年第四十六周工作小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/25/2018年第四十六周工作小结/" itemprop="url">2018年第四十六周工作小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-25T22:55:08+08:00">
+                2018-11-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本周的主要工作是完成了medel放大，手势滑动，以及分享到app等功能。</p>
+<p>medel放大主要使用的是photoview的改写版本，因为产品要求不支持反转，因此读了一下代码去掉了反转的操作，放大的弹性指数用的是正常的2.5倍。medel放大，手势等等业务逻辑写的都比较简单。</p>
+<p>这次medel的放大页面，需要使用viewpager进行滑动更改，因此这就需要了进行medel的bitmap缓存，按照以往的写法，这个地方应该写一个lrucache，配套SoftReference<bitmap>来使用，但是调试过程中发现了一些问题。</bitmap></p>
+<p>softreference是当内存不足的时候会被强制回收，lrucache里面携带的是linkedlist，直接使用key指向该软引用，lrucache里面会记录目前保留下来的数量，然后作对比。但是比较神奇的是，发现了lrucache里面记录的数量大于0，但是linkedlist里面size却为0了。做了两个对比，当不使用软引用，直接使用携带bitmap，发现并不会出现这种情况。关于这个问题查了一下，其实jvm并不希望我们使用软引用，因为无法确定何时回收比较好，因此此处回收的机制并不是当内存不足的时候才回收，由于给了1/8最大可用内存，因此此处应该是触发了一个最大内存限制，导致直接被强制回收了所有软引用的地方，导致发生了这个问题。另外实验了一下，在recyclerview中，当view被回收复用的时候，此时使用软引用就不会触发这个问题，因为当view被回收复用的时候，此时就会释放该部分指向，当这部分到了内存限制的时候回被自然的回收，但是viewpager中view不会被回收，而且我没有设置最大页面的offset，导致这个问题发生。</p>
+<p>因此以后使用到软引用的时候，不能光认为是内存不足就会被回收，要做好直接被回收的准备，否则就不应该使用软引用。</p>
+<p>另外这次关于medel的设计，是在spu详情页面，spu详情页面跳出medel预览，然后medel预览还可以跳转详情，这涉及一个无限跳转的问题，测试发现一个详情页面占用起码300M内存，但是如果是相同的大概只会增加100M，但是如果无限跳转肯定会导致内存不足的问题，从淘宝测试了一下，淘宝最多只允许三个页面跳转，因此我们也需要考虑到这个问题。</p>
+<p>下个版本需要设计一下页面多级跳转的问题。目前思想是在activty栈里面做一些设置，在相同activity过多的时候，采取旧页面强制销毁的方式，然后启动新的页面，这样应该可以解决这个问题</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/16/网络协议基础/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1570,143 +1696,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/18/binder机制学习/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/18/binder机制学习/" itemprop="url">binder机制学习</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-18T22:42:23+08:00">
-                2018-10-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>binder平时总听过，但是原理只知道是ipc，也就是进程间通信。但是真正的原理其实还是不理解。</p>
-<h1 id="binder位置"><a href="#binder位置" class="headerlink" title="binder位置"></a>binder位置</h1><p>binder介于framework和systemservice之间，属于让开发者来调用系统层接口的方法。</p>
-<h1 id="ipc"><a href="#ipc" class="headerlink" title="ipc"></a>ipc</h1><p>ipc全称是inter-process communication,进程间通讯</p>
-<p>ipc的方式有很多种，socket，共享内存，管道，消息队列</p>
-<h2 id="socket"><a href="#socket" class="headerlink" title="socket"></a>socket</h2><p>socket实现进程间通讯，是基于tcpip协议来实现的，一般实现tcp，如果是udp也是可以的，udp是两个socket但是无连接。<br>通过tcp实现ipc的原理<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">客户端程序通过socket发送一系列信息到传输层的tcp，然后往下传，通过网络层，网络接口层，然后在往上传到网络层，然后传到服务端的传输层tcp，然后由服务器的socket接收到，之后回传也是相同的</span><br></pre></td></tr></table></figure></p>
-<p>缺点是需传输效率较低，一般只用在不同机器，或者跨网络的通行</p>
-<h2 id="共享内存"><a href="#共享内存" class="headerlink" title="共享内存"></a>共享内存</h2><p>共享内存的ipc，传输的对象一般都是可描述的，所以都用序列化，创建共享内存就使用memoryfile即可</p>
-<p>这样构建的内存可以让其他进程共享</p>
-<p>共享内存的优点在于无需复制，速度快，共享缓冲区直接附加到进程虚拟地址空间。缺点在于同步问题不好解决</p>
-<h2 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h2><p>消息队列就是messagequeue<br>实现的思路<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">在进程a中创建一个message，讲这个message对象通过imessenger.send(message)方法传递到进程b中</span><br><span class="line">send(message)会使用一个parcel对象对message对象编集，再将parcel对象传递到进程b中，然后解编集，得到一个和进程a中message对象内容一样的对象，在将message对象加入到b的消息队列里面，handler会处理它</span><br></pre></td></tr></table></figure></p>
-<p>消息队列的好处是比较方便，缺点是信息复制2次，有额外的cpu消耗，不是很适合频繁或者信息量大的通信</p>
-<h2 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h2><p>管道是比较古老的通信方式，包括无名管道和有名管道，前者是父子进程间的通信，后者用于运行同一机器上的任意两个进程间的通信。实现方式是pipe，利用管道的有handler（此处需要研究一下handler的实现原理）</p>
-<p>管道创建时分配了一个page大小的内存（page？）缓存区大小比较有限</p>
-<h1 id="Binder"><a href="#Binder" class="headerlink" title="Binder"></a>Binder</h1><p>binder ipc属于c/s结构，client部分是用户代码，最终会调用binder driver的transact接口，binder driver会调用server</p>
-<p>client:用户需要实现的代码，如aidl自动生成的接口类<br>binder driver：在内核层实现的driver<br>server：这个server就是service中onbind返回的ibinder对象</p>
-<p>binder driver这块并不需要用户知道，server中会开启一个线程池（防止任务积压，也需要做好同步措施）去处理客户端调用</p>
-<p>对于调用binder driver中的transact接口，客户端可以手动调用，也可以通过aidl的方式生成的代理类来调用，服务端可以继承binder对象，也可以继承aidl生成的接口类的stub对象</p>
-<h1 id="实现环节"><a href="#实现环节" class="headerlink" title="实现环节"></a>实现环节</h1><p>//todo</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1757,7 +1746,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">123</span>
+                  <span class="site-state-item-count">124</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1770,7 +1759,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
