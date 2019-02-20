@@ -1,5 +1,5 @@
 ---
-title: 设计模式以及java举例
+title: 设计模式以及Android举例
 date: 2019-02-15 00:13:47
 tags: 设计模式
 ---
@@ -139,8 +139,52 @@ public class AbstractFactory {
 }
 ```
 
-工厂过程其实可以直接合成一个Factory使用，但是工厂过程一般都是静态方法，不支持动态更改。
-而转变为抽象工厂模式，每次需要增加一个实例的话只需要增加一个工厂类，然后抽象工厂方法可以直接
+工厂模式的精髓在于**工厂模式**，就是把类型的定义过程和实例化过程分开
+
+首先是定义过程，定义了一个产品如何创建，然后创建了一个创建这个产品的工厂，这一步是简单工厂，在之后创建了一个创建工厂的工厂，这个就是抽象工厂。
+因为产品之间的构造可能有依赖，这个依赖需要通过简单工厂的协作来解决，因此需要一个抽象工厂来协助处理工厂之间的关系。
+
+### 工厂模式进一步的优化
+
+```
+public class ConcreateFactory extends Factory{
+    @Override
+    public<T extends Product> T createProduct(Class<T> clz){
+        Product p = null;
+        try{
+            p = (Product) class.forName(clz.getName()).newInstance();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return (T)p;
+    }
+}
+```
+这样的话只需要传入名字即可实例，对比new出来的，不需要代码的变化。
+
+### 工厂模式在Android中的使用例子
+
+
+#### collection
+
+Collection接口继承自Iterable接口
+
+```
+public interface Iterable<T>{
+    Iterator<T> iterator();
+}
+```
+
+该接口的作用就是返回一个迭代器，这个iterator方法就相当于一个工厂方法，专门为new对象而生。
+
+#### Activity.onCreate()
+
+ActivityThread作为一个app的入口，自zygote孵化一个新的进程之后就会被调用。
+
+ActivityThread会准备looper和消息队列，然后调用attach方法绑定到ActivityManagerService中，
+之后就会不断的读取消息队列中的消息并分发消息。
+
+在looper准备之前，会调用attach，会将AMS与当前的athread绑定，AMS会将
 
 
 
