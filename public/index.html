@@ -239,7 +239,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/15/设计模式以及java举例/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/15/设计模式以及Android举例/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Sample">
@@ -258,7 +258,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/02/15/设计模式以及java举例/" itemprop="url">设计模式以及java举例</a></h1>
+                <a class="post-title-link" href="/2019/02/15/设计模式以及Android举例/" itemprop="url">设计模式以及Android举例</a></h1>
         
 
         <div class="post-meta">
@@ -392,7 +392,27 @@
 <h3 id="抽象工厂模式"><a href="#抽象工厂模式" class="headerlink" title="抽象工厂模式"></a>抽象工厂模式</h3><p>实例构建过程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//声明抽象接口类</span><br><span class="line">interface food&#123;&#125;</span><br><span class="line"></span><br><span class="line">//需要的实体类需要继承该接口</span><br><span class="line">class A implements food&#123;&#125;</span><br><span class="line">class B implements food&#123;&#125;</span><br></pre></td></tr></table></figure></p>
 <p>工厂过程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">interface produce&#123; food get();&#125;</span><br><span class="line"></span><br><span class="line">class FactoryForA implements produce&#123;</span><br><span class="line">    @Override</span><br><span class="line">    public food get() &#123;</span><br><span class="line">        return new A();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">class FactoryForB implements produce&#123;</span><br><span class="line">    @Override</span><br><span class="line">    public food get() &#123;</span><br><span class="line">        return new B();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>抽象工厂过程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public class AbstractFactory &#123;</span><br><span class="line">    public void ClientCode(String name)&#123;</span><br><span class="line">        if(name.equals(&quot;A&quot;))&#123;</span><br><span class="line">            food x= new FactoryForA().get();</span><br><span class="line">            x = new FactoryForB().get();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>工厂过程其实可以直接合成一个Factory使用，但是工厂过程一般都是静态方法，不支持动态更改。<br>而转变为抽象工厂模式，每次需要增加一个实例的话只需要增加一个工厂类，然后抽象工厂方法可以直接</p>
+<p>工厂模式的精髓在于<strong>工厂模式</strong>，就是把类型的定义过程和实例化过程分开</p>
+<p>首先是定义过程，定义了一个产品如何创建，然后创建了一个创建这个产品的工厂，这一步是简单工厂，在之后创建了一个创建工厂的工厂，这个就是抽象工厂。<br>因为产品之间的构造可能有依赖，这个依赖需要通过简单工厂的协作来解决，因此需要一个抽象工厂来协助处理工厂之间的关系。</p>
+<h3 id="工厂模式进一步的优化"><a href="#工厂模式进一步的优化" class="headerlink" title="工厂模式进一步的优化"></a>工厂模式进一步的优化</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class ConcreateFactory extends Factory&#123;</span><br><span class="line">    @Override</span><br><span class="line">    public&lt;T extends Product&gt; T createProduct(Class&lt;T&gt; clz)&#123;</span><br><span class="line">        Product p = null;</span><br><span class="line">        try&#123;</span><br><span class="line">            p = (Product) class.forName(clz.getName()).newInstance();</span><br><span class="line">        &#125;catch(Exception e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        return (T)p;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样的话只需要传入名字即可实例，对比new出来的，不需要代码的变化。</p>
+<h3 id="工厂模式在Android中的使用例子"><a href="#工厂模式在Android中的使用例子" class="headerlink" title="工厂模式在Android中的使用例子"></a>工厂模式在Android中的使用例子</h3><h4 id="collection"><a href="#collection" class="headerlink" title="collection"></a>collection</h4><p>Collection接口继承自Iterable接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface Iterable&lt;T&gt;&#123;</span><br><span class="line">    Iterator&lt;T&gt; iterator();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该接口的作用就是返回一个迭代器，这个iterator方法就相当于一个工厂方法，专门为new对象而生。</p>
+<h4 id="Activity-onCreate"><a href="#Activity-onCreate" class="headerlink" title="Activity.onCreate()"></a>Activity.onCreate()</h4><p>ActivityThread作为一个app的入口，自zygote孵化一个新的进程之后就会被调用。</p>
+<p>ActivityThread会准备<br>在looplooper和消息队列，然后调用attach方法绑定到ActivityManagerService中，<br>之后就会不断的读取消息队列中的消息并分发消息。<br>looper准备之前，会调用attach，会将AMS与当前的athread绑定，AMS会调用attachApplication方法，<br>attachapplication中主要是做了bindApplication和attachApplicationlocked，会通过mStackSupervisor进行<br>realStartActivityLocked方法，该方法首先会准备启动activity的参数信息，准备完毕后会调用ApplicationThread<br>的scheduleLaunchActivity方法启动activity。<br>启动的过程是构造一个ActivityClientRecord对象，并将相关参数设置，最后通过sendMessage方法发送一个启动消息到消息队列，<br>由ActivityThread的handler处理启动。这也就是looper启动的时候做的事情。</p>
+<p>在looper调用该消息的时候，会针对flag做各种处理。比如说启动activity的flag为LAUNCH_ACTIVITY，处理的过程在activitythread中<br>复写的handler对象，其接受到了msg之后会触发performLaunchActivity方法，该方法为具体的启动Activity逻辑</p>
+<p>从mInstrumentation.callActivityOnCreate()之中就可以看到其调用了activity的oncreate，<br>做了activity.performCreate()的操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">final void performCreate(Bundle icicle, PersistableBundle persistentState) &#123;</span><br><span class="line">        mCanEnterPictureInPicture = true;</span><br><span class="line">        restoreHasCurrentPermissionRequest(icicle);</span><br><span class="line">        if (persistentState != null) &#123;</span><br><span class="line">            onCreate(icicle, persistentState);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            onCreate(icicle);</span><br><span class="line">        &#125;</span><br><span class="line">        mActivityTransitionState.readState(icicle);</span><br><span class="line"></span><br><span class="line">        mVisibleFromClient = !mWindow.getWindowStyle().getBoolean(</span><br><span class="line">                com.android.internal.R.styleable.Window_windowNoDisplay, false);</span><br><span class="line">        mFragments.dispatchActivityCreated();</span><br><span class="line">        mActivityTransitionState.setEnterActivityOptions(this, getActivityOptions());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>activity的performCreate事实上就是执行了oncreate操作。</p>
+<p>说上面这么一大段是什么意思呢?oncreate里面只是通过了setContentView便可以创建出不同的View，可以说是工厂模式的一种</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><ul>
+<li>降低了对象之间的耦合度，代码结构清晰，对调用者隐藏了产品的生产过程，生产过程改变后，调用者不用做什么改变，易于修改。</li>
+<li>易于拓展，要增加工厂和产品都非常方便，直接实现接口，不用修改之前的代码。</li>
+</ul>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><ul>
+<li>系统结构复杂化，非常简单的系统不需要这样了。</li>
+</ul>
 
           
         
@@ -512,7 +532,8 @@
       
         
           
-            
+            <h1 id="tinker作用"><a href="#tinker作用" class="headerlink" title="tinker作用"></a>tinker作用</h1><p>tinker一般可以用作热修复，其</p>
+
           
         
       
