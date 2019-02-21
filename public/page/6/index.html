@@ -239,6 +239,131 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/01/2018第十七周工作小结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/01/2018第十七周工作小结/" itemprop="url">2018第十七周工作小结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-01T23:45:39+08:00">
+                2018-05-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最近实在是太忙了，忙到github都忘了更新博客了。每天都在忙着需求，改bug，然后项目追着上线。累的半死不活的。</p>
+<p>好消息是项目终于给整上线了，坏消息是项目上线之后可能会更忙。</p>
+<p>来公司2个月还没到，一下子回到了刚毕业的时候在传音那种加班加点很累的生活方式。不过好的是，起码现在自己是在做自己的事情。</p>
+<p>上周来了个大牛，技术比我厉害，也跟着他学习到了不少东西。需要整理一下。主要是http/https，okhttp工作原理，还有序列化原理等等。这些是学到的东西。</p>
+<p>工作上面的总结感觉没啥好说的，有两个要写一下，一个是activity栈的工作原理，一个是fragment栈的工作原理。目前了解一些，但是不够深入。</p>
+<p>明天开始仍然是进入学习的阶段。就先这样吧。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/22/2018第十六周工作小结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1481,133 +1606,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/26/java-uri拼接/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/26/java-uri拼接/" itemprop="url">java-uri拼接</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-26T20:31:44+08:00">
-                2018-03-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>项目中遇到一个问题，是关于uri拼接的。</p>
-<p>uri类似如下<br><a href="http://www.baidu.com/d/j/fd%3fd" target="_blank" rel="noopener">www.baidu.com/d/j/fd%3fd</a></p>
-<p>我需要在后面加一个 ?xx/impg,wpeg/resize,h_40这样的</p>
-<p>这个涉及到解码编码的问题，前面由于具有%3这种符号，不可以解码，需要编码，而后缀由于具有?这种符号，不可以编码。</p>
-<p>这样可以直接前面的通过URI的buildupon来构建，而后面的可以通过直接相加避免编码的方法。</p>
-<p>事实上直接相加或许也可以，但是通过buildupon的path相加，会自动对path的内容进行编码，但是坑爹的是我的后缀也没变了。而encodepath则更坑，把前缀也给解码了。</p>
-<p>后来又试了一下直接相加，也可以？？</p>
-<p>这就好蛋疼了。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1658,7 +1656,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">124</span>
+                  <span class="site-state-item-count">125</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

@@ -239,6 +239,156 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/28/项目卡顿问题优化专题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/28/项目卡顿问题优化专题/" itemprop="url">项目卡顿问题优化专题</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-28T11:07:03+08:00">
+                2018-11-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>公司做了一波推广，卡顿问题比较明显的显示了出来。华为荣耀系列的卡顿问题尤其明显，很多用户反映在看上新的时候卡顿比较严重，还有用户说在使用时间较长之后，就比较卡顿。</p>
+<p>刚好这周把需求做完并且全部提测通过了，因此有三天的时间来做轻度优化。不过这个专题需要常驻，因为app需要优化的地方实在是太多了。</p>
+<h1 id="商品详情"><a href="#商品详情" class="headerlink" title="商品详情"></a>商品详情</h1><p>商品详情页面是所有spu最终展示的地方，这个地方是所有用户必然经过的地方，商品详情页不是所有页面的终点，不是唯一的，所以商品详情页面有很多可以优化的地方。</p>
+<h2 id="无限跳转优化"><a href="#无限跳转优化" class="headerlink" title="无限跳转优化"></a>无限跳转优化</h2><p>商品详情页面作为展示spu的地方，其中却又展示了很多不同的spu，另外相同spu之间也是支持跳转的。</p>
+<p>我对比了淘宝和微博，淘宝只支持保留三个spu，但是相同spu是可以跳转的，而微博支持无限跳转，我试了超过10个都可以返回，但是微博不支持在一个人主页里面仍然跳进这个人主页，也就是不支持相同spu的跳转。</p>
+<p>和产品讨论了一下，这个地方相同spu仍然支持跳转，但是最多保留5个。</p>
+<p>我设计这地方的方案是在application里面持有activity的引用，在activity启动的时候，进行判断，如果是详情页面，就放入数组里面，否则就不管。放进数组里面之后会判断是否数组长度是否超过4个，超过的话就会进行移除的操作，手动执行finish。</p>
+<p>另外在destroy的时候，也这样判断，决定是否直接移除。</p>
+<p>操作的入口比较好找，直接套用application的registerActivityLifecycleCallbacks即可。</p>
+<p>在这个地方有一个问题，关于对activity的持有是否需要使用weakreference。</p>
+<p>registerActivityLifecycleCallbacks的源码在application里面，主要的操作通过collectActivityLifecycleCallbacks来反馈</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">private Object[] collectActivityLifecycleCallbacks() &#123;</span><br><span class="line">        Object[] callbacks = null;</span><br><span class="line">        synchronized (mActivityLifecycleCallbacks) &#123;</span><br><span class="line">            if (mActivityLifecycleCallbacks.size() &gt; 0) &#123;</span><br><span class="line">                callbacks = mActivityLifecycleCallbacks.toArray();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return callbacks;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法主要是在各activity生命周期开始的时候进行执行</p>
+<p>启动的时候如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/* package */ void dispatchActivityCreated(Activity activity, Bundle savedInstanceState) &#123;</span><br><span class="line">       Object[] callbacks = collectActivityLifecycleCallbacks();</span><br><span class="line">       if (callbacks != null) &#123;</span><br><span class="line">           for (int i=0; i&lt;callbacks.length; i++) &#123;</span><br><span class="line">               ((ActivityLifecycleCallbacks)callbacks[i]).onActivityCreated(activity,</span><br><span class="line">                       savedInstanceState);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>关闭的时候如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/* package */ void dispatchActivityDestroyed(Activity activity) &#123;</span><br><span class="line">        Object[] callbacks = collectActivityLifecycleCallbacks();</span><br><span class="line">        if (callbacks != null) &#123;</span><br><span class="line">            for (int i=0; i&lt;callbacks.length; i++) &#123;</span><br><span class="line">                ((ActivityLifecycleCallbacks)callbacks[i]).onActivityDestroyed(activity);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>问题就在actvity是在走destroy之前执行该方法，还是走完之后执行的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">protected void onDestroy() &#123;</span><br><span class="line">       if (DEBUG_LIFECYCLE) Slog.v(TAG, &quot;onDestroy &quot; + this);</span><br><span class="line">       mCalled = true;</span><br><span class="line"></span><br><span class="line">       // dismiss any dialogs we are managing.</span><br><span class="line">       if (mManagedDialogs != null) &#123;</span><br><span class="line">           final int numDialogs = mManagedDialogs.size();</span><br><span class="line">           for (int i = 0; i &lt; numDialogs; i++) &#123;</span><br><span class="line">               final ManagedDialog md = mManagedDialogs.valueAt(i);</span><br><span class="line">               if (md.mDialog.isShowing()) &#123;</span><br><span class="line">                   md.mDialog.dismiss();</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">           mManagedDialogs = null;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       // close any cursors we are managing.</span><br><span class="line">       synchronized (mManagedCursors) &#123;</span><br><span class="line">           int numCursors = mManagedCursors.size();</span><br><span class="line">           for (int i = 0; i &lt; numCursors; i++) &#123;</span><br><span class="line">               ManagedCursor c = mManagedCursors.get(i);</span><br><span class="line">               if (c != null) &#123;</span><br><span class="line">                   c.mCursor.close();</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">           mManagedCursors.clear();</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       // Close any open search dialog</span><br><span class="line">       if (mSearchManager != null) &#123;</span><br><span class="line">           mSearchManager.stopSearch();</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       if (mActionBar != null) &#123;</span><br><span class="line">           mActionBar.onDestroy();</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       getApplication().dispatchActivityDestroyed(this);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>因此就证明了，destroy是在分发之前执行的，此时使用弱引用其实并不碍事，即使destroy的时候发生了gc，也没有太大的问题，只要之后的过程中将被回收的值对应的key清除即可。</p>
+<p>weakreference在这边如果使用的话，需要考虑到contain的写法，需要判断的比较多，经过尝试，其实效率和直接强引用差不多。</p>
+<h2 id="详情页面泄露问题"><a href="#详情页面泄露问题" class="headerlink" title="详情页面泄露问题"></a>详情页面泄露问题</h2><h2 id="详情页面启动速度慢的问题"><a href="#详情页面启动速度慢的问题" class="headerlink" title="详情页面启动速度慢的问题"></a>详情页面启动速度慢的问题</h2><p>详情页面启动速度慢的问题其实并不在详情页。经过排查，发现在有很多medel页面正在加载的地方，会出现启动速度过慢的问题。尤其是主页瀑布流尤为严重。通过一步一步的debug，发现当很多medel的bitmap在绘制时，cpu会爆满。<br>因为一直在分配线程，导致cpu调度过慢，甚至有时候会会在点击详情页的时候出现ANR问题。</p>
+<p>排查出这个问题就好了，解决方法是将绘制由需要多少线程给多少线程改为固定数量线程池即可。这样cpu不至于说调度不来的问题。</p>
+<p>这个问题给我一个想法，如果线程池结合observable，做出一个栈型线程池，但是在这个场景中其实不适合。</p>
+<p>因此解决了启动速度慢的问题</p>
+<h1 id="订单发起页面"><a href="#订单发起页面" class="headerlink" title="订单发起页面"></a>订单发起页面</h1><p>订单发起页面和普通页面不同，主要差别在于订单发起页面在很多地方都可以发起，但是其作用是唯一的，就是发起这个订单，并且继续后续的流程。但是由于在很多地方都可以发起订单，且订单页面又可以发起去很多地方。所以订单发起页面事实上也是无限的页面。</p>
+<p>但是订单发起页面不需要保留用户的返回路径，仅仅只需要一个活着的页面反复调用即可。</p>
+<p>因此我的做法是，在订单发起页面的start函数中，添加flag为FLAG_ACTIVITY_REORDER_TO_FRONT</p>
+<p>因为试了一下发现FLAG_ACTIVITY_BROUGHT_TO_FRONT并无效，所以只可以尝试FLAG_ACTIVITY_REORDER_TO_FRONT</p>
+<p>详细代码为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public static void start(Activity activity)&#123;</span><br><span class="line">        Intent intent = new Intent(activity, OrderConfirmActivity.class);</span><br><span class="line">        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);</span><br><span class="line">        activity.startActivity(intent);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="splash页优化"><a href="#splash页优化" class="headerlink" title="splash页优化"></a>splash页优化</h1><p>splash页面是app的进入时必走的页面，从leaks上面看，也有泄露的问题，检查发现泄露在lambda表达式中，而所有的lambda都是rxjava写的回调表达式，因此所做的是将这个页面所有的observable与该splashactivity的lifecycle绑定，另外eventbus也加了一些强判断（其实没啥必要），为了保险。</p>
+<h2 id="引导页面"><a href="#引导页面" class="headerlink" title="引导页面"></a>引导页面</h2><p>2.8.0版本增加了引导页面，引导用户去设置medel，最近出现oom的现象，排查发现整个设置流程都没有进入destroy。因此在登录成功之后，启动了新的task来load，这样可以强制删除这些无用的流程。</p>
+<h1 id="vipZoon页面"><a href="#vipZoon页面" class="headerlink" title="vipZoon页面"></a>vipZoon页面</h1><p>vipzone是会员专区，这个页面是滑动式，每个请求发现都没有捆绑住lifecycle，进行了捆绑处理</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/25/2018年第四十六周工作小结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1545,157 +1695,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/20/android渠道包打包取舍以及打包流程分析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/20/android渠道包打包取舍以及打包流程分析/" itemprop="url">android渠道包打包取舍以及打包流程分析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-20T16:20:28+08:00">
-                2018-10-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="前述"><a href="#前述" class="headerlink" title="前述"></a>前述</h1><p>刚开始接手好搭的时候，用的是美团的多渠道打包方案，但是当时前人写的代码有些问题。</p>
-<p>当时的流程大致是：打包一个包，然后解压，修改META-INFO,之后重新压缩，过程中会生成一个额外的包含渠道名的文件。</p>
-<p>这样的好处是解压之后重新压缩，并不需要重新编译，也不需要重新签名。</p>
-<p>但是当时在apk启动的时候使用的读取渠道包的方式也是和官网提供的一样，没有变化。是启动时解压apk，然后读取相对应的文件。</p>
-<h1 id="过去方式的缺点"><a href="#过去方式的缺点" class="headerlink" title="过去方式的缺点"></a>过去方式的缺点</h1><p>由于需要启动的时候解压apk，整个过程耗时大约200ms，而且是每次都会出现的。加上前人对于性能的优化也不是很在心，当时刚接手的时候启动速度十分慢（大约1-2秒的卡顿）。</p>
-<p>后来不得已，出于性能的考虑，对这个动了刀子。</p>
-<h1 id="变化"><a href="#变化" class="headerlink" title="变化"></a>变化</h1><p>由于刚开始的渠道包并不算太多，因此第一个考虑就是使用gradle的变体来进行更改。</p>
-<p>变体是官方提供的，使用变体的话，平时打包也可以直接选定打什么包。对于项目来讲，省了不少时间。</p>
-<h1 id="变体带来的缺点"><a href="#变体带来的缺点" class="headerlink" title="变体带来的缺点"></a>变体带来的缺点</h1><p>后期由于项目规模大了起来，增加了5个渠道，全渠道打包时间一下子长了很多，由刚开始的40分钟，猛增到一小时20多分钟。同时市场那边的意思是后期还会继续扩充渠道。</p>
-<p>因此现在必须要更改一下这个打包方式。</p>
-<h1 id="想法1-raw"><a href="#想法1-raw" class="headerlink" title="想法1-raw"></a>想法1-raw</h1><p>第一种想法是脱离美团打包，通过自己设置资源文件夹下面的raw目录，来进行打包，raw文件在android里面是不会编译成二进制文件的，会原样保留到apk里面。在app启动的时候直接读raw文件。<br>但是这种想法刚说出来就被进奎否了，当时的问题出在raw文件需要进行重新编译，否则不会出现在R.java中，而如果使用apktool重新编译，效率基本上和变体是55开。</p>
-<h1 id="想法2-asset"><a href="#想法2-asset" class="headerlink" title="想法2-asset"></a>想法2-asset</h1><p>第二种想法是第一种想法的补充，既然raw文件需要通过编译来生成r，那我们找一个不需要编译的，想法很简单，打包之后直接塞一个文件到asset里面，这个文件就是配置文件，每次打包之后，解压，然后复制相对应渠道的配置文件到asset里面，这样就可以避免需要回编译的目的了。但是这个方法需要进行重新签名。</p>
-<h1 id="想法3-美团方案优化"><a href="#想法3-美团方案优化" class="headerlink" title="想法3-美团方案优化"></a>想法3-美团方案优化</h1><p>在目前不需要配置额外的配置目录的情况下，想法2其实是有些牛刀小用了。事实上我们完全可以在美团的打包方案上面进行优化。美团提供的打包方案，当时细细想想，完全没有必要每次启动apk的时候都去读取。仅仅需要第一次打开app的时候，读取并写入sp中，之后每次读取sp，如果没有在去重新读取即可。这样可以省了好多事情。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>鉴于目前项目的规格以及需求，仅仅在需要扩充渠道的时候，仅仅需要重启美团的优化方案，同时优化每次编译的选项即可。但是在后续需要用到不同配置文件的时候，就需要使用想法2的方法，美团的方案不够支持那么详细。</p>
-<p>同时鉴于此，也算研究了一下app打包流程，顺便总结一下。</p>
-<h1 id="打包流程"><a href="#打包流程" class="headerlink" title="打包流程"></a>打包流程</h1><p><img src="/images/android/androidpackageimage.png" alt="打包流程"></p>
-<p>从官方图可以很明显的看出流程变化。</p>
-<ol>
-<li>资源文件是通过aapt来进行打包的，aapt全称是Android Asset Packaging Tool，可以看出来，aapt打包生成了2个东西，一个是R,一个是compiled resources，像想法一之中的raw就是生成在r里面，compiled resources 是asset文件夹下面的东西，这些东西不会参与打包，而是直接被压缩进apk.</li>
-</ol>
-<p>关于asset和raw我之前一直认为raw是原封不动，不会编译成二进制，今天才知道两个相同点都是原封不动不会被编译成二进制。差别就是读写方式不同。因此想法1本来就是错误的。</p>
-<ol>
-<li><p>java编译器同时编译三者，一是代码，二是r文件，三是aidl编译下来的java接口。编译成class之后，然后和第三方class一起并到dex中（dex是好几个class合并起来的）。<br>看到这边有个疑问，为什么是class？我们所知道的第三方包，有时候是使用aar的形式来进行依赖的，aar包含了资源文件，但是我查了一下，如果是aar的话。将会被打包到class.jar中，应该就是先打包到jar中，然后又会被放到dex中</p>
-</li>
-<li><p>asset， resource， dex 三者就可以打包成一个apk了，此时使用apkbuilder即可，打包成一个未签名的apk。</p>
-</li>
-<li><p>apk好了之后使用jarsigner来进行签名</p>
-</li>
-<li><p>按理说签名完之后就应该结束了，为什么还会有个zipaligh呢？</p>
-</li>
-</ol>
-<p>zipalign的效果：zipalign是一个对齐工具，android基于linux，因此资源也是仿照linux来的，在多进程需要寻找资源的时候，最好的方式是按照linux架构来设计数据摆放位置，因此最好的是放在4字节层，这样子的话系统就不需要读取所有的文件，而直接可以类似链表的形式知道什么资源在什么地方。这样节省了大量的内存。因此这个步骤我们称之为对齐</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1746,7 +1745,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">124</span>
+                  <span class="site-state-item-count">125</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

@@ -79,18 +79,21 @@
 
 
 
-<meta name="description" content="tinker作用tinker一般可以用作热修复，其">
+<meta name="description" content="tinker作用tinker一般可以用作热修复，其作为热修复java方案的代表，日常工作也经常用到。 其原理是参考自instant run 的方案，通过生成patch包，不过是通过网络下发，然后在本地进行处理。 instant run基于提升平时打包的速度，instant run 需要  只对代码改变部分做构建和部署 不重新安装应用 不重启应用 不重启activity  从其官方图中可以看出，针对">
 <meta name="keywords" content="android">
 <meta property="og:type" content="article">
 <meta property="og:title" content="tinker机制学习">
 <meta property="og:url" content="http://yoursite.com/2019/01/28/tinker机制学习/index.html">
 <meta property="og:site_name" content="记录者">
-<meta property="og:description" content="tinker作用tinker一般可以用作热修复，其">
+<meta property="og:description" content="tinker作用tinker一般可以用作热修复，其作为热修复java方案的代表，日常工作也经常用到。 其原理是参考自instant run 的方案，通过生成patch包，不过是通过网络下发，然后在本地进行处理。 instant run基于提升平时打包的速度，instant run 需要  只对代码改变部分做构建和部署 不重新安装应用 不重启应用 不重启activity  从其官方图中可以看出，针对">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-02-21T13:47:31.393Z">
+<meta property="og:image" content="http://yoursite.com/images/android/instanctRunSwapImage.webp">
+<meta property="og:image" content="http://yoursite.com/images/android/instantRunApkMarker.webp">
+<meta property="og:updated_time" content="2019-02-21T16:36:47.734Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="tinker机制学习">
-<meta name="twitter:description" content="tinker作用tinker一般可以用作热修复，其">
+<meta name="twitter:description" content="tinker作用tinker一般可以用作热修复，其作为热修复java方案的代表，日常工作也经常用到。 其原理是参考自instant run 的方案，通过生成patch包，不过是通过网络下发，然后在本地进行处理。 instant run基于提升平时打包的速度，instant run 需要  只对代码改变部分做构建和部署 不重新安装应用 不重启应用 不重启activity  从其官方图中可以看出，针对">
+<meta name="twitter:image" content="http://yoursite.com/images/android/instanctRunSwapImage.webp">
 
 
 
@@ -310,7 +313,24 @@
       
 
       
-        <h1 id="tinker作用"><a href="#tinker作用" class="headerlink" title="tinker作用"></a>tinker作用</h1><p>tinker一般可以用作热修复，其</p>
+        <h1 id="tinker作用"><a href="#tinker作用" class="headerlink" title="tinker作用"></a>tinker作用</h1><p>tinker一般可以用作热修复，其作为热修复java方案的代表，日常工作也经常用到。</p>
+<p>其原理是参考自instant run 的方案，通过生成patch包，不过是通过网络下发，然后在本地进行处理。</p>
+<h1 id="instant-run"><a href="#instant-run" class="headerlink" title="instant run"></a>instant run</h1><p>基于提升平时打包的速度，instant run 需要</p>
+<ul>
+<li>只对代码改变部分做构建和部署</li>
+<li>不重新安装应用</li>
+<li>不重启应用</li>
+<li>不重启activity</li>
+</ul>
+<p>从其官方图中可以看出，针对上面四个需求，生成了三种插拔机制。</p>
+<p><img src="/images/android/instanctRunSwapImage.webp" alt="swap"></p>
+<ul>
+<li>热插拔：代码改变被应用、投射到app上面，不需要重启应用，不需要重建activity</li>
+<li>温插拔：activity需要被重启才能看到所需更改</li>
+<li>冷插拔：app需要被重启（不需要重新安装）</li>
+</ul>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p><img src="/images/android/instantRunApkMarker.webp" alt="原理"></p>
+<p>从这个图可以看出来，APK的生成分为两个部分</p>
 
       
     </div>
@@ -430,7 +450,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">124</span>
+                  <span class="site-state-item-count">125</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -476,7 +496,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#tinker作用"><span class="nav-number">1.</span> <span class="nav-text">tinker作用</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#tinker作用"><span class="nav-number">1.</span> <span class="nav-text">tinker作用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#instant-run"><span class="nav-number">2.</span> <span class="nav-text">instant run</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#原理"><span class="nav-number">2.1.</span> <span class="nav-text">原理</span></a></li></ol></li></ol></div>
             
 
           </div>

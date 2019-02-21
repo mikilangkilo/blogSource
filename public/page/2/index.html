@@ -239,6 +239,145 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/02/jvm内存模型/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Sample">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/02/jvm内存模型/" itemprop="url">jvm内存模型</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-02T23:48:21+08:00">
+                2019-01-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="/images/android/jvm内存模型.jpg" alt="JVM内存模型示意图"></p>
+<h2 id="内存计数器（PC寄存器）"><a href="#内存计数器（PC寄存器）" class="headerlink" title="内存计数器（PC寄存器）"></a>内存计数器（PC寄存器）</h2><p>由于在JVM中，多线程是通过线程轮流切换来获得CPU执行时间的，因此，在任一具体时刻，一个CPU的内核只会执行一条线程中的指令，</p>
+<p>因此，为了能够使得每个线程都在线程切换后能够恢复在切　换　之前的程序执行位置，每个线程都需要有自己独立的程序计数器，并且不能互相被干扰，</p>
+<p>否则就会影响到程序的正常执行次序。因此，可以这么说，程序计数器是每个线程所私有的。由于程序计数器中存储的数据所占空间的大小不会随程序的执行而发生改变，</p>
+<p>因此，对于程序计数器是不会发生内存溢出现象(OutOfMemory)的。</p>
+<p>内存计数器是context的一部分</p>
+<h2 id="java-栈"><a href="#java-栈" class="headerlink" title="java 栈"></a>java 栈</h2><p>Java栈中存放的是一个个的栈帧，每个栈帧对应一个被调用的方法，在栈帧中包括局部变量表(Local Variables)、操作数栈(Operand Stack)、</p>
+<p>指向当前方法所属的类的运行时常量池（运行时常量池的概念在方法区部分会谈到）的引用(Reference to runtime constant pool)、</p>
+<p>方法返回地址(Return Address)和一些额外的附加信息。当线程执行一个方法时，就会随之创建一个对应的栈帧，并将建立的栈帧压栈。当方法执行完毕之后，便会将栈帧出栈。　</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">经常有人把Java 内存区分为堆内存（Heap）和栈内存（Stack），这种分法比较粗</span><br><span class="line"></span><br><span class="line">糙，Java 内存区域的划分实际上远比这复杂。这种划分方式的流行只能说明大多数程序</span><br><span class="line"></span><br><span class="line">员最关注的、与对象内存分配关系最密切的内存区域是这两块。其中所指的“堆”在后</span><br><span class="line"></span><br><span class="line">面会专门讲述，而所指的“栈”就是现在讲的虚拟机栈，或者说是虚拟机栈中的局部变</span><br><span class="line"></span><br><span class="line">量表部分。</span><br><span class="line"></span><br><span class="line">局部变量表存放了编译期可知的各种基本数据类型（boolean、byte、char、short、int、</span><br><span class="line"></span><br><span class="line">float、long、double）、对象引用（reference 类型，它不等同于对象本身，根据不同的虚拟</span><br><span class="line"></span><br><span class="line">机实现，它可能是一个指向对象起始地址的引用指针，也可能指向一个代表对象的句柄或</span><br><span class="line"></span><br><span class="line">者其他与此对象相关的位置）和returnAddress 类型（指向了一条字节码指令的地址）。</span><br><span class="line"></span><br><span class="line">其中64 位长度的long 和double 类型的数据会占用2 个局部变量空间（Slot），其余</span><br><span class="line"></span><br><span class="line">的数据类型只占用1 个。局部变量表所需的内存空间在编译期间完成分配，当进入一个</span><br><span class="line"></span><br><span class="line">方法时，这个方法需要在帧中分配多大的局部变量空间是完全确定的，在方法运行期间</span><br><span class="line"></span><br><span class="line">不会改变局部变量表的大小。</span><br></pre></td></tr></table></figure>
+<h2 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h2><p>本地方法栈与Java栈的作用和原理非常相似。区别只不过是Java栈是为执行Java方法服务的，而本地方法栈则是为执行本地方法（Native Method）服务的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">本地方法栈（Native Method Stacks）与虚拟机栈所发挥的作用是非常相似的，其</span><br><span class="line"></span><br><span class="line">区别不过是虚拟机栈为虚拟机执行Java 方法（也就是字节码）服务，而本地方法栈则</span><br><span class="line"></span><br><span class="line">是为虚拟机使用到的Native 方法服务。虚拟机规范中对本地方法栈中的方法使用的语</span><br><span class="line"></span><br><span class="line">言、使用方式与数据结构并没有强制规定，因此具体的虚拟机可以自由实现它。甚至</span><br><span class="line"></span><br><span class="line">有的虚拟机（譬如Sun HotSpot 虚拟机）直接就把本地方法栈和虚拟机栈合二为一。</span><br><span class="line"></span><br><span class="line">与虚拟机栈一样，本地方法栈区域也会抛出StackOverflowError 和OutOfMemoryError</span><br><span class="line"></span><br><span class="line">异常。</span><br></pre></td></tr></table></figure>
+<h2 id="java-堆"><a href="#java-堆" class="headerlink" title="java 堆"></a>java 堆</h2><p>Java中的堆是用来存储对象本身的以及数组（数组引用是存放在Java栈中的）。堆是被所有线程共享的，在JVM中只有一个堆。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">对于大多数应用来说，Java 堆（Java Heap）是Java 虚拟机所管理的内存中最大的</span><br><span class="line"></span><br><span class="line">一块。Java 堆是被所有线程共享的一块内存区域，在虚拟机启动时创建。此内存区域的</span><br><span class="line"></span><br><span class="line">唯一目的就是存放对象实例，几乎所有的对象实例都在这里分配内存。这一点在Java 虚</span><br><span class="line"></span><br><span class="line">拟机规范中的描述是：所有的对象实例以及数组都要在堆上分配①，但是随着JIT 编译器</span><br><span class="line"></span><br><span class="line">的发展与逃逸分析技术的逐渐成熟，栈上分配、标量替换②优化技术将会导致一些微妙</span><br><span class="line"></span><br><span class="line">的变化发生，所有的对象都分配在堆上也渐渐变得不是那么“绝对”了。</span><br><span class="line"></span><br><span class="line">Java 堆是垃圾收集器管理的主要区域，因此很多时候也被称做“GC 堆”（Garbage</span><br><span class="line"></span><br><span class="line">Collected Heap，幸好国内没翻译成“垃圾堆”）。如果从内存回收的角度看，由于现在</span><br><span class="line"></span><br><span class="line">收集器基本都是采用的分代收集算法，所以Java 堆中还可以细分为：新生代和老年代；</span><br><span class="line"></span><br><span class="line">再细致一点的有Eden 空间、From Survivor 空间、To Survivor 空间等。如果从内存分配</span><br><span class="line"></span><br><span class="line">的角度看，线程共享的Java 堆中可能划分出多个线程私有的分配缓冲区（Thread Local</span><br><span class="line"></span><br><span class="line">Allocation Buffer，TLAB）。不过，无论如何划分，都与存放内容无关，无论哪个区域，</span><br><span class="line"></span><br><span class="line">存储的都仍然是对象实例，进一步划分的目的是为了更好地回收内存，或者更快地分配</span><br><span class="line"></span><br><span class="line">内存。在本章中，我们仅仅针对内存区域的作用进行讨论，Java 堆中的上述各个区域的</span><br><span class="line"></span><br><span class="line">分配和回收等细节将会是下一章的主题。</span><br><span class="line"></span><br><span class="line">根据Java 虚拟机规范的规定，Java 堆可以处于物理上不连续的内存空间中，只要</span><br><span class="line"></span><br><span class="line">逻辑上是连续的即可，就像我们的磁盘空间一样。在实现时，既可以实现成固定大小</span><br><span class="line"></span><br><span class="line">的，也可以是可扩展的，不过当前主流的虚拟机都是按照可扩展来实现的（通过-Xmx</span><br><span class="line"></span><br><span class="line">和-Xms 控制）。如果在堆中没有内存完成实例分配，并且堆也无法再扩展时，将会抛出</span><br><span class="line"></span><br><span class="line">OutOfMemoryError 异常。</span><br></pre></td></tr></table></figure>
+<h2 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h2><p>与堆一样，是被线程共享的区域。在方法区中，存储了每个类的信息（包括类的名称、方法信息、字段信息）、静态变量、常量以及编译器编译后的代码等。</p>
+<p>在Class文件中除了类的字段、方法、接口等描述信息外，还有一项信息是常量池，用来存储编译期间生成的字面量和符号引用。</p>
+<p>在方法区中有一个非常重要的部分就是运行时常量池，它是每一个类或接口的常量池的运行时表示形式，在类和接口被加载到JVM后，</p>
+<p>对应的运行时常量池就被创建出来。当然并非Class文件常量池中的内容才能进入运行时常量池，在运行期间也可将新的常量放入运行时常量池中，比如String的intern方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">方法区（Method Area）与Java 堆一样，是各个线程共享的内存区域，它用于存</span><br><span class="line"></span><br><span class="line">储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。虽</span><br><span class="line"></span><br><span class="line">然Java 虚拟机规范把方法区描述为堆的一个逻辑部分，但是它却有一个别名叫做Non-</span><br><span class="line"></span><br><span class="line">Heap（非堆），目的应该是与Java 堆区分开来。</span><br><span class="line"></span><br><span class="line">对于习惯在HotSpot 虚拟机上开发和部署程序的开发者来说，很多人愿意把方法区</span><br><span class="line"></span><br><span class="line">称为“永久代”（Permanent Generation），本质上两者并不等价，仅仅是因为HotSpot 虚</span><br><span class="line"></span><br><span class="line">拟机的设计团队选择把GC 分代收集扩展至方法区，或者说使用永久代来实现方法区而</span><br><span class="line"></span><br><span class="line">已。对于其他虚拟机（如BEA JRockit、IBM J9 等）来说是不存在永久代的概念的。即</span><br><span class="line"></span><br><span class="line">使是HotSpot 虚拟机本身，根据官方发布的路线图信息，现在也有放弃永久代并“搬家”</span><br><span class="line"></span><br><span class="line">至Native Memory 来实现方法区的规划了。</span><br><span class="line"></span><br><span class="line">Java 虚拟机规范对这个区域的限制非常宽松，除了和Java 堆一样不需要连续的内</span><br><span class="line"></span><br><span class="line">存和可以选择固定大小或者可扩展外，还可以选择不实现垃圾收集。相对而言，垃圾</span><br><span class="line"></span><br><span class="line">收集行为在这个区域是比较少出现的，但并非数据进入了方法区就如永久代的名字一</span><br><span class="line"></span><br><span class="line">样“永久”存在了。这个区域的内存回收目标主要是针对常量池的回收和对类型的卸</span><br><span class="line"></span><br><span class="line">载，一般来说这个区域的回收“成绩”比较难以令人满意，尤其是类型的卸载，条件</span><br><span class="line"></span><br><span class="line">相当苛刻，但是这部分区域的回收确实是有必要的。在Sun 公司的BUG 列表中，曾出</span><br><span class="line"></span><br><span class="line">现过的若干个严重的BUG 就是由于低版本的HotSpot 虚拟机对此区域未完全回收而导</span><br><span class="line"></span><br><span class="line">致内存泄漏。</span><br><span class="line"></span><br><span class="line">根据Java 虚拟机规范的规定，当方法区无法满足内存分配需求时，将抛出</span><br><span class="line"></span><br><span class="line">OutOfMemoryError 异常。</span><br></pre></td></tr></table></figure>
+<h2 id="静态区"><a href="#静态区" class="headerlink" title="静态区"></a>静态区</h2><p>静态区也称为运行常量池，static出来的对象都是静态的。该区域存放类和接口的常量，</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/02/okhttp+retrofit/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1609,156 +1748,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/28/项目卡顿问题优化专题/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Sample">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="记录者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/28/项目卡顿问题优化专题/" itemprop="url">项目卡顿问题优化专题</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-28T11:07:03+08:00">
-                2018-11-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>公司做了一波推广，卡顿问题比较明显的显示了出来。华为荣耀系列的卡顿问题尤其明显，很多用户反映在看上新的时候卡顿比较严重，还有用户说在使用时间较长之后，就比较卡顿。</p>
-<p>刚好这周把需求做完并且全部提测通过了，因此有三天的时间来做轻度优化。不过这个专题需要常驻，因为app需要优化的地方实在是太多了。</p>
-<h1 id="商品详情"><a href="#商品详情" class="headerlink" title="商品详情"></a>商品详情</h1><p>商品详情页面是所有spu最终展示的地方，这个地方是所有用户必然经过的地方，商品详情页不是所有页面的终点，不是唯一的，所以商品详情页面有很多可以优化的地方。</p>
-<h2 id="无限跳转优化"><a href="#无限跳转优化" class="headerlink" title="无限跳转优化"></a>无限跳转优化</h2><p>商品详情页面作为展示spu的地方，其中却又展示了很多不同的spu，另外相同spu之间也是支持跳转的。</p>
-<p>我对比了淘宝和微博，淘宝只支持保留三个spu，但是相同spu是可以跳转的，而微博支持无限跳转，我试了超过10个都可以返回，但是微博不支持在一个人主页里面仍然跳进这个人主页，也就是不支持相同spu的跳转。</p>
-<p>和产品讨论了一下，这个地方相同spu仍然支持跳转，但是最多保留5个。</p>
-<p>我设计这地方的方案是在application里面持有activity的引用，在activity启动的时候，进行判断，如果是详情页面，就放入数组里面，否则就不管。放进数组里面之后会判断是否数组长度是否超过4个，超过的话就会进行移除的操作，手动执行finish。</p>
-<p>另外在destroy的时候，也这样判断，决定是否直接移除。</p>
-<p>操作的入口比较好找，直接套用application的registerActivityLifecycleCallbacks即可。</p>
-<p>在这个地方有一个问题，关于对activity的持有是否需要使用weakreference。</p>
-<p>registerActivityLifecycleCallbacks的源码在application里面，主要的操作通过collectActivityLifecycleCallbacks来反馈</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">private Object[] collectActivityLifecycleCallbacks() &#123;</span><br><span class="line">        Object[] callbacks = null;</span><br><span class="line">        synchronized (mActivityLifecycleCallbacks) &#123;</span><br><span class="line">            if (mActivityLifecycleCallbacks.size() &gt; 0) &#123;</span><br><span class="line">                callbacks = mActivityLifecycleCallbacks.toArray();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return callbacks;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>这个方法主要是在各activity生命周期开始的时候进行执行</p>
-<p>启动的时候如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/* package */ void dispatchActivityCreated(Activity activity, Bundle savedInstanceState) &#123;</span><br><span class="line">       Object[] callbacks = collectActivityLifecycleCallbacks();</span><br><span class="line">       if (callbacks != null) &#123;</span><br><span class="line">           for (int i=0; i&lt;callbacks.length; i++) &#123;</span><br><span class="line">               ((ActivityLifecycleCallbacks)callbacks[i]).onActivityCreated(activity,</span><br><span class="line">                       savedInstanceState);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
-<p>关闭的时候如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/* package */ void dispatchActivityDestroyed(Activity activity) &#123;</span><br><span class="line">        Object[] callbacks = collectActivityLifecycleCallbacks();</span><br><span class="line">        if (callbacks != null) &#123;</span><br><span class="line">            for (int i=0; i&lt;callbacks.length; i++) &#123;</span><br><span class="line">                ((ActivityLifecycleCallbacks)callbacks[i]).onActivityDestroyed(activity);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<p>问题就在actvity是在走destroy之前执行该方法，还是走完之后执行的。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">protected void onDestroy() &#123;</span><br><span class="line">       if (DEBUG_LIFECYCLE) Slog.v(TAG, &quot;onDestroy &quot; + this);</span><br><span class="line">       mCalled = true;</span><br><span class="line"></span><br><span class="line">       // dismiss any dialogs we are managing.</span><br><span class="line">       if (mManagedDialogs != null) &#123;</span><br><span class="line">           final int numDialogs = mManagedDialogs.size();</span><br><span class="line">           for (int i = 0; i &lt; numDialogs; i++) &#123;</span><br><span class="line">               final ManagedDialog md = mManagedDialogs.valueAt(i);</span><br><span class="line">               if (md.mDialog.isShowing()) &#123;</span><br><span class="line">                   md.mDialog.dismiss();</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">           mManagedDialogs = null;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       // close any cursors we are managing.</span><br><span class="line">       synchronized (mManagedCursors) &#123;</span><br><span class="line">           int numCursors = mManagedCursors.size();</span><br><span class="line">           for (int i = 0; i &lt; numCursors; i++) &#123;</span><br><span class="line">               ManagedCursor c = mManagedCursors.get(i);</span><br><span class="line">               if (c != null) &#123;</span><br><span class="line">                   c.mCursor.close();</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">           mManagedCursors.clear();</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       // Close any open search dialog</span><br><span class="line">       if (mSearchManager != null) &#123;</span><br><span class="line">           mSearchManager.stopSearch();</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       if (mActionBar != null) &#123;</span><br><span class="line">           mActionBar.onDestroy();</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       getApplication().dispatchActivityDestroyed(this);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-<p>因此就证明了，destroy是在分发之前执行的，此时使用弱引用其实并不碍事，即使destroy的时候发生了gc，也没有太大的问题，只要之后的过程中将被回收的值对应的key清除即可。</p>
-<p>weakreference在这边如果使用的话，需要考虑到contain的写法，需要判断的比较多，经过尝试，其实效率和直接强引用差不多。</p>
-<h2 id="详情页面泄露问题"><a href="#详情页面泄露问题" class="headerlink" title="详情页面泄露问题"></a>详情页面泄露问题</h2><h2 id="详情页面启动速度慢的问题"><a href="#详情页面启动速度慢的问题" class="headerlink" title="详情页面启动速度慢的问题"></a>详情页面启动速度慢的问题</h2><p>详情页面启动速度慢的问题其实并不在详情页。经过排查，发现在有很多medel页面正在加载的地方，会出现启动速度过慢的问题。尤其是主页瀑布流尤为严重。通过一步一步的debug，发现当很多medel的bitmap在绘制时，cpu会爆满。<br>因为一直在分配线程，导致cpu调度过慢，甚至有时候会会在点击详情页的时候出现ANR问题。</p>
-<p>排查出这个问题就好了，解决方法是将绘制由需要多少线程给多少线程改为固定数量线程池即可。这样cpu不至于说调度不来的问题。</p>
-<p>这个问题给我一个想法，如果线程池结合observable，做出一个栈型线程池，但是在这个场景中其实不适合。</p>
-<p>因此解决了启动速度慢的问题</p>
-<h1 id="订单发起页面"><a href="#订单发起页面" class="headerlink" title="订单发起页面"></a>订单发起页面</h1><p>订单发起页面和普通页面不同，主要差别在于订单发起页面在很多地方都可以发起，但是其作用是唯一的，就是发起这个订单，并且继续后续的流程。但是由于在很多地方都可以发起订单，且订单页面又可以发起去很多地方。所以订单发起页面事实上也是无限的页面。</p>
-<p>但是订单发起页面不需要保留用户的返回路径，仅仅只需要一个活着的页面反复调用即可。</p>
-<p>因此我的做法是，在订单发起页面的start函数中，添加flag为FLAG_ACTIVITY_REORDER_TO_FRONT</p>
-<p>因为试了一下发现FLAG_ACTIVITY_BROUGHT_TO_FRONT并无效，所以只可以尝试FLAG_ACTIVITY_REORDER_TO_FRONT</p>
-<p>详细代码为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public static void start(Activity activity)&#123;</span><br><span class="line">        Intent intent = new Intent(activity, OrderConfirmActivity.class);</span><br><span class="line">        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);</span><br><span class="line">        activity.startActivity(intent);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<h1 id="splash页优化"><a href="#splash页优化" class="headerlink" title="splash页优化"></a>splash页优化</h1><p>splash页面是app的进入时必走的页面，从leaks上面看，也有泄露的问题，检查发现泄露在lambda表达式中，而所有的lambda都是rxjava写的回调表达式，因此所做的是将这个页面所有的observable与该splashactivity的lifecycle绑定，另外eventbus也加了一些强判断（其实没啥必要），为了保险。</p>
-<h2 id="引导页面"><a href="#引导页面" class="headerlink" title="引导页面"></a>引导页面</h2><p>2.8.0版本增加了引导页面，引导用户去设置medel，最近出现oom的现象，排查发现整个设置流程都没有进入destroy。因此在登录成功之后，启动了新的task来load，这样可以强制删除这些无用的流程。</p>
-<h1 id="vipZoon页面"><a href="#vipZoon页面" class="headerlink" title="vipZoon页面"></a>vipZoon页面</h1><p>vipzone是会员专区，这个页面是滑动式，每个请求发现都没有捆绑住lifecycle，进行了捆绑处理</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1809,7 +1798,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">124</span>
+                  <span class="site-state-item-count">125</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
