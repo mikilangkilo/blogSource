@@ -181,10 +181,55 @@ public interface Iterable<T>{
 
 ActivityThread作为一个app的入口，自zygote孵化一个新的进程之后就会被调用。
 
-ActivityThread会准备looper和消息队列，然后调用attach方法绑定到ActivityManagerService中，
+ActivityThread会准备
+在looplooper和消息队列，然后调用attach方法绑定到ActivityManagerService中，
 之后就会不断的读取消息队列中的消息并分发消息。
+looper准备之前，会调用attach，会将AMS与当前的athread绑定，AMS会调用attachApplication方法，
+attachapplication中主要是做了bindApplication和attachApplicationlocked，会通过mStackSupervisor进行
+realStartActivityLocked方法，该方法首先会准备启动activity的参数信息，准备完毕后会调用ApplicationThread
+的scheduleLaunchActivity方法启动activity。
+启动的过程是构造一个ActivityClientRecord对象，并将相关参数设置，最后通过sendMessage方法发送一个启动消息到消息队列，
+由ActivityThread的handler处理启动。这也就是looper启动的时候做的事情。
 
-在looper准备之前，会调用attach，会将AMS与当前的athread绑定，AMS会将
+在looper调用该消息的时候，会针对flag做各种处理。比如说启动activity的flag为LAUNCH_ACTIVITY，处理的过程在activitythread中
+复写的handler对象，其接受到了msg之后会触发performLaunchActivity方法，该方法为具体的启动Activity逻辑
+
+从mInstrumentation.callActivityOnCreate()之中就可以看到其调用了activity的oncreate，
+做了activity.performCreate()的操作
+
+```
+final void performCreate(Bundle icicle, PersistableBundle persistentState) {
+        mCanEnterPictureInPicture = true;
+        restoreHasCurrentPermissionRequest(icicle);
+        if (persistentState != null) {
+            onCreate(icicle, persistentState);
+        } else {
+            onCreate(icicle);
+        }
+        mActivityTransitionState.readState(icicle);
+
+        mVisibleFromClient = !mWindow.getWindowStyle().getBoolean(
+                com.android.internal.R.styleable.Window_windowNoDisplay, false);
+        mFragments.dispatchActivityCreated();
+        mActivityTransitionState.setEnterActivityOptions(this, getActivityOptions());
+    }
+```
+
+activity的performCreate事实上就是执行了oncreate操作。
+
+说上面这么一大段是什么意思呢?oncreate里面只是通过了setContentView便可以创建出不同的View，可以说是工厂模式的一种
+
+### 总结
+
+#### 优点
+
+- 降低了对象之间的耦合度，代码结构清晰，对调用者隐藏了产品的生产过程，生产过程改变后，调用者不用做什么改变，易于修改。
+- 易于拓展，要增加工厂和产品都非常方便，直接实现接口，不用修改之前的代码。
+
+#### 缺点
+
+- 系统结构复杂化，非常简单的系统不需要这样了。
+
 
 
 
