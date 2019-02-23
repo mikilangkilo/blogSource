@@ -89,7 +89,8 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/images/android/instanctRunSwapImage.webp">
 <meta property="og:image" content="http://yoursite.com/images/android/instantRunApkMarker.webp">
-<meta property="og:updated_time" content="2019-02-21T16:36:47.734Z">
+<meta property="og:image" content="http://yoursite.com/images/android/instantRunOpenApkMarker.webp">
+<meta property="og:updated_time" content="2019-02-23T18:06:09.356Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="tinker机制学习">
 <meta name="twitter:description" content="tinker作用tinker一般可以用作热修复，其作为热修复java方案的代表，日常工作也经常用到。 其原理是参考自instant run 的方案，通过生成patch包，不过是通过网络下发，然后在本地进行处理。 instant run基于提升平时打包的速度，instant run 需要  只对代码改变部分做构建和部署 不重新安装应用 不重启应用 不重启activity  从其官方图中可以看出，针对">
@@ -330,7 +331,36 @@
 <li>冷插拔：app需要被重启（不需要重新安装）</li>
 </ul>
 <h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p><img src="/images/android/instantRunApkMarker.webp" alt="原理"></p>
-<p>从这个图可以看出来，APK的生成分为两个部分</p>
+<p>从这个图可以看出来，APK的生成分为两个部分。<br>第一个部分是通过aapt生成res，第二部分是通过javaC生成dex文件</p>
+<p>不涉及instantrun的话，编译也就上述几个步骤。打包的话会有签名和对齐动作。</p>
+<p>打开instant run 开关，会有所变化</p>
+<p><img src="/images/android/instantRunOpenApkMarker.webp" alt="打开instant run的编译效果"></p>
+<p>打开开关后，会新增一个appserver.class类编译进dex，同时会有一个新的application类。</p>
+<p>新的application类注入了一个新的自定义类加载器，同时该application类会启动我们所需的新注入的<br>appserver，该application是原生application类的一个代理类。这样instantrun就跑起来了。</p>
+<p>（该appserver主要是检测app是否在前台，以及是否是对应与android studio的appserver）</p>
+<h3 id="热插拔"><a href="#热插拔" class="headerlink" title="热插拔"></a>热插拔</h3><p>热插拔主要体现在一个ui不变化，即时响应。</p>
+<p>其步骤：</p>
+<ol>
+<li>首先通过gradle生成增量dex文件</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Gradle Incremental Build</span><br></pre></td></tr></table></figure>
+<p>gradle会通过增量编译脚本，将dex文件最小化的进行更改</p>
+<ol>
+<li><p>更改完的dex文件会发送到appserver中，发送到appserver</p>
+</li>
+<li><p>appserver接收到dex后，会重写类文件。<br>appserver是保持活跃的，所以一旦有新的dex发来，就会立即执行处理任务。这里就体现了热插拔的效果。</p>
+</li>
+</ol>
+<p>instant run 热插拔的局限性：只能适用于简单改变，类似于方法上面的修改，或者变量值修改。</p>
+<h3 id="温插拔"><a href="#温插拔" class="headerlink" title="温插拔"></a>温插拔</h3><p>温插拔体现在activity需要被重启才能看到修改</p>
+<p>从上面的app构建图可以看出来，资源文件这种在activity创建时加载的内容，需要重启activity才能重新加载。</p>
+<p>其步骤和热插拔几乎相同，唯一不同是修改了资源文件之后会走这步，发送的是资源文件的增量包，同时附带一个重启栈顶activity的指令</p>
+<p>温插拔的局限性：只能适用于资源文件的更改，不包括manifest，架构，结构的变化。</p>
+<h3 id="冷插拔"><a href="#冷插拔" class="headerlink" title="冷插拔"></a>冷插拔</h3><p>基于art虚拟机的模式，工程会被拆分成10个部分，每个部分拥有自己的dex文件，然后所有的类会根据包名被分配给对应的dex文件。</p>
+<p>结构更改产生的变化，此时带来dex的变化，这个变化不是增量变化，而是单纯的变化，这种变化需要重新替换dex文件</p>
+<p>替换dex需要自定义类加载器选择性的加载新的dex，因此必须要重启app才能走到这一步。</p>
+<p>冷插拔在art虚拟机上面是有效的，但是dalvik中则不行 api-21以上才有效。</p>
+<h2 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h2><p>instant run 只能在主进程运行，多进程模式下，所有的温插拔都会变为冷插拔。<br>不可以多台部署，只可以通过gradle生成增量包，jack编译器不行。</p>
 
       
     </div>
@@ -450,7 +480,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">125</span>
+                  <span class="site-state-item-count">126</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -496,7 +526,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#tinker作用"><span class="nav-number">1.</span> <span class="nav-text">tinker作用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#instant-run"><span class="nav-number">2.</span> <span class="nav-text">instant run</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#原理"><span class="nav-number">2.1.</span> <span class="nav-text">原理</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#tinker作用"><span class="nav-number">1.</span> <span class="nav-text">tinker作用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#instant-run"><span class="nav-number">2.</span> <span class="nav-text">instant run</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#原理"><span class="nav-number">2.1.</span> <span class="nav-text">原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#热插拔"><span class="nav-number">2.1.1.</span> <span class="nav-text">热插拔</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#温插拔"><span class="nav-number">2.1.2.</span> <span class="nav-text">温插拔</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#冷插拔"><span class="nav-number">2.1.3.</span> <span class="nav-text">冷插拔</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意点"><span class="nav-number">2.2.</span> <span class="nav-text">注意点</span></a></li></ol></li></ol></div>
             
 
           </div>

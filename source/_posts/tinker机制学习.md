@@ -38,7 +38,7 @@ tinker一般可以用作热修复，其作为热修复java方案的代表，日�
 
 打开instant run 开关，会有所变化
 
-![打开instant run的编译效果](/images/android/instantRunOpenMarker.webp)
+![打开instant run的编译效果](/images/android/instantRunOpenApkMarker.webp)
 
 打开开关后，会新增一个appserver.class类编译进dex，同时会有一个新的application类。
 
