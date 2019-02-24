@@ -21,7 +21,7 @@ tinker一般可以用作热修复，其作为热修复java方案的代表，日�
 
 从其官方图中可以看出，针对上面四个需求，生成了三种插拔机制。
 
-![swap](/images/android/instanctRunSwapImage.webp)
+![swap](/images/android/instantRunSwapImage.webp)
 
 - 热插拔：代码改变被应用、投射到app上面，不需要重启应用，不需要重建activity
 - 温插拔：activity需要被重启才能看到所需更改
@@ -90,4 +90,248 @@ instant run 热插拔的局限性：只能适用于简单改变，类似于方�
 
 instant run 只能在主进程运行，多进程模式下，所有的温插拔都会变为冷插拔。
 不可以多台部署，只可以通过gradle生成增量包，jack编译器不行。
+
+# tinker
+
+## applicationlike
+
+tinker 目前的版本已经支持反射模式修改application，不需要像以前那样傻乎乎的继承一个applicationlike。
+
+而applicationlike是干嘛的？
+
+从上面分析instantrun知道了，在开启instantrun之后，build的过程在dex生成过程中增加了application和appserver。
+添加的自定义application主要是做了一个自定义类加载器的作用。
+
+我们来看一下tinker中是如何做的。
+
+```
+public abstract class ApplicationLike implements ApplicationLifeCycle {
+    private final Application application;
+    private final Intent      tinkerResultIntent;
+    private final long        applicationStartElapsedTime;
+    private final long        applicationStartMillisTime;
+    private final int         tinkerFlags;
+    private final boolean     tinkerLoadVerifyFlag;
+
+    public ApplicationLike(Application application, int tinkerFlags, boolean tinkerLoadVerifyFlag,
+                           long applicationStartElapsedTime, long applicationStartMillisTime, Intent tinkerResultIntent) {
+        this.application = application;
+        this.tinkerFlags = tinkerFlags;
+        this.tinkerLoadVerifyFlag = tinkerLoadVerifyFlag;
+        this.applicationStartElapsedTime = applicationStartElapsedTime;
+        this.applicationStartMillisTime = applicationStartMillisTime;
+        this.tinkerResultIntent = tinkerResultIntent;
+    }
+
+    ...
+}
+```
+
+```
+public interface ApplicationLifeCycle {
+
+    /**
+     * Same as {@link Application#onCreate()}.
+     */
+    void onCreate();
+
+    /**
+     * Same as {@link Application#onLowMemory()}.
+     */
+    void onLowMemory();
+
+    /**
+     * Same as {@link Application#onTrimMemory(int level)}.
+     * @param level
+     */
+    void onTrimMemory(int level);
+
+    /**
+     * Same as {@link Application#onTerminate()}.
+     */
+    void onTerminate();
+
+    /**
+     * Same as {@link Application#onConfigurationChanged(Configuration newconfig)}.
+     */
+    void onConfigurationChanged(Configuration newConfig);
+
+    /**
+     * Same as {@link Application#attachBaseContext(Context context)}.
+     */
+    void onBaseContextAttached(Context base);
+}
+```
+
+从这里可以看出，这个applicationlike并不是一个application，而是一个代理类，application通过构造器构造的方式添加的。
+
+其生命周期略过不表，毕竟我也没怎么在这里面改过东西。。
+
+我从项目里面没找到tinkerapplication，从网上抄下来了。。
+
+```
+public abstract class TinkerApplication extends Application {
+    ...
+
+    private ApplicationLike applicationLike = null;
+    /**
+     * current build.
+     */
+    protected TinkerApplication(int tinkerFlags) {
+        this(tinkerFlags, "com.tencent.tinker.loader.app.DefaultApplicationLike", TinkerLoader.class.getName(), false);
+    }
+
+    /**
+     * @param delegateClassName The fully-qualified name of the {@link ApplicationLifeCycle} class
+     *                          that will act as the delegate for application lifecycle callbacks.
+     */
+    protected TinkerApplication(int tinkerFlags, String delegateClassName,
+                                String loaderClassName, boolean tinkerLoadVerifyFlag) {
+        this.tinkerFlags = tinkerFlags;
+        this.delegateClassName = delegateClassName;
+        this.loaderClassName = loaderClassName;
+        this.tinkerLoadVerifyFlag = tinkerLoadVerifyFlag;
+
+    }
+
+    protected TinkerApplication(int tinkerFlags, String delegateClassName) {
+        this(tinkerFlags, delegateClassName, TinkerLoader.class.getName(), false);
+    }
+
+    private ApplicationLike createDelegate() {
+        try {
+            // 通过反射创建ApplicationLike对象
+            Class<?> delegateClass = Class.forName(delegateClassName, false, getClassLoader());
+            Constructor<?> constructor = delegateClass.getConstructor(Application.class, int.class, boolean.class,
+                long.class, long.class, Intent.class);
+            return (ApplicationLike) constructor.newInstance(this, tinkerFlags, tinkerLoadVerifyFlag,
+                applicationStartElapsedTime, applicationStartMillisTime, tinkerResultIntent);
+        } catch (Throwable e) {
+            throw new TinkerRuntimeException("createDelegate failed", e);
+        }
+    }
+
+    private synchronized void ensureDelegate() {
+        if (applicationLike == null) {
+            applicationLike = createDelegate();
+        }
+    }
+
+
+    private void onBaseContextAttached(Context base) {
+        applicationStartElapsedTime = SystemClock.elapsedRealtime();
+        applicationStartMillisTime = System.currentTimeMillis();
+        //先调用了tinker进行patch等操作
+        loadTinker();
+       //再创建ApplicationLike对象
+        ensureDelegate();
+       //最后再执行ApplicationLike的生命周期
+        applicationLike.onBaseContextAttached(base);
+        ...
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        Thread.setDefaultUncaughtExceptionHandler(new TinkerUncaughtHandler(this));
+        onBaseContextAttached(base);
+    }
+
+    private void loadTinker() {
+        //disable tinker, not need to install
+        if (tinkerFlags == TINKER_DISABLE) {
+            return;
+        }
+        tinkerResultIntent = new Intent();
+        try {
+            //反射调用TinkLoader的tryLoad方法
+            Class<?> tinkerLoadClass = Class.forName(loaderClassName, false, getClassLoader());
+
+            Method loadMethod = tinkerLoadClass.getMethod(TINKER_LOADER_METHOD, TinkerApplication.class, int.class, boolean.class);
+            Constructor<?> constructor = tinkerLoadClass.getConstructor();
+            tinkerResultIntent = (Intent) loadMethod.invoke(constructor.newInstance(), this, tinkerFlags, tinkerLoadVerifyFlag);
+        } catch (Throwable e) {
+            //has exception, put exception error code
+            ShareIntentUtil.setIntentReturnCode(tinkerResultIntent, ShareConstants.ERROR_LOAD_PATCH_UNKNOWN_EXCEPTION);
+            tinkerResultIntent.putExtra(INTENT_PATCH_EXCEPTION, e);
+        }
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        ensureDelegate();
+        applicationLike.onCreate();
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        if (applicationLike != null) {
+            applicationLike.onTerminate();
+        }
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        if (applicationLike != null) {
+            applicationLike.onLowMemory();
+        }
+    }
+
+    @TargetApi(14)
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+        if (applicationLike != null) {
+            applicationLike.onTrimMemory(level);
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (applicationLike != null) {
+            applicationLike.onConfigurationChanged(newConfig);
+        }
+    }
+
+  ...
+}
+```
+其中过程在onBaseContextAttached中做了比较全的概括，loadtinker之所以在applicationlike创立之前创建，就是为了能够修改application的内容
+
+## hotfix
+
+替换patch的方法在tinker类中
+
+```
+public class Tinker {
+    ...
+    final PatchListener listener;
+    final LoadReporter  loadReporter;
+    final PatchReporter patchReporter;
+    ...
+}
+```
+
+其成员变量就三个
+
+```
+if (loadReporter == null) {
+                loadReporter = new DefaultLoadReporter(context);
+            }
+
+            if (patchReporter == null) {
+                patchReporter = new DefaultPatchReporter(context);
+            }
+
+            if (listener == null) {
+                listener = new DefaultPatchListener(context);
+            }
+```
+
+### 准备补丁
+
 
