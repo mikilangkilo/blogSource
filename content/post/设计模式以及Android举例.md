@@ -230,9 +230,95 @@ activity的performCreate事实上就是执行了oncreate操作。
 
 - 系统结构复杂化，非常简单的系统不需要这样了。
 
+## 策略模式
+
+根据不同的情况选择不同的策略的模式，称为策略模式。
+
+例如根据排序算法在不同数量级的优越性，根据数据的数量来安排适用的算法，但是这样会导致封装的类太过臃肿，违背了OCP原则和单一职责原则。
+不过如果将需要的算法和策略抽象出来，提供一个统一的接口，由客户端注入不同的实现对象或者策略的动态替换，这种模式的可拓展性、可维护性更高。
+
+### 定义
+
+策略模式定义了一系列算法，并将每个算法封装起来，而且还可以使他们互相替换，策略模式让算法独立于使用她的客户而独立变化。
+
+### 使用场景
+
+- 针对同一类型问题的多种处理方式，仅仅是具体行为上有差别。
+- 需要安全的封装多种同一类型的操作
+- 出现同一个抽象类有多个子类，而又需要使用if-else或者switch-case来具体选择子类时。
+
+### 简单实现
 
 
+接口的实现
+```
+public interface CalculateStrategy{
+    int calculatePrice(int km);
+}
+```
+计算公交车费的实体类
 
+```
+public class BusStrategy implements CalculateStrategy{
+    @Override
+    public int calculatePrice(int km){
+        ....
+    }
+}
+```
+计算地铁费的实体类
+```
+public class SubwayStrategy implements CalculateStrategy{
+    @Override
+    public int calculatePrice(int km){
+        ...
+    }
+}
+```
+计算总费用的实体类
+```
+public class TranficCalculator{
+    CalculateStrategy mStrategy;
+    
+    public void setStrategy(Calculategy strategy){
+        this.mStrategy = strategy;
+    }
+    
+    public int calculatePrice(int km){
+        return mStrategy.calculatePrice(km);
+    }
+
+    public static void main(String[] args){
+        TranficCalculator tc = new TranficCalculator();
+        tc.setStrategy(new BusStrategy);
+        System.out.println(tc.calculatePrice(16))
+    }
+}
+```
+
+如上，虽然写法比较繁琐，但是去掉了ifelse语句，相对来讲清晰很多很多。
+
+如果想计算别的条件的话，比如说计算texi的价格，只需要增加一个texi的calculator，之后将其注入到TranficCalculator中即可。
+
+对比ifelse的话，需要增加一个else语句，而设计原则是针对扩展开放，针对修改关闭。
+
+### Android中的实现
+
+安卓中针对策略模式的实现还是很多的。
+
+动画的时间插值器，能有线性的，能有加减速的。recyclerview的layoutmanager，有GridLayoutManager，有LinearLayoutManager都是这种。
+
+从客户端的角度来看，如果他不通过这种方式开放的话，其实对使用者很不友好，需要修改源码，而正是套用了策略模式，所以对使用者来说拓展很方便。
+
+### 优点
+
+- 结构清晰明了、使用简单直观
+- 耦合度相对来讲很低，扩展方便
+- 操作封装也更为彻底，数据更为安全
+
+### 缺点
+
+- 随着策略的增加，子类也变得繁多（事实上策略的增多必然会带来代码的冗余，但是修改if-else的接口对比增加子类来讲更加有缺点）
 
 
 
