@@ -28,6 +28,7 @@ hugo new site /
 ## hugo 新建文章
 
 hugo new post/hugo_first_page.md
+hugo new post/
 
 ## 安装themes
 
@@ -65,7 +66,7 @@ hugo --theme=hyde --baseUrl="https://gwyloved.github.io/"
 
 ## 根目录直接生成并部署
 
-hugo && git add . && git commit -m "rebase" && git push && cd public/ && git add . && git commit -m "rebase" && git push
+cd ~/Desktop/hugoSite/ && hugo && git add . && git commit -m "rebase" && git push && cd public/ && git add . && git commit -m "rebase" && git push
 
 
 
