@@ -88,6 +88,28 @@ tags: 设计模式
 
 # 详解
 
+## builder模式
+
+builder模式是一步一步构建一个复杂对象的创建型模式。
+
+### 应用场景
+
+- 相同的方法，不同的执行顺序，产生不同的事件结果时。
+
+- 多个部件或零件，都可以装配到一个对象中，但是产生的运行结果又不相同时。
+
+- 产品类非常复杂，或者产品类中的调用顺序不同产生了不同的作用，这个时候使用建造者模式十分适合。
+
+- 当初始化一个对象特别复杂，比如说参数多，参数很多具有默认值。
+
+### 实现
+
+builder模式的实现实在太过普通，因此决定不详述
+
+### android中的实现
+
+AlertDialog.builder
+
 ## 原型模式
 
 由于类的初始化消耗太大，因此采取使用clone的方式来规避通过new初始化带来的消耗。
@@ -351,6 +373,167 @@ public class TranficCalculator{
 ### 缺点
 
 - 随着策略的增加，子类也变得繁多（事实上策略的增多必然会带来代码的冗余，但是修改if-else的接口对比增加子类来讲更加有缺点）
+
+## 状态模式
+
+状态模式中的行为是由状态来决定的，不同的状态下有不同的行为，状态模式和策略模式的结构几乎完全一样。
+
+但他们的目的，本质缺完全不一样，状态模式的行为是平行的，不可替换的，策略模式的行为是独立的，可相互替换的。
+
+状态模式把对象的行为包装在不同的状态对象里，每个状态对象都有一个共同的抽象状态基类。
+
+状态模式的意图是让一个对象在其内部状态改变的时候，其行为也随之改变。
+
+### 使用场景
+
+- 一个对象的行为取决于它的状态，而且它必须在运行时根据状态改变它的行为
+
+- 代码中包含大量与状态有关的条件语句
+
+### 示例
+
+这个模式使用也很多，不示例了。
+
+## 责任链模式
+
+责任链模式是指将请求从链表的首端发出，沿着链的路径一次传递给每个节点对象，直至有对象处理这个请求为止。
+
+### 使用场景
+
+- 多个对象可以处理同一请求，但具体由哪个处理则在运行时动态决定
+
+- 在请求处理者不明确的情况下向多个对象中的一个，提交一个请求
+
+- 需要动态指定一组对象处理请求
+
+### 使用示例
+
+```
+public abstract class Handler{
+    protected Handler successor;
+    public abstract void handleRequest(String condition);
+}
+```
+
+```
+public class ConcreteHandler1 extends Handler{
+    @Override
+    public void handleRequest(String condition){
+        if(condition.equals("ConcreteHandler1")){
+            System.out.println("ConcreteHandler1 handled");
+            return;
+        }else{
+            successor.handleRequest(condition);
+        }
+    }
+}
+```
+
+```
+public class ConcreteHandler2 extends Handler{
+    @Override
+    public void handleRequest(String condition){
+        if(condition.equals("ConcreteHandler2")){
+            System.out.println("ConcreteHandler2 handled");
+            return;
+        }else{
+            successor.handleRequest(condition);
+        }
+    }
+}
+```
+
+```
+public class Client{
+    public static void main(String[] args){
+        ConcreteHandler1 handler1 = new ConcreteHandler1();
+        ConcreteHandler2 handler2 = new ConcreteHandler2();
+        handler1.succssor = handler2;
+        handler2.succssor = handler1;
+        handler1.handleRequest("ConcreteHandler2");
+    } 
+}
+```
+
+类似于这种，一个处理不了就传给下个处理的模式
+
+### android实现
+
+事件的分发处理就是责任链模式，或者说主要的是Viewgroup将事件分发到view中
+
+viewgroup中持有了view的处理方法，在viewgroup决定不处理的时候，就会调用view的dispatch方法进行调用。
+
+## 解释器模式
+
+解释器模式主要是用于定义语言文法的表示，平时用的较少，略过不表
+
+## 命令模式
+
+命令模式是将一系列方法调用进行封装，只需要一个方法执行，这些所有被封装的方法就会被顺序执行。
+
+### 使用场景
+
+- 需要抽象出待执行的动作，然后以参数的形式提供出来的
+
+- 在不同的时刻指定、排列和执行请求，一个命令对象可以有与初始请求无关的生存期
+
+- 需要支持取消操作
+
+- 支持修改日志功能，这样当系统崩溃时，这些修改可以被重做一遍
+
+- 需要支持事务操作
+
+#### 代码表示
+
+```
+public class Receiver{
+    public void action(){
+        System.out.println("执行具体操作");
+    }
+}
+```
+
+```
+public interface Command{
+    void execute();
+}
+```
+
+```
+public class ConcreteCommand implements Command{
+    private Receiver receiver;
+    public ConcreteCommand(Receiver receiver){
+        this.receiver = receiver;
+    }
+    @Override
+    public void execute(){
+        receiver.action();
+    }
+}
+```
+
+```
+public class Invoker{
+    private Command command;
+    public Invoker(Command command){
+        this.command = command;
+    }
+    public void action(){
+        command.execute();
+    }
+}
+```
+
+```
+public class Client{
+    public static void main(String[] args){
+        Receiver receiver = new Receiver();
+        Command command = new ConcreteCommand(receiver);
+        Invoker invoker = new Invoker(command);
+        invoker.action();
+    }
+}
+```
 
 
 
