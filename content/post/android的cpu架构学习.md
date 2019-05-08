@@ -1,7 +1,6 @@
 ---
 title: "Android的cpu架构学习"
 date: 2019-05-08T11:42:04+08:00
-draft: true
 ---
 
 以往听过arm架构和x86架构，在jni和选用so库的时候需要注意一下，但这次项目转型flutter，遇到的flutterlibso的问题，也是关于arm架构的问题。
