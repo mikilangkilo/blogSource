@@ -76,7 +76,5 @@ brew install pandoc
 
 2.
 
-cd ~/Desktop/hugoSite/content/ 
-
-pandoc -f markdown -t html -o 安卓开发工程师-殷鹏程.html about.md -T "Pengcheng Yin's Resume" --metadata pagetitle="resume" -c css/main.css
+cd ~/Desktop/hugoSite/content/ && pandoc -f markdown -t html -o 安卓开发工程师-殷鹏程.html about.md -T "Pengcheng Yin's Resume" --metadata pagetitle="resume" -c css/main.css
 
