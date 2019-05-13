@@ -10,6 +10,15 @@
 
 ## 自我描述
 
+本人性格开朗，随和，在工作方面有以下几个优点：
+1.工作有规划，熟练使用番茄工作法规划每日任务
+2.总结能力强，平时爱好将不懂的问题和工作总结到博客上
+3.有较强的自我驱动和自我管理能力
+4.适应力强，与同事能够很快的打成一片
+5.时间观念很强，工作三年除了特殊情况外从未迟到
+6.责任感强，上头交予的任务从未逾期过
+7.能接受高强度的加班
+平时虽然话不多，但能与他人和谐相处
 
 ## 工作经验
 
@@ -59,13 +68,9 @@
 ### 编程语言
 
 - [Java](https://www.java.com)^†^
-- [Kotlin](http://kotlinlang.org)^†^
-- [Python](https://www.python.org)
-- [C/C++](http://www.cplusplus.com)
-- [Shell](http://www.linuxshell.it)
-- [JavaScript](https://www.javascript.com)
-- [HTML](https://www.w3.org/html)
-
+- [Kotlin](http://kotlinlang.org)
+- [Python](https://www.python.org)^†^
+- [Dart](https://dart.dev/)
 
 ### 框架
 
