@@ -68,5 +68,15 @@ hugo --theme=hyde --baseUrl="https://gwyloved.github.io/"
 
 cd ~/Desktop/hugoSite/ && hugo && git add . && git commit -m "rebase" && git push && cd public/ && git add . && git commit -m "rebase" && git push
 
+## 基于个人简历生成html
 
+1.
+
+brew install pandoc 
+
+2.
+
+cd ~/Desktop/hugoSite/content/ 
+
+pandoc -f markdown -t html -o 安卓开发工程师-殷鹏程.html about.md -T "Pengcheng Yin's Resume" --metadata pagetitle="resume" -c css/main.css
 
