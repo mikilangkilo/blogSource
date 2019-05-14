@@ -13,7 +13,7 @@
 本人性格开朗，随和，在工作方面有以下几个优点：
 
 * 工作有规划，熟练使用番茄工作法规划每日任务
-* 总结能力强，平时爱好将不懂的问题和工作总结到博客上
+* 总结能力强，平时爱将不懂的问题和工作上遇到的困难总结到博客上
 * 有较强的自我驱动和自我管理能力
 * 适应力强，与同事能够很快的打成一片
 * 时间观念很强，工作三年除了特殊情况外从未迟到
@@ -28,27 +28,24 @@
 
 *2018/03 - 至今*
 
-在「Android 客户端基础架构组」下主要负责提升工程效率和新技术的引进，主要内容如下：
+在「Android 开发组」下主要负责[好搭盒子]需求实现和效率提升，主要内容如下：
 
-* 统一 Android 公共工具库以提升团队开发效率；
-* 状态栏刘海适配；
-* 封装统一线程池来优化应用内存使用；
-* Android P 新特性分享供团队学习研究；
-* 为业务团队提供良好 SDK 提升业务开发效率；
-* 为团队开发工程模板插件以提升开发效率和开发规范。
-
+* 实现产品的需求，持续提升发布版本(累计从1.9.2提升至3.5.0)
+* 优化安装包性能，包括不局限于使用lint，mat，Leakcancary，traceview等工具进行内存分析优化，资源压缩等
+* 根据业务需求选型技术框架，设计并完善相应的架构代码
+* 根据jenkins搭设自动化出包流程，提升工作效率
+* 通过bugly和用户反馈，发布热修复补丁或者版本升级策略进行项目稳定性维护
 
 ### **Android 开发工程师** [崇杏健康](https://www.highwho.com/)
 
 *2017/06 - 2018/03*
 
-在「数字座舱 App 部门」中作为基础组件开发的核心成员，其主要职责如下：
+在「开发部」中作为独立的安卓开发，主要职责如下：
 
-* 为开发团队书写了安卓开发规范文档，更有利于维护项目，促进成员之间 CR，提升团队开发效率；
-* 提取开发中的公共组件模块，合理分类并封装它们，提升组件复用性，减少团队任务量从而提升开发效率；
-* 结合 [marx/xlog](https://github.com/Tencent/mars) 开发了团队日志框架，日志性能大幅提高，查看日志更为方便，开发效率大为提升；
-* 为团队封装公共提示库，使其提示更为规范统一，减少团队任务量从而提升开发效率；
-* 为各应用提供公共埋点库，减少团队任务量从而提升开发效率，使埋点统计更为方便。
+* 协助web端，设计基于crosswalk的web容器，添加app安全，保活、升级、资源替换等一系列本地功能
+* 协助地推人员，设计通过二维码扫描录入数据库的android软件
+* 编写食堂后台app，设计菜品上传、维护，利润图表等功能
+* 编写
 
 ### **Android Framework开发工程师** [传音控股](http://www.transsion.com/)
 
@@ -65,7 +62,7 @@
 
 ## 技能专长
 
-以下都是我平时用过或熟悉的编程语言、框架、软件及工具，带 ^†^ 符号的是我比较喜欢和常用的。
+以下都是我平时用过或熟悉的编程语言、框架，带 ^†^ 符号的是我比较喜欢和常用的。
 
 ### 编程语言
 
@@ -83,33 +80,16 @@
 - [Glide](https://github.com/bumptech/glide)^†^
 - [Dagger2](https://github.com/google/dagger)
 
-
-### 工具软件
-
-- [Mac OS X](http://apple.com/macosx)^†^
-- [Adobe Photoshop](http://www.adobe.com/cn/products/cs6/photoshop.html)
-- [Alfred 3](https://www.alfredapp.com)^†^
-- [Android Studio](https://developer.android.com/studio/index.html?hl=zh-cn)^†^
-- [Atom](https://atom.io)^†^
-- [Git](https://git-scm.com)^†^
-- [IntelliJ IDEA](https://www.jetbrains.com/idea)^†^
-- [iTerm](https://www.iterm2.com)^†^
-- [JIRA](https://www.atlassian.com/software/jira)^†^
-- [on-my-zsh](https://github.com/robbyrussell/oh-my-zsh)^†^
-- [Postman](https://www.getpostman.com)^†^
-- [PyCharm](https://www.jetbrains.com/pycharm)
-- [Source Tree](https://www.sourcetreeapp.com)^†^
-- [XMind](https://www.xmind.cn)
-
-
 ## 教育经历
 
 *2012 - 2016* [南京邮电大学](http://www.njupt.edu.cn/) 光电信息工程 本科
 
 
 ## 其他奖项
+
 CET-6
 
 ## 兴趣爱好
 
-爱折腾，喜欢探索和尝试没有干过的新鲜事物，业余喜爱打羽毛球、跑步。
+业余时间会整理整理个人博客，刷刷leetcode，也会和朋友一起做做项目。
+喜欢下棋。
