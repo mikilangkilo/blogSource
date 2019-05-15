@@ -652,20 +652,81 @@ begin
 
 -> ActivityManagerService.registerReceiver(),此步将receiver示例出来，并且添加了相应的filter，然后作为成员变量保存在mReceiverResolver中
 
+当有广播进来的时候，会通过成员变量来逐步发送广播，直到触发onReceive方法
 
+与之相似的eventbus原理也大致相同，差别是eventbus使用了name pattern方法来进行消息的定向投递，broadcast则没有这种方式而是全部投递。
 
+另外一点是eventbus较为轻量，但是不支持app以外的广播发送，最多也就是个本地广播
 
+## 备忘录模式
 
+备忘录模式是一种行为模式，用于保存对象当前状态，并且在之后可以再次恢复到此状态
 
+### 定义
 
+在不破坏封闭的前提下，捕获一个对象的内部状态，并在该对象之外保存这个状态，这样，以后就可以将该对象恢复到原先保存的状态。
 
+### 使用场景
 
+1. 需要保存一个对象在某一个时刻的状态或者部分状态
+2. 如果用一个接口来让其他对象得到这些状态，将会暴露对象的实现细节，并且破坏对象的封装性，一个对象不希望外接直接访问其内部状态，通过中间对象可以间接访问其内部对象
 
+### 示例
 
+```
+public class CallOfDuty{
+    private int mCheckPoint = 1;
+    private int mLifeValue = 100;
+    public void play(){
+        mLifeValue -= 10;
+        mCheckPoint ++;
+    }
+    public void quit(){
+        
+    }
+    public Memoto createMemoto(){
+        Memoto memoto = new Memoto();
+        memoto.mCheckpoint = mCheckpoint;
+        memoto.mLifeValue = mLifeValue;
+        return memoto;
+    }
+    public void restore(Memoto memoto){
+        this.mCheckpoint = memoto.mCheckpoint;
+        this.mLifeValue = memoto.mLifeValue;
+    }
+}
+```
 
+提供一个实体类专门记录当前的状态，并且提供一个方法用于恢复状态
 
+```
+public class Caretaker{
+    Memoto mMemoto;
+    public void archive(Memoto memoto){
+        this.mMemoto = memoto;
+    }
+    public Memoto getMemoto(){
+        return mMemoto;
+    }
+}
+```
 
+创建一个管理类用于存储状态
 
+```
+public class Client{
+    public static void main(String[] args){
+        CallOfDuty game = new CallOfDuty();
+        game.play();
+        Caretaker caretaker = new Caretaker();
+        caretaker.archive(game.createMemoto());
+        game.quit();
+        CallOfDuty newGame = new CallOfDuty();
+        newGame.restore(caretaker.getMemoto());
+    }
+}
+```
 
+### android 实现
 
-
+在安卓中，activity的onSaveInstanceState和onRestoreInstanceState就是备忘录模式
