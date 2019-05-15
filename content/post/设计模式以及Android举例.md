@@ -632,6 +632,25 @@ public class ObserverObject implements Observer{
 
 ### android中的使用
 
+android中的broadcastreceiver，作为四大组件之一，每个使用的地方都需要通过context的registerReceiver函数注册到AMS中，当通过sendBroadcast发送广播时，所有注册了对应的intentfilter的BR对象就会接受到这个消息。
+
+其注册流程大致经过以下几个步骤：
+
+begin
+
+-> Activity.registerReceiver 
+
+-> ContextWrapper.registerReceiver 
+
+-> ContextImpl.registerReceiver
+
+-> ContextImpl.registerReceiverInternal
+
+-> ActivityManagerNative.getDefault().registerReceiver(mMainThread.getApplicationThread(),mPackageInfo.getReceiverDispatcher(),...)
+
+-> ActivityMangerProxy.registerReceiver()
+
+-> ActivityManagerService.registerReceiver(),此步将receiver示例出来，并且添加了相应的filter，然后作为成员变量保存在mReceiverResolver中
 
 
 
