@@ -31,9 +31,9 @@
 在「Android 开发组」下主要负责[好搭盒子]需求实现和效率提升，主要内容如下：
 
 * 实现产品的需求，持续提升发布版本(累计从1.9.2提升至3.5.0)
-* 优化安装包性能，包括不局限于使用lint，mat，Leakcancary，traceview等工具进行内存分析优化，资源压缩等
+* 优化安装包性能，包括不局限于使用lint，mat，Leakcancary，traceview等工具进行内存分析优化，布局优化，资源压缩等
 * 根据业务需求选型技术框架，设计并完善相应的架构代码
-* 根据jenkins搭设自动化出包流程，提升工作效率
+* 依托jenkins搭设自动化出包流程，提升工作效率
 * 通过bugly和用户反馈，发布热修复补丁或者版本升级策略进行项目稳定性维护
 
 ### **Android 开发工程师** [崇杏健康](https://www.highwho.com/)
@@ -42,23 +42,24 @@
 
 在「开发部」中作为独立的安卓开发，主要职责如下：
 
-* 协助web端，设计基于crosswalk的web容器，添加app安全，保活、升级、资源替换等一系列本地功能
+* 协助web端，设计基于crosswalk的web容器，添加app安全，保活、升级、资源拦截替换等一系列本地功能
 * 协助地推人员，设计通过二维码扫描录入数据库的android软件
-* 编写食堂后台app，设计菜品上传、维护，利润图表等功能
-* 编写
+* 编写医院食堂后台app，设计菜品上传、维护，利润图表等功能
+* 编写医院图形化app，仿照设计饼状图，柱状图，贝塞尔曲线图等
 
 ### **Android Framework开发工程师** [传音控股](http://www.transsion.com/)
 
 
 *2016/03 - 2017/06*
 
-在安卓团队中主要从事智能厨电方面的开发，其主要经历如下：
+在Systemui组中主要从事模块维护和功能升级，其主要经历如下：
 
-* 参与项目的搭建，选用合适的架构，合理分包，使可读性更好，促进团队开发效率；
-* 参与多个项目的用户界面设计，可灵活运用原生组件，追求良好的用户体验；
-* 参与公共组件的封装，提升组件复用性，从而提升团队开发效率；
-* 封装电控板对接的协议，从而让协议的通用性更高。
-
+* 维护notification/recent/navigator/volume模块
+* 完成systemui在Android N上面的升级（功能迁移，bug修复）
+* 编写monkey脚本进行性能压力测试，处理内存泄漏
+* 压缩运行内存，处理运行时OOM问题，运行内存从120M降低到50M
+* 与telephone和setting组合作，进行通知定制化处理，添加流量显示，电量显示等功能
+* 整合framework层util工具类，提供全团队使用
 
 ## 技能专长
 
@@ -67,18 +68,17 @@
 ### 编程语言
 
 - [Java](https://www.java.com)^†^
-- [Kotlin](http://kotlinlang.org)
 - [Python](https://www.python.org)^†^
+- [Kotlin](http://kotlinlang.org)
 - [Dart](https://dart.dev/)
 
 ### 框架
 
-- [RxAndroid](https://github.com/ReactiveX/RxAndroid)^†^
-- [EventBus](https://github.com/greenrobot/EventBus)^†^
 - [Retrofit](https://github.com/square/retrofit)^†^
+- [Okhttp](https://github.com/square/okhttp)^†^
 - [Gson](https://github.com/google/gson)^†^
 - [Glide](https://github.com/bumptech/glide)^†^
-- [Dagger2](https://github.com/google/dagger)
+- [Dagger2](https://github.com/google/dagger)^†^
 
 ## 教育经历
 
@@ -87,7 +87,7 @@
 
 ## 其他奖项
 
-CET-6
+CET-6，院级一等奖学金
 
 ## 兴趣爱好
 
