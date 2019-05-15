@@ -130,3 +130,10 @@ adb shell cmd package compile --reset my-package
 ```
 adb shell cmd package compile --reset -a
 ```
+
+
+# 华为方舟编译器初探
+
+因为暂时没有源码，只能通过别人的博客和华为的专利申请说明书看看了
+
+先mark一下
