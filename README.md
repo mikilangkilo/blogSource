@@ -28,7 +28,7 @@ hugo new site /
 ## hugo 新建文章
 
 hugo new post/hugo_first_page.md
-cd ~/Desktop/hugoSite/content/ && hugo new post/
+cd ~/Desktop/hugoSite/content/ && hugo new post/sychronized的三种用法.md
 
 ## 安装themes
 
