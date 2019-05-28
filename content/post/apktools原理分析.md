@@ -166,7 +166,317 @@ private static void cmdDecode(String[] args) throws InvalidArgsError,
 	}
 ```
 
+反编译的过程操纵了一个叫做apkdecoder的类，通过传入的参数进行了一些配置项的更改，之后核心在于
 
+```
+        decoder.setApkFile(new File(args[i]));
+		try {
+			decoder.decode();
+		} catch (OutDirExistsException ex) {
+		    ...
+		}
+```
 
+### apkDecoder.decode()
 
+```
+public void decode() throws AndrolibException, IOException {
+		File outDir = getOutDir();
 
+		if (!mForceDelete && outDir.exists()) {
+			throw new OutDirExistsException();
+		}
+
+		if (!mApkFile.isFile() || !mApkFile.canRead()) {
+			throw new InFileNotFoundException();
+		}
+
+		try {
+			OS.rmdir(outDir);
+		} catch (BrutException ex) {
+			throw new AndrolibException(ex);
+		}
+		outDir.mkdirs();
+
+		if (hasSources()) {
+			switch (mDecodeSources) {
+			case DECODE_SOURCES_NONE:
+				mAndrolib.decodeSourcesRaw(mApkFile, outDir, mDebug);
+				break;
+			case DECODE_SOURCES_SMALI:
+				mAndrolib.decodeSourcesSmali(mApkFile, outDir, mDebug, mBakDeb);
+				break;
+			case DECODE_SOURCES_JAVA:
+				mAndrolib.decodeSourcesJava(mApkFile, outDir, mDebug);
+				break;
+			}
+		}
+
+		if (hasResources()) {
+
+			// read the resources.arsc checking for STORED vs DEFLATE
+			// compression
+			// this will determine whether we compress on rebuild or not.
+			JarFile jf = new JarFile(mApkFile.getAbsoluteFile());
+			JarEntry je = jf.getJarEntry("resources.arsc");
+			if (je != null) {
+				int compression = je.getMethod();
+				mCompressResources = (compression != ZipEntry.STORED)
+						&& (compression == ZipEntry.DEFLATED);
+			}
+			jf.close();
+
+			switch (mDecodeResources) {
+			case DECODE_RESOURCES_NONE:
+				mAndrolib.decodeResourcesRaw(mApkFile, outDir);
+				break;
+			case DECODE_RESOURCES_FULL:
+				mAndrolib.decodeResourcesFull(mApkFile, outDir, getResTable());
+				break;
+			}
+		} else {
+			// if there's no resources.asrc, decode the manifest without looking
+			// up attribute references
+			if (hasManifest()) {
+				switch (mDecodeResources) {
+				case DECODE_RESOURCES_NONE:
+					mAndrolib.decodeManifestRaw(mApkFile, outDir);
+					break;
+				case DECODE_RESOURCES_FULL:
+					mAndrolib.decodeManifestFull(mApkFile, outDir,
+							getResTable());
+					break;
+				}
+			}
+		}
+
+		mAndrolib.decodeRawFiles(mApkFile, outDir);
+		writeMetaFile();
+	}
+```
+
+decode的过程写的还蛮清楚的，分三步
+
+- hasResources()
+
+```
+public boolean hasSources() throws AndrolibException {
+		try {
+			return mApkFile.getDirectory().containsFile("classes.dex");
+		} catch (DirectoryException ex) {
+			throw new AndrolibException(ex);
+		}
+	}
+```
+
+当apk文件拥有classes.dex文件的时候
+
+执行
+```
+switch (mDecodeSources) {
+			case DECODE_SOURCES_NONE:
+				mAndrolib.decodeSourcesRaw(mApkFile, outDir, mDebug);
+				break;
+			case DECODE_SOURCES_SMALI:
+				mAndrolib.decodeSourcesSmali(mApkFile, outDir, mDebug, mBakDeb);
+				break;
+			case DECODE_SOURCES_JAVA:
+				mAndrolib.decodeSourcesJava(mApkFile, outDir, mDebug);
+				break;
+			}
+```
+mDecodeResources默认是SMALI
+
+> smali 和 baksmali 则是针对 DEX 执行文件格式的汇编器和反汇编器，反汇编后 DEX 文件会产生.smali 后缀的代码文件，smali 代码拥有特定的格式与语法，smali 语言是对 Dalvik 虚拟机字节码的一种解释。
+
+这也是apktool反编译生成的产物。
+
+不过在这里我们也可以看出来，也是可以有其他两个选项的
+
+#### AndroidLib.decodeSourcesSmali
+
+```
+public void decodeSourcesSmali(File apkFile, File outDir, boolean debug,
+			boolean bakdeb) throws AndrolibException {
+		try {
+			File smaliDir = new File(outDir, SMALI_DIRNAME);
+			OS.rmdir(smaliDir);
+			smaliDir.mkdirs();
+			LOGGER.info("Baksmaling...");
+			SmaliDecoder.decode(apkFile, smaliDir, debug, bakdeb);
+		} catch (BrutException ex) {
+			throw new AndrolibException(ex);
+		}
+	}
+```
+
+调用了SmaliDecoder.decode
+
+```
+private void decode() throws AndrolibException {
+		try {
+			baksmali.disassembleDexFile(mApkFile.getAbsolutePath(),
+					new DexFile(mApkFile), false, mOutDir.getAbsolutePath(),
+					null, null, null, false, true, true, mBakDeb, false, false,
+					0, false, false, null, false);
+		} catch (IOException ex) {
+			throw new AndrolibException(ex);
+		}
+	}
+```
+
+这里调用了baksmali.disassembleDexFile
+
+```
+public static void disassembleDexFile(String dexFilePath, DexFile dexFile, boolean deodex, String outputDirectory,
+                                          String[] classPathDirs, String bootClassPath, String extraBootClassPath,
+                                          boolean noParameterRegisters, boolean useLocalsDirective,
+                                          boolean useSequentialLabels, boolean outputDebugInfo, boolean addCodeOffsets,
+                                          boolean noAccessorComments, int registerInfo, boolean verify,
+                                          boolean ignoreErrors, String inlineTable, boolean checkPackagePrivateAccess)
+    {
+        baksmali.noParameterRegisters = noParameterRegisters;
+        baksmali.useLocalsDirective = useLocalsDirective;
+        baksmali.useSequentialLabels = useSequentialLabels;
+        baksmali.outputDebugInfo = outputDebugInfo;
+        baksmali.addCodeOffsets = addCodeOffsets;
+        baksmali.noAccessorComments = noAccessorComments;
+        baksmali.deodex = deodex;
+        baksmali.registerInfo = registerInfo;
+        baksmali.bootClassPath = bootClassPath;
+        baksmali.verify = verify;
+
+        if (registerInfo != 0 || deodex || verify) {
+            try {
+                String[] extraBootClassPathArray = null;
+                if (extraBootClassPath != null && extraBootClassPath.length() > 0) {
+                    assert extraBootClassPath.charAt(0) == ':';
+                    extraBootClassPathArray = extraBootClassPath.substring(1).split(":");
+                }
+
+                if (dexFile.isOdex() && bootClassPath == null) {
+                    //ext.jar is a special case - it is typically the 2nd jar in the boot class path, but it also
+                    //depends on classes in framework.jar (typically the 3rd jar in the BCP). If the user didn't
+                    //specify a -c option, we should add framework.jar to the boot class path by default, so that it
+                    //"just works"
+                    if (extraBootClassPathArray == null && isExtJar(dexFilePath)) {
+                        extraBootClassPathArray = new String[] {"framework.jar"};
+                    }
+                    ClassPath.InitializeClassPathFromOdex(classPathDirs, extraBootClassPathArray, dexFilePath, dexFile,
+                            checkPackagePrivateAccess);
+                } else {
+                    String[] bootClassPathArray = null;
+                    if (bootClassPath != null) {
+                        bootClassPathArray = bootClassPath.split(":");
+                    }
+                    ClassPath.InitializeClassPath(classPathDirs, bootClassPathArray, extraBootClassPathArray,
+                            dexFilePath, dexFile, checkPackagePrivateAccess);
+                }
+
+                if (inlineTable != null) {
+                    inlineResolver = new CustomInlineMethodResolver(inlineTable);
+                }
+            } catch (Exception ex) {
+                System.err.println("\n\nError occured while loading boot class path files. Aborting.");
+                ex.printStackTrace(System.err);
+                System.exit(1);
+            }
+        }
+
+        File outputDirectoryFile = new File(outputDirectory);
+        if (!outputDirectoryFile.exists()) {
+            if (!outputDirectoryFile.mkdirs()) {
+                System.err.println("Can't create the output directory " + outputDirectory);
+                System.exit(1);
+            }
+        }
+
+        if (!noAccessorComments) {
+            syntheticAccessorResolver = new SyntheticAccessorResolver(dexFile);
+        }
+
+        //sort the classes, so that if we're on a case-insensitive file system and need to handle classes with file
+        //name collisions, then we'll use the same name for each class, if the dex file goes through multiple
+        //baksmali/smali cycles for some reason. If a class with a colliding name is added or removed, the filenames
+        //may still change of course
+        ArrayList<ClassDefItem> classDefItems = new ArrayList<ClassDefItem>(dexFile.ClassDefsSection.getItems());
+        Collections.sort(classDefItems, new Comparator<ClassDefItem>() {
+            public int compare(ClassDefItem classDefItem1, ClassDefItem classDefItem2) {
+                return classDefItem1.getClassType().getTypeDescriptor().compareTo(classDefItem1.getClassType().getTypeDescriptor());
+            }
+        });
+
+        ClassFileNameHandler fileNameHandler = new ClassFileNameHandler(outputDirectoryFile, ".smali");
+
+        for (ClassDefItem classDefItem: classDefItems) {
+            /**
+             * The path for the disassembly file is based on the package name
+             * The class descriptor will look something like:
+             * Ljava/lang/Object;
+             * Where the there is leading 'L' and a trailing ';', and the parts of the
+             * package name are separated by '/'
+             */
+
+            String classDescriptor = classDefItem.getClassType().getTypeDescriptor();
+
+            //validate that the descriptor is formatted like we expect
+            if (classDescriptor.charAt(0) != 'L' ||
+                classDescriptor.charAt(classDescriptor.length()-1) != ';') {
+                System.err.println("Unrecognized class descriptor - " + classDescriptor + " - skipping class");
+                continue;
+            }
+
+            File smaliFile = fileNameHandler.getUniqueFilenameForClass(classDescriptor);
+
+            //create and initialize the top level string template
+            ClassDefinition classDefinition = new ClassDefinition(classDefItem);
+
+            //write the disassembly
+            Writer writer = null;
+            try
+            {
+                File smaliParent = smaliFile.getParentFile();
+                if (!smaliParent.exists()) {
+                    if (!smaliParent.mkdirs()) {
+                        System.err.println("Unable to create directory " + smaliParent.toString() + " - skipping class");
+                        continue;
+                    }
+                }
+
+                if (!smaliFile.exists()){
+                    if (!smaliFile.createNewFile()) {
+                        System.err.println("Unable to create file " + smaliFile.toString() + " - skipping class");
+                        continue;
+                    }
+                }
+
+                BufferedWriter bufWriter = new BufferedWriter(new OutputStreamWriter(
+                        new FileOutputStream(smaliFile), "UTF8"));
+
+                writer = new IndentingWriter(bufWriter);
+                classDefinition.writeTo((IndentingWriter)writer);
+            } catch (Exception ex) {
+                System.err.println("\n\nError occured while disassembling class " + classDescriptor.replace('/', '.') + " - skipping class");
+                ex.printStackTrace();
+                smaliFile.delete();
+            }
+            finally
+            {
+                if (writer != null) {
+                    try {
+                        writer.close();
+                    } catch (Throwable ex) {
+                        System.err.println("\n\nError occured while closing file " + smaliFile.toString());
+                        ex.printStackTrace();
+                    }
+                }
+            }
+
+            if (!ignoreErrors && classDefinition.hadValidationErrors()) {
+                System.exit(1);
+            }
+        }
+    }
+```
+
+这里就到了核心部分
