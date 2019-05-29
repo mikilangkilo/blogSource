@@ -479,4 +479,96 @@ public static void disassembleDexFile(String dexFilePath, DexFile dexFile, boole
     }
 ```
 
-这里就到了核心部分
+这里就到了核心部分，这里比较长，需要提炼一下。
+
+首先
+```
+if (extraBootClassPath != null && extraBootClassPath.length() > 0) {
+                    assert extraBootClassPath.charAt(0) == ':';
+                    extraBootClassPathArray = extraBootClassPath.substring(1).split(":");
+                }
+```
+这一段是不需要的，因为这个extraBootClassPath是个null
+
+```
+if (dexFile.isOdex() && bootClassPath == null) {
+```
+
+这一段是固定的false，因为这个bootClassPath也是个null
+
+因此就会走入
+```
+String[] bootClassPathArray = null;
+                    if (bootClassPath != null) {
+                        bootClassPathArray = bootClassPath.split(":");
+                    }
+                    ClassPath.InitializeClassPath(classPathDirs, bootClassPathArray, extraBootClassPathArray,
+                            dexFilePath, dexFile, checkPackagePrivateAccess);
+```
+
+这一步就很关键了，因为执行了
+
+```
+ClassPath.InitializeClassPath(...);
+```
+
+这个api的作用如下
+
+```
+/**
+     * Initialize the class path using the dependencies from an odex file
+     * @param classPathDirs The directories to search for boot class path files
+     * @param extraBootClassPathEntries any extra entries that should be added after the entries that are read
+     * from the odex file
+     * @param dexFilePath The path of the dex file (used for error reporting purposes only)
+     * @param dexFile The DexFile to load - it must represents an odex file
+     */
+```
+
+使用一个odex文件的依赖来初始化文件的路径。
+
+```
+String[] bootClassPath = new String[odexDependencies.getDependencyCount()];
+        for (int i=0; i<bootClassPath.length; i++) {
+            String dependency = odexDependencies.getDependency(i);
+
+            if (dependency.endsWith(".odex")) {
+                int slashIndex = dependency.lastIndexOf("/");
+
+                if (slashIndex != -1) {
+                    dependency = dependency.substring(slashIndex+1);
+                }
+            } else if (dependency.endsWith("@classes.dex")) {
+                Matcher m = dalvikCacheOdexPattern.matcher(dependency);
+
+                if (!m.find()) {
+                    throw new ExceptionWithContext(String.format("Cannot parse dependency value %s", dependency));
+                }
+
+                dependency = m.group(1);
+            } else {
+                throw new ExceptionWithContext(String.format("Cannot parse dependency value %s", dependency));
+            }
+
+            bootClassPath[i] = dependency;
+        }
+```
+
+这是找到依赖的方法，一是直接通过判断是否以odex结尾，是的话直接截取，二是通过匹配查找，返回找到的第一个。
+
+之后又调用
+
+```
+theClassPath.initClassPath(classPathDirs, bootClassPath, extraBootClassPathEntries, dexFilePath, dexFile,
+                checkPackagePrivateAccess);
+```
+
+//这调用的也太深了吧，我好想吐槽啊
+
+这一步的目的是执行
+
+```
+loadDexFile(file.getPath(), dexFile);
+```
+
+事实上，在调用initClassPath的时候，就在动作的末位有了这个loadDexFile的动作
