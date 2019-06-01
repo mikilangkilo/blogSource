@@ -3,4 +3,44 @@ title: "编一个属于自己的ROM"
 date: 2019-05-30T22:53:33+08:00
 ---
 
-埋坑。AOSP下好了开始搞
+# AOSP下载
+
+下载有两种方式，第一种是直接init repo，然后repo sync，不过在大陆几乎无法成功。
+
+因此使用第二种方式
+
+## 第一步下载初始化包
+
+```
+wget -c https://mirrors.tuna.tsinghua.edu.cn/aosp-monthly/aosp-latest.tar
+```
+
+47个g。。。。。。mac的记得要装一个移动硬盘
+
+## 第二步解压
+
+```
+tar xf aosp-latest.tar
+```
+
+## 第三步repoinit
+
+注意要进入解压的目录内
+```
+repo init -u https://aosp.tuna.tsinghua.edu.cn/platform/manifest
+```
+如果出现repo command not found，调用以下命令
+
+```
+echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc 
+export PATH=$PATH:$HOME/bin 
+```
+
+之后repo就有了
+
+## 第四步repo sync
+
+```
+repo sync
+```
+
