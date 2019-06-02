@@ -44,3 +44,25 @@ export PATH=$PATH:$HOME/bin
 repo sync
 ```
 
+这一步也十分可能卡住，建议使用
+
+```
+repo sync -f -j8
+```
+
+同时这一步极有可能出现checkout error的错误，不过会提示出错误的路径和checkout的hash，因此需要手动到对应目录下执行stash和checkout指令
+
+无尽的等待和重试...
+
+# AOSP编译
+
+编译的过程和以前framework全编的过程基本相同
+
+根目录下执行
+```
+make -j8
+```
+
+又是无尽的等待....
+
+
