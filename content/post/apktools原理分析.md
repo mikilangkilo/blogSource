@@ -179,6 +179,7 @@ private static void cmdDecode(String[] args) throws InvalidArgsError,
 
 ### apkDecoder.decode()
 
+
 ```
 public void decode() throws AndrolibException, IOException {
 		File outDir = getOutDir();
@@ -255,48 +256,26 @@ public void decode() throws AndrolibException, IOException {
 	}
 ```
 
-decode的过程写的还蛮清楚的，分三步
+这里写的其实蛮清楚的
 
-- hasResources()
+创建存储的文件夹->解码dex文件到存储的文件夹->处理资源文件->拷贝manifest到存储的文件夹->拷贝raw文件（asset，lib）到存储文件夹->整合metainfo文件到存储的文件夹
 
-```
-public boolean hasSources() throws AndrolibException {
-		try {
-			return mApkFile.getDirectory().containsFile("classes.dex");
-		} catch (DirectoryException ex) {
-			throw new AndrolibException(ex);
-		}
-	}
-```
+也就是解码其实只用到了一处，其余部分都是拷贝或者整合。
 
-当apk文件拥有classes.dex文件的时候
+其中decode又分为decode为raw文件，decode为smali文件，和decode为java文件三种
 
-执行
-```
-switch (mDecodeSources) {
-			case DECODE_SOURCES_NONE:
-				mAndrolib.decodeSourcesRaw(mApkFile, outDir, mDebug);
-				break;
-			case DECODE_SOURCES_SMALI:
-				mAndrolib.decodeSourcesSmali(mApkFile, outDir, mDebug, mBakDeb);
-				break;
-			case DECODE_SOURCES_JAVA:
-				mAndrolib.decodeSourcesJava(mApkFile, outDir, mDebug);
-				break;
-			}
-```
-mDecodeResources默认是SMALI
+默认是decode为smali文件。
 
-> smali 和 baksmali 则是针对 DEX 执行文件格式的汇编器和反汇编器，反汇编后 DEX 文件会产生.smali 后缀的代码文件，smali 代码拥有特定的格式与语法，smali 语言是对 Dalvik 虚拟机字节码的一种解释。
+raw文件的decode就是直接复制，不解码的意思。
 
-这也是apktool反编译生成的产物。
+因此我们需要看一下decode为smali和decode为java2种。
 
-不过在这里我们也可以看出来，也是可以有其他两个选项的
+### mAndrolib.decodeSourcesSmali(mApkFile, outDir, mDebug, mBakDeb)
 
-#### AndroidLib.decodeSourcesSmali
+这个参数第四个是指控制debug输出，和第三个一样
 
 ```
-public void decodeSourcesSmali(File apkFile, File outDir, boolean debug,
+	public void decodeSourcesSmali(File apkFile, File outDir, boolean debug,
 			boolean bakdeb) throws AndrolibException {
 		try {
 			File smaliDir = new File(outDir, SMALI_DIRNAME);
@@ -308,24 +287,14 @@ public void decodeSourcesSmali(File apkFile, File outDir, boolean debug,
 			throw new AndrolibException(ex);
 		}
 	}
-```
-
-调用了SmaliDecoder.decode
 
 ```
-private void decode() throws AndrolibException {
-		try {
-			baksmali.disassembleDexFile(mApkFile.getAbsolutePath(),
-					new DexFile(mApkFile), false, mOutDir.getAbsolutePath(),
-					null, null, null, false, true, true, mBakDeb, false, false,
-					0, false, false, null, false);
-		} catch (IOException ex) {
-			throw new AndrolibException(ex);
-		}
-	}
-```
 
-这里调用了baksmali.disassembleDexFile
+这里也就是创建了文件夹，然后调用了SmaliDecoder的decode方式
+
+而smalidecoder又是调用了baksmali.disassembleDexFile
+
+baksmali的这个api虽然写的长，但是可以分析的，具体源码如下
 
 ```
 public static void disassembleDexFile(String dexFilePath, DexFile dexFile, boolean deodex, String outputDirectory,
@@ -346,7 +315,7 @@ public static void disassembleDexFile(String dexFilePath, DexFile dexFile, boole
         baksmali.bootClassPath = bootClassPath;
         baksmali.verify = verify;
 
-        if (registerInfo != 0 || deodex || verify) {
+        if (registerInfo != 0 || deodex || verify) {//0 || false || false
             try {
                 String[] extraBootClassPathArray = null;
                 if (extraBootClassPath != null && extraBootClassPath.length() > 0) {
@@ -391,7 +360,7 @@ public static void disassembleDexFile(String dexFilePath, DexFile dexFile, boole
             }
         }
 
-        if (!noAccessorComments) {
+        if (!noAccessorComments) {//!false
             syntheticAccessorResolver = new SyntheticAccessorResolver(dexFile);
         }
 
@@ -479,96 +448,34 @@ public static void disassembleDexFile(String dexFilePath, DexFile dexFile, boole
     }
 ```
 
-这里就到了核心部分，这里比较长，需要提炼一下。
-
-首先
-```
-if (extraBootClassPath != null && extraBootClassPath.length() > 0) {
-                    assert extraBootClassPath.charAt(0) == ':';
-                    extraBootClassPathArray = extraBootClassPath.substring(1).split(":");
-                }
-```
-这一段是不需要的，因为这个extraBootClassPath是个null
+流程精简如下
 
 ```
-if (dexFile.isOdex() && bootClassPath == null) {
-```
+从dex文件中拿出class到集合类中
 
-这一段是固定的false，因为这个bootClassPath也是个null
+根据typedescriptor对class进行排序
 
-因此就会走入
-```
-String[] bootClassPathArray = null;
-                    if (bootClassPath != null) {
-                        bootClassPathArray = bootClassPath.split(":");
-                    }
-                    ClassPath.InitializeClassPath(classPathDirs, bootClassPathArray, extraBootClassPathArray,
-                            dexFilePath, dexFile, checkPackagePrivateAccess);
-```
-
-这一步就很关键了，因为执行了
+对描述符为object的class文件进行处理，将处理的结果写入根据class名新建的smali文件中
 
 ```
-ClassPath.InitializeClassPath(...);
-```
 
-这个api的作用如下
+上面所说的处理过程如下
 
 ```
-/**
-     * Initialize the class path using the dependencies from an odex file
-     * @param classPathDirs The directories to search for boot class path files
-     * @param extraBootClassPathEntries any extra entries that should be added after the entries that are read
-     * from the odex file
-     * @param dexFilePath The path of the dex file (used for error reporting purposes only)
-     * @param dexFile The DexFile to load - it must represents an odex file
-     */
+public void writeTo(IndentingWriter writer) throws IOException {
+        writeClass(writer);
+        writeSuper(writer);
+        writeSourceFile(writer);
+        writeInterfaces(writer);
+        writeAnnotations(writer);
+        writeStaticFields(writer);
+        writeInstanceFields(writer);
+        writeDirectMethods(writer);
+        writeVirtualMethods(writer);
+    }
 ```
 
-使用一个odex文件的依赖来初始化文件的路径。
+这里看的很仔细了，无论是类信息，父类，源文件等等，全都写入了smali
 
-```
-String[] bootClassPath = new String[odexDependencies.getDependencyCount()];
-        for (int i=0; i<bootClassPath.length; i++) {
-            String dependency = odexDependencies.getDependency(i);
+到这里就完成了dex文件转为smali文件的decode过程
 
-            if (dependency.endsWith(".odex")) {
-                int slashIndex = dependency.lastIndexOf("/");
-
-                if (slashIndex != -1) {
-                    dependency = dependency.substring(slashIndex+1);
-                }
-            } else if (dependency.endsWith("@classes.dex")) {
-                Matcher m = dalvikCacheOdexPattern.matcher(dependency);
-
-                if (!m.find()) {
-                    throw new ExceptionWithContext(String.format("Cannot parse dependency value %s", dependency));
-                }
-
-                dependency = m.group(1);
-            } else {
-                throw new ExceptionWithContext(String.format("Cannot parse dependency value %s", dependency));
-            }
-
-            bootClassPath[i] = dependency;
-        }
-```
-
-这是找到依赖的方法，一是直接通过判断是否以odex结尾，是的话直接截取，二是通过匹配查找，返回找到的第一个。
-
-之后又调用
-
-```
-theClassPath.initClassPath(classPathDirs, bootClassPath, extraBootClassPathEntries, dexFilePath, dexFile,
-                checkPackagePrivateAccess);
-```
-
-//这调用的也太深了吧，我好想吐槽啊
-
-这一步的目的是执行
-
-```
-loadDexFile(file.getPath(), dexFile);
-```
-
-事实上，在调用initClassPath的时候，就在动作的末位有了这个loadDexFile的动作
