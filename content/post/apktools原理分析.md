@@ -270,7 +270,7 @@ raw文件的decode就是直接复制，不解码的意思。
 
 因此我们需要看一下decode为smali和decode为java2种。
 
-### mAndrolib.decodeSourcesSmali(mApkFile, outDir, mDebug, mBakDeb)
+#### mAndrolib.decodeSourcesSmali(mApkFile, outDir, mDebug, mBakDeb)
 
 这个参数第四个是指控制debug输出，和第三个一样
 
@@ -479,3 +479,30 @@ public void writeTo(IndentingWriter writer) throws IOException {
 
 到这里就完成了dex文件转为smali文件的decode过程
 
+#### mAndrolib.decodeSourcesJava(mApkFile, outDir, mDebug);
+
+好，让我们来学习以下怎么decode为java文件的
+
+```
+public void decodeSourcesJava(ExtFile apkFile, File outDir, boolean debug)
+			throws AndrolibException {
+		LOGGER.info("Decoding Java sources...");
+		new AndrolibJava().decode(apkFile, outDir);
+	}
+```
+
+嗯。。。调用了androidlibjava的decode，这个decode写了什么呢？
+
+```
+public void decode(ExtFile apkFile, File outDir) {
+		throw new UnsupportedOperationException("Not yet implemented");
+	}
+```
+
+坑爹啊，原来没实现！！！
+
+所以其实只有两种方式，一种是直接拷贝，二是将dex转为smali，而将dex转为java的还没有写出来！
+
+## 回编译过程
+
+//TODO ：19。6。2
