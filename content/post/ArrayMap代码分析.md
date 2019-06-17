@@ -26,6 +26,19 @@ tags: 源码分析
  * you have no control over this shrinking -- if you set a capacity and then remove an
  * item, it may reduce the capacity to better match the current size.  In the future an
  * explicit call to set the capacity should turn off this aggressive shrinking behavior.</p>
+ *
+ *
+ * arraymap是一个key2value的map对象，设计的比传统的hashmap在内存方面更有效果
+ * 它将键值对保存在数组结构中，每一个键值对拥有一个hash值对应，用一个object数组保存这个键值对
+ * 因此避免了对每一个加入这个map的实体创建一个额外的空间。并且它也尝试更有倾略性的控制这些数组的增长
+ * 每一次增长只需要拷贝一次数组里面的对象，不需要重构hash的表
+ * 
+ * 注意，这个数据结构对大数量的对象并不合适，他会比hashmap慢好多，因为查找需要二分查找，并且add和remove操作需要插入和删除数组里面的对象
+ * 对于拥有接近上百个对象的容器，arraymap的表现不出色，比一半以上的容器弱
+ *
+ * 因为这个容器是为了更好的内存占用而设计的，不像别的标准的java容器，arraymap在移除对象的时候，会缩小他的数组
+ * 目前开发者对这个缩小的行为无法操作，如果开发者设置了一个容量，然后移除一个对象，arraymap将会减少容量
+ * 以后设置一个容量，可以关闭这个倾略性的收缩行为。
  */
 public final class ArrayMap<K, V> implements Map<K, V> {
     private static final boolean DEBUG = false;
@@ -46,6 +59,7 @@ public final class ArrayMap<K, V> implements Map<K, V> {
     /**
      * The minimum amount by which the capacity of a ArrayMap will increase.
      * This is tuned to be relatively space-efficient.
+     * arraymap的容量增加，如果不处理的话，最小将是下面这个参数，
      */
     private static final int BASE_SIZE = 4;
 
@@ -242,6 +256,7 @@ public final class ArrayMap<K, V> implements Map<K, V> {
     /**
      * Create a new empty ArrayMap.  The default capacity of an array map is 0, and
      * will grow once items are added to it.
+     * 默认的构造函数，容量为0
      */
     public ArrayMap() {
         this(0, false);
@@ -449,6 +464,13 @@ public final class ArrayMap<K, V> implements Map<K, V> {
      * @param value The value to store for the given key.
      * @return Returns the old value that was stored for the given key, or null if there
      * was no such key.
+     * add操作，对key做取hash操作
+     * 其取hash操作就是默认的System.identityHashCode(key),也就是不管用户是否复写，始终是object的hashcode方法
+     * 取位置的操作在indexof(key，hash)里面
+     * 当获得的index大于等于0会做插入操作，否则取反，之后根据存储的容量和hash数组的长度做对比
+     * 若存储的容量大于等于hash数组的长度，将其与BASE_SIZE做比较，如果是2倍以上，则在3/2 * size的地方插入，否则一倍以上则在BASE_SIZE * 2处插入，否则在BASE_SIZE处插入
+     * 存储的容量小于hash的长度，则扩容
+     * 此处操作有点疑惑
      */
     @Override
     public V put(K key, V value) {
