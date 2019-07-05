@@ -136,3 +136,13 @@ message分发判断是否传入到对应的handler中，其实是message自身�
 ```
 
 post的时候会通过这个方法对runnable对象进行封装，这样就顺利的将一个runnable与message联系起来，之后looper执行的时候仍然可以以message为对象进行处理。
+
+
+# MessageQueue.IdleHandler
+
+idelHandler提供了一个接口，当messagequeue里面的信息全部被执行结束之后才会回调这个接口。
+
+其十分有效。因为android是事件驱动模型，如果messagequeue中没有内容，那么一定代表目前事件全部被处理结束了，因此此时如果想进行耗时操作，将操作放在这个接口中使用将十分有意义。
+
+特别是在oncreate()中做的操作。
+
