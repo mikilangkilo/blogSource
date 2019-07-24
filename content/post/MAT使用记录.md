@@ -17,4 +17,8 @@ list objects -- with incoming references : 查看这个对象被哪些外部对�
 
 show objects by class  --  with outgoing references ：查看这个对象类型持有的外部对象引用
 
-show objects by class  --  with incoming references ：查看这个对象类型被哪些外部对象引用
+show objects by class  --  with incoming references ：查看这个对象类型被哪些外部对象引用、
+
+# 方法学习
+
+查bitmap图
