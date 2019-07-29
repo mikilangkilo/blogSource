@@ -19,6 +19,28 @@ show objects by class  --  with outgoing references ：查看这个对象类型�
 
 show objects by class  --  with incoming references ：查看这个对象类型被哪些外部对象引用、
 
+# 自动化导出并转化
+
+```aidl
+#!/bin/bash
+yourdate=`date +%m-%d-%H-%M-%S`
+adb shell am dumpheap com.ximalaya.ting.android.car /data/local/tmp/tingcar.hprof;
+sleep 5;
+adb pull /data/local/tmp/tingcar.hprof $yourdate.hprof;
+mkdir $yourdate;
+hprof-conv $yourdate.hprof $yourdate/$yourdate.hprof;
+rm $yourdate.hprof;
+adb shell rm /data/local/tmp/tingcar.hprof;
+```
+
 # 方法学习
 
-查bitmap图
+## 查bitmap图
+
+1.导出heap
+2.转化heap
+3.搜索Bitmap(注意大小写)
+4.右键bitmap类->list object -> with outgoing reference
+5.在bitmap对象列表页->右键想看的bitmap对象->copy->Save Value To File -> 保存到本地
+6.鼠标切回刚才的bitmap，打开inspector，可以看到宽高（buffer区有内存的实际大小，就是宽*高*2(rgb565就是2，rgb8888就是4)）
+7.根据记录的宽高，可以
