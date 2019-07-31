@@ -1,6 +1,8 @@
 ---
 title: "Glide内存缓存机制"
 date: 2019-07-29T09:50:23+08:00
+tags: glide
+category: 性能
 ---
 
 

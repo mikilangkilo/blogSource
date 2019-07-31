@@ -1,6 +1,8 @@
 ---
 title: "Bitmap内存区域探究"
 date: 2019-07-26T11:24:53+08:00
+tags: bitmap
+category: 性能
 ---
 
 # bitmap内存占用关系
