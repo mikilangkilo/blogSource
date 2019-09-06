@@ -38,6 +38,25 @@ recyclerview加载视图的过程中ui线程并非一直卡顿中，因此基于
 
 设置 RecyclerView.addOnScrollListener(listener); 来对滑动过程中停止加载的操作。
 
+```
+rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+	  @Override
+	  public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+		super.onScrollStateChanged(recyclerView, newState);
+		if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+		  Glide.with(context).resumeRequests();
+		}else {
+		  Glide.with(context).pauseRequests();
+		}
+	  }
+
+	  @Override
+	  public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+		super.onScrolled(recyclerView, dx, dy);
+	  }
+	});
+```
+
 # 不需要动画则关闭动画
 
 ((SimpleItemAnimator) rv.getItemAnimator()).setSupportsChangeAnimations(false); 把默认动画关闭来提升效率。
