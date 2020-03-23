@@ -9,13 +9,42 @@ date: 2019-12-01T21:19:44+08:00
 
 但是其实了解的真的是表象。
 
-# looper为什么在while(true)的时候不会阻塞？
+android作为事件驱动模型的典范，经典的就是每个输入，例如touchevent、keyevent等，都作为一个个的event传入，这样最后都包装成了handler的message对象，传入messagequeue中由looper进行调用
+
+其实looper是必然需要阻塞的，但是这个阻塞不是说阻塞住事件的运行，像sleep这种，而是说他作为一个管理者，需要阻塞住jvm的死亡
 
 ```
-/**
-     * Run the message queue in this thread. Be sure to call
-     * {@link #quit()} to end the loop.
-     */
+    public static void main(String[] args) {
+        Trace.traceBegin(64L, "ActivityThreadMain");
+        SamplingProfilerIntegration.start();
+        CloseGuard.setEnabled(false);
+        Environment.initForCurrentUser();
+        EventLogger.setReporter(new ActivityThread.EventLoggingReporter());
+        File configDir = Environment.getUserConfigDirectory(UserHandle.myUserId());
+        TrustedCertificateStore.setDefaultUserDirectory(configDir);
+        Process.setArgV0("<pre-initialized>");
+        Looper.prepareMainLooper();
+        ActivityThread thread = new ActivityThread();
+        thread.attach(false);
+        if (sMainThreadHandler == null) {
+            sMainThreadHandler = thread.getHandler();
+        }
+
+        Trace.traceEnd(64L);
+        Looper.loop();
+        throw new RuntimeException("Main thread loop unexpectedly exited");
+    }
+```
+
+在ActivityThread里面也是很明白的就展示了这个关系，loop的过程理应阻塞住，否则会抛出runtime异常
+
+其实更应该关注的是，looper的loop一直在跑，那怎么做才能说进行了优化？因为我们知道ANR的发生条件，在主线程出现操作锁死，超过一定时间之后，ams会执行anr指令。
+
+looper做了什么操作，可以说在用户代码之外，做了竟可能多的优化，使得大部分时间是用在处理代码上面呢
+
+这就是我的知识盲点了。
+
+```
     public static void loop() {
         final Looper me = myLooper();
         if (me == null) {
@@ -117,4 +146,4 @@ date: 2019-12-01T21:19:44+08:00
     }
 ```
 
-这里可以看到，一个for(;;)语句，如果在主线程的话就是阻塞住一直在处理
+这里仔细看吧，首先大部分变量都用final修饰了，final修饰的变量有个好处，也是平时刷leetcode的时候也会用到的trick，final修饰的变量存在固定区域，而不是栈区
