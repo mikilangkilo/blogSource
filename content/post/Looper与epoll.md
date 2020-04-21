@@ -44,6 +44,8 @@ looper做了什么操作，可以说在用户代码之外，做了竟可能多�
 
 这就是我的知识盲点了。
 
+# Looper 读操作
+
 ```
     public static void loop() {
         final Looper me = myLooper();
@@ -262,4 +264,122 @@ looper做了什么操作，可以说在用户代码之外，做了竟可能多�
 ```
 这里的一个nativePollOnce，就是大名鼎鼎的睡眠唤醒了
 
-nativepollonce很明显，是个阻塞，阻塞到确定能
+首先得理解一下为什么要睡眠唤醒。
+
+messagequeue.next这个操作是阻塞住的，阻塞的效果就代表该线程的CPU利用率将满荷，而很明显，现实中空置的时候并没有那么高的cpu占用率，主线程虽然是更新ui的，但是ui更新并不是连续不断的，而是一秒60Hz，所以在一帧画完之后到下一帧结束之前，此时主线程是空跑状态
+
+或者说在没有事件的时候，主线程处于空置状态，那么此时，如果之前的for(;;)仍然在跑的话，那么此时就是该核上面满负载cpu了，那么事实上，loop的loop操作就事实"阻塞"了，这种阻塞是我们不想见到的。
+
+android os在这一层的处理，就像java一样，java在线程一直在跑想要离开的时候可以做一些操作让开cpu使用权，这样cpu不至于满负载等待。
+
+这里让开主线程使用权的操作，就是睡眠唤醒了。
+
+具体还得进入到代码中来看。
+
+```
+Looper::Looper(bool allowNonCallbacks) :
+mAllowNonCallbacks(allowNonCallbacks), mSendingMessage(false),
+mResponseIndex(0), mNextMessageUptime(LLONG_MAX) {
+
+    int wakeFds[2];
+    int result = pipe(wakeFds);
+        
+    mWakeReadPipeFd = wakeFds[0];
+    mWakeWritePipeFd = wakeFds[1];
+    result = fcntl(mWakeReadPipeFd, F_SETFL, O_NONBLOCK);
+        
+    result = fcntl(mWakeWritePipeFd, F_SETFL, O_NONBLOCK);
+        
+    // Allocate the epoll instance and register the wake pipe.
+    mEpollFd = epoll_create(EPOLL_SIZE_HINT);
+        
+    struct epoll_event eventItem;
+    // zero out unused members of data field union
+    memset(& eventItem, 0, sizeof(epoll_event));  
+    eventItem.events = EPOLLIN;
+    eventItem.data.fd = mWakeReadPipeFd;
+    result = epoll_ctl(mEpollFd, EPOLL_CTL_ADD, mWakeReadPipeFd, & eventItem);  
+}
+```
+
+>>> 首先通过管道pipe创建了读端与写端两个文件描述符，最后通过epoll_create创建epoll专用文件描述符，最后通过epoll_ctl告诉mEpollFd需要监控mWakeReadPipeFd描述符的EPOLLIN事件。
+
+# Looper 写操作
+
+写操作就是通过sendMessage一路往下操作
+
+```
+    boolean enqueueMessage(Message msg, long when) {
+        if (msg.target == null) {
+            throw new IllegalArgumentException("Message must have a target.");
+        }
+        if (msg.isInUse()) {
+            throw new IllegalStateException(msg + " This message is already in use.");
+        }
+
+        synchronized (this) {
+            if (mQuitting) {
+                IllegalStateException e = new IllegalStateException(
+                        msg.target + " sending message to a Handler on a dead thread");
+                Log.w(TAG, e.getMessage(), e);
+                msg.recycle();
+                return false;
+            }
+
+            msg.markInUse();
+            msg.when = when;
+            Message p = mMessages;
+            boolean needWake;
+            if (p == null || when == 0 || when < p.when) {
+                // New head, wake up the event queue if blocked.
+                msg.next = p;
+                mMessages = msg;
+                needWake = mBlocked;
+            } else {
+                // Inserted within the middle of the queue.  Usually we don't have to wake
+                // up the event queue unless there is a barrier at the head of the queue
+                // and the message is the earliest asynchronous message in the queue.
+                needWake = mBlocked && p.target == null && msg.isAsynchronous();
+                Message prev;
+                for (;;) {
+                    prev = p;
+                    p = p.next;
+                    if (p == null || when < p.when) {
+                        break;
+                    }
+                    if (needWake && p.isAsynchronous()) {
+                        needWake = false;
+                    }
+                }
+                msg.next = p; // invariant: p == prev.next
+                prev.next = msg;
+            }
+
+            // We can assume mPtr != 0 because mQuitting is false.
+            if (needWake) {
+                nativeWake(mPtr);
+            }
+        }
+        return true;
+    }
+```
+
+这边的情况就是两个，一个是当前没有信息了，这时候需要唤醒，一个是当前有信息，需要插入。
+
+很明显，需要插入的这种，标明当前其实并不是睡眠状态，因此不需要执行nativeWake，而第一种则是需要nativeWake的
+
+```
+void Looper::wake() {
+    ssize_t nWrite;
+    do {
+        nWrite = write(mWakeWritePipeFd, "W", 1);
+    } while (nWrite == -1 && errno == EINTR);
+    if (nWrite != 1) {
+        if (errno != EAGAIN) {
+            ALOGW("Could not write wake signal, errno=%d", errno);
+        }
+    }
+}
+```
+
+这边就是往句柄里面写入W，唤醒应用主线程。
