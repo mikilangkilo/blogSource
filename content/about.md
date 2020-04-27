@@ -4,7 +4,7 @@
 
 - 联系电话: +86 150-0089-7584
 - 电子邮箱: [913925047@qq.com](913925047@qq.com)
-- 个人博客: [http://gwyloved.github.io@](http://gwyloved.github.io)
+- 个人博客: [http://gwyloved.github.io](http://gwyloved.github.io)
 - GitHub: [https://github.com/GWYloved](https://github.com/GWYloved)
 
 ## 工作经验
@@ -17,7 +17,7 @@
 
 * 负责业务模块开发推进，主要负责了4.O大版本/4.1小版本/3.5老版本/定制化版本需求的开发以及bug维护
 * 负责app性能稳定和提升，在部分低版本低性能安卓车机上面进行点对点优化，促进项目顺利发布，输出优化ppt
-* 参与技术方案选型，进行个人技术分享，参与组内code review
+* 参与技术方案选型，进行个人技术分享，参与组内code review以及进行季度性项目复盘，流程优化
 
 ### **高级 Android 开发工程师** [好买衣](http://www.haomaiyi.com/)
 
