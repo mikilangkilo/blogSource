@@ -121,3 +121,35 @@ public class RecyclerView2 extends RecyclerView {
 
 发生一种情况，recyclerview滑动到边界的时候，触发了requestDisallowInterceptTouchEvent方法，导致父类开始进行拦截，但是同时recyclerview反向滑动，此时反向滑动事件本不应同时被拦截，也被拦截了。
 
+目前解决这一种情况，需要重新重写一些viewpager2，然后更改内部recyclerview的滑动逻辑，增加对子类view是否可以继续滑动来判断是否。
+
+另外这一种滑动冲突的解决方式仍然有一种缺点，就是点击如果屏幕过于敏感的时候，一次点击会出现点击偏移，导致第一次触摸就造成了父类焦点拦截，因此最好增加一个误触优化点。
+
+基于此的优化方式总结一下
+
+1、根本方式：重写viewpager2，改写内部recyclerview的事件拦截和传递
+
+2、基于已有方式的优化版：
+```
+    case MotionEvent.ACTION_MOVE:
+                int endX = (int) ev.getX();
+                int endY = (int) ev.getY();
+                int disX = Math.abs(endX - startX);
+                int disY = Math.abs(endY - startY);
+                if (disX > disY) {
+                    if (disX < 100){
+                        break;
+                    }
+                    Log.e("mikilangkilo", "RecyclerView2/dispatchTouchEvent: "+canScrollHorizontally(startX - endX)+",startX = "+startX+",endX = "+endX);
+                    getParent()
+                        .requestDisallowInterceptTouchEvent(canScrollHorizontally(startX - endX));
+                } else {
+                    if (disY < 100){
+                        break;
+                    }
+                    getParent()
+                        .requestDisallowInterceptTouchEvent(canScrollVertically(startY - endY));
+                }
+                break;
+```
+此处增加100像素点误触范围即可规避
