@@ -1,9 +1,7 @@
 ---
 title: "Recyclerview优化小结"
 date: 2019-06-12T14:41:42+08:00
-description : "
-总结一些recyclerview的优化策略
-"
+tags : android
 ---
 
 该篇不讨论源码，只总结优化的trick

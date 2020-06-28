@@ -1,7 +1,7 @@
 ---
 title: volatile的作用及其原理
 date: 2019-01-09 19:03:23
-tags: 多线程
+tags: java
 ---
 
 # 作用

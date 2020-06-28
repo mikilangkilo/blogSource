@@ -1,6 +1,7 @@
 ---
 title: "Viewpager2与recycleview混用导致的滑动冲突解决"
 date: 2020-05-07T15:55:45+08:00
+tags: android
 ---
 
 项目升级到androidX有几个月了，别的都挺稳定的，也用了一些androidX真香的特性。

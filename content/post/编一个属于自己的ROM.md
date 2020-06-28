@@ -1,6 +1,7 @@
 ---
 title: "编一个属于自己的ROM"
 date: 2019-05-30T22:53:33+08:00
+tags: android
 ---
 
 # AOSP下载

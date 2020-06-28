@@ -1,6 +1,7 @@
 ---
 title: "Looper与epoll"
 date: 2019-12-01T21:19:44+08:00
+tags: android
 ---
 
 关于looper，就想起了handler，handler与looper，messagequeue的关系，刚毕业的时候学习过一阵。

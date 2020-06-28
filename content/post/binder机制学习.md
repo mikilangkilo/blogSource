@@ -1,7 +1,7 @@
 ---
 title: binder机制学习
 date: 2018-10-18 22:42:23
-tags:
+tags: android
 ---
 binder平时总听过，但是原理只知道是ipc，也就是进程间通信。但是真正的原理其实还是不理解。
 

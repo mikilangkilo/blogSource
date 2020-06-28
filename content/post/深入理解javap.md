@@ -1,7 +1,7 @@
 ---
 title: "深入理解javap"
 date: 2020-04-27T16:11:29+08:00
-tags: java进阶
+tags: java
 ---
 
 javap一般用到javap -c -v -l 等参数，但是一般cv之间切换来看。大致的方法懂一些，百度能看出来干了啥，但从来也没总结过。

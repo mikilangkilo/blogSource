@@ -1,6 +1,7 @@
 ---
 title: "Sychronized的三种用法"
 date: 2019-05-21T00:43:56+08:00
+tags: java
 ---
 
 # public void sychronized foo(){}
