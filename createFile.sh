@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 read -p "Input name:" -s name
 echo $name
-cd ~/Desktop/self-projects/blogSource/ && hugo new post/$name.md
+cd ~/../../../Volumes/workspace/blogSource/ && hugo new post/$name.md
