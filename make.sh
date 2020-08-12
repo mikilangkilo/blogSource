@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-cd ~/Desktop/self-projects/blogSource/ && hugo && git add . && git commit -m "feature/new blog" && git push && cd public/ && git add . && git commit -m "feature/new blog" && git push --set-upstream origin master
+cd ~/../../../Volumes/workspace/blogSource/ && hugo && git add . && git commit -m "feature/new blog" && git push && cd public/ && git add . && git commit -m "feature/new blog" && git push --set-upstream origin master
