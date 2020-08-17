@@ -3,23 +3,26 @@ languageCode = "zh"
 title = "Keep sharp"
 theme = "hyde"
 googleAnalytics = "UA-142199557-1"
+
 [params]
     description = "这里是殷鹏程的个人博客"#simple description on page
     menu = "tags"
-    copyright = "Copyright (c) 2019, Yin pengcheng"
+    copyright = "Copyright (c) 2020, Yin pengcheng"
     layoutReverse = true
+    disableRSS = true
+    disableSitemap = false
+
+[markup]
+  [markup.highlight]
+    lineNos = true
+    style = "github"
+
 [menus]
     [[menus.main]]
         name = "文章"
         post = "<span class='alert'>New!</span>"
         pre = "<i class='fa fa-road'></i>"
         url = "/post/"
-
-    [[menus.main]]
-            name = "分类"
-            post = "<span class='alert'>New!</span>"
-            pre = "<i class='fa fa-road'></i>"
-            url = "/tags/"
 
     [[menus.main]]
             name = "关于我"
