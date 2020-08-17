@@ -1,7 +1,7 @@
 baseURL = "https://gwyloved.github.io/"
 languageCode = "zh"
 title = "Keep sharp"
-theme = "maupassant"
+theme = "hyde"
 googleAnalytics = "UA-142199557-1"
 [taxonomies]
   category = "categories"
