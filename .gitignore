@@ -4,5 +4,5 @@ themes/next/
 .deploy_*
 .idea
 blogSource.iml
-themes/
+themes/*
 public/
