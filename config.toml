@@ -3,9 +3,6 @@ languageCode = "zh"
 title = "Keep sharp"
 theme = "hyde"
 googleAnalytics = "UA-142199557-1"
-[taxonomies]
-  category = "categories"
-  tag = "tags"
 
 [params]
     description = "这里是殷鹏程的个人博客"#simple description on page
@@ -32,11 +29,6 @@ googleAnalytics = "UA-142199557-1"
             post = "<span class='alert'>New!</span>"
             pre = "<i class='fa fa-road'></i>"
             url = "/about/"
-
-    [[menu.main]]
-            identifier = "archives"
-            name = "归档"
-            url = "/archives/"
 
     [[menus.main]]
             name = "github"
