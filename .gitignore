@@ -1,9 +1,6 @@
 node_modules/
 package-lock.json
-themes/next/
 .deploy_*
 .idea
 blogSource.iml
-themes/*
 public/
-themes/hyde
