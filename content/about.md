@@ -10,8 +10,8 @@ tag : "简历"
 
 - 联系电话: +86 150-0089-7584
 - 电子邮箱: [913925047@qq.com](913925047@qq.com)
-- 个人博客: [http://gwyloved.github.io](http://gwyloved.github.io)
-- GitHub: [https://github.com/GWYloved](https://github.com/GWYloved)
+- 个人博客: [http://mikilangkilo.github.io](http://mikilangkilo.github.io)
+- GitHub: [https://github.com/mikilangkilo](https://github.com/mikilangkilo)
 
 ## 工作经验
 
